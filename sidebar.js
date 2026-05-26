@@ -17,6 +17,25 @@ function initSidebar() {
   var cleanPath = rawPath.replace(/\.html$/, '').toLowerCase();
   if (!cleanPath || cleanPath === '') cleanPath = 'index'; // Handle root url
 
+  // Sidebar Toggle Logic
+  var toggleBtn = document.querySelector('.ti-menu-2');
+  var sidebar = document.querySelector('.sidebar');
+  if(toggleBtn && sidebar) {
+    toggleBtn.addEventListener('click', function() {
+      sidebar.classList.toggle('collapsed');
+      if(sidebar.classList.contains('collapsed')) {
+        localStorage.setItem('sidebarState', 'collapsed');
+      } else {
+        localStorage.setItem('sidebarState', 'expanded');
+      }
+    });
+
+    // Check saved state
+    if(localStorage.getItem('sidebarState') === 'collapsed') {
+      sidebar.classList.add('collapsed');
+    }
+  }
+
   document.querySelectorAll('.nav-sub').forEach(function(sub) {
     sub.style.maxHeight = '0';
     sub.style.overflow = 'hidden';

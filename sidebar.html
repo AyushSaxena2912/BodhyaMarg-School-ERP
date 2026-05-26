@@ -37,13 +37,45 @@
   font-weight: 600 !important;
 }
 .nav-sub-container > a.nav-item .ti-chevron-down { transition: transform 0.25s ease; }
-.nav-sub-container > a.nav-item { user-select: none; }
+
+/* Collapsed Sidebar State */
+.sidebar { transition: width 0.3s ease, min-width 0.3s ease; overflow-x: hidden; }
+.sidebar.collapsed { width: 72px; min-width: 72px; }
+.sidebar.collapsed .brand-name { display: none; }
+.sidebar.collapsed .brand-bar { justify-content: center; padding: 16px 0; }
+.sidebar.collapsed .school-info, .sidebar.collapsed .school-picker > .ti-chevron-down { display: none; }
+.sidebar.collapsed .school-picker { padding: 12px 10px; justify-content: center; }
+.sidebar.collapsed .school-icon { margin: 0; }
+.sidebar.collapsed .nav-label { display: none; }
+.sidebar.collapsed .nav-item { font-size: 0; gap: 0; justify-content: center; width: 44px; height: 44px; margin: 4px auto; padding: 0; border-radius: 10px; }
+.sidebar.collapsed .nav-item i { font-size: 20px; margin: 0; }
+.sidebar.collapsed .nav-item .ti-chevron-down { display: none; }
+.sidebar.collapsed .nav-sub { display: none !important; }
+.sidebar.collapsed .nav-sub-container.open > a.nav-item { background: transparent !important; color: var(--text-muted) !important; font-weight: normal !important; }
+.sidebar.collapsed .nav-sub-container > a.nav-item.active { background: var(--green-light) !important; color: var(--green) !important; font-weight: 600 !important; }.nav-sub-container > a.nav-item { user-select: none; }
 
 /* Highlight Nav Label if it has an active or open item */
 .nav-group:has(.nav-item.active) .nav-label,
 .nav-group:has(.nav-sub-container.open) .nav-label {
   color: var(--green) !important;
 }
+
+
+/* Collapsed Sidebar State */
+.sidebar { transition: width 0.3s ease, min-width 0.3s ease; }
+.sidebar.collapsed { width: 72px; min-width: 72px; }
+.sidebar.collapsed .brand-name { font-size: 0; gap: 0; }
+.sidebar.collapsed .brand-name i { font-size: 24px; margin: 0 auto; }
+.sidebar.collapsed .school-info, .sidebar.collapsed .school-picker > .ti-chevron-down { display: none; }
+.sidebar.collapsed .school-picker { padding: 10px; justify-content: center; }
+.sidebar.collapsed .school-icon { margin: 0; }
+.sidebar.collapsed .nav-label { display: none; }
+.sidebar.collapsed .nav-item { font-size: 0; gap: 0; justify-content: center; padding: 12px 0; }
+.sidebar.collapsed .nav-item i { font-size: 20px; margin: 0; }
+.sidebar.collapsed .nav-item .ti-chevron-down { display: none; }
+.sidebar.collapsed .nav-sub { display: none !important; }
+.sidebar.collapsed .nav-sub-container.open > a.nav-item { background: transparent !important; color: var(--text-muted) !important; font-weight: normal !important; }
+.sidebar.collapsed .nav-sub-container > a.nav-item.active { background: var(--green-light) !important; color: var(--green) !important; font-weight: 600 !important; }
 
 </style>
 
