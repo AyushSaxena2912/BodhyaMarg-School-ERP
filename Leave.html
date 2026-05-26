@@ -153,11 +153,16 @@ input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--green); cu
 }
 .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
 
+
 /* Sidebar active state fix - override link color specificity */
 .sidebar a.nav-item.active,
 .sidebar a.nav-item.active:link,
 .sidebar a.nav-item.active:visited,
-.sidebar a.nav-item.active:hover {
+.sidebar a.nav-item.active:hover,
+.nav-sub-container.open > a.nav-item,
+.nav-sub-container.open > a.nav-item:link,
+.nav-sub-container.open > a.nav-item:visited,
+.nav-sub-container.open > a.nav-item:hover {
   background: var(--green-light) !important;
   color: var(--green) !important;
   font-weight: 600 !important;

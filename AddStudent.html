@@ -143,11 +143,16 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
 .btn-primary:hover { background: var(--green-dark); }
 
+
 /* Sidebar active state fix - override link color specificity */
 .sidebar a.nav-item.active,
 .sidebar a.nav-item.active:link,
 .sidebar a.nav-item.active:visited,
-.sidebar a.nav-item.active:hover {
+.sidebar a.nav-item.active:hover,
+.nav-sub-container.open > a.nav-item,
+.nav-sub-container.open > a.nav-item:link,
+.nav-sub-container.open > a.nav-item:visited,
+.nav-sub-container.open > a.nav-item:hover {
   background: var(--green-light) !important;
   color: var(--green) !important;
   font-weight: 600 !important;

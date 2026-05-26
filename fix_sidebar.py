@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fix sidebar toggle + active highlight in all ERP HTML files. V2"""
+"""Fix sidebar toggle + active highlight in all ERP HTML files. V3"""
 
 import os, re, glob
 
@@ -97,12 +97,17 @@ NEW_SCRIPT = r'''<script>
 </aside>'''
 
 # CSS to add for active highlighting fix (override link color specificity)
+# Including .nav-sub-container.open > a.nav-item so that it is highlighted green when expanded.
 CSS_ADDITION = '''
 /* Sidebar active state fix - override link color specificity */
 .sidebar a.nav-item.active,
 .sidebar a.nav-item.active:link,
 .sidebar a.nav-item.active:visited,
-.sidebar a.nav-item.active:hover {
+.sidebar a.nav-item.active:hover,
+.nav-sub-container.open > a.nav-item,
+.nav-sub-container.open > a.nav-item:link,
+.nav-sub-container.open > a.nav-item:visited,
+.nav-sub-container.open > a.nav-item:hover {
   background: var(--green-light) !important;
   color: var(--green) !important;
   font-weight: 600 !important;
@@ -114,10 +119,6 @@ CSS_ADDITION = '''
 # Pattern to remove old CSS fix if present
 OLD_CSS_FIX = re.compile(
     r'/\*\s*Sidebar active state fix.*?\*/.*?\.nav-sub-container > a\.nav-item \{ user-select: none; \}\s*',
-    re.DOTALL
-)
-OLD_CHEVRON_CSS = re.compile(
-    r'\n\.nav-sub-container > a\.nav-item \.ti-chevron-down \{ transition: transform [^}]+\}\s*\n\.nav-sub-container > a\.nav-item \{ user-select: none; \}\s*',
     re.DOTALL
 )
 
@@ -140,7 +141,6 @@ for filepath in glob.glob(os.path.join(SCRIPT_DIR, '*.html')):
     
     # Remove old CSS fixes if present
     new_content = OLD_CSS_FIX.sub('', new_content)
-    new_content = OLD_CHEVRON_CSS.sub('', new_content)
     
     # Add new CSS fix before the first </style> tag
     if '/* Sidebar active state fix' not in new_content:
