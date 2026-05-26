@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fix sidebar toggle + active highlight in all ERP HTML files."""
+"""Fix sidebar toggle + active highlight in all ERP HTML files. V2"""
 
 import os, re, glob
 
@@ -14,35 +14,41 @@ OLD_SCRIPT_PATTERN = re.compile(
 # New improved sidebar script
 NEW_SCRIPT = r'''<script>
     document.addEventListener('DOMContentLoaded', function() {
-      // 1. Detect current page
+      // 1. Detect current page from URL
       var path = window.location.pathname.split('/').pop() || 'index.html';
 
-      // 2. Mark active links
-      var links = document.querySelectorAll('.sidebar a.nav-item');
-      links.forEach(function(link) {
-        var href = link.getAttribute('href');
-        if(href && href !== '#' && href === path) {
-          link.classList.add('active');
-          // Also mark parent nav-item in the sub-container
-          var subContainer = link.closest('.nav-sub-container');
-          if(subContainer) {
-            var parentLink = subContainer.querySelector(':scope > a.nav-item');
-            if(parentLink) parentLink.classList.add('active');
-          }
-        }
-      });
-
-      // 3. Hide all nav-subs first
+      // 2. Hide ALL nav-subs first
       document.querySelectorAll('.nav-sub').forEach(function(sub) {
         sub.style.maxHeight = '0';
         sub.style.overflow = 'hidden';
         sub.style.transition = 'max-height 0.25s ease';
       });
 
-      // 4. Open nav-subs that contain active items
-      document.querySelectorAll('.nav-item.active').forEach(function(activeItem) {
+      // 3. Reset all chevrons
+      document.querySelectorAll('.nav-sub-container').forEach(function(c) {
+        c.classList.remove('open');
+        var chev = c.querySelector(':scope > a.nav-item .ti-chevron-down');
+        if(chev) chev.style.transform = 'rotate(0deg)';
+      });
+
+      // 4. Mark active links based on current page URL
+      var links = document.querySelectorAll('.sidebar a.nav-item');
+      links.forEach(function(link) {
+        link.classList.remove('active'); // reset first
+        var href = link.getAttribute('href');
+        if(href && href !== '#' && href === path) {
+          link.classList.add('active');
+        }
+      });
+
+      // 5. For active items inside sub-containers, also activate parent + expand
+      document.querySelectorAll('.nav-sub .nav-item.active').forEach(function(activeItem) {
         var subContainer = activeItem.closest('.nav-sub-container');
         if(subContainer) {
+          // Activate parent link
+          var parentLink = subContainer.querySelector(':scope > a.nav-item');
+          if(parentLink) parentLink.classList.add('active');
+          // Expand this sub-menu
           subContainer.classList.add('open');
           var sub = subContainer.querySelector('.nav-sub');
           if(sub) sub.style.maxHeight = sub.scrollHeight + 'px';
@@ -50,7 +56,10 @@ NEW_SCRIPT = r'''<script>
           var chevron = subContainer.querySelector(':scope > a.nav-item .ti-chevron-down');
           if(chevron) chevron.style.transform = 'rotate(180deg)';
         }
-        // Highlight parent nav-group label
+      });
+
+      // 6. Highlight parent nav-group labels for active items
+      document.querySelectorAll('.nav-item.active').forEach(function(activeItem) {
         var navGroup = activeItem.closest('.nav-group');
         if(navGroup) {
           var label = navGroup.querySelector('.nav-label');
@@ -58,31 +67,24 @@ NEW_SCRIPT = r'''<script>
         }
       });
 
-      // 5. Add click toggle for all sub-containers
+      // 7. Click toggle for all sub-containers
       document.querySelectorAll('.nav-sub-container').forEach(function(container) {
         var parentLink = container.querySelector(':scope > a.nav-item');
         if(!parentLink) return;
 
         parentLink.addEventListener('click', function(e) {
-          // If the parent link has a real href and is the active page, allow navigation
-          // Otherwise, toggle the submenu
-          var href = parentLink.getAttribute('href');
           var sub = container.querySelector('.nav-sub');
           if(!sub) return;
-
           e.preventDefault();
           e.stopPropagation();
 
           var isOpen = container.classList.contains('open');
-          
           if(isOpen) {
-            // Close it
             container.classList.remove('open');
             sub.style.maxHeight = '0';
             var chevron = parentLink.querySelector('.ti-chevron-down');
             if(chevron) chevron.style.transform = 'rotate(0deg)';
           } else {
-            // Open it
             container.classList.add('open');
             sub.style.maxHeight = sub.scrollHeight + 'px';
             var chevron = parentLink.querySelector('.ti-chevron-down');
@@ -94,11 +96,30 @@ NEW_SCRIPT = r'''<script>
   </script>
 </aside>'''
 
-# CSS to add for chevron transition
+# CSS to add for active highlighting fix (override link color specificity)
 CSS_ADDITION = '''
+/* Sidebar active state fix - override link color specificity */
+.sidebar a.nav-item.active,
+.sidebar a.nav-item.active:link,
+.sidebar a.nav-item.active:visited,
+.sidebar a.nav-item.active:hover {
+  background: var(--green-light) !important;
+  color: var(--green) !important;
+  font-weight: 600 !important;
+}
 .nav-sub-container > a.nav-item .ti-chevron-down { transition: transform 0.25s ease; }
 .nav-sub-container > a.nav-item { user-select: none; }
 '''
+
+# Pattern to remove old CSS fix if present
+OLD_CSS_FIX = re.compile(
+    r'/\*\s*Sidebar active state fix.*?\*/.*?\.nav-sub-container > a\.nav-item \{ user-select: none; \}\s*',
+    re.DOTALL
+)
+OLD_CHEVRON_CSS = re.compile(
+    r'\n\.nav-sub-container > a\.nav-item \.ti-chevron-down \{ transition: transform [^}]+\}\s*\n\.nav-sub-container > a\.nav-item \{ user-select: none; \}\s*',
+    re.DOTALL
+)
 
 count = 0
 for filepath in glob.glob(os.path.join(SCRIPT_DIR, '*.html')):
@@ -117,9 +138,12 @@ for filepath in glob.glob(os.path.join(SCRIPT_DIR, '*.html')):
     # Replace the old script block
     new_content = OLD_SCRIPT_PATTERN.sub(NEW_SCRIPT, content)
     
-    # Add chevron CSS if not already there
-    if 'ti-chevron-down' not in content.split('</style>')[0] or 'transition: transform' not in content:
-        # Add CSS before the first </style> tag
+    # Remove old CSS fixes if present
+    new_content = OLD_CSS_FIX.sub('', new_content)
+    new_content = OLD_CHEVRON_CSS.sub('', new_content)
+    
+    # Add new CSS fix before the first </style> tag
+    if '/* Sidebar active state fix' not in new_content:
         new_content = new_content.replace('</style>', CSS_ADDITION + '</style>', 1)
     
     if new_content != content:
