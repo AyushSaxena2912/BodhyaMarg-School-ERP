@@ -120,6 +120,9 @@ input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--green); cu
 .page-btn.disabled { opacity: .4; cursor: default; pointer-events: none; }
 .page-dots { font-size: 12px; color: var(--text-hint); padding: 0 2px; }
 
+
+.nav-sub-container > a.nav-item .ti-chevron-down { transition: transform 0.25s ease; }
+.nav-sub-container > a.nav-item { user-select: none; }
 </style>
 <style>
 .sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
@@ -318,40 +321,81 @@ input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--green); cu
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      var path = window.location.pathname.split('/').pop();
-      if(path) {
-        var links = document.querySelectorAll('.sidebar a.nav-item');
-        links.forEach(function(link) {
-          if(link.getAttribute('href') === path) {
-            link.classList.add('active');
-            var subContainer = link.closest('.nav-sub-container');
-            if(subContainer) {
-               var parentLink = subContainer.querySelector('a.nav-item');
-               if(parentLink) {
-                 parentLink.classList.add('active');
-               }
-            }
+      // 1. Detect current page
+      var path = window.location.pathname.split('/').pop() || 'index.html';
+
+      // 2. Mark active links
+      var links = document.querySelectorAll('.sidebar a.nav-item');
+      links.forEach(function(link) {
+        var href = link.getAttribute('href');
+        if(href && href !== '#' && href === path) {
+          link.classList.add('active');
+          // Also mark parent nav-item in the sub-container
+          var subContainer = link.closest('.nav-sub-container');
+          if(subContainer) {
+            var parentLink = subContainer.querySelector(':scope > a.nav-item');
+            if(parentLink) parentLink.classList.add('active');
+          }
+        }
+      });
+
+      // 3. Hide all nav-subs first
+      document.querySelectorAll('.nav-sub').forEach(function(sub) {
+        sub.style.maxHeight = '0';
+        sub.style.overflow = 'hidden';
+        sub.style.transition = 'max-height 0.25s ease';
+      });
+
+      // 4. Open nav-subs that contain active items
+      document.querySelectorAll('.nav-item.active').forEach(function(activeItem) {
+        var subContainer = activeItem.closest('.nav-sub-container');
+        if(subContainer) {
+          subContainer.classList.add('open');
+          var sub = subContainer.querySelector('.nav-sub');
+          if(sub) sub.style.maxHeight = sub.scrollHeight + 'px';
+          // Rotate chevron
+          var chevron = subContainer.querySelector(':scope > a.nav-item .ti-chevron-down');
+          if(chevron) chevron.style.transform = 'rotate(180deg)';
+        }
+        // Highlight parent nav-group label
+        var navGroup = activeItem.closest('.nav-group');
+        if(navGroup) {
+          var label = navGroup.querySelector('.nav-label');
+          if(label) label.style.color = 'var(--green)';
+        }
+      });
+
+      // 5. Add click toggle for all sub-containers
+      document.querySelectorAll('.nav-sub-container').forEach(function(container) {
+        var parentLink = container.querySelector(':scope > a.nav-item');
+        if(!parentLink) return;
+
+        parentLink.addEventListener('click', function(e) {
+          // If the parent link has a real href and is the active page, allow navigation
+          // Otherwise, toggle the submenu
+          var href = parentLink.getAttribute('href');
+          var sub = container.querySelector('.nav-sub');
+          if(!sub) return;
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          var isOpen = container.classList.contains('open');
+          
+          if(isOpen) {
+            // Close it
+            container.classList.remove('open');
+            sub.style.maxHeight = '0';
+            var chevron = parentLink.querySelector('.ti-chevron-down');
+            if(chevron) chevron.style.transform = 'rotate(0deg)';
+          } else {
+            // Open it
+            container.classList.add('open');
+            sub.style.maxHeight = sub.scrollHeight + 'px';
+            var chevron = parentLink.querySelector('.ti-chevron-down');
+            if(chevron) chevron.style.transform = 'rotate(180deg)';
           }
         });
-      }
-      
-      // Auto-hide all nav-subs first
-      document.querySelectorAll('.nav-sub').forEach(function(sub) {
-         sub.style.display = 'none'; 
-      });
-      document.querySelectorAll('.nav-item.active').forEach(function(activeItem) {
-          // Show the nav-sub if active item is inside one
-          var subContainer = activeItem.closest('.nav-sub-container');
-          if(subContainer) {
-              var sub = subContainer.querySelector('.nav-sub');
-              if(sub) sub.style.display = 'block';
-          }
-          // Highlight the parent nav-group's nav-label in green
-          var navGroup = activeItem.closest('.nav-group');
-          if(navGroup) {
-              var label = navGroup.querySelector('.nav-label');
-              if(label) label.style.color = 'var(--green)';
-          }
       });
     });
   </script>
