@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Vehicle Occupancy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+  --orange: #f59e0b; --orange-light: #fef3c7;
+  --red: #ef4444; --red-light: #fee2e2;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+.sidebar { width: 224px; min-width: 224px; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; height: 100vh; }
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.brand-bar { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.brand-name { font-size: 14px; font-weight: 600; color: var(--green); display: flex; align-items: center; gap: 8px; }
+.school-picker { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border); cursor: pointer; flex-shrink: 0; }
+.school-picker:hover { background: var(--bg); }
+.school-icon { width: 32px; height: 32px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.school-icon i { font-size: 16px; color: var(--green); }
+.school-info .name { font-size: 12px; font-weight: 600; }
+.school-info .sub  { font-size: 10px; color: var(--text-muted); }
+.nav-group { padding: 6px 0; }
+.nav-label { font-size: 10px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: .07em; padding: 6px 16px 2px; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 6px 16px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; transition: background .12s; }
+.nav-item i { font-size: 15px; flex-shrink: 0; }
+.nav-item:hover { background: var(--bg); color: var(--text); }
+.nav-item.active { background: var(--green-light); color: var(--green); font-weight: 600; }
+.nav-sub .nav-item { padding: 5px 16px 5px 32px; font-size: 12px; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.av { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.bc-green { color: var(--green); font-weight: 500; }
+.page-actions { display: flex; gap: 10px; align-items: center; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); transition: background .12s; white-space: nowrap; }
+.btn:hover { background: var(--bg); }
+.btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-export { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text-muted); }
+.table-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.card-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 12px; }
+.card-title { font-size: 14px; font-weight: 600; }
+.card-header-right { display: flex; align-items: center; gap: 10px; }
+.filter-btn, .sort-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; font-weight: 500; font-family: inherit; color: var(--text-muted); cursor: pointer; }
+.table-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap; }
+.toolbar-left { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-muted); }
+.toolbar-left select { font-family: inherit; font-size: 12.5px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 28px 5px 10px; background: var(--white); outline: none; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
+.table-search { display: flex; align-items: center; gap: 7px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; }
+.table-search i { font-size: 13px; color: var(--text-hint); }
+.table-search input { border: none; background: transparent; font-size: 12px; font-family: inherit; outline: none; width: 180px; }
+.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; min-width: 900px; }
+thead tr { background: var(--bg); border-bottom: 1px solid var(--border); }
+thead th { padding: 11px 18px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-align: left; white-space: nowrap; }
+thead th.th-check { width: 44px; padding-left: 20px; }
+thead th .sort-icon { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+thead th .sort-icon i { font-size: 13px; color: var(--text-hint); }
+tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #fafbfc; }
+tbody td { padding: 13px 18px; font-size: 12.5px; color: var(--text); vertical-align: middle; white-space: nowrap; }
+tbody td.td-check { width: 44px; padding-left: 20px; }
+input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--green); cursor: pointer; }
+
+/* Badges & Tags */
+.bus-no { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: var(--green-light); color: var(--green-dark); font-size: 12px; font-weight: 700; border: 1px solid #bbf7d0; }
+.mono-tag { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); font-size: 11.5px; font-weight: 500; color: var(--text-muted); font-family: monospace; letter-spacing: 0.02em; white-space: nowrap; }
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.badge::before { content:''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.badge-available { background: var(--green-light); color: var(--green); }
+.badge-available::before { background: var(--green); }
+.badge-full { background: var(--red-light); color: var(--red); }
+.badge-full::before { background: var(--red); }
+.badge-almost { background: var(--orange-light); color: var(--orange); }
+.badge-almost::before { background: var(--orange); }
+
+/* Progress Bar */
+.progress-container { width: 100%; min-width: 140px; }
+.progress-bar-bg { width: 100%; height: 6px; background: #e2e6ea; border-radius: 3px; overflow: hidden; margin-bottom: 6px; display: flex; }
+.progress-fill-students { height: 100%; background: var(--green); }
+.progress-fill-teachers { height: 100%; background: #3b82f6; }
+.progress-fill-staff { height: 100%; background: #8b5cf6; }
+.progress-text { font-size: 10.5px; color: var(--text-muted); display: flex; justify-content: space-between; }
+.progress-legend { display: flex; gap: 8px; font-size: 10px; margin-top: 4px; }
+.legend-item { display: flex; align-items: center; gap: 3px; }
+.legend-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+.action-btn { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: none; background: transparent; cursor: pointer; color: var(--text-muted); font-size: 18px; }
+.action-btn:hover { background: var(--bg); }
+.dropdown { position: absolute; right: 0; top: 32px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 4px 16px rgba(0,0,0,.08); min-width: 150px; z-index: 100; display: none; overflow: hidden; }
+.dropdown.open { display: block; }
+.dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px 14px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; transition: background .1s; }
+.dropdown-item:hover { background: var(--bg); color: var(--text); }
+
+.pagination { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 14px 18px; border-top: 1px solid var(--border); }
+.page-btn { min-width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; font-weight: 500; font-family: inherit; color: var(--text-muted); cursor: pointer; padding: 0 6px; transition: all .12s; }
+.page-btn:hover { background: var(--bg); }
+.page-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
+.page-btn.disabled { opacity: .4; cursor: default; pointer-events: none; }
+.page-dots { font-size: 12px; color: var(--text-hint); padding: 0 2px; }
+
+</style>
+<style>
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand-bar">
+    <div class="brand-name"><i class="ti ti-school"></i> BodhyaMarg</div>
+    <i class="ti ti-menu-2" style="font-size:18px;color:var(--text-muted);cursor:pointer;"></i>
+  </div>
+  <div class="school-picker">
+    <div class="school-icon"><i class="ti ti-shield-half"></i></div>
+    <div class="school-info"><div class="name">Delhi Public School</div><div class="sub">Main Campus</div></div>
+    <i class="ti ti-chevron-down" style="margin-left:auto;font-size:14px;color:var(--text-hint);"></i>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Main</div>
+    <div class="nav-sub-container">
+      <a href="VehicleOccupancy.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="VehicleOccupancy.html" class="nav-item">Admin Dashboard</a>
+        <a href="#" class="nav-item">Teacher Dashboard</a>
+        <a href="#" class="nav-item">Student Dashboard</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Peoples</div>
+    <div class="nav-sub-container">
+      <a href="AddStudent.html" class="nav-item"><i class="ti ti-school"></i> Students <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddStudent.html" class="nav-item">All Students</a>
+        <a href="#" class="nav-item">Student Promotion</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-user-check"></i> Parents</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-heart"></i> Guardians</a>
+    <div class="nav-sub-container">
+      <a href="AddTeacher.html" class="nav-item"><i class="ti ti-users"></i> Teachers <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddTeacher.html" class="nav-item">All Teachers</a>
+        <a href="#" class="nav-item">Routine</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Academic</div>
+    <div class="nav-sub-container">
+      <a href="AddClasses.html" class="nav-item"><i class="ti ti-books"></i> Classes <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddClasses.html" class="nav-item">All Classes</a>
+        <a href="#" class="nav-item">Schedule</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-building-community"></i> Class Room</a>
+    <a href="ClassRoutine.html" class="nav-item"><i class="ti ti-calendar-event"></i> Class Routine</a>
+    <a href="AddSections.html" class="nav-item"><i class="ti ti-box"></i> Section</a>
+    <a href="Subjects.html" class="nav-item"><i class="ti ti-book-2"></i> Subject</a>
+    <a href="AddClassSyllabus.html" class="nav-item"><i class="ti ti-file-text"></i> Syllabus</a>
+    <a href="AcademicCalendar.html" class="nav-item"><i class="ti ti-table"></i> Time Table</a>
+    <a href="HomeworkList.html" class="nav-item"><i class="ti ti-file-certificate"></i> Home Work</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-test-pipe"></i> Examinations <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Exam</a>
+        <a href="#" class="nav-item">Exam Schedule</a>
+        <a href="#" class="nav-item">Grade</a>
+        <a href="#" class="nav-item">Exam Attendance</a>
+        <a href="#" class="nav-item">Exam Results</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-target"></i> Reasons</a>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Management</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-receipt"></i> Fees Collection <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Fees Group</a>
+        <a href="#" class="nav-item">Fees Type</a>
+        <a href="#" class="nav-item">Fees Master</a>
+        <a href="#" class="nav-item">Fees Assign</a>
+        <a href="#" class="nav-item">Collect Fees</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-ball-football"></i> Sports</a>
+    <div class="nav-sub-container">
+      <a href="HostelList.html" class="nav-item"><i class="ti ti-building-store"></i> Hostel <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="HostelList.html" class="nav-item">Hostel List</a>
+        <a href="HostelRooms.html" class="nav-item">Hostel Rooms</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="AddVehicle.html" class="nav-item"><i class="ti ti-bus"></i> Transport <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="RoutesList.html" class="nav-item">Routes</a>
+        <a href="PickupPoints.html" class="nav-item">Pickup Points</a>
+        <a href="AddDrivers.html" class="nav-item">Vehicle Drivers</a>
+        <a href="AddVehicle.html" class="nav-item">Vehicles</a>
+        <a href="AssignVehicle.html" class="nav-item">Assign Vehicle</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">HRM</div>
+    <a href="AddStafff.html" class="nav-item"><i class="ti ti-users-group"></i> Staffs</a>
+    <a href="Designation.html" class="nav-item"><i class="ti ti-id-badge"></i> Designation</a>
+    <a href="Department.html" class="nav-item"><i class="ti ti-sitemap"></i> Department</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-calendar-check"></i> Attendance <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Student Attendance</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="Leave.html" class="nav-item"><i class="ti ti-calendar-minus"></i> Leaves <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="Leave.html" class="nav-item">List of leaves</a>
+        <a href="LeaveApproveRequest.html" class="nav-item">Approve Request</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Finance & Accounts</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-wallet"></i> Accounts <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Expenses</a>
+        <a href="#" class="nav-item">Expense Category</a>
+        <a href="#" class="nav-item">Income</a>
+        <a href="#" class="nav-item">Transactions</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Announcements</div>
+    <a href="NoticeBoard.html" class="nav-item"><i class="ti ti-clipboard-text"></i> Notice Board</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Reports</div>
+    <a href="#" class="nav-item"><i class="ti ti-report"></i> Attendance Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-report-analytics"></i> Class Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-chart-bar"></i> Student Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-file-analytics"></i> Grade Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-receipt-2"></i> Fees Report</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">User Management</div>
+    <a href="#" class="nav-item"><i class="ti ti-users"></i> Users</a>
+    <a href="#" class="nav-item"><i class="ti ti-shield-lock"></i> Roles & Permissions</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-x"></i> Delete Account Request</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Membership</div>
+    <a href="#" class="nav-item"><i class="ti ti-star"></i> Membership Plans</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Support</div>
+    <a href="#" class="nav-item"><i class="ti ti-user"></i> Profile</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Settings</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-settings"></i> General Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Profile Settings</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-book"></i> Academic Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">School Settings</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">UI Interface</div>
+    <a href="#" class="nav-item"><i class="ti ti-components"></i> Base UI</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var path = window.location.pathname.split('/').pop();
+      if(path) {
+        var links = document.querySelectorAll('.sidebar a.nav-item');
+        links.forEach(function(link) {
+          if(link.getAttribute('href') === path) {
+            link.classList.add('active');
+            var subContainer = link.closest('.nav-sub-container');
+            if(subContainer) {
+               var parentLink = subContainer.querySelector('a.nav-item');
+               if(parentLink) {
+                 parentLink.classList.add('active');
+               }
+            }
+          }
+        });
+      }
+      
+      // Auto-hide all nav-subs first
+      document.querySelectorAll('.nav-sub').forEach(function(sub) {
+         sub.style.display = 'none'; 
+      });
+      document.querySelectorAll('.nav-item.active').forEach(function(activeItem) {
+          // Show the nav-sub if active item is inside one
+          var subContainer = activeItem.closest('.nav-sub-container');
+          if(subContainer) {
+              var sub = subContainer.querySelector('.nav-sub');
+              if(sub) sub.style.display = 'block';
+          }
+          // Highlight the parent nav-group's nav-label in green
+          var navGroup = activeItem.closest('.nav-group');
+          if(navGroup) {
+              var label = navGroup.querySelector('.nav-label');
+              if(label) label.style.color = 'var(--green)';
+          }
+      });
+    });
+  </script>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search..." />
+    </div>
+    <div class="topbar-right">
+      <div class="icon-btn"><i class="ti ti-bell" style="font-size:16px;"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings" style="font-size:16px;"></i></div>
+      <div class="av">AD</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Vehicle Occupancy Tracker</h1>
+        <div class="breadcrumb">
+          Dashboard <i class="ti ti-chevron-right" style="font-size:10px;"></i>
+          Transport <i class="ti ti-chevron-right" style="font-size:10px;"></i>
+          <span class="bc-green">Vehicle Occupancy</span>
+        </div>
+      </div>
+      <div class="page-actions">
+        <button class="icon-btn"><i class="ti ti-refresh" style="font-size:16px;"></i></button>
+        <button class="icon-btn"><i class="ti ti-printer" style="font-size:16px;"></i></button>
+        <button class="btn-export"><i class="ti ti-download" style="font-size:14px;"></i> Export <i class="ti ti-chevron-down" style="font-size:12px;"></i></button>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="card-header">
+        <div class="card-title">Real-Time Capacity & Assignments</div>
+        <div class="card-header-right">
+          <button class="filter-btn"><i class="ti ti-filter" style="font-size:13px;"></i> Filter <i class="ti ti-chevron-down" style="font-size:12px;"></i></button>
+          <button class="sort-btn"><i class="ti ti-arrows-sort" style="font-size:13px;"></i> Sort by A-Z <i class="ti ti-chevron-down" style="font-size:12px;"></i></button>
+        </div>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="toolbar-left">
+          Row Per Page
+          <select onchange="changePerPage(this.value)">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+          Entries
+        </div>
+        <div class="table-search">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Search vehicle or bus no." oninput="filterTable(this.value)" />
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="th-check"><input type="checkbox" onclick="toggleAll(this)" /></th>
+              <th><span class="sort-icon">Bus No. <i class="ti ti-selector"></i></span></th>
+              <th><span class="sort-icon">Vehicle No. <i class="ti ti-selector"></i></span></th>
+              <th><span class="sort-icon">Route <i class="ti ti-selector"></i></span></th>
+              <th><span class="sort-icon">Occupancy Progress <i class="ti ti-selector"></i></span></th>
+              <th><span class="sort-icon">Available Seats <i class="ti ti-selector"></i></span></th>
+              <th><span class="sort-icon">Status <i class="ti ti-selector"></i></span></th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function pad(n){ return String(n).padStart(2,'0'); }
+
+var occupancyData = [
+  { id:1, busNo:1, vehicle:'MP09 AA 1234', route:'Vijay Nagar', capacity: 50, students: 40, teachers: 3, staff: 2 },
+  { id:2, busNo:2, vehicle:'MP09 AB 2345', route:'Palasia', capacity: 40, students: 38, teachers: 2, staff: 0 },
+  { id:3, busNo:3, vehicle:'MP09 AC 3456', route:'Rajwada', capacity: 30, students: 15, teachers: 2, staff: 1 },
+  { id:4, busNo:4, vehicle:'MP09 AD 4567', route:'Scheme No. 54', capacity: 50, students: 20, teachers: 1, staff: 1 },
+  { id:5, busNo:5, vehicle:'MP09 AE 5678', route:'Bicholi Mardana', capacity: 40, students: 35, teachers: 1, staff: 1 },
+  { id:6, busNo:6, vehicle:'MP09 AF 6789', route:'Lasudia', capacity: 30, students: 25, teachers: 2, staff: 2 },
+  { id:7, busNo:7, vehicle:'MP09 AG 7890', route:'Rau', capacity: 50, students: 48, teachers: 1, staff: 1 },
+  { id:8, busNo:8, vehicle:'MP09 AH 8901', route:'Sanwer Road', capacity: 40, students: 10, teachers: 0, staff: 0 },
+  { id:9, busNo:9, vehicle:'MP09 AI 9012', route:'Bhawarkuan', capacity: 30, students: 30, teachers: 0, staff: 0 },
+  { id:10, busNo:10, vehicle:'MP09 AJ 0123', route:'Vijay Nagar', capacity: 50, students: 42, teachers: 5, staff: 0 },
+  { id:11, busNo:11, vehicle:'MP09 AK 1122', route:'Palasia', capacity: 40, students: 20, teachers: 1, staff: 1 },
+  { id:12, busNo:12, vehicle:'MP09 AL 2233', route:'Rajwada', capacity: 30, students: 29, teachers: 1, staff: 0 },
+];
+
+var filterText = '';
+var currentPage = 1;
+var perPage = 10;
+
+function render() {
+  var filtered = occupancyData.filter(function(a) {
+    var q = filterText.toLowerCase();
+    return String(a.busNo).includes(q) ||
+      a.route.toLowerCase().includes(q) ||
+      a.vehicle.toLowerCase().includes(q);
+  });
+  
+  var totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  if (currentPage > totalPages) currentPage = totalPages;
+  var slice = filtered.slice((currentPage - 1) * perPage, currentPage * perPage);
+
+  document.getElementById('tableBody').innerHTML = slice.map(function(a) {
+    var totalAssigned = a.students + a.teachers + a.staff;
+    var available = a.capacity - totalAssigned;
+    
+    var status = 'Available';
+    var badgeClass = 'badge-available';
+    if(available === 0) { status = 'Full'; badgeClass = 'badge-full'; }
+    else if(available <= 5) { status = 'Almost Full'; badgeClass = 'badge-almost'; }
+    
+    var pctStudents = (a.students / a.capacity) * 100;
+    var pctTeachers = (a.teachers / a.capacity) * 100;
+    var pctStaff = (a.staff / a.capacity) * 100;
+
+    var progressHtml = `
+      <div class="progress-container">
+        <div class="progress-text">
+          <span style="font-weight:600;color:var(--text);">${totalAssigned} / ${a.capacity} Assigned</span>
+          <span style="font-size:10px;">${Math.round((totalAssigned/a.capacity)*100)}%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-fill-students" style="width:${pctStudents}%"></div>
+          <div class="progress-fill-teachers" style="width:${pctTeachers}%"></div>
+          <div class="progress-fill-staff" style="width:${pctStaff}%"></div>
+        </div>
+        <div class="progress-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> S: ${a.students}</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> T: ${a.teachers}</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> St: ${a.staff}</div>
+        </div>
+      </div>
+    `;
+
+    return '<tr>' +
+      '<td class="td-check"><input type="checkbox" /></td>' +
+      '<td><span class="bus-no">' + pad(a.busNo) + '</span></td>' +
+      '<td><span class="mono-tag">' + a.vehicle + '</span></td>' +
+      '<td style="font-weight:500;">' + a.route + '</td>' +
+      '<td>' + progressHtml + '</td>' +
+      '<td style="font-weight:600; color:' + (available===0?'var(--red)':(available<=5?'var(--orange)':'var(--green)')) + ';">' + available + ' Seats</td>' +
+      '<td><span class="badge ' + badgeClass + '">' + status + '</span></td>' +
+      '<td style="position:relative;">' +
+        '<button class="action-btn" onclick="toggleMenu(event,' + a.id + ')"><i class="ti ti-dots-vertical"></i></button>' +
+        '<div class="dropdown" id="menu-' + a.id + '">' +
+          '<div class="dropdown-item"><i class="ti ti-eye"></i> View Details</div>' +
+          '<div class="dropdown-item"><i class="ti ti-edit"></i> Edit Assignments</div>' +
+        '</div>' +
+      '</td></tr>';
+  }).join('');
+
+  var pg = document.getElementById('pagination');
+  var html = '<button class="page-btn ' + (currentPage===1?'disabled':'') + '" onclick="goPage(' + (currentPage-1) + ')"><i class="ti ti-chevron-left" style="font-size:13px;"></i> Prev</button>';
+  for (var i = 1; i <= Math.min(totalPages, 20); i++) {
+    if (i===1||i===totalPages||(i>=currentPage-1&&i<=currentPage+1))
+      html += '<button class="page-btn ' + (i===currentPage?'active':'') + '" onclick="goPage(' + i + ')">' + i + '</button>';
+    else if (i===currentPage-2||i===currentPage+2)
+      html += '<span class="page-dots">…</span>';
+  }
+  html += '<button class="page-btn ' + (currentPage===totalPages?'disabled':'') + '" onclick="goPage(' + (currentPage+1) + ')">Next <i class="ti ti-chevron-right" style="font-size:13px;"></i></button>';
+  pg.innerHTML = html;
+}
+
+function goPage(p) { var tot=Math.max(1,Math.ceil(occupancyData.length/perPage)); if(p<1||p>tot)return; currentPage=p; render(); }
+function changePerPage(v) { perPage=parseInt(v); currentPage=1; render(); }
+function filterTable(v) { filterText=v; currentPage=1; render(); }
+function toggleAll(cb) { document.querySelectorAll('#tableBody input[type=checkbox]').forEach(function(c){c.checked=cb.checked;}); }
+
+function toggleMenu(e, id) {
+  e.stopPropagation();
+  document.querySelectorAll('.dropdown').forEach(function(d){ if(d.id!=='menu-'+id) d.classList.remove('open'); });
+  document.getElementById('menu-'+id).classList.toggle('open');
+}
+document.addEventListener('click', function() { document.querySelectorAll('.dropdown').forEach(function(d){d.classList.remove('open');}); });
+
+render();
+</script>
+</body>
+</html>

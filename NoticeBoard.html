@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Notice Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --blue: #3b5bdb; --blue-light: #eef2ff; --blue-dark: #2f4ac0;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+/* ── Sidebar ── */
+.sidebar { width: 224px; min-width: 224px; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; height: 100vh; }
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.brand-bar { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.brand-name { font-size: 14px; font-weight: 600; color: var(--green); display: flex; align-items: center; gap: 8px; }
+.school-picker { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border); cursor: pointer; flex-shrink: 0; }
+.school-picker:hover { background: var(--bg); }
+.school-icon { width: 32px; height: 32px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.school-icon i { font-size: 16px; color: var(--green); }
+.school-info .name { font-size: 12px; font-weight: 600; }
+.school-info .sub  { font-size: 10px; color: var(--text-muted); }
+.nav-group { padding: 6px 0; }
+.nav-label { font-size: 10px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: .07em; padding: 6px 16px 2px; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 6px 16px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; transition: background .12s; }
+.nav-item i { font-size: 15px; flex-shrink: 0; }
+.nav-item:hover { background: var(--bg); color: var(--text); }
+.nav-item.active { background: var(--green-light); color: var(--green); font-weight: 600; }
+.nav-sub .nav-item { padding: 5px 16px 5px 32px; font-size: 12px; }
+
+/* ── Main ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.ay-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* ── Content ── */
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ── Page header ── */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.breadcrumb span { color: var(--green); }
+.page-actions { display: flex; gap: 10px; align-items: center; }
+
+/* ── Buttons ── */
+.btn-export { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text-muted); }
+.btn-add { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: none; background: var(--green); color: #fff; }
+.btn-add:hover { background: var(--green-dark); }
+
+/* ── Date filter bar ── */
+.filter-bar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-bottom: 12px; }
+.date-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; color: var(--text-muted); cursor: pointer; }
+.date-pill i { font-size: 14px; color: var(--text-hint); }
+.filter-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; color: var(--text-muted); cursor: pointer; }
+
+/* ── Notice list card ── */
+.notice-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.notice-row { display: flex; align-items: center; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--border); transition: background .1s; }
+.notice-row:last-of-type { border-bottom: none; }
+.notice-row:hover { background: #fafbfc; }
+.notice-check { flex-shrink: 0; }
+.notice-check input { width: 15px; height: 15px; accent-color: var(--green); cursor: pointer; }
+.notice-icon { width: 36px; height: 36px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.notice-icon i { font-size: 18px; color: var(--green); }
+.notice-info { flex: 1; min-width: 0; }
+.notice-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.notice-date  { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+.notice-action { flex-shrink: 0; position: relative; }
+.action-btn { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: none; background: transparent; cursor: pointer; color: var(--text-muted); font-size: 18px; }
+.action-btn:hover { background: var(--bg); }
+.dropdown { position: absolute; right: 0; top: 32px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 4px 16px rgba(0,0,0,.08); min-width: 130px; z-index: 100; display: none; overflow: hidden; }
+.dropdown.open { display: block; }
+.dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px 14px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; }
+.dropdown-item:hover { background: var(--bg); color: var(--text); }
+.dropdown-item.danger { color: #dc2626; }
+.dropdown-item.danger:hover { background: #fef2f2; }
+
+/* ── Pagination ── */
+.pagination { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 14px 18px; border-top: 1px solid var(--border); }
+.page-btn { min-width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; font-weight: 500; font-family: inherit; color: var(--text-muted); cursor: pointer; padding: 0 6px; transition: all .12s; }
+.page-btn:hover { background: var(--bg); }
+.page-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
+.page-btn.disabled { opacity: .4; cursor: default; pointer-events: none; }
+.page-dots { font-size: 12px; color: var(--text-hint); padding: 0 2px; }
+
+/* ── Modal ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 300; opacity: 0; pointer-events: none; transition: opacity .15s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--white); border-radius: var(--radius-lg); width: 520px; max-height: 90vh; overflow-y: auto; padding: 28px; box-shadow: 0 8px 40px rgba(0,0,0,.16); transform: translateY(12px); transition: transform .15s; }
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal::-webkit-scrollbar { width: 4px; }
+.modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.modal-header h2 { font-size: 17px; font-weight: 700; color: var(--text); }
+.close-btn { width: 30px; height: 30px; border-radius: 50%; border: none; background: #e5e7eb; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 16px; }
+.close-btn:hover { background: #d1d5db; }
+
+.form-field { margin-bottom: 18px; }
+.form-field label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.form-field input[type=text],
+.form-field input[type=date],
+.form-field textarea {
+  width: 100%; font-family: inherit; font-size: 13px; color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 10px 12px; background: var(--white); outline: none; transition: border-color .15s;
+}
+.form-field input:focus, .form-field textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(26,122,74,.08); }
+.form-field textarea { resize: vertical; min-height: 90px; }
+
+/* attachment box */
+.attach-box { background: var(--green-light); border: 1px solid #c5e8d6; border-radius: var(--radius); padding: 16px; }
+.attach-box .attach-label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.attach-box .attach-hint  { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+.btn-upload { display: inline-flex; align-items: center; gap: 7px; padding: 8px 18px; border-radius: var(--radius); background: var(--green); color: #fff; font-size: 12.5px; font-weight: 600; font-family: inherit; border: none; cursor: pointer; }
+.btn-upload:hover { background: var(--green-dark); }
+.attach-file-name { margin-top: 8px; font-size: 12px; color: var(--green); font-weight: 500; display: none; }
+
+/* message to checkboxes */
+.msg-to-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 8px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.check-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text); padding: 10px 14px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .1s; }
+.check-row:nth-child(odd) { border-right: 1px solid var(--border); }
+.check-row:nth-last-child(1), .check-row:nth-last-child(2) { border-bottom: none; }
+.check-row:hover { background: var(--green-light); }
+.check-row input[type=checkbox] {
+  width: 16px; height: 16px; min-width: 16px;
+  accent-color: var(--green); cursor: pointer;
+  border: 1.5px solid var(--border); border-radius: 3px;
+}
+
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); }
+.btn-cancel { padding: 9px 20px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 13px; font-weight: 500; font-family: inherit; cursor: pointer; color: var(--text-muted); }
+.btn-cancel:hover { background: var(--bg); }
+.btn-submit { padding: 9px 24px; border-radius: var(--radius); border: none; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; }
+.btn-submit:hover { background: var(--green-dark); }
+
+/* ── Toast ── */
+.toast { position: fixed; bottom: 24px; right: 24px; padding: 10px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 500; color: #fff; background: var(--green); z-index: 9999; opacity: 0; pointer-events: none; transition: opacity .2s; display: flex; align-items: center; gap: 8px; }
+.toast.show { opacity: 1; }
+</style>
+<style>
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="brand-bar">
+    <div class="brand-name"><i class="ti ti-school"></i> BodhyaMarg</div>
+    <i class="ti ti-menu-2" style="font-size:18px;color:var(--text-muted);cursor:pointer;"></i>
+  </div>
+  <div class="school-picker">
+    <div class="school-icon"><i class="ti ti-shield-half"></i></div>
+    <div class="school-info"><div class="name">Delhi Public School</div><div class="sub">Main Campus</div></div>
+    <i class="ti ti-chevron-down" style="margin-left:auto;font-size:14px;color:var(--text-hint);"></i>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Main</div>
+    <div class="nav-sub-container">
+      <a href="VehicleOccupancy.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="VehicleOccupancy.html" class="nav-item">Admin Dashboard</a>
+        <a href="#" class="nav-item">Teacher Dashboard</a>
+        <a href="#" class="nav-item">Student Dashboard</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Peoples</div>
+    <div class="nav-sub-container">
+      <a href="AddStudent.html" class="nav-item"><i class="ti ti-school"></i> Students <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddStudent.html" class="nav-item">All Students</a>
+        <a href="#" class="nav-item">Student Promotion</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-user-check"></i> Parents</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-heart"></i> Guardians</a>
+    <div class="nav-sub-container">
+      <a href="AddTeacher.html" class="nav-item"><i class="ti ti-users"></i> Teachers <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddTeacher.html" class="nav-item">All Teachers</a>
+        <a href="#" class="nav-item">Routine</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Academic</div>
+    <div class="nav-sub-container">
+      <a href="AddClasses.html" class="nav-item"><i class="ti ti-books"></i> Classes <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddClasses.html" class="nav-item">All Classes</a>
+        <a href="#" class="nav-item">Schedule</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-building-community"></i> Class Room</a>
+    <a href="ClassRoutine.html" class="nav-item"><i class="ti ti-calendar-event"></i> Class Routine</a>
+    <a href="AddSections.html" class="nav-item"><i class="ti ti-box"></i> Section</a>
+    <a href="Subjects.html" class="nav-item"><i class="ti ti-book-2"></i> Subject</a>
+    <a href="AddClassSyllabus.html" class="nav-item"><i class="ti ti-file-text"></i> Syllabus</a>
+    <a href="AcademicCalendar.html" class="nav-item"><i class="ti ti-table"></i> Time Table</a>
+    <a href="HomeworkList.html" class="nav-item"><i class="ti ti-file-certificate"></i> Home Work</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-test-pipe"></i> Examinations <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Exam</a>
+        <a href="#" class="nav-item">Exam Schedule</a>
+        <a href="#" class="nav-item">Grade</a>
+        <a href="#" class="nav-item">Exam Attendance</a>
+        <a href="#" class="nav-item">Exam Results</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-target"></i> Reasons</a>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Management</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-receipt"></i> Fees Collection <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Fees Group</a>
+        <a href="#" class="nav-item">Fees Type</a>
+        <a href="#" class="nav-item">Fees Master</a>
+        <a href="#" class="nav-item">Fees Assign</a>
+        <a href="#" class="nav-item">Collect Fees</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-ball-football"></i> Sports</a>
+    <div class="nav-sub-container">
+      <a href="HostelList.html" class="nav-item"><i class="ti ti-building-store"></i> Hostel <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="HostelList.html" class="nav-item">Hostel List</a>
+        <a href="HostelRooms.html" class="nav-item">Hostel Rooms</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="AddVehicle.html" class="nav-item"><i class="ti ti-bus"></i> Transport <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="RoutesList.html" class="nav-item">Routes</a>
+        <a href="PickupPoints.html" class="nav-item">Pickup Points</a>
+        <a href="AddDrivers.html" class="nav-item">Vehicle Drivers</a>
+        <a href="AddVehicle.html" class="nav-item">Vehicles</a>
+        <a href="AssignVehicle.html" class="nav-item">Assign Vehicle</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">HRM</div>
+    <a href="AddStafff.html" class="nav-item"><i class="ti ti-users-group"></i> Staffs</a>
+    <a href="Designation.html" class="nav-item"><i class="ti ti-id-badge"></i> Designation</a>
+    <a href="Department.html" class="nav-item"><i class="ti ti-sitemap"></i> Department</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-calendar-check"></i> Attendance <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Student Attendance</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="Leave.html" class="nav-item"><i class="ti ti-calendar-minus"></i> Leaves <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="Leave.html" class="nav-item">List of leaves</a>
+        <a href="LeaveApproveRequest.html" class="nav-item">Approve Request</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Finance & Accounts</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-wallet"></i> Accounts <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Expenses</a>
+        <a href="#" class="nav-item">Expense Category</a>
+        <a href="#" class="nav-item">Income</a>
+        <a href="#" class="nav-item">Transactions</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Announcements</div>
+    <a href="NoticeBoard.html" class="nav-item"><i class="ti ti-clipboard-text"></i> Notice Board</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Reports</div>
+    <a href="#" class="nav-item"><i class="ti ti-report"></i> Attendance Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-report-analytics"></i> Class Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-chart-bar"></i> Student Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-file-analytics"></i> Grade Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-receipt-2"></i> Fees Report</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">User Management</div>
+    <a href="#" class="nav-item"><i class="ti ti-users"></i> Users</a>
+    <a href="#" class="nav-item"><i class="ti ti-shield-lock"></i> Roles & Permissions</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-x"></i> Delete Account Request</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Membership</div>
+    <a href="#" class="nav-item"><i class="ti ti-star"></i> Membership Plans</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Support</div>
+    <a href="#" class="nav-item"><i class="ti ti-user"></i> Profile</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Settings</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-settings"></i> General Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Profile Settings</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-book"></i> Academic Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">School Settings</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">UI Interface</div>
+    <a href="#" class="nav-item"><i class="ti ti-components"></i> Base UI</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var path = window.location.pathname.split('/').pop();
+      if(path) {
+        var links = document.querySelectorAll('.sidebar a.nav-item');
+        links.forEach(function(link) {
+          if(link.getAttribute('href') === path) {
+            link.classList.add('active');
+            var subContainer = link.closest('.nav-sub-container');
+            if(subContainer) {
+               var parentLink = subContainer.querySelector('a.nav-item');
+               if(parentLink) {
+                 parentLink.classList.add('active');
+               }
+            }
+          }
+        });
+      }
+      
+      // Auto-hide all nav-subs first
+      document.querySelectorAll('.nav-sub').forEach(function(sub) {
+         sub.style.display = 'none'; 
+      });
+      document.querySelectorAll('.nav-item.active').forEach(function(activeItem) {
+          // Show the nav-sub if active item is inside one
+          var subContainer = activeItem.closest('.nav-sub-container');
+          if(subContainer) {
+              var sub = subContainer.querySelector('.nav-sub');
+              if(sub) sub.style.display = 'block';
+          }
+          // Highlight the parent nav-group's nav-label in green
+          var navGroup = activeItem.closest('.nav-group');
+          if(navGroup) {
+              var label = navGroup.querySelector('.nav-label');
+              if(label) label.style.color = 'var(--green)';
+          }
+      });
+    });
+  </script>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search anything…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill"><i class="ti ti-calendar"></i> Academic Year : 2026 / 2027 <i class="ti ti-chevron-down"></i></div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1>Notice Board</h1>
+        <div class="breadcrumb">
+          Dashboard <i class="ti ti-chevron-right"></i>
+          HRM <i class="ti ti-chevron-right"></i>
+          <span>Notice Board</span>
+        </div>
+      </div>
+      <div class="page-actions">
+        <button class="btn-export"><i class="ti ti-download"></i> Export</button>
+        <button class="btn-add" onclick="openModal()"><i class="ti ti-circle-plus"></i> Add Message</button>
+      </div>
+    </div>
+
+    <!-- Date filter bar -->
+    <div class="filter-bar">
+      <div class="date-pill"><i class="ti ti-calendar"></i> 15 May 2026 - 24 May 2026</div>
+      <div class="filter-pill"><i class="ti ti-adjustments-horizontal"></i> Filter</div>
+    </div>
+
+    <!-- Notice List -->
+    <div class="notice-card">
+      <div id="noticeList"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NEW MESSAGE MODAL ═══ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>New Message</h2>
+      <button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div class="form-field">
+      <label>Title</label>
+      <input type="text" id="fTitle" placeholder="Enter notice title" />
+    </div>
+
+    <div class="form-field">
+      <label>Notice Date</label>
+      <input type="date" id="fNoticeDate" value="2026-05-26" />
+    </div>
+
+    <div class="form-field">
+      <label>Publish On</label>
+      <input type="date" id="fPublishDate" value="2026-05-26" />
+    </div>
+
+    <div class="form-field">
+      <div class="attach-box">
+        <div class="attach-label">Attachment</div>
+        <div class="attach-hint">Upload size of 4MB, Accepted Format PDF</div>
+        <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
+          <i class="ti ti-file-upload"></i> Upload
+        </button>
+        <input type="file" id="fileInput" accept=".pdf" style="display:none;" onchange="showFileName(this)" />
+        <div class="attach-file-name" id="attachFileName"></div>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>Message</label>
+      <textarea id="fMessage" placeholder="Write your message here…"></textarea>
+    </div>
+
+    <div class="form-field">
+      <label>Message To</label>
+      <div class="msg-to-grid">
+        <label class="check-row"><input type="checkbox" value="Student" /> Student</label>
+        <label class="check-row"><input type="checkbox" value="Accountant" /> Accountant</label>
+        <label class="check-row"><input type="checkbox" value="Parent" /> Parent</label>
+        <label class="check-row"><input type="checkbox" value="Librarian" /> Librarian</label>
+        <label class="check-row"><input type="checkbox" value="Admin" /> Admin</label>
+        <label class="check-row"><input type="checkbox" value="Receptionist" /> Receptionist</label>
+        <label class="check-row"><input type="checkbox" value="Teacher" /> Teacher</label>
+        <label class="check-row"><input type="checkbox" value="Super Admin" /> Super Admin</label>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-submit" onclick="saveNotice()">Add New Message</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="ti ti-circle-check"></i> <span id="toastMsg"></span></div>
+
+<script>
+let notices = [
+  { id:1,  title:'Annual Sports Day Notice',           date:'23 Apr 2024' },
+  { id:2,  title:'Exam Schedule – May 2024',           date:'23 Apr 2024' },
+  { id:3,  title:'Parent-Teacher Meeting',             date:'23 Apr 2024' },
+  { id:4,  title:'Summer Vacation Announcement',       date:'23 Apr 2024' },
+  { id:5,  title:'Staff Meeting – May 2024',           date:'23 Apr 2024' },
+  { id:6,  title:'Library Closed – 10 May 2024',      date:'23 Apr 2024' },
+  { id:7,  title:'New Uniform Policy 2024',            date:'23 Apr 2024' },
+  { id:8,  title:'School Picnic – 18 May 2024',        date:'23 Apr 2024' },
+  { id:9,  title:'Art Competition – Registration Open',date:'24 Apr 2024' },
+  { id:10, title:'Teacher Training Workshop',          date:'24 Apr 2024' },
+  { id:11, title:'Half-Yearly Result Distribution',    date:'25 Apr 2024' },
+  { id:12, title:'Independence Day Celebration Notice',date:'25 Apr 2024' },
+];
+let nextId = 13;
+let currentPage = 1;
+const perPage = 8;
+
+function render() {
+  const totalPages = Math.max(1, Math.ceil(notices.length / perPage));
+  if (currentPage > totalPages) currentPage = totalPages;
+  const slice = notices.slice((currentPage-1)*perPage, currentPage*perPage);
+
+  document.getElementById('noticeList').innerHTML = slice.map(n => `
+    <div class="notice-row">
+      <div class="notice-check"><input type="checkbox" /></div>
+      <div class="notice-icon"><i class="ti ti-clipboard-text"></i></div>
+      <div class="notice-info">
+        <div class="notice-title">${n.title}</div>
+        <div class="notice-date">Added on : ${n.date}</div>
+      </div>
+      <div class="notice-action">
+        <button class="action-btn" onclick="toggleMenu(event,${n.id})"><i class="ti ti-dots-vertical"></i></button>
+        <div class="dropdown" id="menu-${n.id}">
+          <div class="dropdown-item"><i class="ti ti-eye"></i> View</div>
+          <div class="dropdown-item"><i class="ti ti-edit"></i> Edit</div>
+          <div class="dropdown-item danger" onclick="deleteNotice(${n.id})"><i class="ti ti-trash"></i> Delete</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const pg = document.getElementById('pagination');
+  let html = `<button class="page-btn ${currentPage===1?'disabled':''}" onclick="goPage(${currentPage-1})"><i class="ti ti-chevron-left" style="font-size:13px;"></i> Pre</button>`;
+  for (let p=1; p<=totalPages; p++) {
+    if (p===1||p===totalPages||(p>=currentPage-1&&p<=currentPage+1))
+      html += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+    else if (p===currentPage-2||p===currentPage+2)
+      html += `<span class="page-dots">…</span>`;
+  }
+  html += `<button class="page-btn ${currentPage===totalPages?'disabled':''}" onclick="goPage(${currentPage+1})">Next <i class="ti ti-chevron-right" style="font-size:13px;"></i></button>`;
+  pg.innerHTML = html;
+}
+
+function goPage(p) {
+  const total = Math.ceil(notices.length / perPage);
+  if (p<1||p>total) return;
+  currentPage=p; render();
+}
+
+function toggleMenu(e, id) {
+  e.stopPropagation();
+  document.querySelectorAll('.dropdown').forEach(d=>{ if(d.id!=='menu-'+id) d.classList.remove('open'); });
+  document.getElementById('menu-'+id).classList.toggle('open');
+}
+document.addEventListener('click', ()=>document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open')));
+
+function deleteNotice(id) {
+  notices = notices.filter(n=>n.id!==id);
+  render();
+}
+
+// ── Modal ──
+function openModal() {
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fMessage').value = '';
+  document.getElementById('fNoticeDate').value = '2026-05-26';
+  document.getElementById('fPublishDate').value = '2026-05-26';
+  document.getElementById('attachFileName').style.display = 'none';
+  document.querySelectorAll('.msg-to-grid input[type=checkbox]').forEach(c=>c.checked=false);
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+function closeModalOutside(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); }
+
+function showFileName(input) {
+  const el = document.getElementById('attachFileName');
+  if (input.files.length) {
+    el.textContent = '📎 ' + input.files[0].name;
+    el.style.display = 'block';
+  }
+}
+
+function saveNotice() {
+  const title = document.getElementById('fTitle').value.trim();
+  if (!title) { document.getElementById('fTitle').focus(); return; }
+  const dateVal = document.getElementById('fNoticeDate').value;
+  const d = dateVal ? new Date(dateVal) : new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const formatted = `${String(d.getDate()).padStart(2,'0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  notices.unshift({ id: nextId++, title, date: formatted });
+  closeModal();
+  currentPage = 1;
+  render();
+  showToast('Notice added successfully!');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+render();
+</script>
+</body>
+</html>

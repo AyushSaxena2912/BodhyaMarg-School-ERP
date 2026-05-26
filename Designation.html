@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Designation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+/* ── Sidebar ── */
+.sidebar { width: 224px; min-width: 224px; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; height: 100vh; }
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.brand-bar { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.brand-name { font-size: 14px; font-weight: 600; color: var(--green); display: flex; align-items: center; gap: 8px; }
+.school-picker { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border); cursor: pointer; flex-shrink: 0; }
+.school-picker:hover { background: var(--bg); }
+.school-icon { width: 32px; height: 32px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.school-icon i { font-size: 16px; color: var(--green); }
+.school-info .name { font-size: 12px; font-weight: 600; }
+.school-info .sub  { font-size: 10px; color: var(--text-muted); }
+.nav-group { padding: 6px 0; }
+.nav-label { font-size: 10px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: .07em; padding: 6px 16px 2px; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 6px 16px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; transition: background .12s; }
+.nav-item i { font-size: 15px; flex-shrink: 0; }
+.nav-item:hover { background: var(--bg); color: var(--text); }
+.nav-item.active { background: var(--green-light); color: var(--green); font-weight: 600; }
+.nav-sub .nav-item { padding: 5px 16px 5px 32px; font-size: 12px; }
+
+/* ── Main ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.ay-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* ── Content ── */
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ── Page header ── */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.breadcrumb span { color: var(--green); }
+.page-actions { display: flex; gap: 10px; align-items: center; }
+
+/* ── Buttons ── */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); transition: background .12s; white-space: nowrap; }
+.btn:hover { background: var(--bg); }
+.btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-export { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text-muted); }
+
+/* ── Table card ── */
+.table-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+
+/* ── Table toolbar ── */
+.table-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap; }
+.toolbar-left { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-muted); }
+.toolbar-left select {
+  font-family: inherit; font-size: 12.5px; color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 5px 28px 5px 10px; background: var(--white); outline: none; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+}
+.toolbar-right { display: flex; align-items: center; gap: 10px; }
+.table-search { display: flex; align-items: center; gap: 7px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; }
+.table-search i { font-size: 13px; color: var(--text-hint); }
+.table-search input { border: none; background: transparent; font-size: 12px; font-family: inherit; outline: none; width: 180px; }
+.btn-filter { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; font-weight: 500; font-family: inherit; color: var(--text-muted); cursor: pointer; }
+.btn-sort { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; font-weight: 500; font-family: inherit; color: var(--text-muted); cursor: pointer; }
+
+/* ── Table ── */
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--bg); border-bottom: 1px solid var(--border); }
+thead th { padding: 11px 18px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-align: left; white-space: nowrap; }
+thead th.th-check { width: 40px; padding-left: 18px; }
+thead th .sort-icon { display: inline-flex; align-items: center; gap: 3px; cursor: pointer; }
+thead th .sort-icon i { font-size: 13px; color: var(--text-hint); }
+tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #fafbfc; }
+tbody td { padding: 13px 18px; font-size: 12.5px; color: var(--text); vertical-align: middle; }
+tbody td.td-check { width: 40px; }
+
+/* ── Checkbox ── */
+input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--green); cursor: pointer; }
+
+/* ── Status badge ── */
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 500; }
+.badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.badge-active { background: var(--green-light); color: var(--green); }
+.badge-active::before { background: var(--green); }
+.badge-inactive { background: #fef2f2; color: #dc2626; }
+.badge-inactive::before { background: #dc2626; }
+
+/* ── Action menu ── */
+.action-btn { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: none; background: transparent; cursor: pointer; color: var(--text-muted); font-size: 18px; position: relative; }
+.action-btn:hover { background: var(--bg); }
+.dropdown { position: absolute; right: 0; top: 32px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 4px 16px rgba(0,0,0,.08); min-width: 130px; z-index: 100; display: none; overflow: hidden; }
+.dropdown.open { display: block; }
+.dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px 14px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; transition: background .1s; }
+.dropdown-item:hover { background: var(--bg); color: var(--text); }
+.dropdown-item.danger { color: #dc2626; }
+.dropdown-item.danger:hover { background: #fef2f2; }
+
+/* ── Pagination ── */
+.pagination { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 14px 18px; border-top: 1px solid var(--border); }
+.page-btn { min-width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; font-weight: 500; font-family: inherit; color: var(--text-muted); cursor: pointer; padding: 0 6px; transition: all .12s; }
+.page-btn:hover { background: var(--bg); }
+.page-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
+.page-btn.disabled { opacity: .4; cursor: default; pointer-events: none; }
+.page-dots { font-size: 12px; color: var(--text-hint); padding: 0 2px; }
+
+/* ── Modal ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity .15s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--white); border-radius: var(--radius-lg); width: 420px; padding: 28px; box-shadow: 0 8px 32px rgba(0,0,0,.14); transform: translateY(10px); transition: transform .15s; }
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-title { font-size: 15px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.modal-title i { color: var(--green); font-size: 18px; }
+.modal-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px; }
+.modal-field label { font-size: 11.5px; font-weight: 500; color: var(--text-muted); }
+.modal-field input, .modal-field select {
+  font-family: inherit; font-size: 12.5px; color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 9px 10px; background: var(--white); outline: none; transition: border-color .15s;
+}
+.modal-field input:focus, .modal-field select:focus { border-color: var(--green); }
+.modal-field select {
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; cursor: pointer;
+}
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+</style>
+<style>
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="brand-bar">
+    <div class="brand-name"><i class="ti ti-school"></i> BodhyaMarg</div>
+    <i class="ti ti-menu-2" style="font-size:18px;color:var(--text-muted);cursor:pointer;"></i>
+  </div>
+  <div class="school-picker">
+    <div class="school-icon"><i class="ti ti-shield-half"></i></div>
+    <div class="school-info"><div class="name">Delhi Public School</div><div class="sub">Main Campus</div></div>
+    <i class="ti ti-chevron-down" style="margin-left:auto;font-size:14px;color:var(--text-hint);"></i>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Main</div>
+    <div class="nav-sub-container">
+      <a href="VehicleOccupancy.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="VehicleOccupancy.html" class="nav-item">Admin Dashboard</a>
+        <a href="#" class="nav-item">Teacher Dashboard</a>
+        <a href="#" class="nav-item">Student Dashboard</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Peoples</div>
+    <div class="nav-sub-container">
+      <a href="AddStudent.html" class="nav-item"><i class="ti ti-school"></i> Students <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddStudent.html" class="nav-item">All Students</a>
+        <a href="#" class="nav-item">Student Promotion</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-user-check"></i> Parents</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-heart"></i> Guardians</a>
+    <div class="nav-sub-container">
+      <a href="AddTeacher.html" class="nav-item"><i class="ti ti-users"></i> Teachers <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddTeacher.html" class="nav-item">All Teachers</a>
+        <a href="#" class="nav-item">Routine</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Academic</div>
+    <div class="nav-sub-container">
+      <a href="AddClasses.html" class="nav-item"><i class="ti ti-books"></i> Classes <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddClasses.html" class="nav-item">All Classes</a>
+        <a href="#" class="nav-item">Schedule</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-building-community"></i> Class Room</a>
+    <a href="ClassRoutine.html" class="nav-item"><i class="ti ti-calendar-event"></i> Class Routine</a>
+    <a href="AddSections.html" class="nav-item"><i class="ti ti-box"></i> Section</a>
+    <a href="Subjects.html" class="nav-item"><i class="ti ti-book-2"></i> Subject</a>
+    <a href="AddClassSyllabus.html" class="nav-item"><i class="ti ti-file-text"></i> Syllabus</a>
+    <a href="AcademicCalendar.html" class="nav-item"><i class="ti ti-table"></i> Time Table</a>
+    <a href="HomeworkList.html" class="nav-item"><i class="ti ti-file-certificate"></i> Home Work</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-test-pipe"></i> Examinations <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Exam</a>
+        <a href="#" class="nav-item">Exam Schedule</a>
+        <a href="#" class="nav-item">Grade</a>
+        <a href="#" class="nav-item">Exam Attendance</a>
+        <a href="#" class="nav-item">Exam Results</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-target"></i> Reasons</a>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Management</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-receipt"></i> Fees Collection <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Fees Group</a>
+        <a href="#" class="nav-item">Fees Type</a>
+        <a href="#" class="nav-item">Fees Master</a>
+        <a href="#" class="nav-item">Fees Assign</a>
+        <a href="#" class="nav-item">Collect Fees</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-ball-football"></i> Sports</a>
+    <div class="nav-sub-container">
+      <a href="HostelList.html" class="nav-item"><i class="ti ti-building-store"></i> Hostel <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="HostelList.html" class="nav-item">Hostel List</a>
+        <a href="HostelRooms.html" class="nav-item">Hostel Rooms</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="AddVehicle.html" class="nav-item"><i class="ti ti-bus"></i> Transport <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="RoutesList.html" class="nav-item">Routes</a>
+        <a href="PickupPoints.html" class="nav-item">Pickup Points</a>
+        <a href="AddDrivers.html" class="nav-item">Vehicle Drivers</a>
+        <a href="AddVehicle.html" class="nav-item">Vehicles</a>
+        <a href="AssignVehicle.html" class="nav-item">Assign Vehicle</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">HRM</div>
+    <a href="AddStafff.html" class="nav-item"><i class="ti ti-users-group"></i> Staffs</a>
+    <a href="Designation.html" class="nav-item"><i class="ti ti-id-badge"></i> Designation</a>
+    <a href="Department.html" class="nav-item"><i class="ti ti-sitemap"></i> Department</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-calendar-check"></i> Attendance <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Student Attendance</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="Leave.html" class="nav-item"><i class="ti ti-calendar-minus"></i> Leaves <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="Leave.html" class="nav-item">List of leaves</a>
+        <a href="LeaveApproveRequest.html" class="nav-item">Approve Request</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Finance & Accounts</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-wallet"></i> Accounts <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Expenses</a>
+        <a href="#" class="nav-item">Expense Category</a>
+        <a href="#" class="nav-item">Income</a>
+        <a href="#" class="nav-item">Transactions</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Announcements</div>
+    <a href="NoticeBoard.html" class="nav-item"><i class="ti ti-clipboard-text"></i> Notice Board</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Reports</div>
+    <a href="#" class="nav-item"><i class="ti ti-report"></i> Attendance Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-report-analytics"></i> Class Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-chart-bar"></i> Student Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-file-analytics"></i> Grade Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-receipt-2"></i> Fees Report</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">User Management</div>
+    <a href="#" class="nav-item"><i class="ti ti-users"></i> Users</a>
+    <a href="#" class="nav-item"><i class="ti ti-shield-lock"></i> Roles & Permissions</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-x"></i> Delete Account Request</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Membership</div>
+    <a href="#" class="nav-item"><i class="ti ti-star"></i> Membership Plans</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Support</div>
+    <a href="#" class="nav-item"><i class="ti ti-user"></i> Profile</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Settings</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-settings"></i> General Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Profile Settings</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-book"></i> Academic Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">School Settings</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">UI Interface</div>
+    <a href="#" class="nav-item"><i class="ti ti-components"></i> Base UI</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var path = window.location.pathname.split('/').pop();
+      if(path) {
+        var links = document.querySelectorAll('.sidebar a.nav-item');
+        links.forEach(function(link) {
+          if(link.getAttribute('href') === path) {
+            link.classList.add('active');
+            var subContainer = link.closest('.nav-sub-container');
+            if(subContainer) {
+               var parentLink = subContainer.querySelector('a.nav-item');
+               if(parentLink) {
+                 parentLink.classList.add('active');
+               }
+            }
+          }
+        });
+      }
+      
+      // Auto-hide all nav-subs first
+      document.querySelectorAll('.nav-sub').forEach(function(sub) {
+         sub.style.display = 'none'; 
+      });
+      document.querySelectorAll('.nav-item.active').forEach(function(activeItem) {
+          // Show the nav-sub if active item is inside one
+          var subContainer = activeItem.closest('.nav-sub-container');
+          if(subContainer) {
+              var sub = subContainer.querySelector('.nav-sub');
+              if(sub) sub.style.display = 'block';
+          }
+          // Highlight the parent nav-group's nav-label in green
+          var navGroup = activeItem.closest('.nav-group');
+          if(navGroup) {
+              var label = navGroup.querySelector('.nav-label');
+              if(label) label.style.color = 'var(--green)';
+          }
+      });
+    });
+  </script>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search anything…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill"><i class="ti ti-calendar"></i> Academic Year : 2026 / 2027 <i class="ti ti-chevron-down"></i></div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1>Designation</h1>
+        <div class="breadcrumb">
+          Dashboard <i class="ti ti-chevron-right"></i>
+          HRM <i class="ti ti-chevron-right"></i>
+          <span>Designation</span>
+        </div>
+      </div>
+      <div class="page-actions">
+        <button class="btn-export"><i class="ti ti-download"></i> Export</button>
+        <button class="btn btn-primary" onclick="openModal()"><i class="ti ti-circle-plus"></i> Add Designation</button>
+      </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+      <!-- Toolbar -->
+      <div class="table-toolbar">
+        <div class="toolbar-left">
+          <span style="font-size:12.5px;color:var(--text-muted);">Row Per Page</span>
+          <select onchange="changePerPage(this.value)">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+          </select>
+          <span style="font-size:12.5px;color:var(--text-muted);">Entries</span>
+        </div>
+        <div class="toolbar-right">
+          <button class="btn-filter" onclick="/* filter */"><i class="ti ti-adjustments-horizontal"></i> Filter</button>
+          <button class="btn-sort"><i class="ti ti-arrows-sort"></i> Sort By A-Z <i class="ti ti-chevron-down" style="font-size:11px;"></i></button>
+          <div class="table-search">
+            <i class="ti ti-search"></i>
+            <input type="text" placeholder="Search" oninput="filterTable(this.value)" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <table id="deptTable">
+        <thead>
+          <tr>
+            <th class="th-check"><input type="checkbox" id="checkAll" onchange="toggleAll(this)" /></th>
+            <th>
+              <span class="sort-icon">Designation <i class="ti ti-arrows-sort"></i></span>
+            </th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADD / EDIT MODAL ═══ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-sitemap"></i> <span id="modalHeading">Add Designation</span></div>
+    <div class="modal-field">
+      <label>Designation</label>
+      <input type="text" id="deptNameInput" placeholder="Enter designation name" />
+    </div>
+    <div class="modal-field">
+      <label>Status</label>
+      <select id="deptStatusInput">
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveDept()"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Data ──
+let departments = [
+  { id: 1, name: 'Technical Head', status: 'Active'   },
+  { id: 2, name: 'Receptionist',   status: 'Active'   },
+  { id: 3, name: 'Coach',          status: 'Active'   },
+  { id: 4, name: 'Teacher',        status: 'Active'   },
+  { id: 5, name: 'Accountant',     status: 'Inactive' },
+  { id: 6, name: 'Warden',         status: 'Active'   },
+];
+let nextId = 8;
+let editingId = null;
+let currentPage = 1;
+let perPage = 10;
+let filterText = '';
+
+// ── Render ──
+function render() {
+  const filtered = departments.filter(d =>
+    d.name.toLowerCase().includes(filterText.toLowerCase())
+  );
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  if (currentPage > totalPages) currentPage = totalPages;
+  const start = (currentPage - 1) * perPage;
+  const slice = filtered.slice(start, start + perPage);
+
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = slice.map(d => `
+    <tr>
+      <td class="td-check"><input type="checkbox" /></td>
+      <td>${d.name}</td>
+      <td><span class="badge badge-${d.status.toLowerCase()}">${d.status}</span></td>
+      <td style="position:relative;">
+        <button class="action-btn" onclick="toggleMenu(event, ${d.id})"><i class="ti ti-dots-vertical"></i></button>
+        <div class="dropdown" id="menu-${d.id}">
+          <div class="dropdown-item" onclick="editDept(${d.id})"><i class="ti ti-edit"></i> Edit</div>
+          <div class="dropdown-item danger" onclick="deleteDept(${d.id})"><i class="ti ti-trash"></i> Delete</div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const pg = document.getElementById('pagination');
+  let html = `<button class="page-btn ${currentPage===1?'disabled':''}" onclick="goPage(${currentPage-1})"><i class="ti ti-chevron-left" style="font-size:13px;"></i> Pre</button>`;
+  const pages = [];
+  for (let i = 1; i <= Math.min(totalPages, 20); i++) pages.push(i);
+  pages.forEach((p, idx) => {
+    if (p === 1 || p === totalPages || (p >= currentPage - 1 && p <= currentPage + 1)) {
+      html += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+    } else if (pages[idx-1] && pages[idx-1] < p - 1) {
+      html += `<span class="page-dots">…</span>`;
+    }
+  });
+  if (totalPages > 20) html += `<span class="page-dots">…</span><button class="page-btn" onclick="goPage(20)">20</button>`;
+  html += `<button class="page-btn ${currentPage===totalPages?'disabled':''}" onclick="goPage(${currentPage+1})">Next <i class="ti ti-chevron-right" style="font-size:13px;"></i></button>`;
+  pg.innerHTML = html;
+}
+
+function goPage(p) {
+  const totalPages = Math.ceil(departments.filter(d => d.name.toLowerCase().includes(filterText.toLowerCase())).length / perPage);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p; render();
+}
+
+function changePerPage(v) { perPage = parseInt(v); currentPage = 1; render(); }
+function filterTable(v) { filterText = v; currentPage = 1; render(); }
+function toggleAll(cb) { document.querySelectorAll('#tableBody input[type=checkbox]').forEach(c => c.checked = cb.checked); }
+
+// ── Dropdown menus ──
+function toggleMenu(e, id) {
+  e.stopPropagation();
+  document.querySelectorAll('.dropdown').forEach(d => { if (d.id !== 'menu-'+id) d.classList.remove('open'); });
+  document.getElementById('menu-'+id).classList.toggle('open');
+}
+document.addEventListener('click', () => document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open')));
+
+// ── CRUD ──
+function openModal(heading='Add Designation') {
+  editingId = null;
+  document.getElementById('modalHeading').textContent = heading;
+  document.getElementById('deptNameInput').value = '';
+  document.getElementById('deptStatusInput').value = 'Active';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function editDept(id) {
+  const d = departments.find(x => x.id === id);
+  if (!d) return;
+  editingId = id;
+  document.getElementById('modalHeading').textContent = 'Edit Designation';
+  document.getElementById('deptNameInput').value = d.name;
+  document.getElementById('deptStatusInput').value = d.status;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+function closeModalOutside(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+function saveDept() {
+  const name = document.getElementById('deptNameInput').value.trim();
+  const status = document.getElementById('deptStatusInput').value;
+  if (!name) { document.getElementById('deptNameInput').focus(); return; }
+  if (editingId) {
+    const d = departments.find(x => x.id === editingId);
+    if (d) { d.name = name; d.status = status; }
+  } else {
+    departments.push({ id: nextId++, name, status });
+  }
+  closeModal(); render();
+}
+function deleteDept(id) {
+  if (confirm('Delete this designation?')) {
+    departments = departments.filter(d => d.id !== id);
+    render();
+  }
+}
+
+render();
+</script>
+</body>
+</html>

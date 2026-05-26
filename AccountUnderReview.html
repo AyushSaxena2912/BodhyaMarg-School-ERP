@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Account Under Review - BodhyaMarg ERP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+  :root {
+    --green: #0b7b3f; /* Matching the header green */
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --bg-color: #f8fafc;
+    --white: #ffffff;
+    --border: #e2e8f0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* Header Section */
+  .header {
+    background-color: var(--green);
+    color: var(--white);
+    padding: 16px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .school-logo {
+    width: 65px; 
+    height: auto;
+  }
+  .school-titles {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .school-name {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+  }
+  .school-sub {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .school-sub2 {
+    font-size: 10px;
+    font-weight: 400;
+    margin-top: 1px;
+    opacity: 0.9;
+  }
+  .header-nav {
+    display: flex;
+    gap: 32px;
+  }
+  .header-nav a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: opacity 0.2s;
+  }
+  .header-nav a:hover {
+    opacity: 0.8;
+  }
+  
+  /* Main Content Layout */
+  .main-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+  .login-wrapper {
+    display: flex;
+    max-width: 1050px;
+    width: 100%;
+    gap: 48px;
+    align-items: stretch;
+  }
+  
+  /* Left Banner Image */
+  .banner-section {
+    flex: 1.1;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+  .banner-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  /* Right Login Form / Card */
+  .login-section {
+    flex: 0.9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 420px;
+  }
+  .login-card {
+    background: var(--white);
+    padding: 48px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.02);
+  }
+  
+  /* Review Details */
+  .review-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .review-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e3a5f;
+    margin-bottom: 12px;
+  }
+  .review-subtitle {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+  .review-subtitle p {
+    margin-bottom: 8px;
+  }
+  .review-subtitle p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .btn-login {
+    width: 100%;
+    padding: 12px;
+    background: var(--green);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-login:hover {
+    background: #096332;
+  }
+  
+  .powered-by {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+  .powered-by span {
+    color: var(--green);
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 900px) {
+    .login-wrapper {
+      flex-direction: column;
+      max-width: 500px;
+    }
+    .header {
+      flex-direction: column;
+      gap: 20px;
+      padding: 16px 20px;
+      text-align: center;
+    }
+    .header-nav {
+      gap: 16px;
+    }
+    .school-titles {
+      align-items: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header class="header">
+    <div class="header-left">
+      <img src="school_logo.png" alt="DPS Logo" class="school-logo" onerror="this.src='https://via.placeholder.com/65x80?text=Logo'" />
+      <div class="school-titles">
+        <div class="school-name">DELHI PUBLIC SCHOOL</div>
+        <div class="school-sub">Greater Faridabad</div>
+        <div class="school-sub2">(Under the agencies of The DPS Society)</div>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <a href="#">About</a>
+      <a href="#">Academics</a>
+      <a href="#">Admissions</a>
+    </nav>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="main-container">
+    <div class="login-wrapper">
+      
+      <!-- Left Banner Image -->
+      <div class="banner-section">
+        <img src="login_banner.png" alt="Admissions Open Banner" onerror="this.src='https://via.placeholder.com/600x600?text=Banner+Image'" />
+      </div>
+
+      <!-- Right Review Card -->
+      <div class="login-section">
+        <div class="login-card">
+          <div class="review-content">
+            <h1 class="review-title">Account Under Review</h1>
+            <div class="review-subtitle">
+              <p>Your account is under review. You will get access once approved.</p>
+              <p>Check your email for updates or contact the admin if urgent.</p>
+            </div>
+            
+            <button type="button" class="btn-login" onclick="window.location.href='Login.html'">Back to Login</button>
+          </div>
+        </div>
+        
+        <div class="powered-by">
+          Powered By <span>BodhyaMarg</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

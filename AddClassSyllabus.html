@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Class Syllabus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+    --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+    --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+    --radius: 8px; --radius-lg: 12px;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+  /* ── Sidebar ── */
+  .sidebar { width: 224px; min-width: 224px; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; height: 100vh; }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .brand-bar { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .brand-name { font-size: 14px; font-weight: 600; color: var(--green); display: flex; align-items: center; gap: 8px; }
+  .brand-name i { font-size: 18px; }
+  .school-picker { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
+  .school-picker:hover { background: var(--bg); }
+  .school-icon { width: 32px; height: 32px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .school-icon i { font-size: 16px; color: var(--green); }
+  .school-info .name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .school-info .sub  { font-size: 10px; color: var(--text-muted); }
+  .nav-group { padding: 8px 0; }
+  .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: 0.07em; padding: 6px 16px 2px; }
+  .nav-item { display: flex; align-items: center; gap: 9px; padding: 7px 16px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; transition: background 0.12s; user-select: none; }
+  .nav-item i { font-size: 16px; flex-shrink: 0; }
+  .nav-item:hover { background: var(--bg); color: var(--text); }
+  .nav-item.active { background: var(--green-light); color: var(--green); font-weight: 600; }
+  .nav-item.active i { color: var(--green); }
+  .nav-sub { padding-left: 16px; }
+  .nav-sub .nav-item { font-size: 12px; padding: 5px 16px; }
+
+  /* ── Main ── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100vh; }
+  .topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+  .topbar-search i { font-size: 14px; color: var(--text-hint); }
+  .topbar-search input { border: none; background: transparent; font-size: 12.5px; color: var(--text); font-family: inherit; outline: none; width: 100%; }
+  .topbar-search input::placeholder { color: var(--text-hint); }
+  .topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .ay-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+  .ay-pill i { font-size: 14px; color: var(--text-hint); }
+  .icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); transition: background 0.12s; }
+  .icon-btn:hover { background: var(--bg); }
+  .icon-btn i { font-size: 16px; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+  /* ── Content ── */
+  .content { flex: 1; overflow-y: auto; padding: 24px; }
+  .content::-webkit-scrollbar { width: 4px; }
+  .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+  .page-title h1 { font-size: 20px; font-weight: 600; color: var(--text); }
+  .breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+  .breadcrumb span { color: var(--green); }
+  .breadcrumb i { font-size: 11px; }
+  .header-actions { display: flex; gap: 8px; }
+  .btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); transition: background 0.12s; }
+  .btn:hover { background: var(--bg); }
+  .btn i { font-size: 15px; }
+  .btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+  .btn-primary:hover { background: var(--green-dark); }
+
+  /* ── Table Card ── */
+  .table-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .table-toolbar { display: flex; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); gap: 10px; }
+  .table-toolbar-title { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+  .toolbar-btn { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-muted); border: 1px solid var(--border); padding: 6px 12px; border-radius: var(--radius); cursor: pointer; background: var(--white); font-family: inherit; transition: background 0.12s; }
+  .toolbar-btn:hover { background: var(--bg); }
+  .toolbar-btn i { font-size: 14px; }
+  .table-controls { display: flex; align-items: center; justify-content: space-between; padding: 10px 18px; border-bottom: 1px solid var(--border); background: #fafbfc; }
+  .rpp { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+  .rpp select { font-size: 12px; font-family: inherit; border: 1px solid var(--border); border-radius: var(--radius); padding: 4px 8px; background: var(--white); color: var(--text); cursor: pointer; }
+  .tbl-search { display: flex; align-items: center; gap: 7px; border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; background: var(--white); }
+  .tbl-search i { font-size: 13px; color: var(--text-hint); }
+  .tbl-search input { border: none; background: transparent; font-size: 12px; font-family: inherit; color: var(--text); outline: none; width: 160px; }
+  .tbl-search input::placeholder { color: var(--text-hint); }
+
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  col.col-cb      { width: 44px; }
+  col.col-class   { width: 120px; }
+  col.col-group   { width: auto; }
+  col.col-action  { width: 80px; }
+  thead tr { background: #f8f9fb; }
+  th { font-size: 11.5px; font-weight: 600; color: var(--text-muted); padding: 11px 18px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; user-select: none; cursor: pointer; }
+  th i { font-size: 11px; vertical-align: middle; margin-left: 3px; color: var(--text-hint); }
+  th:hover { background: #f0f1f3; }
+  td { font-size: 12.5px; color: var(--text); padding: 11px 18px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #f8faf9; }
+  .cb { width: 15px; height: 15px; border: 1.5px solid var(--border); border-radius: 4px; cursor: pointer; accent-color: var(--green); }
+
+  /* Subject group tags */
+  .subject-tags { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .s-tag { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; background: #eff6ff; color: #2563eb; }
+  .s-tag.more { background: var(--green-light); color: var(--green); cursor: pointer; font-weight: 600; }
+  .s-tag.more:hover { background: #c8e8d8; }
+
+  .three-dot { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; color: var(--text-muted); transition: background 0.12s; }
+  .three-dot:hover { background: var(--bg); }
+  .three-dot i { font-size: 16px; }
+
+  /* Pagination */
+  .pagination { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 12px 18px; border-top: 1px solid var(--border); background: #fafbfc; }
+  .pg-btn { min-width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); font-size: 12px; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text-muted); padding: 0 8px; transition: background 0.12s; gap: 4px; }
+  .pg-btn:hover { background: var(--bg); }
+  .pg-btn.active { background: var(--green); color: #fff; border-color: var(--green); font-weight: 600; }
+  .pg-btn i { font-size: 12px; }
+  .pg-dots { font-size: 12px; color: var(--text-hint); padding: 0 4px; }
+
+  /* Dropdown menu */
+  .dropdown-menu { position: absolute; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 4px 16px rgba(0,0,0,0.1); z-index: 100; min-width: 140px; padding: 4px 0; display: none; }
+  .dropdown-menu.open { display: block; }
+  .dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px 14px; font-size: 12.5px; color: var(--text); cursor: pointer; }
+  .dropdown-item:hover { background: var(--bg); }
+  .dropdown-item i { font-size: 14px; color: var(--text-muted); }
+  .dropdown-item.danger { color: #dc2626; }
+  .dropdown-item.danger i { color: #dc2626; }
+</style>
+<style>
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand-bar">
+    <div class="brand-name"><i class="ti ti-school"></i> BodhyaMarg</div>
+    <i class="ti ti-menu-2" style="font-size:18px;color:var(--text-muted);cursor:pointer;"></i>
+  </div>
+  <div class="school-picker">
+    <div class="school-icon"><i class="ti ti-shield-half"></i></div>
+    <div class="school-info"><div class="name">Delhi Public School</div><div class="sub">Main Campus</div></div>
+    <i class="ti ti-chevron-down" style="margin-left:auto;font-size:14px;color:var(--text-hint);"></i>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Main</div>
+    <div class="nav-sub-container">
+      <a href="VehicleOccupancy.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="VehicleOccupancy.html" class="nav-item">Admin Dashboard</a>
+        <a href="#" class="nav-item">Teacher Dashboard</a>
+        <a href="#" class="nav-item">Student Dashboard</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Peoples</div>
+    <div class="nav-sub-container">
+      <a href="AddStudent.html" class="nav-item"><i class="ti ti-school"></i> Students <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddStudent.html" class="nav-item">All Students</a>
+        <a href="#" class="nav-item">Student Promotion</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-user-check"></i> Parents</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-heart"></i> Guardians</a>
+    <div class="nav-sub-container">
+      <a href="AddTeacher.html" class="nav-item"><i class="ti ti-users"></i> Teachers <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddTeacher.html" class="nav-item">All Teachers</a>
+        <a href="#" class="nav-item">Routine</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Academic</div>
+    <div class="nav-sub-container">
+      <a href="AddClasses.html" class="nav-item"><i class="ti ti-books"></i> Classes <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddClasses.html" class="nav-item">All Classes</a>
+        <a href="#" class="nav-item">Schedule</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-building-community"></i> Class Room</a>
+    <a href="ClassRoutine.html" class="nav-item"><i class="ti ti-calendar-event"></i> Class Routine</a>
+    <a href="AddSections.html" class="nav-item"><i class="ti ti-box"></i> Section</a>
+    <a href="Subjects.html" class="nav-item"><i class="ti ti-book-2"></i> Subject</a>
+    <a href="AddClassSyllabus.html" class="nav-item"><i class="ti ti-file-text"></i> Syllabus</a>
+    <a href="AcademicCalendar.html" class="nav-item"><i class="ti ti-table"></i> Time Table</a>
+    <a href="HomeworkList.html" class="nav-item"><i class="ti ti-file-certificate"></i> Home Work</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-test-pipe"></i> Examinations <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Exam</a>
+        <a href="#" class="nav-item">Exam Schedule</a>
+        <a href="#" class="nav-item">Grade</a>
+        <a href="#" class="nav-item">Exam Attendance</a>
+        <a href="#" class="nav-item">Exam Results</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-target"></i> Reasons</a>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Management</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-receipt"></i> Fees Collection <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Fees Group</a>
+        <a href="#" class="nav-item">Fees Type</a>
+        <a href="#" class="nav-item">Fees Master</a>
+        <a href="#" class="nav-item">Fees Assign</a>
+        <a href="#" class="nav-item">Collect Fees</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-ball-football"></i> Sports</a>
+    <div class="nav-sub-container">
+      <a href="HostelList.html" class="nav-item"><i class="ti ti-building-store"></i> Hostel <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="HostelList.html" class="nav-item">Hostel List</a>
+        <a href="HostelRooms.html" class="nav-item">Hostel Rooms</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="AddVehicle.html" class="nav-item"><i class="ti ti-bus"></i> Transport <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="RoutesList.html" class="nav-item">Routes</a>
+        <a href="PickupPoints.html" class="nav-item">Pickup Points</a>
+        <a href="AddDrivers.html" class="nav-item">Vehicle Drivers</a>
+        <a href="AddVehicle.html" class="nav-item">Vehicles</a>
+        <a href="AssignVehicle.html" class="nav-item">Assign Vehicle</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">HRM</div>
+    <a href="AddStafff.html" class="nav-item"><i class="ti ti-users-group"></i> Staffs</a>
+    <a href="Designation.html" class="nav-item"><i class="ti ti-id-badge"></i> Designation</a>
+    <a href="Department.html" class="nav-item"><i class="ti ti-sitemap"></i> Department</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-calendar-check"></i> Attendance <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Student Attendance</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="Leave.html" class="nav-item"><i class="ti ti-calendar-minus"></i> Leaves <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="Leave.html" class="nav-item">List of leaves</a>
+        <a href="LeaveApproveRequest.html" class="nav-item">Approve Request</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Finance & Accounts</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-wallet"></i> Accounts <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Expenses</a>
+        <a href="#" class="nav-item">Expense Category</a>
+        <a href="#" class="nav-item">Income</a>
+        <a href="#" class="nav-item">Transactions</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Announcements</div>
+    <a href="NoticeBoard.html" class="nav-item"><i class="ti ti-clipboard-text"></i> Notice Board</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Reports</div>
+    <a href="#" class="nav-item"><i class="ti ti-report"></i> Attendance Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-report-analytics"></i> Class Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-chart-bar"></i> Student Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-file-analytics"></i> Grade Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-receipt-2"></i> Fees Report</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">User Management</div>
+    <a href="#" class="nav-item"><i class="ti ti-users"></i> Users</a>
+    <a href="#" class="nav-item"><i class="ti ti-shield-lock"></i> Roles & Permissions</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-x"></i> Delete Account Request</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Membership</div>
+    <a href="#" class="nav-item"><i class="ti ti-star"></i> Membership Plans</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Support</div>
+    <a href="#" class="nav-item"><i class="ti ti-user"></i> Profile</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Settings</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-settings"></i> General Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Profile Settings</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-book"></i> Academic Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">School Settings</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">UI Interface</div>
+    <a href="#" class="nav-item"><i class="ti ti-components"></i> Base UI</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var path = window.location.pathname.split('/').pop();
+      if(path) {
+        var links = document.querySelectorAll('.sidebar a.nav-item');
+        links.forEach(function(link) {
+          if(link.getAttribute('href') === path) {
+            link.classList.add('active');
+            var subContainer = link.closest('.nav-sub-container');
+            if(subContainer) {
+               var parentLink = subContainer.querySelector('a.nav-item');
+               if(parentLink) {
+                 parentLink.classList.add('active');
+               }
+            }
+          }
+        });
+      }
+      
+      // Auto-hide all nav-subs first
+      document.querySelectorAll('.nav-sub').forEach(function(sub) {
+         sub.style.display = 'none'; 
+      });
+      document.querySelectorAll('.nav-item.active').forEach(function(activeItem) {
+          // Show the nav-sub if active item is inside one
+          var subContainer = activeItem.closest('.nav-sub-container');
+          if(subContainer) {
+              var sub = subContainer.querySelector('.nav-sub');
+              if(sub) sub.style.display = 'block';
+          }
+          // Highlight the parent nav-group's nav-label in green
+          var navGroup = activeItem.closest('.nav-group');
+          if(navGroup) {
+              var label = navGroup.querySelector('.nav-label');
+              if(label) label.style.color = 'var(--green)';
+          }
+      });
+    });
+  </script>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search anything…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill">
+        <i class="ti ti-calendar"></i>
+        Academic Year : 2026 / 2027
+        <i class="ti ti-chevron-down"></i>
+      </div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div class="page-title">
+        <h1>Class Syllabus</h1>
+        <div class="breadcrumb">
+          Dashboard <i class="ti ti-chevron-right"></i>
+          Academic <i class="ti ti-chevron-right"></i>
+          <span>Class Syllabus</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn"><i class="ti ti-download"></i> Export</button>
+        <button class="btn btn-primary"><i class="ti ti-plus"></i> Add Syllabus</button>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-toolbar">
+        <span class="table-toolbar-title">Class Syllabus</span>
+        <button class="toolbar-btn"><i class="ti ti-filter"></i> Filter</button>
+        <button class="toolbar-btn"><i class="ti ti-arrows-sort"></i> Sort By A-Z <i class="ti ti-chevron-down"></i></button>
+      </div>
+      <div class="table-controls">
+        <div class="rpp">
+          Row Per Page
+          <select><option>10</option><option>25</option><option>50</option></select>
+          Entries
+        </div>
+        <div class="tbl-search"><i class="ti ti-search"></i><input type="text" placeholder="Search" /></div>
+      </div>
+
+      <table>
+        <colgroup>
+          <col class="col-cb" />
+          <col class="col-class" />
+          <col class="col-group" />
+          <col class="col-action" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th><input type="checkbox" class="cb" id="selectAll" /></th>
+            <th>Class <i class="ti ti-selector"></i></th>
+            <th>Subject Group</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+
+      <div class="pagination">
+        <button class="pg-btn"><i class="ti ti-chevron-left"></i> Pre</button>
+        <button class="pg-btn active">1</button>
+        <button class="pg-btn">2</button>
+        <span class="pg-dots">…</span>
+        <button class="pg-btn">20</button>
+        <button class="pg-btn">Next <i class="ti ti-chevron-right"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dropdown menu (shared) -->
+<div class="dropdown-menu" id="dropdownMenu">
+  <div class="dropdown-item"><i class="ti ti-eye"></i> View</div>
+  <div class="dropdown-item"><i class="ti ti-edit"></i> Edit</div>
+  <div class="dropdown-item danger"><i class="ti ti-trash"></i> Delete</div>
+</div>
+
+<script>
+const syllabusData = [
+  { class: "I",    roman: "I",    subjects: ["English", "Hindi", "Maths", "EVS"] },
+  { class: "II",   roman: "II",   subjects: ["Maths", "Drawing", "English", "Hindi"] },
+  { class: "III",  roman: "III",  subjects: ["Moral Science", "English", "Hindi", "Maths"] },
+  { class: "IV",   roman: "IV",   subjects: ["Moral Science", "English", "Hindi", "Maths"] },
+  { class: "V",    roman: "V",    subjects: ["Moral Science", "English", "Hindi", "Maths"] },
+  { class: "VI",   roman: "VI",   subjects: ["Moral Science", "English", "Hindi", "Science", "Social"] },
+  { class: "VII",  roman: "VII",  subjects: ["Moral Science", "English", "Hindi", "Science", "Maths"] },
+  { class: "VIII", roman: "VIII", subjects: ["Moral Science", "English", "Hindi", "Science", "Maths"] },
+  { class: "IX",   roman: "IX",   subjects: ["Chemistry", "Physics", "Biology", "Maths", "English", "Hindi"] },
+  { class: "X",    roman: "X",    subjects: ["Chemistry", "Physics", "Biology", "Maths", "English", "Hindi"] },
+];
+
+const VISIBLE = 2; // show first 2, rest as +N
+
+const tbody = document.getElementById("table-body");
+syllabusData.forEach(row => {
+  const visible = row.subjects.slice(0, VISIBLE);
+  const extra = row.subjects.length - VISIBLE;
+  const tagsHTML = visible.map(s => `<span class="s-tag">${s}</span>`).join("")
+    + (extra > 0 ? `<span class="s-tag more">+${extra}</span>` : "");
+
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="checkbox" class="cb row-cb" /></td>
+    <td style="font-weight:600;">${row.roman}</td>
+    <td><div class="subject-tags">${tagsHTML}</div></td>
+    <td style="position:relative;">
+      <div class="three-dot action-btn"><i class="ti ti-dots-vertical"></i></div>
+    </td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// Select all
+document.getElementById("selectAll").addEventListener("change", function(){
+  document.querySelectorAll(".row-cb").forEach(cb => cb.checked = this.checked);
+});
+
+// Pagination active
+document.querySelectorAll(".pg-btn").forEach(btn => {
+  btn.addEventListener("click", function(){
+    if(this.textContent.trim().match(/^\d+$/)){
+      document.querySelectorAll(".pg-btn").forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+    }
+  });
+});
+
+// Dropdown
+const dropdown = document.getElementById("dropdownMenu");
+document.addEventListener("click", function(e) {
+  const btn = e.target.closest(".action-btn");
+  if (btn) {
+    const rect = btn.getBoundingClientRect();
+    dropdown.style.top = (rect.bottom + window.scrollY + 4) + "px";
+    dropdown.style.left = (rect.left + window.scrollX - 100) + "px";
+    dropdown.classList.toggle("open");
+    e.stopPropagation();
+  } else {
+    dropdown.classList.remove("open");
+  }
+});
+</script>
+</body>
+</html>

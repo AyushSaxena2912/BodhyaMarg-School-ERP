@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Hostel Rooms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --green-mid: #22a05f;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+  --amber: #d97706; --amber-light: #fef3c7;
+  --red: #dc2626; --red-light: #fef2f2;
+  --blue: #2563eb; --blue-light: #eff6ff;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+/* ── Sidebar ── */
+.sidebar { width: 224px; min-width: 224px; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; height: 100vh; }
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.brand-bar { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.brand-name { font-size: 14px; font-weight: 600; color: var(--green); display: flex; align-items: center; gap: 8px; }
+.school-picker { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border); cursor: pointer; flex-shrink: 0; }
+.school-picker:hover { background: var(--bg); }
+.school-icon { width: 32px; height: 32px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.school-icon i { font-size: 16px; color: var(--green); }
+.school-info .name { font-size: 12px; font-weight: 600; }
+.school-info .sub  { font-size: 10px; color: var(--text-muted); }
+.nav-group { padding: 6px 0; }
+.nav-label { font-size: 10px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: .07em; padding: 6px 16px 2px; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 6px 16px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; transition: background .12s; }
+.nav-item i { font-size: 15px; flex-shrink: 0; }
+.nav-item:hover { background: var(--bg); color: var(--text); }
+.nav-item.active { background: var(--green-light); color: var(--green); font-weight: 600; }
+.nav-sub .nav-item { padding: 5px 16px 5px 40px; font-size: 12px; }
+
+/* ── Main ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.ay-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); position: relative; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* ── Content ── */
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ── Page header ── */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.breadcrumb span { color: var(--green); }
+.page-actions { display: flex; gap: 10px; align-items: center; }
+
+
+
+/* ── Buttons ── */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); transition: background .12s; white-space: nowrap; }
+.btn:hover { background: var(--bg); }
+.btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-export { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text-muted); }
+
+/* ── Table card ── */
+.table-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+
+/* ── Table toolbar ── */
+.table-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap; }
+.toolbar-left { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-muted); }
+.toolbar-left select {
+  font-family: inherit; font-size: 12.5px; color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 5px 28px 5px 10px; background: var(--white); outline: none; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+}
+.toolbar-right { display: flex; align-items: center; gap: 10px; }
+.table-search { display: flex; align-items: center; gap: 7px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; }
+.table-search i { font-size: 13px; color: var(--text-hint); }
+.table-search input { border: none; background: transparent; font-size: 12px; font-family: inherit; outline: none; width: 180px; }
+.btn-filter { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; font-weight: 500; font-family: inherit; color: var(--text-muted); cursor: pointer; }
+.btn-sort   { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; font-weight: 500; font-family: inherit; color: var(--text-muted); cursor: pointer; }
+
+/* ── Table ── */
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--bg); border-bottom: 1px solid var(--border); }
+thead th { padding: 11px 18px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-align: left; white-space: nowrap; }
+thead th.th-check { width: 40px; padding-left: 18px; }
+tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #fafbfc; }
+tbody td { padding: 13px 18px; font-size: 12.5px; color: var(--text); vertical-align: middle; }
+tbody td.td-check { width: 40px; }
+input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--green); cursor: pointer; }
+
+/* ── Hostel name ── */
+.hostel-name { font-weight: 600; font-size: 13px; }
+.hostel-room-no { font-size: 11px; color: var(--text-hint); margin-top: 2px; display: flex; align-items: center; gap: 3px; }
+
+/* ── Vacancy badge ── */
+.vac-wrap { display: flex; flex-direction: column; gap: 6px; min-width: 180px; }
+.vac-top  { display: flex; align-items: center; justify-content: space-between; }
+.vac-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 600; }
+.vac-pill.available  { background: #dcfce7; color: #166534; }
+.vac-pill.limited    { background: var(--amber-light); color: var(--amber); }
+.vac-pill.full       { background: var(--red-light); color: var(--red); }
+.vac-numbers { font-size: 11px; color: var(--text-hint); }
+.vac-bar { height: 5px; background: #e5e7eb; border-radius: 10px; overflow: hidden; }
+.vac-bar-fill { height: 100%; border-radius: 10px; transition: width .3s; }
+.vac-bar-fill.available { background: var(--green); }
+.vac-bar-fill.limited   { background: var(--amber); }
+.vac-bar-fill.full      { background: var(--red); }
+
+/* ── Allocate btn ── */
+.btn-allocate { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: var(--radius); font-size: 11.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--green); background: var(--green-light); color: var(--green-dark); transition: all .12s; white-space: nowrap; }
+.btn-allocate:hover { background: var(--green); color: #fff; }
+.btn-allocate:disabled, .btn-allocate.disabled { border-color: var(--border); background: var(--bg); color: var(--text-hint); cursor: not-allowed; }
+
+/* ── Hostel badge ── */
+.hostel-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 500; }
+.hostel-badge.boys  { background: #dbeafe; color: #1d4ed8; }
+.hostel-badge.girls { background: #fce7f3; color: #9d174d; }
+
+/* ── Action menu ── */
+.action-btn { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: none; background: transparent; cursor: pointer; color: var(--text-muted); font-size: 18px; position: relative; }
+.action-btn:hover { background: var(--bg); }
+.dropdown { position: absolute; right: 0; top: 32px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 4px 16px rgba(0,0,0,.08); min-width: 130px; z-index: 100; display: none; overflow: hidden; }
+.dropdown.open { display: block; }
+.dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px 14px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; transition: background .1s; }
+.dropdown-item:hover { background: var(--bg); color: var(--text); }
+.dropdown-item.danger { color: #dc2626; }
+.dropdown-item.danger:hover { background: #fef2f2; }
+
+/* ── Pagination ── */
+.pagination { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 14px 18px; border-top: 1px solid var(--border); }
+.page-btn { min-width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; font-weight: 500; font-family: inherit; color: var(--text-muted); cursor: pointer; padding: 0 6px; transition: all .12s; }
+.page-btn:hover { background: var(--bg); }
+.page-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
+.page-btn.disabled { opacity: .4; cursor: default; pointer-events: none; }
+.page-dots { font-size: 12px; color: var(--text-hint); padding: 0 2px; }
+
+/* ── Allocate Modal ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity .15s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--white); border-radius: var(--radius-lg); width: 420px; max-width: 95vw; padding: 28px; box-shadow: 0 8px 32px rgba(0,0,0,.14); transform: translateY(10px); transition: transform .15s; }
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.modal-title i { color: var(--green); font-size: 18px; }
+.modal-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+.modal-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.modal-field label { font-size: 11.5px; font-weight: 500; color: var(--text-muted); }
+.modal-field input, .modal-field select { font-family: inherit; font-size: 12.5px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 9px 10px; background: var(--white); outline: none; transition: border-color .15s; }
+.modal-field input:focus, .modal-field select:focus { border-color: var(--green); }
+.modal-field select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; cursor: pointer; }
+.modal-info-box { background: var(--green-light); border: 1px solid #bbf7d0; border-radius: var(--radius); padding: 10px 14px; font-size: 12px; color: var(--green-dark); display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+</style>
+<style>
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="brand-bar">
+    <div class="brand-name"><i class="ti ti-school"></i> BodhyaMarg</div>
+    <i class="ti ti-menu-2" style="font-size:18px;color:var(--text-muted);cursor:pointer;"></i>
+  </div>
+  <div class="school-picker">
+    <div class="school-icon"><i class="ti ti-shield-half"></i></div>
+    <div class="school-info"><div class="name">Delhi Public School</div><div class="sub">Main Campus</div></div>
+    <i class="ti ti-chevron-down" style="margin-left:auto;font-size:14px;color:var(--text-hint);"></i>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Main</div>
+    <div class="nav-sub-container">
+      <a href="VehicleOccupancy.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="VehicleOccupancy.html" class="nav-item">Admin Dashboard</a>
+        <a href="#" class="nav-item">Teacher Dashboard</a>
+        <a href="#" class="nav-item">Student Dashboard</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Peoples</div>
+    <div class="nav-sub-container">
+      <a href="AddStudent.html" class="nav-item"><i class="ti ti-school"></i> Students <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddStudent.html" class="nav-item">All Students</a>
+        <a href="#" class="nav-item">Student Promotion</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-user-check"></i> Parents</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-heart"></i> Guardians</a>
+    <div class="nav-sub-container">
+      <a href="AddTeacher.html" class="nav-item"><i class="ti ti-users"></i> Teachers <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddTeacher.html" class="nav-item">All Teachers</a>
+        <a href="#" class="nav-item">Routine</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Academic</div>
+    <div class="nav-sub-container">
+      <a href="AddClasses.html" class="nav-item"><i class="ti ti-books"></i> Classes <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddClasses.html" class="nav-item">All Classes</a>
+        <a href="#" class="nav-item">Schedule</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-building-community"></i> Class Room</a>
+    <a href="ClassRoutine.html" class="nav-item"><i class="ti ti-calendar-event"></i> Class Routine</a>
+    <a href="AddSections.html" class="nav-item"><i class="ti ti-box"></i> Section</a>
+    <a href="Subjects.html" class="nav-item"><i class="ti ti-book-2"></i> Subject</a>
+    <a href="AddClassSyllabus.html" class="nav-item"><i class="ti ti-file-text"></i> Syllabus</a>
+    <a href="AcademicCalendar.html" class="nav-item"><i class="ti ti-table"></i> Time Table</a>
+    <a href="HomeworkList.html" class="nav-item"><i class="ti ti-file-certificate"></i> Home Work</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-test-pipe"></i> Examinations <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Exam</a>
+        <a href="#" class="nav-item">Exam Schedule</a>
+        <a href="#" class="nav-item">Grade</a>
+        <a href="#" class="nav-item">Exam Attendance</a>
+        <a href="#" class="nav-item">Exam Results</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-target"></i> Reasons</a>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Management</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-receipt"></i> Fees Collection <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Fees Group</a>
+        <a href="#" class="nav-item">Fees Type</a>
+        <a href="#" class="nav-item">Fees Master</a>
+        <a href="#" class="nav-item">Fees Assign</a>
+        <a href="#" class="nav-item">Collect Fees</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-ball-football"></i> Sports</a>
+    <div class="nav-sub-container">
+      <a href="HostelList.html" class="nav-item"><i class="ti ti-building-store"></i> Hostel <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="HostelList.html" class="nav-item">Hostel List</a>
+        <a href="HostelRooms.html" class="nav-item">Hostel Rooms</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="AddVehicle.html" class="nav-item"><i class="ti ti-bus"></i> Transport <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="RoutesList.html" class="nav-item">Routes</a>
+        <a href="PickupPoints.html" class="nav-item">Pickup Points</a>
+        <a href="AddDrivers.html" class="nav-item">Vehicle Drivers</a>
+        <a href="AddVehicle.html" class="nav-item">Vehicles</a>
+        <a href="AssignVehicle.html" class="nav-item">Assign Vehicle</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">HRM</div>
+    <a href="AddStafff.html" class="nav-item"><i class="ti ti-users-group"></i> Staffs</a>
+    <a href="Designation.html" class="nav-item"><i class="ti ti-id-badge"></i> Designation</a>
+    <a href="Department.html" class="nav-item"><i class="ti ti-sitemap"></i> Department</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-calendar-check"></i> Attendance <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Student Attendance</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="Leave.html" class="nav-item"><i class="ti ti-calendar-minus"></i> Leaves <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="Leave.html" class="nav-item">List of leaves</a>
+        <a href="LeaveApproveRequest.html" class="nav-item">Approve Request</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Finance & Accounts</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-wallet"></i> Accounts <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Expenses</a>
+        <a href="#" class="nav-item">Expense Category</a>
+        <a href="#" class="nav-item">Income</a>
+        <a href="#" class="nav-item">Transactions</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Announcements</div>
+    <a href="NoticeBoard.html" class="nav-item"><i class="ti ti-clipboard-text"></i> Notice Board</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Reports</div>
+    <a href="#" class="nav-item"><i class="ti ti-report"></i> Attendance Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-report-analytics"></i> Class Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-chart-bar"></i> Student Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-file-analytics"></i> Grade Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-receipt-2"></i> Fees Report</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">User Management</div>
+    <a href="#" class="nav-item"><i class="ti ti-users"></i> Users</a>
+    <a href="#" class="nav-item"><i class="ti ti-shield-lock"></i> Roles & Permissions</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-x"></i> Delete Account Request</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Membership</div>
+    <a href="#" class="nav-item"><i class="ti ti-star"></i> Membership Plans</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Support</div>
+    <a href="#" class="nav-item"><i class="ti ti-user"></i> Profile</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Settings</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-settings"></i> General Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Profile Settings</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-book"></i> Academic Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">School Settings</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">UI Interface</div>
+    <a href="#" class="nav-item"><i class="ti ti-components"></i> Base UI</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var path = window.location.pathname.split('/').pop();
+      if(path) {
+        var links = document.querySelectorAll('.sidebar a.nav-item');
+        links.forEach(function(link) {
+          if(link.getAttribute('href') === path) {
+            link.classList.add('active');
+            var subContainer = link.closest('.nav-sub-container');
+            if(subContainer) {
+               var parentLink = subContainer.querySelector('a.nav-item');
+               if(parentLink) {
+                 parentLink.classList.add('active');
+               }
+            }
+          }
+        });
+      }
+      
+      // Auto-hide all nav-subs first
+      document.querySelectorAll('.nav-sub').forEach(function(sub) {
+         sub.style.display = 'none'; 
+      });
+      document.querySelectorAll('.nav-item.active').forEach(function(activeItem) {
+          // Show the nav-sub if active item is inside one
+          var subContainer = activeItem.closest('.nav-sub-container');
+          if(subContainer) {
+              var sub = subContainer.querySelector('.nav-sub');
+              if(sub) sub.style.display = 'block';
+          }
+          // Highlight the parent nav-group's nav-label in green
+          var navGroup = activeItem.closest('.nav-group');
+          if(navGroup) {
+              var label = navGroup.querySelector('.nav-label');
+              if(label) label.style.color = 'var(--green)';
+          }
+      });
+    });
+  </script>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search anything…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill"><i class="ti ti-calendar"></i> Academic Year : 2026 / 2027 <i class="ti ti-chevron-down"></i></div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Hostel Rooms</h1>
+        <div class="breadcrumb">
+          Dashboard <i class="ti ti-chevron-right"></i>
+          Management <i class="ti ti-chevron-right"></i>
+          Hostel <i class="ti ti-chevron-right"></i>
+          <span>Hostel Rooms</span>
+        </div>
+      </div>
+      <div class="page-actions">
+        <button class="btn-export"><i class="ti ti-download"></i> Export</button>
+        <button class="btn btn-primary" onclick="openAddModal()"><i class="ti ti-circle-plus"></i> Add Room</button>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="toolbar-left">
+          <span>Row Per Page</span>
+          <select onchange="changePerPage(this.value)">
+            <option>10</option><option>25</option><option>50</option>
+          </select>
+          <span>Entries</span>
+        </div>
+        <div class="toolbar-right">
+          <button class="btn-filter"><i class="ti ti-adjustments-horizontal"></i> Filter</button>
+          <button class="btn-sort"><i class="ti ti-arrows-sort"></i> Sort By A-Z <i class="ti ti-chevron-down" style="font-size:11px;"></i></button>
+          <div class="table-search">
+            <i class="ti ti-search"></i>
+            <input type="text" placeholder="Search" oninput="filterTable(this.value)" />
+          </div>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th class="th-check"><input type="checkbox" onclick="toggleAll(this)" /></th>
+            <th>Room No</th>
+            <th>Hostel Name</th>
+            <th>No of Beds</th>
+            <th>Vacancy Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ALLOCATE MODAL ═══ -->
+<div class="modal-overlay" id="allocModal" onclick="closeAllocOutside(event)">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-user-plus"></i> <span id="allocHeading">Allocate Student</span></div>
+    <div class="modal-sub" id="allocSub">Assigning bed in room <strong id="allocRoomName"></strong></div>
+    <div class="modal-info-box" id="allocInfo"></div>
+    <div class="modal-field">
+      <label>Student Name *</label>
+      <input type="text" id="allocStudent" placeholder="e.g. Rohan Sharma" />
+    </div>
+    <div class="modal-field">
+      <label>Class / Section</label>
+      <select id="allocClass">
+        <option value="">Select class</option>
+        <option>Class 9 – A</option><option>Class 9 – B</option>
+        <option>Class 10 – A</option><option>Class 10 – B</option>
+        <option>Class 11 – Science</option><option>Class 11 – Commerce</option>
+        <option>Class 12 – Science</option><option>Class 12 – Commerce</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Admission No</label>
+      <input type="text" id="allocAdm" placeholder="e.g. ADM2026001" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeAllocModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmAlloc()"><i class="ti ti-check"></i> Allocate</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let rooms = [
+  { id:1, roomNo:'A1', hostel:'Phoenix Residence', hostelType:'Boys',  beds:1, occupied:1 },
+  { id:2, roomNo:'A4', hostel:'Nova Nest',         hostelType:'Girls', beds:1, occupied:0 },
+  { id:3, roomNo:'C1', hostel:'Empyrean Estate',   hostelType:'Boys',  beds:1, occupied:1 },
+  { id:4, roomNo:'B3', hostel:'Summit Springs',    hostelType:'Boys',  beds:1, occupied:0 },
+  { id:5, roomNo:'A2', hostel:'Tranquil Haven',    hostelType:'Girls', beds:1, occupied:1 },
+  { id:6, roomNo:'B1', hostel:'Vista Villa',       hostelType:'Boys',  beds:1, occupied:0 },
+  { id:7, roomNo:'A3', hostel:'Radiant Towers',    hostelType:'Boys',  beds:2, occupied:1 },
+  { id:8, roomNo:'B2', hostel:'Zenith Zone',       hostelType:'Girls', beds:2, occupied:2 },
+  { id:9, roomNo:'B4', hostel:'Beacon Breeze',     hostelType:'Girls', beds:2, occupied:1 },
+  { id:10,roomNo:'C2', hostel:'Nexus Nook',        hostelType:'Girls', beds:2, occupied:2 },
+  { id:11,roomNo:'A5', hostel:'Phoenix Residence', hostelType:'Boys',  beds:3, occupied:2 },
+  { id:12,roomNo:'C3', hostel:'Empyrean Estate',   hostelType:'Boys',  beds:3, occupied:3 },
+  { id:13,roomNo:'D1', hostel:'Radiant Towers',    hostelType:'Boys',  beds:4, occupied:2 },
+  { id:14,roomNo:'D2', hostel:'Beacon Breeze',     hostelType:'Girls', beds:4, occupied:4 },
+  { id:15,roomNo:'E1', hostel:'Tranquil Haven',    hostelType:'Girls', beds:4, occupied:3 },
+];
+
+let nextId = 16, currentPage = 1, perPage = 10, filterText = '', allocatingId = null;
+
+function vacStatus(occupied, beds) {
+  const vacant = beds - occupied;
+  if (vacant === 0) return 'full';
+  if (vacant / beds <= 0.25) return 'limited';
+  return 'available';
+}
+
+function vacLabel(status) {
+  if (status === 'full')      return '<i class="ti ti-lock" style="font-size:12px;"></i> Full';
+  if (status === 'limited')   return '<i class="ti ti-alert-triangle" style="font-size:12px;"></i> Limited';
+  return '<i class="ti ti-circle-check" style="font-size:12px;"></i> Available';
+}
+
+function renderSummary() {
+  const total   = rooms.length;
+  const full    = rooms.filter(r => r.occupied >= r.beds).length;
+  const limited = rooms.filter(r => { const v=r.beds-r.occupied; return v>0 && v/r.beds<=0.25; }).length;
+  const avail   = rooms.filter(r => r.beds-r.occupied > 0 && (r.beds-r.occupied)/r.beds > 0.25).length;
+  const totalVacant = rooms.reduce((s,r) => s + (r.beds - r.occupied), 0);
+
+  document.getElementById('summaryRow').innerHTML = `
+    <div class="sum-card blue">
+      <div class="sc-label">Total Rooms</div>
+      <div class="sc-val">${total}</div>
+      <div class="sc-sub">All hostel rooms</div>
+    </div>
+    <div class="sum-card green">
+      <div class="sc-label">Vacant Beds</div>
+      <div class="sc-val">${totalVacant}</div>
+      <div class="sc-sub">Ready for allocation</div>
+    </div>
+    <div class="sum-card amber">
+      <div class="sc-label">Limited / Near Full</div>
+      <div class="sc-val">${limited}</div>
+      <div class="sc-sub">≤25% beds remaining</div>
+    </div>
+    <div class="sum-card red">
+      <div class="sc-label">Fully Occupied</div>
+      <div class="sc-val">${full}</div>
+      <div class="sc-sub">No bed available</div>
+    </div>
+  `;
+}
+
+function render() {
+  const filtered = rooms.filter(r =>
+    r.roomNo.toLowerCase().includes(filterText.toLowerCase()) ||
+    r.hostel.toLowerCase().includes(filterText.toLowerCase()) ||
+    r.hostelType.toLowerCase().includes(filterText.toLowerCase())
+  );
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  if (currentPage > totalPages) currentPage = totalPages;
+  const slice = filtered.slice((currentPage-1)*perPage, currentPage*perPage);
+
+  document.getElementById('tableBody').innerHTML = slice.map(r => {
+    const vacant = r.beds - r.occupied;
+    const status = vacStatus(r.occupied, r.beds);
+    const pct    = Math.round((r.occupied / r.beds) * 100);
+    const canAlloc = vacant > 0;
+
+    return `
+    <tr>
+      <td class="td-check"><input type="checkbox" /></td>
+      <td>
+        <div class="hostel-name" style="font-size:13px;font-weight:600;">${r.roomNo}</div>
+      </td>
+      <td>
+        <div style="font-weight:500;font-size:12.5px;">${r.hostel}</div>
+        <span class="hostel-badge ${r.hostelType.toLowerCase()}" style="margin-top:4px;">${r.hostelType}</span>
+      </td>
+      <td style="font-size:13px;font-weight:500;">${r.beds}</td>
+      <td>
+        <div class="vac-wrap">
+          <div class="vac-top">
+            <span class="vac-pill ${status}">${vacLabel(status)}</span>
+            <span class="vac-numbers">${vacant} / ${r.beds} vacant</span>
+          </div>
+          <div class="vac-bar">
+            <div class="vac-bar-fill ${status}" style="width:${pct}%"></div>
+          </div>
+        </div>
+      </td>
+      <td style="position:relative;display:flex;align-items:center;gap:8px;padding-top:16px;">
+        <button class="btn-allocate ${canAlloc?'':'disabled'}" ${canAlloc?'':'disabled'} onclick="openAllocModal(${r.id})">
+          <i class="ti ti-user-plus" style="font-size:13px;"></i> Allocate
+        </button>
+        <button class="action-btn" onclick="toggleMenu(event,${r.id})"><i class="ti ti-dots-vertical"></i></button>
+        <div class="dropdown" id="menu-${r.id}">
+          <div class="dropdown-item" onclick="editRoom(${r.id})"><i class="ti ti-edit"></i> Edit</div>
+          <div class="dropdown-item danger" onclick="deleteRoom(${r.id})"><i class="ti ti-trash"></i> Delete</div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // pagination
+  const pg = document.getElementById('pagination');
+  let html = `<button class="page-btn ${currentPage===1?'disabled':''}" onclick="goPage(${currentPage-1})"><i class="ti ti-chevron-left" style="font-size:13px;"></i> Pre</button>`;
+  for (let i=1; i<=Math.min(totalPages,20); i++) {
+    if (i===1||i===totalPages||(i>=currentPage-1&&i<=currentPage+1))
+      html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    else if (i===currentPage-2||i===currentPage+2)
+      html += `<span class="page-dots">…</span>`;
+  }
+  html += `<button class="page-btn ${currentPage===totalPages?'disabled':''}" onclick="goPage(${currentPage+1})">Next <i class="ti ti-chevron-right" style="font-size:13px;"></i></button>`;
+  pg.innerHTML = html;
+}
+
+function goPage(p) {
+  const tot = Math.ceil(rooms.filter(r=>r.hostel.toLowerCase().includes(filterText.toLowerCase())).length/perPage);
+  if(p<1||p>tot) return; currentPage=p; render();
+}
+function changePerPage(v) { perPage=parseInt(v); currentPage=1; render(); }
+function filterTable(v)   { filterText=v; currentPage=1; render(); }
+function toggleAll(cb)    { document.querySelectorAll('#tableBody input[type=checkbox]').forEach(c=>c.checked=cb.checked); }
+
+function toggleMenu(e,id) {
+  e.stopPropagation();
+  document.querySelectorAll('.dropdown').forEach(d=>{ if(d.id!=='menu-'+id) d.classList.remove('open'); });
+  document.getElementById('menu-'+id).classList.toggle('open');
+}
+document.addEventListener('click',()=>document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open')));
+
+/* ── Allocate modal ── */
+function openAllocModal(id) {
+  const r = rooms.find(x=>x.id===id); if(!r) return;
+  allocatingId = id;
+  const vacant = r.beds - r.occupied;
+  document.getElementById('allocHeading').textContent = 'Allocate Student';
+  document.getElementById('allocRoomName').textContent = `${r.roomNo} – ${r.hostel}`;
+  document.getElementById('allocInfo').innerHTML = `<i class="ti ti-bed" style="font-size:15px;"></i> <strong>${vacant}</strong> bed${vacant>1?'s':''} available in this room (${r.hostelType} hostel)`;
+  document.getElementById('allocStudent').value = '';
+  document.getElementById('allocClass').value   = '';
+  document.getElementById('allocAdm').value     = '';
+  document.getElementById('allocModal').classList.add('open');
+}
+function closeAllocModal() { document.getElementById('allocModal').classList.remove('open'); }
+function closeAllocOutside(e) { if(e.target===document.getElementById('allocModal')) closeAllocModal(); }
+
+function confirmAlloc() {
+  const name = document.getElementById('allocStudent').value.trim();
+  if (!name) { document.getElementById('allocStudent').focus(); return; }
+  const r = rooms.find(x=>x.id===allocatingId);
+  if(r && r.occupied < r.beds) { r.occupied++; }
+  closeAllocModal();
+  render();
+}
+
+/* ── Add/Edit Room modal ── */
+let editingRoomId = null;
+
+function openAddModal() {
+  editingRoomId = null;
+  document.getElementById('roomModalHeading').textContent = 'Add Room';
+  document.getElementById('roomNo').value     = '';
+  document.getElementById('roomHostel').value = '';
+  document.getElementById('roomType').value   = 'Boys';
+  document.getElementById('roomBeds').value   = '';
+  document.getElementById('roomOccupied').value = '';
+  document.getElementById('roomModal').classList.add('open');
+}
+
+function editRoom(id) {
+  const r = rooms.find(x=>x.id===id); if(!r) return;
+  editingRoomId = id;
+  document.getElementById('roomModalHeading').textContent = 'Edit Room';
+  document.getElementById('roomNo').value       = r.roomNo;
+  document.getElementById('roomHostel').value   = r.hostel;
+  document.getElementById('roomType').value     = r.hostelType;
+  document.getElementById('roomBeds').value     = r.beds;
+  document.getElementById('roomOccupied').value = r.occupied;
+  document.getElementById('roomModal').classList.add('open');
+}
+
+function closeRoomModal() { document.getElementById('roomModal').classList.remove('open'); }
+function closeRoomOutside(e) { if(e.target===document.getElementById('roomModal')) closeRoomModal(); }
+
+function saveRoom() {
+  const roomNo   = document.getElementById('roomNo').value.trim();
+  const hostel   = document.getElementById('roomHostel').value.trim();
+  const type     = document.getElementById('roomType').value;
+  const beds     = parseInt(document.getElementById('roomBeds').value) || 0;
+  const occupied = parseInt(document.getElementById('roomOccupied').value) || 0;
+
+  if (!roomNo) { document.getElementById('roomNo').focus(); return; }
+  if (!hostel) { document.getElementById('roomHostel').focus(); return; }
+  if (beds < 1) { document.getElementById('roomBeds').focus(); return; }
+
+  if (editingRoomId) {
+    const r = rooms.find(x=>x.id===editingRoomId);
+    if(r){ r.roomNo=roomNo; r.hostel=hostel; r.hostelType=type; r.beds=beds; r.occupied=Math.min(occupied,beds); }
+  } else {
+    rooms.push({ id: nextId++, roomNo, hostel, hostelType: type, beds, occupied: Math.min(occupied, beds) });
+  }
+  closeRoomModal();
+  render();
+}
+
+function deleteRoom(id) {
+  if(confirm('Delete this room?')) { rooms = rooms.filter(r=>r.id!==id); render(); }
+}
+
+render();
+</script>
+
+<!-- ═══ ADD / EDIT ROOM MODAL ═══ -->
+<div class="modal-overlay" id="roomModal" onclick="closeRoomOutside(event)">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-door"></i> <span id="roomModalHeading">Add Room</span></div>
+    <div class="modal-sub">Fill in the room details below.</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;">
+      <div class="modal-field">
+        <label>Room No *</label>
+        <input type="text" id="roomNo" placeholder="e.g. A1" />
+      </div>
+      <div class="modal-field">
+        <label>Hostel Type *</label>
+        <select id="roomType">
+          <option value="Boys">Boys</option>
+          <option value="Girls">Girls</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-field">
+      <label>Hostel Name *</label>
+      <input type="text" id="roomHostel" placeholder="e.g. Phoenix Residence" />
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div class="modal-field">
+        <label>No of Beds *</label>
+        <input type="number" id="roomBeds" placeholder="e.g. 2" min="1" />
+      </div>
+      <div class="modal-field">
+        <label>Currently Occupied</label>
+        <input type="number" id="roomOccupied" placeholder="e.g. 1" min="0" />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn" onclick="closeRoomModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveRoom()"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

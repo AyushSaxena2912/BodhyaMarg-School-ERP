@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Academic Calendar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+  /* Event colors */
+  --c1: #ede9fe; --c1t: #5b21b6;
+  --c2: #fce7f3; --c2t: #9d174d;
+  --c3: #dbeafe; --c3t: #1e40af;
+  --c4: #dcfce7; --c4t: #166534;
+  --c5: #fef9c3; --c5t: #854d0e;
+  --c6: #ffe4e6; --c6t: #9f1239;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+/* ── Sidebar ── */
+.sidebar { width: 224px; min-width: 224px; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; height: 100vh; }
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.brand-bar { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.brand-name { font-size: 14px; font-weight: 600; color: var(--green); display: flex; align-items: center; gap: 8px; }
+.school-picker { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border); cursor: pointer; flex-shrink: 0; }
+.school-icon { width: 32px; height: 32px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.school-icon i { font-size: 16px; color: var(--green); }
+.school-info .name { font-size: 12px; font-weight: 600; }
+.school-info .sub  { font-size: 10px; color: var(--text-muted); }
+.nav-group { padding: 6px 0; }
+.nav-label { font-size: 10px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: .07em; padding: 6px 16px 2px; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 6px 16px; font-size: 12.5px; color: var(--text-muted); cursor: pointer; transition: background .12s; }
+.nav-item i { font-size: 15px; flex-shrink: 0; }
+.nav-item:hover { background: var(--bg); color: var(--text); }
+.nav-item.active { background: var(--green-light); color: var(--green); font-weight: 600; }
+.nav-sub .nav-item { padding: 5px 16px 5px 32px; font-size: 12px; }
+
+/* ── Main ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.ay-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* ── Content ── */
+.content { flex: 1; overflow-y: auto; padding: 20px 24px; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ── Page header ── */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.breadcrumb span { color: var(--green); }
+.page-actions { display: flex; gap: 10px; align-items: center; }
+.btn-export { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text-muted); }
+.btn-add { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: none; background: var(--green); color: #fff; }
+.btn-add:hover { background: var(--green-dark); }
+
+/* ── Calendar wrapper ── */
+.cal-wrap { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+
+/* ── Calendar toolbar ── */
+.cal-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.cal-nav { display: flex; align-items: center; gap: 8px; }
+.cal-nav-btn { width: 32px; height: 32px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); font-size: 14px; }
+.cal-nav-btn:hover { background: var(--bg); }
+.btn-today { padding: 6px 14px; border-radius: var(--radius); border: none; background: var(--green); color: #fff; font-size: 12.5px; font-weight: 600; font-family: inherit; cursor: pointer; }
+.btn-today:hover { background: var(--green-dark); }
+.cal-month-title { font-size: 16px; font-weight: 700; letter-spacing: .02em; color: var(--text); }
+.view-toggle { display: flex; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.view-btn { padding: 6px 14px; font-size: 12px; font-weight: 500; font-family: inherit; border: none; background: var(--white); color: var(--text-muted); cursor: pointer; }
+.view-btn.active { background: var(--green); color: #fff; }
+.view-btn:not(.active):hover { background: var(--bg); }
+
+/* ── Month grid ── */
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+.cal-dow { padding: 10px 0; text-align: center; font-size: 12px; font-weight: 700; color: var(--text-muted); background: var(--bg); border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); text-transform: uppercase; letter-spacing: .04em; }
+.cal-dow:last-child { border-right: none; }
+
+.cal-cell { min-height: 100px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 6px; position: relative; vertical-align: top; cursor: pointer; transition: background .1s; }
+.cal-cell:last-child, .cal-cell:nth-child(7n) { border-right: none; }
+.cal-cell:hover { background: #fafbfc; }
+.cal-cell.today { background: #fffbe6; }
+.cal-cell.other-month .day-num { color: var(--text-hint); }
+.day-num { font-size: 12.5px; font-weight: 600; color: var(--text); text-align: right; margin-bottom: 4px; line-height: 1; }
+.today .day-num { color: var(--green); font-weight: 700; }
+
+.event-chip { display: block; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; line-height: 1.5; }
+.event-chip:hover { filter: brightness(.95); }
+
+/* Week view */
+.week-wrap { display: none; }
+.week-grid { display: grid; grid-template-columns: 56px repeat(7,1fr); border-left: 1px solid var(--border); }
+.wk-head { background: var(--bg); border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 8px 4px; text-align: center; }
+.wk-head-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: .04em; }
+.wk-head-date { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.2; }
+.wk-head-date.today-d { color: var(--green); }
+.wk-time-col { font-size: 10px; color: var(--text-hint); text-align: right; padding-right: 6px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); height: 48px; display: flex; align-items: flex-start; padding-top: 4px; }
+.wk-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); height: 48px; position: relative; cursor: pointer; }
+.wk-cell:hover { background: #fafbfc; }
+.wk-event { position: absolute; left: 2px; right: 2px; top: 2px; font-size: 10px; font-weight: 600; padding: 2px 5px; border-radius: 4px; overflow: hidden; line-height: 1.4; cursor: pointer; }
+
+/* Day view */
+.day-wrap { display: none; }
+.day-header { padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.day-header .day-title { font-size: 20px; font-weight: 700; }
+.day-header .day-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.day-slots { display: grid; grid-template-columns: 56px 1fr; }
+.day-time { font-size: 10px; color: var(--text-hint); text-align: right; padding-right: 10px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); height: 52px; display: flex; align-items: flex-start; padding-top: 4px; }
+.day-slot { border-bottom: 1px solid var(--border); height: 52px; padding: 3px 8px; cursor: pointer; position: relative; }
+.day-slot:hover { background: #fafbfc; }
+.day-ev { font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 5px; display: inline-block; cursor: pointer; }
+
+/* ── Event list sidebar ── */
+.cal-body { display: flex; gap: 0; }
+.cal-main { flex: 1; min-width: 0; }
+.event-sidebar { width: 240px; min-width: 240px; border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.es-head { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+.es-list { flex: 1; overflow-y: auto; padding: 10px; }
+.es-list::-webkit-scrollbar { width: 3px; }
+.es-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.es-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px; border-radius: var(--radius); margin-bottom: 4px; cursor: pointer; transition: background .1s; }
+.es-item:hover { background: var(--bg); }
+.es-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+.es-info .es-title { font-size: 12.5px; font-weight: 600; color: var(--text); line-height: 1.3; }
+.es-info .es-date  { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.es-empty { text-align: center; padding: 40px 16px; color: var(--text-hint); font-size: 12.5px; }
+
+/* ── Category legend ── */
+.legend { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 16px; border-top: 1px solid var(--border); }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── Modal ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.38); display: flex; align-items: center; justify-content: center; z-index: 400; opacity: 0; pointer-events: none; transition: opacity .15s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--white); border-radius: var(--radius-lg); width: 460px; padding: 26px; box-shadow: 0 8px 40px rgba(0,0,0,.15); transform: translateY(10px); transition: transform .15s; }
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.modal-header h2 { font-size: 15px; font-weight: 700; }
+.close-btn { width: 28px; height: 28px; border-radius: 50%; border: none; background: #f3f4f6; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 14px; }
+.close-btn:hover { background: #e5e7eb; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-field { margin-bottom: 15px; }
+.form-field label { display: block; font-size: 11.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .04em; }
+.form-field input, .form-field select, .form-field textarea {
+  width: 100%; font-family: inherit; font-size: 13px; color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 9px 11px; background: var(--white); outline: none; transition: border-color .15s;
+}
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(26,122,74,.08); }
+.form-field textarea { resize: vertical; min-height: 72px; }
+.form-field select {
+  appearance: none; -webkit-appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px;
+}
+/* color swatches */
+.color-swatches { display: flex; gap: 8px; margin-top: 6px; }
+.swatch { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2.5px solid transparent; transition: transform .1s; }
+.swatch:hover { transform: scale(1.15); }
+.swatch.selected { border-color: var(--text); }
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+.btn-cancel { padding: 8px 18px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; color: var(--text-muted); }
+.btn-save { padding: 8px 22px; border-radius: var(--radius); border: none; background: var(--green); color: #fff; font-size: 12.5px; font-weight: 600; font-family: inherit; cursor: pointer; }
+.btn-save:hover { background: var(--green-dark); }
+.btn-delete { padding: 8px 16px; border-radius: var(--radius); border: 1px solid #fecaca; background: #fff; color: #dc2626; font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; }
+.btn-delete:hover { background: #fef2f2; }
+
+/* toast */
+.toast { position: fixed; bottom: 24px; right: 24px; padding: 10px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 500; color: #fff; background: var(--green); z-index: 9999; opacity: 0; pointer-events: none; transition: opacity .2s; display: flex; align-items: center; gap: 8px; }
+.toast.show { opacity: 1; }
+</style>
+<style>
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="brand-bar">
+    <div class="brand-name"><i class="ti ti-school"></i> BodhyaMarg</div>
+    <i class="ti ti-menu-2" style="font-size:18px;color:var(--text-muted);cursor:pointer;"></i>
+  </div>
+  <div class="school-picker">
+    <div class="school-icon"><i class="ti ti-shield-half"></i></div>
+    <div class="school-info"><div class="name">Delhi Public School</div><div class="sub">Main Campus</div></div>
+    <i class="ti ti-chevron-down" style="margin-left:auto;font-size:14px;color:var(--text-hint);"></i>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Main</div>
+    <div class="nav-sub-container">
+      <a href="VehicleOccupancy.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="VehicleOccupancy.html" class="nav-item">Admin Dashboard</a>
+        <a href="#" class="nav-item">Teacher Dashboard</a>
+        <a href="#" class="nav-item">Student Dashboard</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Peoples</div>
+    <div class="nav-sub-container">
+      <a href="AddStudent.html" class="nav-item"><i class="ti ti-school"></i> Students <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddStudent.html" class="nav-item">All Students</a>
+        <a href="#" class="nav-item">Student Promotion</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-user-check"></i> Parents</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-heart"></i> Guardians</a>
+    <div class="nav-sub-container">
+      <a href="AddTeacher.html" class="nav-item"><i class="ti ti-users"></i> Teachers <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddTeacher.html" class="nav-item">All Teachers</a>
+        <a href="#" class="nav-item">Routine</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Academic</div>
+    <div class="nav-sub-container">
+      <a href="AddClasses.html" class="nav-item"><i class="ti ti-books"></i> Classes <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="AddClasses.html" class="nav-item">All Classes</a>
+        <a href="#" class="nav-item">Schedule</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-building-community"></i> Class Room</a>
+    <a href="ClassRoutine.html" class="nav-item"><i class="ti ti-calendar-event"></i> Class Routine</a>
+    <a href="AddSections.html" class="nav-item"><i class="ti ti-box"></i> Section</a>
+    <a href="Subjects.html" class="nav-item"><i class="ti ti-book-2"></i> Subject</a>
+    <a href="AddClassSyllabus.html" class="nav-item"><i class="ti ti-file-text"></i> Syllabus</a>
+    <a href="AcademicCalendar.html" class="nav-item"><i class="ti ti-table"></i> Time Table</a>
+    <a href="HomeworkList.html" class="nav-item"><i class="ti ti-file-certificate"></i> Home Work</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-test-pipe"></i> Examinations <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Exam</a>
+        <a href="#" class="nav-item">Exam Schedule</a>
+        <a href="#" class="nav-item">Grade</a>
+        <a href="#" class="nav-item">Exam Attendance</a>
+        <a href="#" class="nav-item">Exam Results</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-target"></i> Reasons</a>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Management</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-receipt"></i> Fees Collection <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Fees Group</a>
+        <a href="#" class="nav-item">Fees Type</a>
+        <a href="#" class="nav-item">Fees Master</a>
+        <a href="#" class="nav-item">Fees Assign</a>
+        <a href="#" class="nav-item">Collect Fees</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item"><i class="ti ti-ball-football"></i> Sports</a>
+    <div class="nav-sub-container">
+      <a href="HostelList.html" class="nav-item"><i class="ti ti-building-store"></i> Hostel <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="HostelList.html" class="nav-item">Hostel List</a>
+        <a href="HostelRooms.html" class="nav-item">Hostel Rooms</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="AddVehicle.html" class="nav-item"><i class="ti ti-bus"></i> Transport <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="RoutesList.html" class="nav-item">Routes</a>
+        <a href="PickupPoints.html" class="nav-item">Pickup Points</a>
+        <a href="AddDrivers.html" class="nav-item">Vehicle Drivers</a>
+        <a href="AddVehicle.html" class="nav-item">Vehicles</a>
+        <a href="AssignVehicle.html" class="nav-item">Assign Vehicle</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">HRM</div>
+    <a href="AddStafff.html" class="nav-item"><i class="ti ti-users-group"></i> Staffs</a>
+    <a href="Designation.html" class="nav-item"><i class="ti ti-id-badge"></i> Designation</a>
+    <a href="Department.html" class="nav-item"><i class="ti ti-sitemap"></i> Department</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-calendar-check"></i> Attendance <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Student Attendance</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="Leave.html" class="nav-item"><i class="ti ti-calendar-minus"></i> Leaves <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="Leave.html" class="nav-item">List of leaves</a>
+        <a href="LeaveApproveRequest.html" class="nav-item">Approve Request</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="nav-group">
+    <div class="nav-label">Finance & Accounts</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-wallet"></i> Accounts <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Expenses</a>
+        <a href="#" class="nav-item">Expense Category</a>
+        <a href="#" class="nav-item">Income</a>
+        <a href="#" class="nav-item">Transactions</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Announcements</div>
+    <a href="NoticeBoard.html" class="nav-item"><i class="ti ti-clipboard-text"></i> Notice Board</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Reports</div>
+    <a href="#" class="nav-item"><i class="ti ti-report"></i> Attendance Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-report-analytics"></i> Class Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-chart-bar"></i> Student Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-file-analytics"></i> Grade Report</a>
+    <a href="#" class="nav-item"><i class="ti ti-receipt-2"></i> Fees Report</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">User Management</div>
+    <a href="#" class="nav-item"><i class="ti ti-users"></i> Users</a>
+    <a href="#" class="nav-item"><i class="ti ti-shield-lock"></i> Roles & Permissions</a>
+    <a href="#" class="nav-item"><i class="ti ti-user-x"></i> Delete Account Request</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Membership</div>
+    <a href="#" class="nav-item"><i class="ti ti-star"></i> Membership Plans</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Support</div>
+    <a href="#" class="nav-item"><i class="ti ti-user"></i> Profile</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Settings</div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-settings"></i> General Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">Profile Settings</a>
+      </div>
+    </div>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-book"></i> Academic Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="#" class="nav-item">School Settings</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">UI Interface</div>
+    <a href="#" class="nav-item"><i class="ti ti-components"></i> Base UI</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var path = window.location.pathname.split('/').pop();
+      if(path) {
+        var links = document.querySelectorAll('.sidebar a.nav-item');
+        links.forEach(function(link) {
+          if(link.getAttribute('href') === path) {
+            link.classList.add('active');
+            var subContainer = link.closest('.nav-sub-container');
+            if(subContainer) {
+               var parentLink = subContainer.querySelector('a.nav-item');
+               if(parentLink) {
+                 parentLink.classList.add('active');
+               }
+            }
+          }
+        });
+      }
+      
+      // Auto-hide all nav-subs first
+      document.querySelectorAll('.nav-sub').forEach(function(sub) {
+         sub.style.display = 'none'; 
+      });
+      document.querySelectorAll('.nav-item.active').forEach(function(activeItem) {
+          // Show the nav-sub if active item is inside one
+          var subContainer = activeItem.closest('.nav-sub-container');
+          if(subContainer) {
+              var sub = subContainer.querySelector('.nav-sub');
+              if(sub) sub.style.display = 'block';
+          }
+          // Highlight the parent nav-group's nav-label in green
+          var navGroup = activeItem.closest('.nav-group');
+          if(navGroup) {
+              var label = navGroup.querySelector('.nav-label');
+              if(label) label.style.color = 'var(--green)';
+          }
+      });
+    });
+  </script>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search anything…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill"><i class="ti ti-calendar"></i> Academic Year : 2026 / 2027 <i class="ti ti-chevron-down"></i></div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Academic Calendar</h1>
+        <div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Academic <i class="ti ti-chevron-right"></i> <span>Calendar</span></div>
+      </div>
+      <div class="page-actions">
+        <button class="btn-export"><i class="ti ti-download"></i> Export</button>
+        <button class="btn-add" onclick="openAddModal()"><i class="ti ti-circle-plus"></i> Add Event</button>
+      </div>
+    </div>
+
+    <div class="cal-wrap">
+      <!-- Toolbar -->
+      <div class="cal-toolbar">
+        <div class="cal-nav">
+          <button class="btn-today" onclick="goToday()">Today</button>
+          <button class="cal-nav-btn" onclick="prevMonth()"><i class="ti ti-chevron-left"></i></button>
+          <button class="cal-nav-btn" onclick="nextMonth()"><i class="ti ti-chevron-right"></i></button>
+          <span class="cal-month-title" id="monthTitle"></span>
+        </div>
+        <div class="view-toggle">
+          <button class="view-btn active" id="vMonth" onclick="setView('month')">Month</button>
+          <button class="view-btn" id="vWeek"  onclick="setView('week')">Week</button>
+          <button class="view-btn" id="vDay"   onclick="setView('day')">Day</button>
+        </div>
+      </div>
+
+      <div class="cal-body">
+        <div class="cal-main">
+          <!-- Month view -->
+          <div id="monthView">
+            <div class="cal-grid" id="dowRow"></div>
+            <div class="cal-grid" id="calCells"></div>
+          </div>
+          <!-- Week view -->
+          <div id="weekView" class="week-wrap"></div>
+          <!-- Day view -->
+          <div id="dayView" class="day-wrap"></div>
+        </div>
+
+        <!-- Event Sidebar -->
+        <div class="event-sidebar">
+          <div class="es-head">
+            <span id="esSideTitle">Events</span>
+            <span id="esCount" style="font-size:11px;font-weight:600;color:var(--green);background:var(--green-light);padding:2px 8px;border-radius:20px;"></span>
+          </div>
+          <div class="es-list" id="esList"></div>
+          <div class="legend" id="legendBar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADD / EDIT EVENT MODAL ═══ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add Event</h2>
+      <button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div class="form-field">
+      <label>Event Title</label>
+      <input type="text" id="fTitle" placeholder="e.g. Annual Sports Day" />
+    </div>
+    <div class="form-row">
+      <div class="form-field" style="margin-bottom:0">
+        <label>Start Date</label>
+        <input type="date" id="fStart" />
+      </div>
+      <div class="form-field" style="margin-bottom:0">
+        <label>End Date</label>
+        <input type="date" id="fEnd" />
+      </div>
+    </div>
+    <div style="margin-bottom:15px;margin-top:15px;">
+      <div class="form-field" style="margin-bottom:6px">
+        <label>Category</label>
+        <select id="fCat">
+          <option value="exam">Exam</option>
+          <option value="holiday">Holiday</option>
+          <option value="meeting">Meeting</option>
+          <option value="activity">Activity</option>
+          <option value="admission">Admission</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-field">
+      <label>Color</label>
+      <div class="color-swatches" id="colorSwatches"></div>
+    </div>
+    <div class="form-field">
+      <label>Description (optional)</label>
+      <textarea id="fDesc" placeholder="Add details about this event…"></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-delete" id="btnDelete" style="display:none;" onclick="deleteEvent()"><i class="ti ti-trash"></i> Delete</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveEvent()"><i class="ti ti-check"></i> Save Event</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ──
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+const COLORS = [
+  { bg:'#ede9fe', text:'#5b21b6', dot:'#7c3aed' },
+  { bg:'#fce7f3', text:'#9d174d', dot:'#db2777' },
+  { bg:'#dbeafe', text:'#1e40af', dot:'#3b82f6' },
+  { bg:'#dcfce7', text:'#166534', dot:'#22c55e' },
+  { bg:'#fef9c3', text:'#854d0e', dot:'#eab308' },
+  { bg:'#ffe4e6', text:'#9f1239', dot:'#f43f5e' },
+];
+
+const CAT_COLORS = { exam:'#dbeafe', holiday:'#dcfce7', meeting:'#ede9fe', activity:'#fef9c3', admission:'#ffe4e6', other:'#fce7f3' };
+const CAT_TEXTS  = { exam:'#1e40af', holiday:'#166534', meeting:'#5b21b6', activity:'#854d0e', admission:'#9f1239', other:'#9d174d' };
+
+let today = new Date();
+let viewDate = new Date(today.getFullYear(), today.getMonth(), 1);
+let currentView = 'month';
+let editingId = null;
+let selectedColor = 0;
+let events = [
+  { id:1, title:'Annual Function',       start:'2026-05-22', end:'2026-05-22', cat:'activity', colorIdx:0, desc:'' },
+  { id:2, title:'Teacher Meeting',       start:'2026-05-24', end:'2026-05-24', cat:'meeting',  colorIdx:1, desc:'' },
+  { id:3, title:'Activity - Training',   start:'2026-05-27', end:'2026-05-27', cat:'activity', colorIdx:2, desc:'' },
+  { id:4, title:'Parents, Teacher Meet', start:'2026-05-27', end:'2026-05-27', cat:'meeting',  colorIdx:1, desc:'' },
+  { id:5, title:'Admission Camp',        start:'2026-05-30', end:'2026-05-30', cat:'admission',colorIdx:5, desc:'' },
+  { id:6, title:'Half-Yearly Exams',     start:'2026-06-10', end:'2026-06-18', cat:'exam',     colorIdx:2, desc:'Mid-term examination for all classes' },
+  { id:7, title:'Summer Vacation',       start:'2026-06-20', end:'2026-07-15', cat:'holiday',  colorIdx:3, desc:'Annual summer break' },
+  { id:8, title:'Independence Day',      start:'2026-08-15', end:'2026-08-15', cat:'holiday',  colorIdx:3, desc:'National holiday' },
+];
+let nextId = 9;
+
+// ── Helpers ──
+function ymd(d) { return d.toISOString().split('T')[0]; }
+function parseDate(s) { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function fmtDate(s) {
+  const d = parseDate(s);
+  return `${String(d.getDate()).padStart(2,'0')} ${MONTHS[d.getMonth()].slice(0,3)} ${d.getFullYear()}`;
+}
+function eventsOnDate(dateStr) {
+  return events.filter(e => dateStr >= e.start && dateStr <= e.end);
+}
+function eventsInMonth(y, m) {
+  const start = `${y}-${String(m+1).padStart(2,'0')}-01`;
+  const end   = `${y}-${String(m+1).padStart(2,'0')}-${new Date(y,m+1,0).getDate().toString().padStart(2,'0')}`;
+  return events.filter(e => e.end >= start && e.start <= end);
+}
+
+// ── Render Month ──
+function renderMonth() {
+  const y = viewDate.getFullYear(), m = viewDate.getMonth();
+  document.getElementById('monthTitle').textContent = `${MONTHS[m].toUpperCase()} ${y}`;
+
+  // DOW headers
+  const dowRow = document.getElementById('dowRow');
+  dowRow.innerHTML = DAYS.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+
+  // Cells
+  const firstDay = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const prevDays = new Date(y, m, 0).getDate();
+  const todayStr = ymd(today);
+  let cells = '';
+
+  // Prev month overflow
+  for (let i = firstDay-1; i >= 0; i--) {
+    const d = prevDays - i;
+    const ds = `${y}-${String(m).padStart(2,'0') || String(12)}-${String(d).padStart(2,'0')}`;
+    cells += `<div class="cal-cell other-month" onclick="openAddOnDate('${getOverflowDate(y,m,-i-1+firstDay)}')"><div class="day-num">${d}</div></div>`;
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = ds === todayStr;
+    const dayEvents = eventsOnDate(ds);
+    const chips = dayEvents.slice(0,3).map(e => {
+      const c = COLORS[e.colorIdx];
+      return `<span class="event-chip" style="background:${c.bg};color:${c.text};" onclick="openEditModal(event,${e.id})">${e.title}</span>`;
+    }).join('');
+    const more = dayEvents.length > 3 ? `<span style="font-size:10px;color:var(--text-hint);padding-left:2px;">+${dayEvents.length-3} more</span>` : '';
+    cells += `<div class="cal-cell${isToday?' today':''}" onclick="openAddOnDate('${ds}')">
+      <div class="day-num">${d}</div>${chips}${more}
+    </div>`;
+  }
+
+  // Next month overflow
+  const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+  for (let d = 1; d <= totalCells - firstDay - daysInMonth; d++) {
+    cells += `<div class="cal-cell other-month"><div class="day-num">${d}</div></div>`;
+  }
+
+  document.getElementById('calCells').innerHTML = cells;
+  renderSidebar(eventsInMonth(y, m));
+}
+
+function getOverflowDate(y, m, offset) {
+  const d = new Date(y, m, offset);
+  return ymd(d);
+}
+
+// ── Render Week ──
+function renderWeek() {
+  const y = viewDate.getFullYear(), m = viewDate.getMonth();
+  // Find Monday of current week
+  const dow = viewDate.getDay();
+  const weekStart = new Date(viewDate);
+  weekStart.setDate(viewDate.getDate() - dow);
+
+  const days = Array.from({length:7}, (_,i) => {
+    const d = new Date(weekStart); d.setDate(weekStart.getDate()+i); return d;
+  });
+  document.getElementById('monthTitle').textContent = `${MONTHS[m].toUpperCase()} ${y}`;
+
+  const todayStr = ymd(today);
+  const hours = Array.from({length:24},(_,i)=>i);
+
+  let html = `<div class="week-grid">
+    <div class="wk-head" style="border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg);"></div>
+    ${days.map(d=>{
+      const ds=ymd(d); const isT=ds===todayStr;
+      return `<div class="wk-head" style="text-align:center;">
+        <div class="wk-head-label">${DAYS[d.getDay()]}</div>
+        <div class="wk-head-date ${isT?'today-d':''}">${d.getDate()}</div>
+      </div>`;
+    }).join('')}
+    ${hours.map(h=>`
+      <div class="wk-time-col">${h===0?'':h<12?h+'am':h===12?'12pm':(h-12)+'pm'}</div>
+      ${days.map(d=>{
+        const ds=ymd(d);
+        const hevs = eventsOnDate(ds);
+        const chip = hevs.length && h===9 ? hevs.slice(0,2).map(e=>{
+          const c=COLORS[e.colorIdx];
+          return `<div class="wk-event" style="background:${c.bg};color:${c.text};" onclick="openEditModal(event,${e.id})">${e.title}</div>`;
+        }).join('') : '';
+        return `<div class="wk-cell">${chip}</div>`;
+      }).join('')}
+    `).join('')}
+  </div>`;
+  document.getElementById('weekView').innerHTML = html;
+  renderSidebar(eventsInMonth(y,m));
+}
+
+// ── Render Day ──
+function renderDay() {
+  const ds = ymd(viewDate);
+  const d  = viewDate;
+  document.getElementById('monthTitle').textContent = `${DAYS[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  const hours = Array.from({length:24},(_,i)=>i);
+  const dayEvs = eventsOnDate(ds);
+
+  let html = `<div class="day-header">
+    <div class="day-title">${DAYS[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}</div>
+    <div class="day-sub">${dayEvs.length} event${dayEvs.length!==1?'s':''} today</div>
+  </div>
+  <div class="day-slots">
+    ${hours.map(h=>{
+      const ev = dayEvs.length && h===9 ? dayEvs.map(e=>{
+        const c=COLORS[e.colorIdx];
+        return `<span class="day-ev" style="background:${c.bg};color:${c.text};" onclick="openEditModal(event,${e.id})">${e.title}</span> `;
+      }).join('') : '';
+      return `<div class="day-time">${h===0?'':h<12?h+'am':h===12?'12pm':(h-12)+'pm'}</div>
+              <div class="day-slot">${ev}</div>`;
+    }).join('')}
+  </div>`;
+  document.getElementById('dayView').innerHTML = html;
+  renderSidebar(dayEvs);
+}
+
+// ── Sidebar ──
+function renderSidebar(evList) {
+  document.getElementById('esCount').textContent = evList.length;
+  if (!evList.length) {
+    document.getElementById('esList').innerHTML = `<div class="es-empty"><i class="ti ti-calendar-off" style="font-size:28px;display:block;margin:0 auto 8px;"></i>No events this period</div>`;
+  } else {
+    document.getElementById('esList').innerHTML = evList.map(e=>{
+      const c = COLORS[e.colorIdx];
+      return `<div class="es-item" onclick="openEditModal(event,${e.id})">
+        <div class="es-dot" style="background:${c.dot};"></div>
+        <div class="es-info">
+          <div class="es-title">${e.title}</div>
+          <div class="es-date">${fmtDate(e.start)}${e.end!==e.start?' – '+fmtDate(e.end):''}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  // Legend
+  const cats = [...new Set(evList.map(e=>e.cat))];
+  const catLabels = { exam:'Exam', holiday:'Holiday', meeting:'Meeting', activity:'Activity', admission:'Admission', other:'Other' };
+  document.getElementById('legendBar').innerHTML = cats.map(c=>`
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${CAT_TEXTS[c]};"></div>
+      ${catLabels[c]}
+    </div>`).join('');
+}
+
+// ── View switching ──
+function setView(v) {
+  currentView = v;
+  ['month','week','day'].forEach(x=>{
+    document.getElementById(x+'View').style.display = x===v ? 'block' : 'none';
+    document.getElementById('v'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('active', x===v);
+  });
+  render();
+}
+
+function render() {
+  if (currentView==='month') renderMonth();
+  else if (currentView==='week') renderWeek();
+  else renderDay();
+}
+
+function prevMonth() {
+  if (currentView==='month') viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth()-1, 1);
+  else if (currentView==='week') { const d=new Date(viewDate); d.setDate(d.getDate()-7); viewDate=d; }
+  else { const d=new Date(viewDate); d.setDate(d.getDate()-1); viewDate=d; }
+  render();
+}
+function nextMonth() {
+  if (currentView==='month') viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth()+1, 1);
+  else if (currentView==='week') { const d=new Date(viewDate); d.setDate(d.getDate()+7); viewDate=d; }
+  else { const d=new Date(viewDate); d.setDate(d.getDate()+1); viewDate=d; }
+  render();
+}
+function goToday() { viewDate = new Date(today.getFullYear(), today.getMonth(), 1); render(); }
+
+// ── Modal ──
+function buildSwatches() {
+  document.getElementById('colorSwatches').innerHTML = COLORS.map((c,i)=>`
+    <div class="swatch ${i===selectedColor?'selected':''}" style="background:${c.dot};" onclick="selectColor(${i})"></div>
+  `).join('');
+}
+
+function selectColor(i) {
+  selectedColor = i;
+  buildSwatches();
+  // auto-set cat color
+}
+
+function openAddModal(dateStr) {
+  editingId = null;
+  selectedColor = 0;
+  document.getElementById('modalTitle').textContent = 'Add Event';
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fStart').value = dateStr || ymd(today);
+  document.getElementById('fEnd').value   = dateStr || ymd(today);
+  document.getElementById('fCat').value   = 'activity';
+  document.getElementById('fDesc').value  = '';
+  document.getElementById('btnDelete').style.display = 'none';
+  buildSwatches();
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function openAddOnDate(ds) {
+  openAddModal(ds);
+}
+
+function openEditModal(e, id) {
+  e.stopPropagation();
+  const ev = events.find(x=>x.id===id);
+  if (!ev) return;
+  editingId = id;
+  selectedColor = ev.colorIdx;
+  document.getElementById('modalTitle').textContent = 'Edit Event';
+  document.getElementById('fTitle').value = ev.title;
+  document.getElementById('fStart').value = ev.start;
+  document.getElementById('fEnd').value   = ev.end;
+  document.getElementById('fCat').value   = ev.cat;
+  document.getElementById('fDesc').value  = ev.desc;
+  document.getElementById('btnDelete').style.display = 'inline-flex';
+  buildSwatches();
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal()  { document.getElementById('modalOverlay').classList.remove('open'); editingId=null; }
+function closeModalOutside(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); }
+
+function saveEvent() {
+  const title = document.getElementById('fTitle').value.trim();
+  if (!title) { document.getElementById('fTitle').focus(); return; }
+  const start = document.getElementById('fStart').value;
+  const end   = document.getElementById('fEnd').value   || start;
+  const cat   = document.getElementById('fCat').value;
+  const desc  = document.getElementById('fDesc').value.trim();
+
+  if (editingId) {
+    const ev = events.find(x=>x.id===editingId);
+    if (ev) Object.assign(ev, {title,start,end,cat,colorIdx:selectedColor,desc});
+    showToast('Event updated!');
+  } else {
+    events.push({id:nextId++,title,start,end,cat,colorIdx:selectedColor,desc});
+    showToast('Event added!');
+  }
+  closeModal();
+  render();
+}
+
+function deleteEvent() {
+  if (!editingId) return;
+  events = events.filter(x=>x.id!==editingId);
+  closeModal();
+  render();
+  showToast('Event deleted.');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = `<i class="ti ti-circle-check"></i> ${msg}`;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+// ── Init ──
+document.getElementById('weekView').style.display='none';
+document.getElementById('dayView').style.display='none';
+render();
+</script>
+</body>
+</html>
