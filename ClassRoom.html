@@ -427,7 +427,7 @@
           <tr>
             <th style="width:44px;"><input type="checkbox" class="cb" /></th>
             <th>Room No <i class="ti ti-selector"></i></th>
-            <th>Building / Floor <i class="ti ti-selector"></i></th>
+
             <th>Assigned Class <i class="ti ti-selector"></i></th>
             <th>Capacity <i class="ti ti-selector"></i></th>
             <th>Status <i class="ti ti-selector"></i></th>
@@ -473,7 +473,7 @@ rooms.forEach(r => {
   tr.innerHTML = `
     <td><input type="checkbox" class="cb" /></td>
     <td><span class="room-badge">${r.room}</span></td>
-    <td><span style="color:var(--text);">${r.building}</span><br><span style="font-size:11px;color:var(--text-muted);">${r.floor}</span></td>
+
     <td><span class="class-chip">${r.cls}</span></td>
     <td style="color:var(--text-muted);">${r.capacity} seats</td>
     <td><span class="status-badge ${r.status}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span></td>
