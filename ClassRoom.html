@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Classes List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #1a7a4a;
+    --green-light: #e6f4ee;
+    --green-dark: #145e38;
+    --bg: #f4f6f8;
+    --white: #ffffff;
+    --border: #e2e6ea;
+    --text: #1a1d23;
+    --text-muted: #6b7280;
+    --text-hint: #9ca3af;
+    --warn: #d97706;
+    --danger: #dc2626;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+  }
+
+  /* ── Sidebar ─────────────────────────────── */
+  .sidebar {
+    width: 224px;
+    min-width: 224px;
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 100vh;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .brand-bar {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand-name i { font-size: 18px; }
+
+  .school-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .school-picker:hover { background: var(--bg); }
+  .school-icon {
+    width: 32px; height: 32px;
+    background: var(--green-light);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .school-icon i { font-size: 16px; color: var(--green); }
+  .school-info { flex: 1; }
+  .school-info .name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .school-info .sub  { font-size: 10px; color: var(--text-muted); }
+
+  .nav-group { padding: 8px 0; }
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-hint);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 6px 16px 2px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 16px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 0;
+    transition: background 0.12s;
+    user-select: none;
+  }
+  .nav-item i { font-size: 16px; flex-shrink: 0; }
+  .nav-item:hover { background: var(--bg); color: var(--text); }
+  .nav-item.active {
+    background: var(--green-light);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .nav-item.active i { color: var(--green); }
+
+  .nav-sub { padding-left: 16px; }
+  .nav-sub .nav-item { font-size: 12px; padding: 5px 16px; }
+  .nav-sub .nav-item.active-sub { color: var(--green); font-weight: 600; background: transparent; }
+
+  /* ── Main ─────────────────────────────────── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* Topbar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .topbar-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 7px 12px;
+    width: 280px;
+  }
+  .topbar-search i { font-size: 14px; color: var(--text-hint); }
+  .topbar-search input {
+    border: none; background: transparent;
+    font-size: 12.5px; color: var(--text);
+    font-family: inherit; outline: none; width: 100%;
+  }
+  .topbar-search input::placeholder { color: var(--text-hint); }
+  .topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+  .ay-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .ay-pill i { font-size: 14px; color: var(--text-hint); }
+
+  .icon-btn {
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--white);
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: background 0.12s;
+  }
+  .icon-btn:hover { background: var(--bg); }
+  .icon-btn i { font-size: 16px; }
+
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+
+  /* Content area */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+  }
+  .content::-webkit-scrollbar { width: 4px; }
+  .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* Page header */
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .page-title h1 { font-size: 20px; font-weight: 600; color: var(--text); }
+  .breadcrumb {
+    font-size: 11.5px;
+    color: var(--text-hint);
+    margin-top: 3px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .breadcrumb span { color: var(--green); }
+  .breadcrumb i { font-size: 11px; }
+
+  .header-actions { display: flex; gap: 8px; }
+
+  .btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-size: 12.5px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+    transition: background 0.12s;
+  }
+  .btn:hover { background: var(--bg); }
+  .btn i { font-size: 15px; }
+  .btn-primary {
+    background: var(--green); color: #fff;
+    border-color: var(--green);
+  }
+  .btn-primary:hover { background: var(--green-dark); border-color: var(--green-dark); }
+
+  /* Table card */
+  .table-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .table-toolbar {
+    display: flex; align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    gap: 10px;
+  }
+  .table-toolbar-title { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+
+  .toolbar-btn {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: var(--white);
+    font-family: inherit;
+    transition: background 0.12s;
+  }
+  .toolbar-btn:hover { background: var(--bg); }
+  .toolbar-btn i { font-size: 14px; }
+
+  .table-controls {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    background: #fafbfc;
+  }
+  .rpp {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--text-muted);
+  }
+  .rpp select {
+    font-size: 12px; font-family: inherit;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px 8px;
+    background: var(--white);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .tbl-search {
+    display: flex; align-items: center; gap: 7px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    background: var(--white);
+  }
+  .tbl-search i { font-size: 13px; color: var(--text-hint); }
+  .tbl-search input {
+    border: none; background: transparent;
+    font-size: 12px; font-family: inherit; color: var(--text);
+    outline: none; width: 160px;
+  }
+  .tbl-search input::placeholder { color: var(--text-hint); }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: #f8f9fb; }
+  th {
+    font-size: 11.5px; font-weight: 600;
+    color: var(--text-muted);
+    padding: 11px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    user-select: none;
+    cursor: pointer;
+  }
+  th i { font-size: 11px; vertical-align: middle; margin-left: 3px; color: var(--text-hint); }
+  th:hover { background: #f0f1f3; }
+
+  td {
+    font-size: 12.5px;
+    color: var(--text);
+    padding: 11px 18px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #f8faf9; }
+
+  .cb {
+    width: 15px; height: 15px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    accent-color: var(--green);
+  }
+
+  .class-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    background: var(--green-light);
+    color: var(--green);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .section-chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px;
+    background: #f0f0f0;
+    color: var(--text-muted);
+    border-radius: 50%;
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+
+  .cap-wrap { display: flex; align-items: center; gap: 10px; }
+  .cap-bar {
+    width: 64px; height: 5px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .cap-fill { height: 100%; border-radius: 3px; }
+  .cap-fill.ok     { background: var(--green); }
+  .cap-fill.warn   { background: var(--warn); }
+  .cap-fill.danger { background: var(--danger); }
+  .cap-text { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+  .three-dot {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: background 0.12s;
+  }
+  .three-dot:hover { background: var(--bg); }
+  .three-dot i { font-size: 16px; }
+
+  /* Pagination */
+  .pagination {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 4px;
+    padding: 12px 18px;
+    border-top: 1px solid var(--border);
+    background: #fafbfc;
+  }
+  .pg-btn {
+    min-width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius);
+    font-size: 12px; font-family: inherit;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text-muted);
+    padding: 0 8px;
+    transition: background 0.12s;
+    gap: 4px;
+  }
+  .pg-btn:hover { background: var(--bg); }
+  .pg-btn.active { background: var(--green); color: #fff; border-color: var(--green); font-weight: 600; }
+  .pg-btn i { font-size: 12px; }
+  .pg-dots { font-size: 12px; color: var(--text-hint); padding: 0 4px; }
+
+
+</style>
+<style>
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div id="sidebar-container"></div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search anything…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill">
+        <i class="ti ti-calendar"></i>
+        Academic Year : 2026 / 2027
+        <i class="ti ti-chevron-down"></i>
+      </div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-title">
+        <h1>Classes List</h1>
+        <div class="breadcrumb">
+          Dashboard <i class="ti ti-chevron-right"></i>
+          Academic <i class="ti ti-chevron-right"></i>
+          <span>Classes</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn"><i class="ti ti-download"></i> Export</button>
+        <button class="btn btn-primary"><i class="ti ti-plus"></i> Add Class</button>
+      </div>
+    </div>
+
+    <!-- Table card -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <span class="table-toolbar-title">Classes List</span>
+        <button class="toolbar-btn"><i class="ti ti-filter"></i> Filter</button>
+        <button class="toolbar-btn"><i class="ti ti-arrows-sort"></i> Sort By A-Z <i class="ti ti-chevron-down"></i></button>
+      </div>
+
+      <div class="table-controls">
+        <div class="rpp">
+          Row Per Page
+          <select>
+            <option>10</option><option>25</option><option>50</option><option>100</option>
+          </select>
+          Entries
+        </div>
+        <div class="tbl-search">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Search" />
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:44px;"><input type="checkbox" class="cb" /></th>
+            <th>Class <i class="ti ti-selector"></i></th>
+            <th>Section <i class="ti ti-selector"></i></th>
+            <th>Section Size <i class="ti ti-selector"></i></th>
+            <th>Room No <i class="ti ti-selector"></i></th>
+            <th>Students / Capacity <i class="ti ti-selector"></i></th>
+            <th style="width:60px;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+
+      <div class="pagination">
+        <button class="pg-btn"><i class="ti ti-chevron-left"></i> Pre</button>
+        <button class="pg-btn active">1</button>
+        <button class="pg-btn">2</button>
+        <span class="pg-dots">…</span>
+        <button class="pg-btn">20</button>
+        <button class="pg-btn">Next <i class="ti ti-chevron-right"></i></button>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+const data = [
+  { cls:"I",   sec:"A", size:30, room:101, students:90,  cap:100 },
+  { cls:"I",   sec:"B", size:25, room:102, students:80,  cap:100 },
+  { cls:"II",  sec:"A", size:40, room:103, students:45,  cap:100 },
+  { cls:"II",  sec:"B", size:35, room:104, students:44,  cap:1000 },
+  { cls:"II",  sec:"C", size:25, room:105, students:20,  cap:100 },
+  { cls:"III", sec:"A", size:30, room:106, students:30,  cap:100 },
+  { cls:"III", sec:"B", size:25, room:107, students:33,  cap:100 },
+  { cls:"IV",  sec:"A", size:20, room:108, students:10,  cap:100 },
+  { cls:"IV",  sec:"B", size:30, room:109, students:99,  cap:100 },
+  { cls:"V",   sec:"A", size:35, room:110, students:98,  cap:100 },
+];
+
+const tbody = document.getElementById("table-body");
+data.forEach(r => {
+  const pct = Math.min(Math.round((r.students / r.cap) * 100), 100);
+  const fillCls = pct >= 90 ? "danger" : pct >= 65 ? "warn" : "ok";
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="checkbox" class="cb" /></td>
+    <td><span class="class-badge">${r.cls}</span></td>
+    <td><span class="section-chip">${r.sec}</span></td>
+    <td style="color:var(--text-muted);">${r.size}</td>
+    <td style="color:var(--text-muted);">${r.room}</td>
+    <td>
+      <div class="cap-wrap">
+        <div class="cap-bar"><div class="cap-fill ${fillCls}" style="width:${pct}%"></div></div>
+        <span class="cap-text">${r.students}/${r.cap}</span>
+      </div>
+    </td>
+    <td><div class="three-dot"><i class="ti ti-dots-vertical"></i></div></td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// Select all checkbox
+document.querySelector('thead .cb').addEventListener('change', function(){
+  document.querySelectorAll('tbody .cb').forEach(cb => cb.checked = this.checked);
+});
+
+// Pagination active state
+document.querySelectorAll('.pg-btn').forEach(btn => {
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.pg-btn').forEach(b => b.classList.remove('active'));
+    if(!this.querySelector('i') || this.textContent.trim().match(/^\d+$/)) {
+      this.classList.add('active');
+    }
+  });
+});
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
