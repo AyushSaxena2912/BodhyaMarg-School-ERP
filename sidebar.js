@@ -12,7 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initSidebar() {
-  var path = window.location.pathname.split('/').pop() || 'index.html';
+  // Get path and remove .html for Netlify clean URLs
+  var rawPath = window.location.pathname.split('/').pop();
+  var cleanPath = rawPath.replace(/\.html$/, '').toLowerCase();
+  if (!cleanPath || cleanPath === '') cleanPath = 'index'; // Handle root url
 
   document.querySelectorAll('.nav-sub').forEach(function(sub) {
     sub.style.maxHeight = '0';
@@ -30,8 +33,11 @@ function initSidebar() {
   links.forEach(function(link) {
     link.classList.remove('active');
     var href = link.getAttribute('href');
-    if(href && href !== '#' && href === path) {
-      link.classList.add('active');
+    if(href && href !== '#') {
+      var cleanHref = href.split('/').pop().replace(/\.html$/, '').toLowerCase();
+      if(cleanHref === cleanPath) {
+        link.classList.add('active');
+      }
     }
   });
 
