@@ -82,6 +82,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 .att-radio[value="absent"]:checked + .att-label { background: #fef2f2; color: #ef4444; border-color: #ef4444; }
 .att-radio[value="late"]:checked + .att-label { background: #fffbeb; color: #f59e0b; border-color: #f59e0b; }
 .att-radio[value="halfday"]:checked + .att-label { background: #f0fdfa; color: #0d9488; border-color: #0d9488; }
+.att-radio[value="holiday"]:checked + .att-label { background: #f1f5f9; color: #475569; border-color: #475569; }
 
 .remark-input { width: 100%; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; font-size: 12.5px; font-family: inherit; outline: none; transition: border 0.2s; }
 .remark-input:focus { border-color: var(--green); }
@@ -199,6 +200,7 @@ function getAvColor(status) {
   if (status === 'present') return { bg: '#ecfdf5', text: '#10b981' };
   if (status === 'absent')  return { bg: '#fef2f2', text: '#ef4444' };
   if (status === 'late')    return { bg: '#fffbeb', text: '#f59e0b' };
+  if (status === 'holiday') return { bg: '#f1f5f9', text: '#475569' };
   return { bg: '#f0fdfa', text: '#0d9488' }; // halfday
 }
 
@@ -239,6 +241,10 @@ function render() {
             <label>
               <input type="radio" class="att-radio" name="att_${index}" value="halfday" ${item.status === 'halfday' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
               <span class="att-label">Half Day</span>
+            </label>
+            <label>
+              <input type="radio" class="att-radio" name="att_${index}" value="holiday" ${item.status === 'holiday' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
+              <span class="att-label">Holiday</span>
             </label>
           </div>
         </td>
