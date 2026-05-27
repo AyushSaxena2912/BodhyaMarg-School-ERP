@@ -618,24 +618,24 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   // Routine Logic
   var routineData = [
     { day: 'Monday', lectures: [
-      { type: 'lecture', subject: 'Physics', teacher: 'Anjali Sharma', start: '08:00', end: '08:40', room: 'Room 101', color: 'math' },
-      { type: 'lecture', subject: 'Physics', teacher: 'Anjali Sharma', start: '09:20', end: '10:00', room: 'Room 102', color: 'sci' },
+      { type: 'lecture', subject: 'Physics', cls: 'Class X - A', start: '08:00', end: '08:40', room: 'Room 101', color: 'math' },
+      { type: 'lecture', subject: 'Physics', cls: 'Class IX - B', start: '09:20', end: '10:00', room: 'Room 102', color: 'sci' },
     ]},
     { day: 'Tuesday', lectures: [
-      { type: 'lecture', subject: 'Physics', teacher: 'Anjali Sharma', start: '08:40', end: '09:20', room: 'Room 101', color: 'math' },
-      { type: 'lecture', subject: 'Physics', teacher: 'Anjali Sharma', start: '10:20', end: '11:00', room: 'Room 103', color: 'math' }
+      { type: 'lecture', subject: 'Physics', cls: 'Class X - A', start: '08:40', end: '09:20', room: 'Room 101', color: 'math' },
+      { type: 'lecture', subject: 'Physics', cls: 'Class VIII - C', start: '10:20', end: '11:00', room: 'Room 103', color: 'math' }
     ]},
     { day: 'Wednesday', lectures: [
-      { type: 'lecture', subject: 'Physics', teacher: 'Anjali Sharma', start: '10:20', end: '11:00', room: 'Room 104', color: 'math' },
+      { type: 'lecture', subject: 'Physics', cls: 'Class IX - A', start: '10:20', end: '11:00', room: 'Room 104', color: 'math' },
     ]},
     { day: 'Thursday', lectures: [
-      { type: 'lecture', subject: 'Physics', teacher: 'Anjali Sharma', start: '12:20', end: '13:00', room: 'Lab 1', color: 'sci' },
+      { type: 'lecture', subject: 'Physics', cls: 'Class X - B', start: '12:20', end: '13:00', room: 'Lab 1', color: 'sci' },
     ]},
     { day: 'Friday', lectures: [
-      { type: 'lecture', subject: 'Physics', teacher: 'Anjali Sharma', start: '08:00', end: '08:40', room: 'Room 101', color: 'math' },
+      { type: 'lecture', subject: 'Physics', cls: 'Class X - A', start: '08:00', end: '08:40', room: 'Room 101', color: 'math' },
     ]},
     { day: 'Saturday', lectures: [
-      { type: 'lecture', subject: 'Physics', teacher: 'Anjali Sharma', start: '08:40', end: '09:20', room: 'Room 101', color: 'math' },
+      { type: 'lecture', subject: 'Physics', cls: 'Class VIII - B', start: '08:40', end: '09:20', room: 'Room 101', color: 'math' },
     ]}
   ];
 
@@ -678,7 +678,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           html += '<div class="lecture-card card-' + lec.color + '">';
           html += '  <div class="time"><i class="ti ti-clock"></i> ' + formatTime(lec.start) + ' - ' + formatTime(lec.end) + '</div>';
           html += '  <div class="subject">' + lec.subject + '</div>';
-          html += '  <div class="teacher"><i class="ti ti-user"></i> ' + lec.teacher + '</div>';
+          html += '  <div class="teacher"><i class="ti ti-users"></i> ' + lec.cls + '</div>';
           html += '  <div class="room"><i class="ti ti-map-pin"></i> ' + lec.room + '</div>';
           html += '</div>';
         }
@@ -691,6 +691,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     
     container.innerHTML = html;
   }
+
+  // Handle URL parameter for tab switching on load
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('tab') === 'routine') {
+      switchMainTab('routine');
+    }
+  });
 </script>
 </body>
 </html>
