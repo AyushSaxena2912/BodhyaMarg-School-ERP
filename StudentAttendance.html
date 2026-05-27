@@ -85,6 +85,14 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 
 .remark-input { width: 100%; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; font-size: 12.5px; font-family: inherit; outline: none; transition: border 0.2s; }
 .remark-input:focus { border-color: var(--green); }
+
+/* Pagination */
+.pagination { padding: 16px 20px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border); }
+.page-link { display: flex; align-items: center; justify-content: center; min-width: 34px; height: 34px; padding: 0 8px; border-radius: 6px; font-size: 14px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+.page-link:hover { background: var(--bg); }
+.page-link.active { background: #4361ee; color: #ffffff; border-radius: 8px; }
+.page-link.text-link { color: var(--text-hint); font-size: 14px; background: transparent; }
+.page-link.text-link:hover { color: var(--text); }
 </style>
 <style>
 .sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
@@ -159,6 +167,11 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
           </tr></thead>
           <tbody id="attendanceBody"></tbody>
         </table>
+      </div>
+      <div class="pagination">
+        <a href="#" class="page-link text-link">Prev</a>
+        <a href="#" class="page-link active">1</a>
+        <a href="#" class="page-link text-link">Next</a>
       </div>
     </div>
   </div>
