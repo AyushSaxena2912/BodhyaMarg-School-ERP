@@ -259,6 +259,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
               <th>Passing Marks</th>
               <th>Obtained Marks</th>
               <th>Grade</th>
+              <th>Remarks</th>
             </tr>
           </thead>
           <tbody id="modalSubjectsBody">
@@ -271,25 +272,91 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 </div>
 
 <script>
-const resultData = [
-  { name: 'Aarav Sharma', roll: 'X-A-01', classSec: 'Class X - A', obtained: 465, total: 500, percent: '93.0%', grade: 'O', status: 'pass' },
-  { name: 'Diya Patel', roll: 'X-A-02', classSec: 'Class X - A', obtained: 420, total: 500, percent: '84.0%', grade: 'A+', status: 'pass' },
-  { name: 'Ishaan Verma', roll: 'X-A-03', classSec: 'Class X - A', obtained: 385, total: 500, percent: '77.0%', grade: 'A', status: 'pass' },
-  { name: 'Kavya Singh', roll: 'X-A-04', classSec: 'Class X - A', obtained: 172, total: 500, percent: '34.4%', grade: 'C', status: 'grace' },
-  { name: 'Rohan Gupta', roll: 'X-A-05', classSec: 'Class X - A', obtained: 250, total: 500, percent: '50.0%', grade: 'B', status: 'pass' },
-  { name: 'Ananya Desai', roll: 'X-A-06', classSec: 'Class X - A', obtained: 160, total: 500, percent: '32.0%', grade: 'F', status: 'fail' },
-  { name: 'Vihaan Joshi', roll: 'X-A-07', classSec: 'Class X - A', obtained: 340, total: 500, percent: '68.0%', grade: 'B+', status: 'pass' },
-  { name: 'Myra Shah', roll: 'X-A-08', classSec: 'Class X - A', obtained: 173, total: 500, percent: '34.6%', grade: 'C', status: 'grace' }
+const subjectsList = ['Mathematics', 'Science', 'English', 'Hindi', 'Social Science'];
+
+// Base students, we will generate their marks dynamically
+const baseStudents = [
+  { name: 'Aarav Sharma', roll: 'X-A-01', classSec: 'Class X - A', type: 'pass' },
+  { name: 'Diya Patel', roll: 'X-A-02', classSec: 'Class X - A', type: 'pass' },
+  { name: 'Ishaan Verma', roll: 'X-A-03', classSec: 'Class X - A', type: 'pass' },
+  { name: 'Kavya Singh', roll: 'X-A-04', classSec: 'Class X - A', type: 'supp1' }, // 1 subject fail
+  { name: 'Rohan Gupta', roll: 'X-A-05', classSec: 'Class X - A', type: 'pass' },
+  { name: 'Ananya Desai', roll: 'X-A-06', classSec: 'Class X - A', type: 'fail' }, // 3 subjects fail
+  { name: 'Vihaan Joshi', roll: 'X-A-07', classSec: 'Class X - A', type: 'supp2' }, // 2 subjects fail
+  { name: 'Myra Shah', roll: 'X-A-08', classSec: 'Class X - A', type: 'grace' } // grace passed, maybe just pass
 ];
+
+const resultData = baseStudents.map(student => {
+  let subjects = [];
+  let obtained = 0;
+  let failCount = 0;
+  
+  subjectsList.forEach((sub, index) => {
+    let mark;
+    if (student.type === 'fail' && index < 3) {
+      mark = Math.floor(Math.random() * 20) + 10; // Fail marks 10-29
+    } else if (student.type === 'supp1' && index === 0) {
+      mark = Math.floor(Math.random() * 15) + 15; // Fail marks 15-29
+    } else if (student.type === 'supp2' && index < 2) {
+      mark = Math.floor(Math.random() * 15) + 15; // Fail marks 15-29
+    } else if (student.type === 'grace' && index === 0) {
+      mark = 32; // Just 1 mark short, give grace
+    } else {
+      mark = Math.floor(Math.random() * 55) + 40; // Pass marks 40-94
+    }
+    
+    let subGrade = 'A';
+    if(mark >= 90) subGrade = 'O';
+    else if(mark >= 80) subGrade = 'A+';
+    else if(mark >= 70) subGrade = 'A';
+    else if(mark >= 60) subGrade = 'B+';
+    else if(mark >= 50) subGrade = 'B';
+    else if(mark >= 33) subGrade = 'C';
+    else subGrade = 'F';
+    
+    if (mark < 33) failCount++;
+    
+    subjects.push({
+      name: sub,
+      mark: mark,
+      grade: subGrade
+    });
+    obtained += mark;
+  });
+  
+  let percent = (obtained / 500 * 100).toFixed(1);
+  let status = 'pass';
+  
+  if (failCount >= 3) {
+    status = 'fail';
+  } else if (failCount === 1 || failCount === 2) {
+    status = 'supplementary';
+  } else if (student.type === 'grace') {
+    status = 'grace';
+  }
+  
+  let overallGrade = 'A';
+  if (status === 'fail' || status === 'supplementary') overallGrade = 'F';
+  else {
+    if(percent >= 90) overallGrade = 'O';
+    else if(percent >= 80) overallGrade = 'A+';
+    else if(percent >= 70) overallGrade = 'A';
+    else if(percent >= 60) overallGrade = 'B+';
+    else if(percent >= 50) overallGrade = 'B';
+    else overallGrade = 'C';
+  }
+  
+  return { ...student, subjects, obtained, total: 500, percent: percent + '%', grade: overallGrade, status };
+});
 
 function getInitials(name) {
   return name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
 }
 
 function getAvatarColor(status) {
-  if(status === 'pass') return { bg: '#ecfdf5', text: '#10b981' };
+  if(status === 'pass' || status === 'grace') return { bg: '#ecfdf5', text: '#10b981' };
   if(status === 'fail') return { bg: '#fef2f2', text: '#ef4444' };
-  return { bg: '#fffbeb', text: '#f59e0b' }; // grace
+  return { bg: '#fffbeb', text: '#f59e0b' }; // supplementary / grace
 }
 
 function renderResults() {
@@ -299,6 +366,7 @@ function renderResults() {
     
     let statusText = 'Pass';
     if(item.status === 'fail') statusText = 'Fail';
+    if(item.status === 'supplementary') statusText = 'Supplementary';
     if(item.status === 'grace') statusText = 'Pass w/ Grace';
     
     let avColor = getAvatarColor(item.status);
@@ -320,8 +388,8 @@ function renderResults() {
           <div class="marks-fraction"><span class="marks-obtained">${item.obtained}</span><span class="marks-total">/${item.total}</span></div>
         </td>
         <td style="font-weight: 600;">${item.percent}</td>
-        <td style="font-weight: 600; color: var(--green);">${item.grade}</td>
-        <td><span class="status-badge ${item.status}">${statusText}</span></td>
+        <td style="font-weight: 600; color: ${item.grade === 'F' ? 'var(--red, #ef4444)' : 'var(--green)'};">${item.grade}</td>
+        <td><span class="status-badge ${item.status === 'supplementary' ? 'grace' : item.status}">${statusText}</span></td>
         <td><div class="action-dots" title="View Report" onclick="openModal('${item.roll}')"><i class="ti ti-file-report"></i></div></td>
       </tr>
     `;
@@ -335,56 +403,40 @@ function renderResults() {
   });
 }
 
-const subjectsList = ['Mathematics', 'Science', 'English', 'Hindi', 'Social Science'];
-
 function openModal(rollNo) {
   const student = resultData.find(s => s.roll === rollNo);
   if(!student) return;
   
   let avColor = getAvatarColor(student.status);
+  let statusText = 'Pass';
+  if(student.status === 'fail') statusText = 'Fail';
+  if(student.status === 'supplementary') statusText = 'Supplementary';
+  if(student.status === 'grace') statusText = 'Pass w/ Grace';
   
   document.getElementById('modalStudentHeader').innerHTML = `
     <div class="report-av" style="background:${avColor.bg}; color:${avColor.text};">${getInitials(student.name)}</div>
     <div class="report-info">
       <h3>${student.name}</h3>
-      <p>Roll: ${student.roll} &nbsp;|&nbsp; ${student.classSec} &nbsp;|&nbsp; Result: <strong style="color:${avColor.text}">${student.status.toUpperCase()}</strong></p>
+      <p>Roll: ${student.roll} &nbsp;|&nbsp; ${student.classSec} &nbsp;|&nbsp; Result: <strong style="color:${avColor.text}">${statusText.toUpperCase()}</strong></p>
     </div>
   `;
   
-  // Mock subject marks generation based on total
-  let remaining = student.obtained;
   let subjHtml = '';
   
-  subjectsList.forEach((sub, i) => {
-    let mark = 0;
-    if (i === subjectsList.length - 1) {
-      mark = remaining; // Assign rest to last subject
-    } else {
-      // rough distribution
-      mark = Math.floor(student.obtained / subjectsList.length) + (Math.random() > 0.5 ? 5 : -5);
-      remaining -= mark;
-    }
-    
-    // Ensure mark doesn't exceed 100
-    if(mark > 100) mark = 100;
-    if(mark < 0) mark = 0;
-    
-    let subGrade = 'A';
-    if(mark >= 90) subGrade = 'O';
-    else if(mark >= 80) subGrade = 'A+';
-    else if(mark >= 70) subGrade = 'A';
-    else if(mark >= 60) subGrade = 'B+';
-    else if(mark >= 50) subGrade = 'B';
-    else if(mark >= 40) subGrade = 'C';
-    else subGrade = 'F';
+  student.subjects.forEach(sub => {
+    let mark = sub.mark;
+    let isFail = mark < 33;
+    let remarks = isFail ? 'Supplementary' : 'Pass';
+    if(student.status === 'grace' && mark === 32) remarks = 'Grace (+1)';
     
     subjHtml += `
       <tr>
-        <td style="font-weight: 500;">${sub}</td>
+        <td style="font-weight: 500;">${sub.name}</td>
         <td>100</td>
         <td>33</td>
-        <td style="font-weight: 600; color: ${mark < 33 ? 'var(--red, #ef4444)' : 'var(--text)'};">${mark}</td>
-        <td style="font-weight: 600; color: ${subGrade === 'F' ? 'var(--red, #ef4444)' : 'var(--green)'};">${subGrade}</td>
+        <td style="font-weight: 600; color: ${isFail ? 'var(--red, #ef4444)' : 'var(--text)'};">${mark}</td>
+        <td style="font-weight: 600; color: ${isFail ? 'var(--red, #ef4444)' : 'var(--green)'};">${isFail ? 'F' : sub.grade}</td>
+        <td style="font-weight: 600; font-size: 11px; color: ${isFail ? 'var(--orange, #f59e0b)' : 'var(--text-hint)'};">${remarks.toUpperCase()}</td>
       </tr>
     `;
   });
