@@ -93,6 +93,27 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 .marks-fraction { font-family: monospace; font-size: 14px; }
 .marks-obtained { font-weight: 600; color: var(--text); }
 .marks-total { color: var(--text-hint); }
+
+/* Modal Styles */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.4); display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(2px); }
+.modal-overlay.active { display: flex; }
+.modal { background: var(--white); width: 600px; max-width: 90%; border-radius: var(--radius-lg); box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; }
+.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
+.modal-title { font-size: 16px; font-weight: 700; color: var(--text); }
+.modal-close { cursor: pointer; color: var(--text-hint); transition: 0.2s; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 6px; }
+.modal-close:hover { background: var(--border); color: var(--text); }
+.modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
+
+.report-header { display: flex; gap: 16px; align-items: center; margin-bottom: 24px; }
+.report-av { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; }
+.report-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.report-info p { font-size: 13px; color: var(--text-muted); }
+
+.report-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+.report-table th, .report-table td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid var(--border); text-align: left; }
+.report-table th { background: #f8fafc; font-weight: 600; color: var(--text-muted); }
+.report-table td { color: var(--text); }
+.report-table tr:last-child td { border-bottom: none; }
 </style>
 <style>
 .sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
@@ -218,6 +239,37 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
   </div>
 </div>
 
+<!-- Detailed Report Modal -->
+<div class="modal-overlay" id="reportModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Subject-wise Marks</div>
+      <div class="modal-close" onclick="closeModal()"><i class="ti ti-x" style="font-size:20px;"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="report-header" id="modalStudentHeader">
+        <!-- Populated by JS -->
+      </div>
+      <div style="border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Full Marks</th>
+              <th>Passing Marks</th>
+              <th>Obtained Marks</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody id="modalSubjectsBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 const resultData = [
   { name: 'Aarav Sharma', roll: 'X-A-01', classSec: 'Class X - A', obtained: 465, total: 500, percent: '93.0%', grade: 'O', status: 'pass' },
@@ -270,7 +322,7 @@ function renderResults() {
         <td style="font-weight: 600;">${item.percent}</td>
         <td style="font-weight: 600; color: var(--green);">${item.grade}</td>
         <td><span class="status-badge ${item.status}">${statusText}</span></td>
-        <td><div class="action-dots" title="View Report"><i class="ti ti-file-report"></i></div></td>
+        <td><div class="action-dots" title="View Report" onclick="openModal('${item.roll}')"><i class="ti ti-file-report"></i></div></td>
       </tr>
     `;
   });
@@ -281,6 +333,68 @@ function renderResults() {
       this.classList.toggle('checked');
     });
   });
+}
+
+const subjectsList = ['Mathematics', 'Science', 'English', 'Hindi', 'Social Science'];
+
+function openModal(rollNo) {
+  const student = resultData.find(s => s.roll === rollNo);
+  if(!student) return;
+  
+  let avColor = getAvatarColor(student.status);
+  
+  document.getElementById('modalStudentHeader').innerHTML = `
+    <div class="report-av" style="background:${avColor.bg}; color:${avColor.text};">${getInitials(student.name)}</div>
+    <div class="report-info">
+      <h3>${student.name}</h3>
+      <p>Roll: ${student.roll} &nbsp;|&nbsp; ${student.classSec} &nbsp;|&nbsp; Result: <strong style="color:${avColor.text}">${student.status.toUpperCase()}</strong></p>
+    </div>
+  `;
+  
+  // Mock subject marks generation based on total
+  let remaining = student.obtained;
+  let subjHtml = '';
+  
+  subjectsList.forEach((sub, i) => {
+    let mark = 0;
+    if (i === subjectsList.length - 1) {
+      mark = remaining; // Assign rest to last subject
+    } else {
+      // rough distribution
+      mark = Math.floor(student.obtained / subjectsList.length) + (Math.random() > 0.5 ? 5 : -5);
+      remaining -= mark;
+    }
+    
+    // Ensure mark doesn't exceed 100
+    if(mark > 100) mark = 100;
+    if(mark < 0) mark = 0;
+    
+    let subGrade = 'A';
+    if(mark >= 90) subGrade = 'O';
+    else if(mark >= 80) subGrade = 'A+';
+    else if(mark >= 70) subGrade = 'A';
+    else if(mark >= 60) subGrade = 'B+';
+    else if(mark >= 50) subGrade = 'B';
+    else if(mark >= 40) subGrade = 'C';
+    else subGrade = 'F';
+    
+    subjHtml += `
+      <tr>
+        <td style="font-weight: 500;">${sub}</td>
+        <td>100</td>
+        <td>33</td>
+        <td style="font-weight: 600; color: ${mark < 33 ? 'var(--red, #ef4444)' : 'var(--text)'};">${mark}</td>
+        <td style="font-weight: 600; color: ${subGrade === 'F' ? 'var(--red, #ef4444)' : 'var(--green)'};">${subGrade}</td>
+      </tr>
+    `;
+  });
+  
+  document.getElementById('modalSubjectsBody').innerHTML = subjHtml;
+  document.getElementById('reportModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('reportModal').classList.remove('active');
 }
 
 document.addEventListener('DOMContentLoaded', renderResults);
