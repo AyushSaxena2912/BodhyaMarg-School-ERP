@@ -52,7 +52,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 /* Controls */
 .control-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--border); background: var(--white); border-radius: var(--radius); font-size: 13px; font-family: inherit; font-weight: 500; cursor: pointer; color: var(--text-muted); transition: background 0.15s; }
 .control-btn:hover { background: var(--bg); }
-.btn-primary { background: var(--green); color: var(--white); border-color: var(--green); border-radius: var(--radius); padding: 8px 16px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; transition: background 0.15s; }
+.btn-primary { background: var(--green); color: var(--white); border: none; border-radius: var(--radius); padding: 8px 16px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; transition: background 0.15s; }
 .btn-primary:hover { background: var(--green-dark); }
 .btn-icon { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--white); border-radius: var(--radius); cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
 .btn-icon:hover { background: var(--bg); }
@@ -802,31 +802,31 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     
     parent.children.forEach((child, index) => {
        const isLast = index === parent.children.length - 1;
-       html += \`
-       <div style="border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: \${isLast ? '0' : '16px'};">
+       html += `
+       <div style="border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: ${isLast ? '0' : '16px'};">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 12px;">
-           <span style="color:var(--green); font-size:13px; font-weight:500;">\${child.admissionNo}</span>
-           <span class="status-badge \${child.status.toLowerCase() === 'active' ? 'active' : ''}">\${child.status}</span>
+           <span style="color:var(--green); font-size:13px; font-weight:500;">${child.admissionNo}</span>
+           <span class="status-badge ${child.status.toLowerCase() === 'active' ? 'active' : ''}">${child.status}</span>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
            <div style="display:flex; gap:12px; align-items:center; min-width: 140px;">
              <div class="profile-img" style="width:40px; height:40px; font-size: 18px;"><i class="ti ti-user"></i></div>
              <div style="display:flex; flex-direction:column;">
-               <span style="font-size:13.5px; font-weight:600;">\${child.name}</span>
-               <span style="font-size:12px; color:var(--text-muted);">\${child.class}</span>
+               <span style="font-size:13.5px; font-weight:600;">${child.name}</span>
+               <span style="font-size:12px; color:var(--text-muted);">${child.class}</span>
              </div>
            </div>
            <div style="display:flex; flex-direction:column;">
              <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Roll No</span>
-             <span style="font-size:12.5px; font-weight:500;">\${child.rollNo}</span>
+             <span style="font-size:12.5px; font-weight:500;">${child.rollNo}</span>
            </div>
            <div style="display:flex; flex-direction:column;">
              <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Gender</span>
-             <span style="font-size:12.5px; font-weight:500;">\${child.gender}</span>
+             <span style="font-size:12.5px; font-weight:500;">${child.gender}</span>
            </div>
            <div style="display:flex; flex-direction:column;">
              <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Date of Joined</span>
-             <span style="font-size:12.5px; font-weight:500;">\${child.dateJoined}</span>
+             <span style="font-size:12.5px; font-weight:500;">${child.dateJoined}</span>
            </div>
            <div style="display:flex; gap:8px;">
              <button class="add-fee-btn">Add Fees</button>
@@ -834,7 +834,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
            </div>
         </div>
       </div>
-       \`;
+       `;
     });
 
     document.getElementById('parentModalBody').innerHTML = html;
