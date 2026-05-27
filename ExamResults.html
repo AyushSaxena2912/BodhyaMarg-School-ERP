@@ -276,105 +276,187 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 </div>
 
 <script>
+/*
+ * ===== EXAM RESULT LOGIC =====
+ * Rules:
+ * 1. Passing marks per subject = 33 out of 100
+ * 2. GRACE: If a student is short by ≤5 marks (i.e. scored 28-32) in EXACTLY 1 subject,
+ *    then grace marks are awarded to bring them to 33. Grace can only be given in 1 subject.
+ * 3. SUPPLEMENTARY: After applying grace, if student still fails in 1 or 2 subjects → Supplementary
+ * 4. FAIL: After applying grace, if student fails in 3 or more subjects → Fail
+ * 5. PASS: All subjects ≥ 33 (including after grace)
+ */
+
+const PASS_MARKS = 33;
+const MAX_GRACE = 5; // Grace of up to 5 marks allowed
 const subjectsList = ['Mathematics', 'Science', 'English', 'Hindi', 'Social Science'];
 
-// Base students, we will generate their marks dynamically
-const baseStudents = [
-  { name: 'Aarav Sharma', roll: 'X-A-01', classSec: 'Class X - A', type: 'pass' },
-  { name: 'Diya Patel', roll: 'X-A-02', classSec: 'Class X - A', type: 'pass' },
-  { name: 'Ishaan Verma', roll: 'X-A-03', classSec: 'Class X - A', type: 'pass' },
-  { name: 'Kavya Singh', roll: 'X-A-04', classSec: 'Class X - A', type: 'supp1' }, // 1 subject fail
-  { name: 'Rohan Gupta', roll: 'X-A-05', classSec: 'Class X - A', type: 'pass' },
-  { name: 'Ananya Desai', roll: 'X-A-06', classSec: 'Class X - A', type: 'fail' }, // 3 subjects fail
-  { name: 'Vihaan Joshi', roll: 'X-A-07', classSec: 'Class X - A', type: 'supp2' }, // 2 subjects fail
-  { name: 'Myra Shah', roll: 'X-A-08', classSec: 'Class X - A', type: 'grace' } // grace passed, maybe just pass
+// Fixed, deterministic marks for each student so results don't change on refresh
+const studentsRaw = [
+  // 1. Clean pass – all subjects comfortably above 33
+  { name: 'Aarav Sharma',  roll: 'X-A-01', classSec: 'Class X - A',
+    marks: [92, 88, 85, 79, 91] },
+
+  // 2. Good pass
+  { name: 'Diya Patel',    roll: 'X-A-02', classSec: 'Class X - A',
+    marks: [78, 82, 74, 69, 77] },
+
+  // 3. Grace case – Maths = 30 (short by 3, ≤5 so grace applies), rest pass → PASS w/ Grace
+  { name: 'Ishaan Verma',  roll: 'X-A-03', classSec: 'Class X - A',
+    marks: [30, 55, 48, 62, 45] },
+
+  // 4. Grace eligible in 1 subject (Science=29, short by 4) BUT also fail in another (Maths=18, short by 15)
+  //    Grace can only be applied to 1 subject → apply grace to Science (29→33), Maths still fails → Supplementary
+  { name: 'Kavya Singh',   roll: 'X-A-04', classSec: 'Class X - A',
+    marks: [18, 29, 52, 44, 56] },
+
+  // 5. 1 subject fail (Maths=20, too far for grace) → Supplementary
+  { name: 'Rohan Gupta',   roll: 'X-A-05', classSec: 'Class X - A',
+    marks: [20, 45, 55, 50, 60] },
+
+  // 6. 3 subjects fail → FAIL (even if 1 is grace-eligible, still 3+ fail after grace)
+  { name: 'Ananya Desai',  roll: 'X-A-06', classSec: 'Class X - A',
+    marks: [15, 22, 12, 65, 58] },
+
+  // 7. 2 subjects fail (both too far for grace) → Supplementary
+  { name: 'Vihaan Joshi',  roll: 'X-A-07', classSec: 'Class X - A',
+    marks: [25, 19, 68, 72, 55] },
+
+  // 8. Grace case – Hindi=31 (short by 2, ≤5 so grace applies), rest pass → PASS w/ Grace
+  { name: 'Myra Shah',     roll: 'X-A-08', classSec: 'Class X - A',
+    marks: [45, 52, 67, 31, 48] },
+
+  // 9. 2 subjects grace-eligible (Maths=30, Science=29) but grace only allowed in 1
+  //    → Apply grace to best candidate (30→33), Science=29 still fails → Supplementary
+  { name: 'Arjun Reddy',   roll: 'X-A-09', classSec: 'Class X - A',
+    marks: [30, 29, 58, 61, 44] },
+
+  // 10. 4 subjects fail → clearly FAIL
+  { name: 'Priya Kumari',  roll: 'X-A-10', classSec: 'Class X - A',
+    marks: [10, 15, 22, 8, 40] },
+
+  // 11. EDGE CASE: 3 subjects fail, but 1 is grace-eligible (Maths=29, short by 4)
+  //     → Grace applied to Maths (29→33), now only 2 fail → SUPPLEMENTARY (saved from Fail by grace!)
+  { name: 'Neha Tiwari',   roll: 'X-A-11', classSec: 'Class X - A',
+    marks: [29, 20, 25, 70, 60] },
+
+  // 12. Barely passes everything (all subjects between 33-36) → clean PASS but low grades
+  { name: 'Rahul Yadav',   roll: 'X-A-12', classSec: 'Class X - A',
+    marks: [34, 35, 33, 36, 33] }
 ];
 
-const resultData = baseStudents.map(student => {
-  let subjects = [];
-  let obtained = 0;
-  let failCount = 0;
-  
-  subjectsList.forEach((sub, index) => {
-    let mark;
-    if (student.type === 'fail' && index < 3) {
-      mark = Math.floor(Math.random() * 20) + 10; // Fail marks 10-29
-    } else if (student.type === 'supp1' && index === 0) {
-      mark = Math.floor(Math.random() * 15) + 15; // Fail marks 15-29
-    } else if (student.type === 'supp2' && index < 2) {
-      mark = Math.floor(Math.random() * 15) + 15; // Fail marks 15-29
-    } else if (student.type === 'grace' && index === 0) {
-      mark = 32; // Just 1 mark short, give grace
-    } else {
-      mark = Math.floor(Math.random() * 55) + 40; // Pass marks 40-94
+function getGrade(mark) {
+  if (mark >= 90) return 'O';
+  if (mark >= 80) return 'A+';
+  if (mark >= 70) return 'A';
+  if (mark >= 60) return 'B+';
+  if (mark >= 50) return 'B';
+  if (mark >= 33) return 'C';
+  return 'F';
+}
+
+// Process each student with proper grace/supplementary/fail logic
+const resultData = studentsRaw.map(student => {
+  let subjects = student.marks.map((mark, i) => ({
+    name: subjectsList[i],
+    originalMark: mark,
+    mark: mark,
+    graceApplied: 0,
+    grade: getGrade(mark)
+  }));
+
+  // Step 1: Find all subjects below passing marks
+  let failedSubjects = subjects.filter(s => s.mark < PASS_MARKS);
+
+  // Step 2: Try to apply grace (only 1 subject, only if shortfall ≤ MAX_GRACE)
+  let graceUsed = false;
+  if (failedSubjects.length > 0) {
+    // Find the best candidate for grace: the one closest to passing (smallest shortfall)
+    let graceEligible = failedSubjects
+      .filter(s => (PASS_MARKS - s.mark) <= MAX_GRACE)
+      .sort((a, b) => (PASS_MARKS - a.mark) - (PASS_MARKS - b.mark)); // closest first
+
+    if (graceEligible.length > 0) {
+      // Apply grace to the closest one only
+      let target = graceEligible[0];
+      let graceNeeded = PASS_MARKS - target.mark;
+      target.graceApplied = graceNeeded;
+      target.mark = PASS_MARKS; // Bring to passing
+      target.grade = getGrade(target.mark);
+      graceUsed = true;
     }
-    
-    let subGrade = 'A';
-    if(mark >= 90) subGrade = 'O';
-    else if(mark >= 80) subGrade = 'A+';
-    else if(mark >= 70) subGrade = 'A';
-    else if(mark >= 60) subGrade = 'B+';
-    else if(mark >= 50) subGrade = 'B';
-    else if(mark >= 33) subGrade = 'C';
-    else subGrade = 'F';
-    
-    if (mark < 33) failCount++;
-    
-    subjects.push({
-      name: sub,
-      mark: mark,
-      grade: subGrade
-    });
-    obtained += mark;
-  });
-  
-  let percent = (obtained / 500 * 100).toFixed(1);
+  }
+
+  // Step 3: Recount failures after grace
+  let finalFailCount = subjects.filter(s => s.mark < PASS_MARKS).length;
+
+  // Step 4: Determine overall status
   let status = 'pass';
-  
-  if (failCount >= 3) {
+  if (finalFailCount >= 3) {
     status = 'fail';
-  } else if (failCount === 1 || failCount === 2) {
+  } else if (finalFailCount === 1 || finalFailCount === 2) {
     status = 'supplementary';
-  } else if (student.type === 'grace') {
-    status = 'grace';
+  } else if (graceUsed) {
+    status = 'grace'; // All pass but only because of grace
   }
-  
-  let overallGrade = 'A';
-  if (status === 'fail' || status === 'supplementary') overallGrade = 'F';
-  else {
-    if(percent >= 90) overallGrade = 'O';
-    else if(percent >= 80) overallGrade = 'A+';
-    else if(percent >= 70) overallGrade = 'A';
-    else if(percent >= 60) overallGrade = 'B+';
-    else if(percent >= 50) overallGrade = 'B';
-    else overallGrade = 'C';
+
+  // Calculate totals
+  let obtained = subjects.reduce((sum, s) => sum + s.mark, 0);
+  let percent = (obtained / 500 * 100).toFixed(1);
+
+  // Overall grade
+  let overallGrade;
+  if (status === 'fail') {
+    overallGrade = 'F';
+  } else if (status === 'supplementary') {
+    overallGrade = 'F';
+  } else {
+    overallGrade = getGrade(parseFloat(percent));
   }
-  
-  return { ...student, subjects, obtained, total: 500, percent: percent + '%', grade: overallGrade, status };
+
+  return {
+    name: student.name,
+    roll: student.roll,
+    classSec: student.classSec,
+    subjects,
+    obtained,
+    total: 500,
+    percent: percent + '%',
+    grade: overallGrade,
+    status,
+    graceUsed
+  };
 });
 
 function getInitials(name) {
-  return name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+  return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 }
 
 function getAvatarColor(status) {
-  if(status === 'pass' || status === 'grace') return { bg: '#ecfdf5', text: '#10b981' };
-  if(status === 'fail') return { bg: '#fef2f2', text: '#ef4444' };
-  return { bg: '#fffbeb', text: '#f59e0b' }; // supplementary / grace
+  if (status === 'pass')  return { bg: '#ecfdf5', text: '#10b981' };
+  if (status === 'grace') return { bg: '#ecfdf5', text: '#10b981' };
+  if (status === 'fail')  return { bg: '#fef2f2', text: '#ef4444' };
+  return { bg: '#fffbeb', text: '#f59e0b' }; // supplementary
+}
+
+function getStatusText(status) {
+  if (status === 'pass')          return 'Pass';
+  if (status === 'grace')         return 'Pass w/ Grace';
+  if (status === 'supplementary') return 'Supplementary';
+  if (status === 'fail')          return 'Fail';
+  return 'Pass';
 }
 
 function renderResults() {
   const tbody = document.getElementById('resultsBody');
   let html = '';
+
   resultData.forEach(item => {
-    
-    let statusText = 'Pass';
-    if(item.status === 'fail') statusText = 'Fail';
-    if(item.status === 'supplementary') statusText = 'Supplementary';
-    if(item.status === 'grace') statusText = 'Pass w/ Grace';
-    
+    let statusText = getStatusText(item.status);
     let avColor = getAvatarColor(item.status);
-    
+    let badgeClass = item.status;
+    if (item.status === 'supplementary') badgeClass = 'grace'; // orange badge
+
     html += `
       <tr>
         <td class="checkbox-cell"><div class="checkbox-custom"></div></td>
@@ -392,8 +474,8 @@ function renderResults() {
           <div class="marks-fraction"><span class="marks-obtained">${item.obtained}</span><span class="marks-total">/${item.total}</span></div>
         </td>
         <td style="font-weight: 600;">${item.percent}</td>
-        <td style="font-weight: 600; color: ${item.grade === 'F' ? 'var(--red, #ef4444)' : 'var(--green)'};">${item.grade}</td>
-        <td><span class="status-badge ${item.status === 'supplementary' ? 'grace' : item.status}">${statusText}</span></td>
+        <td style="font-weight: 600; color: ${item.grade === 'F' ? '#ef4444' : 'var(--green)'};">${item.grade}</td>
+        <td><span class="status-badge ${badgeClass}">${statusText}</span></td>
         <td><div class="action-dots" title="View Report" onclick="openModal('${item.roll}')"><i class="ti ti-file-report"></i></div></td>
       </tr>
     `;
@@ -401,7 +483,7 @@ function renderResults() {
   tbody.innerHTML = html;
 
   document.querySelectorAll('.checkbox-custom').forEach(cb => {
-    cb.addEventListener('click', function() {
+    cb.addEventListener('click', function () {
       this.classList.toggle('checked');
     });
   });
@@ -409,14 +491,11 @@ function renderResults() {
 
 function openModal(rollNo) {
   const student = resultData.find(s => s.roll === rollNo);
-  if(!student) return;
-  
+  if (!student) return;
+
   let avColor = getAvatarColor(student.status);
-  let statusText = 'Pass';
-  if(student.status === 'fail') statusText = 'Fail';
-  if(student.status === 'supplementary') statusText = 'Supplementary';
-  if(student.status === 'grace') statusText = 'Pass w/ Grace';
-  
+  let statusText = getStatusText(student.status);
+
   document.getElementById('modalStudentHeader').innerHTML = `
     <div class="report-av" style="background:${avColor.bg}; color:${avColor.text};">${getInitials(student.name)}</div>
     <div class="report-info">
@@ -424,27 +503,50 @@ function openModal(rollNo) {
       <p>Roll: ${student.roll} &nbsp;|&nbsp; ${student.classSec} &nbsp;|&nbsp; Result: <strong style="color:${avColor.text}">${statusText.toUpperCase()}</strong></p>
     </div>
   `;
-  
+
   let subjHtml = '';
-  
+
   student.subjects.forEach(sub => {
-    let mark = sub.mark;
-    let isFail = mark < 33;
-    let remarks = isFail ? 'Supplementary' : 'Pass';
-    if(student.status === 'grace' && mark === 32) remarks = 'Grace (+1)';
-    
+    let isFail = sub.mark < PASS_MARKS;
+
+    // Determine remarks
+    let remarks = 'PASS';
+    let remarkColor = 'var(--text-hint)';
+    let displayMark = sub.mark;
+
+    if (sub.graceApplied > 0) {
+      remarks = `GRACE (+${sub.graceApplied})`;
+      remarkColor = '#10b981';
+      displayMark = sub.originalMark; // Show original mark in obtained
+    } else if (isFail) {
+      remarks = 'SUPPLEMENTARY';
+      remarkColor = '#f59e0b';
+    }
+
+    let markColor = isFail ? '#ef4444' : 'var(--text)';
+    let gradeColor = isFail ? '#ef4444' : 'var(--green)';
+    let displayGrade = isFail ? 'F' : sub.grade;
+
+    // If grace was applied, show the boosted mark and passing grade
+    if (sub.graceApplied > 0) {
+      markColor = '#10b981';
+      gradeColor = '#10b981';
+      displayMark = `${sub.originalMark} → ${sub.mark}`;
+      displayGrade = sub.grade;
+    }
+
     subjHtml += `
       <tr>
         <td style="font-weight: 500;">${sub.name}</td>
         <td>100</td>
         <td>33</td>
-        <td style="font-weight: 600; color: ${isFail ? 'var(--red, #ef4444)' : 'var(--text)'};">${mark}</td>
-        <td style="font-weight: 600; color: ${isFail ? 'var(--red, #ef4444)' : 'var(--green)'};">${isFail ? 'F' : sub.grade}</td>
-        <td style="font-weight: 600; font-size: 11px; color: ${isFail ? 'var(--orange, #f59e0b)' : 'var(--text-hint)'};">${remarks.toUpperCase()}</td>
+        <td style="font-weight: 600; color: ${markColor};">${displayMark}</td>
+        <td style="font-weight: 600; color: ${gradeColor};">${displayGrade}</td>
+        <td style="font-weight: 600; font-size: 11px; color: ${remarkColor};">${remarks}</td>
       </tr>
     `;
   });
-  
+
   document.getElementById('modalSubjectsBody').innerHTML = subjHtml;
   document.getElementById('reportModal').classList.add('active');
 }
