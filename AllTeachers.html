@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – All Teachers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+/* Sidebar overrides if any */
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+
+/* Main */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.ay-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* Content */
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* Page Header */
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.page-title h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); display: flex; align-items: center; gap: 4px; }
+.breadcrumb span { color: var(--text); }
+.header-actions { display: flex; gap: 10px; }
+
+/* Toolbar */
+.toolbar { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.toolbar-title { font-size: 15px; font-weight: 600; }
+.toolbar-actions { display: flex; gap: 12px; align-items: center; position: relative; }
+
+/* Controls */
+.control-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--border); background: var(--white); border-radius: var(--radius); font-size: 13px; font-family: inherit; font-weight: 500; cursor: pointer; color: var(--text-muted); transition: background 0.15s; }
+.control-btn:hover { background: var(--bg); }
+.btn-primary { background: var(--green); color: var(--white); border: none; border-radius: var(--radius); padding: 8px 16px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; transition: background 0.15s; }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-icon { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--white); border-radius: var(--radius); cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
+.btn-icon:hover { background: var(--bg); }
+.btn-icon.active { background: var(--green); color: var(--white); border-color: var(--green); }
+
+/* Filter Dropdown */
+.filter-dropdown { position: absolute; top: calc(100% + 8px); left: 0; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: 0 4px 12px rgba(0,0,0,0.08); width: 280px; padding: 16px; display: none; z-index: 10; }
+.filter-dropdown.show { display: block; }
+.filter-header { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+.filter-row { display: flex; gap: 12px; margin-bottom: 12px; }
+.filter-field { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.filter-field label { font-size: 11.5px; color: var(--text-muted); font-weight: 500; }
+.filter-field select, .filter-field input { padding: 8px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 12.5px; outline: none; font-family: inherit; }
+.filter-footer { display: flex; justify-content: space-between; margin-top: 16px; }
+.btn-reset { background: transparent; border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 12.5px; cursor: pointer; color: var(--text-muted); }
+.btn-apply { background: var(--green); border: none; padding: 6px 12px; border-radius: 6px; font-size: 12.5px; cursor: pointer; color: var(--white); }
+
+/* Grid Layout */
+.student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+
+/* Teacher Card styles */
+.teacher-card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; background: var(--white); }
+.teacher-card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border); padding-bottom: 12px; margin-bottom: 12px; }
+.teacher-id { color: var(--green); font-size: 13px; font-weight: 500; }
+.teacher-profile-block { display: flex; align-items: center; gap: 12px; background: var(--bg); padding: 12px; border-radius: var(--radius); margin-bottom: 16px; }
+.teacher-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.subject-badge { background: #fee2e2; color: #ef4444; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
+.add-fee-btn { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+.add-fee-btn:hover { background: #e2e8f0; color: var(--text); }
+
+/* List Layout */
+.student-list { display: none; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.table-header-controls { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border); }
+.entries-control { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+.entries-control select { padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px; outline: none; }
+.search-control { position: relative; }
+.search-control i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--text-hint); }
+.search-control input { padding: 8px 12px 8px 32px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 12.5px; width: 220px; outline: none; transition: border-color 0.2s; }
+.search-control input:focus { border-color: var(--green); }
+.data-table { width: 100%; border-collapse: collapse; text-align: left; }
+.data-table th, .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.data-table th { background: #f8fafc; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+.data-table th i { font-size: 14px; margin-left: 4px; color: #cbd5e1; }
+.data-table tbody tr:hover { background: #f8fafc; }
+.data-table td { color: var(--text); vertical-align: middle; }
+.table-avatar { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+.table-avatar .avatar-placeholder { width: 34px; height: 34px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--text-hint); }
+
+/* Pagination & Load More */
+.table-footer { padding: 16px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
+.pagination { display: flex; gap: 4px; align-items: center; }
+.page-btn { border: none; background: transparent; color: var(--text-muted); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; }
+.page-btn:hover { background: var(--bg); color: var(--text); }
+.page-btn.active { background: var(--green); color: var(--white); }
+.page-btn.text-btn { font-weight: 500; }
+
+.status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.status-badge.active { background: #ecfdf5; color: #10b981; }
+.status-badge.active::before { content:''; width:6px; height:6px; border-radius:50%; background:#10b981; }
+.status-badge.inactive { background: #fef2f2; color: #ef4444; }
+.status-badge.inactive::before { content:''; width:6px; height:6px; border-radius:50%; background:#ef4444; }
+
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div id="sidebar-container"></div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search anything…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill"><i class="ti ti-calendar"></i> Academic Year : 2026 / 2027 <i class="ti ti-chevron-down"></i></div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <div class="page-title">
+          <h1>Teachers</h1>
+        </div>
+        <div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Peoples <i class="ti ti-chevron-right"></i> <span>Teachers</span></div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-icon"><i class="ti ti-refresh"></i></button>
+        <button class="btn-icon"><i class="ti ti-printer"></i></button>
+        <button class="control-btn"><i class="ti ti-file-export"></i> Export <i class="ti ti-chevron-down"></i></button>
+        <button class="btn-primary"><i class="ti ti-plus"></i> Add Teacher</button>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar-title" id="toolbarTitle">Teachers Grid</div>
+      <div class="toolbar-actions">
+        <div class="control-btn" style="color: var(--text);"><i class="ti ti-calendar"></i> 05/21/2026 - 05/27/2026</div>
+        
+        <div style="position:relative;">
+          <button class="control-btn" id="filterBtn" onclick="toggleFilter()"><i class="ti ti-filter"></i> Filter <i class="ti ti-chevron-down"></i></button>
+          
+          <!-- Filter Dropdown -->
+          <div class="filter-dropdown" id="filterDropdown">
+             <div class="filter-header">Filter</div>
+             <div class="filter-row">
+               <div class="filter-field">
+                 <label>Subject</label>
+                 <select>
+                   <option>Select</option>
+                   <option>Physics</option>
+                   <option>Math</option>
+                   <option>English</option>
+                 </select>
+               </div>
+             </div>
+             <div class="filter-field" style="margin-bottom: 12px;">
+               <label>Search Teacher</label>
+               <input type="text" placeholder="Name, Phone, Email..." />
+             </div>
+             <div class="filter-footer">
+               <button class="btn-reset" onclick="toggleFilter()">Reset</button>
+               <button class="btn-apply" onclick="toggleFilter()">Apply</button>
+             </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:4px; background:var(--bg); padding:3px; border-radius:var(--radius); border:1px solid var(--border);">
+          <button id="btnListView" class="btn-icon" style="width:28px; height:28px; border:none; background:transparent;" onclick="setView('list')"><i class="ti ti-list"></i></button>
+          <button id="btnGridView" class="btn-icon active" style="width:28px; height:28px; border:none;" onclick="setView('grid')"><i class="ti ti-grid-dots"></i></button>
+        </div>
+        
+        <button class="control-btn"><i class="ti ti-arrows-sort"></i> Sort by A-Z <i class="ti ti-chevron-down"></i></button>
+      </div>
+    </div>
+
+    <!-- Student Grid View (Teachers) -->
+    <div class="student-grid" id="studentGrid">
+      <!-- Card -->
+      <div class="teacher-card">
+        <div class="teacher-card-header">
+          <span class="teacher-id">T849127</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="status-badge active">Active</span>
+            <button class="btn-icon" style="width:24px; height:24px; border:none; background:transparent;"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+        </div>
+        <div class="teacher-profile-block">
+          <div class="profile-img" style="width:40px; height:40px; font-size: 18px; border-radius:50%; background:var(--white); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-hint);"><i class="ti ti-user"></i></div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:14px; font-weight:600; color:var(--text);">Teresa</span>
+            <span style="font-size:12px; color:var(--text-muted);">III A</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 16px;">
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Email</span>
+            <span style="font-size:13px; font-weight:500;">teresa@example.com</span>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Phone</span>
+            <span style="font-size:13px; font-weight:500;">+1 82392 37359</span>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px dashed var(--border); padding-top: 12px;">
+          <span class="subject-badge">Physics</span>
+          <button class="add-fee-btn" style="border:none;">View Details</button>
+        </div>
+      </div>
+      <!-- Card -->
+      <div class="teacher-card">
+        <div class="teacher-card-header">
+          <span class="teacher-id">T849126</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="status-badge active">Active</span>
+            <button class="btn-icon" style="width:24px; height:24px; border:none; background:transparent;"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+        </div>
+        <div class="teacher-profile-block">
+          <div class="profile-img" style="width:40px; height:40px; font-size: 18px; border-radius:50%; background:var(--white); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-hint);"><i class="ti ti-user"></i></div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:14px; font-weight:600; color:var(--text);">Daniel</span>
+            <span style="font-size:12px; color:var(--text-muted);">II (A)</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 16px;">
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Email</span>
+            <span style="font-size:13px; font-weight:500;">Daniel@example.com</span>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Phone</span>
+            <span style="font-size:13px; font-weight:500;">+1 56752 86742</span>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px dashed var(--border); padding-top: 12px;">
+          <span class="subject-badge">Computer</span>
+          <button class="add-fee-btn" style="border:none;">View Details</button>
+        </div>
+      </div>
+      <!-- Card -->
+      <div class="teacher-card">
+        <div class="teacher-card-header">
+          <span class="teacher-id">T849125</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="status-badge active">Active</span>
+            <button class="btn-icon" style="width:24px; height:24px; border:none; background:transparent;"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+        </div>
+        <div class="teacher-profile-block">
+          <div class="profile-img" style="width:40px; height:40px; font-size: 18px; border-radius:50%; background:var(--white); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-hint);"><i class="ti ti-user"></i></div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:14px; font-weight:600; color:var(--text);">Hellana</span>
+            <span style="font-size:12px; color:var(--text-muted);">VI (A)</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 16px;">
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Email</span>
+            <span style="font-size:13px; font-weight:500;">Hellana@example.com</span>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Phone</span>
+            <span style="font-size:13px; font-weight:500;">+1 23566 52683</span>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px dashed var(--border); padding-top: 12px;">
+          <span class="subject-badge">English</span>
+          <button class="add-fee-btn" style="border:none;">View Details</button>
+        </div>
+      </div>
+      <!-- Card -->
+      <div class="teacher-card">
+        <div class="teacher-card-header">
+          <span class="teacher-id">T849124</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="status-badge active">Active</span>
+            <button class="btn-icon" style="width:24px; height:24px; border:none; background:transparent;"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+        </div>
+        <div class="teacher-profile-block">
+          <div class="profile-img" style="width:40px; height:40px; font-size: 18px; border-radius:50%; background:var(--white); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-hint);"><i class="ti ti-user"></i></div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:14px; font-weight:600; color:var(--text);">Erickson</span>
+            <span style="font-size:12px; color:var(--text-muted);">VI (B) , V (A)</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 16px;">
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Email</span>
+            <span style="font-size:13px; font-weight:500;">Erickson@example.com</span>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Phone</span>
+            <span style="font-size:13px; font-weight:500;">+1 14259 85573</span>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px dashed var(--border); padding-top: 12px;">
+          <span class="subject-badge">Spanish</span>
+          <button class="add-fee-btn" style="border:none;">View Details</button>
+        </div>
+      </div>
+      <!-- Card -->
+      <div class="teacher-card">
+        <div class="teacher-card-header">
+          <span class="teacher-id">T849123</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="status-badge active">Active</span>
+            <button class="btn-icon" style="width:24px; height:24px; border:none; background:transparent;"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+        </div>
+        <div class="teacher-profile-block">
+          <div class="profile-img" style="width:40px; height:40px; font-size: 18px; border-radius:50%; background:var(--white); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-hint);"><i class="ti ti-user"></i></div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:14px; font-weight:600; color:var(--text);">Morgan</span>
+            <span style="font-size:12px; color:var(--text-muted);">VIII</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 16px;">
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Email</span>
+            <span style="font-size:13px; font-weight:500;">Morgan@example.com</span>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Phone</span>
+            <span style="font-size:13px; font-weight:500;">+1 98765 43210</span>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px dashed var(--border); padding-top: 12px;">
+          <span class="subject-badge">Math</span>
+          <button class="add-fee-btn" style="border:none;">View Details</button>
+        </div>
+      </div>
+      <!-- Card -->
+      <div class="teacher-card">
+        <div class="teacher-card-header">
+          <span class="teacher-id">T849122</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="status-badge inactive">Inactive</span>
+            <button class="btn-icon" style="width:24px; height:24px; border:none; background:transparent;"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+        </div>
+        <div class="teacher-profile-block">
+          <div class="profile-img" style="width:40px; height:40px; font-size: 18px; border-radius:50%; background:var(--white); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-hint);"><i class="ti ti-user"></i></div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:14px; font-weight:600; color:var(--text);">Aaron</span>
+            <span style="font-size:12px; color:var(--text-muted);">I (A)</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 16px;">
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Email</span>
+            <span style="font-size:13px; font-weight:500;">Aaron@example.com</span>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Phone</span>
+            <span style="font-size:13px; font-weight:500;">+1 12345 67890</span>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px dashed var(--border); padding-top: 12px;">
+          <span class="subject-badge">History</span>
+          <button class="add-fee-btn" style="border:none;">View Details</button>
+        </div>
+      </div>
+      <!-- Card -->
+      <div class="teacher-card">
+        <div class="teacher-card-header">
+          <span class="teacher-id">T849121</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="status-badge active">Active</span>
+            <button class="btn-icon" style="width:24px; height:24px; border:none; background:transparent;"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+        </div>
+        <div class="teacher-profile-block">
+          <div class="profile-img" style="width:40px; height:40px; font-size: 18px; border-radius:50%; background:var(--white); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-hint);"><i class="ti ti-user"></i></div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:14px; font-weight:600; color:var(--text);">Jacquelin</span>
+            <span style="font-size:12px; color:var(--text-muted);">IV</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 16px;">
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Email</span>
+            <span style="font-size:13px; font-weight:500;">Jacquelin@example.com</span>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Phone</span>
+            <span style="font-size:13px; font-weight:500;">+1 54321 09876</span>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px dashed var(--border); padding-top: 12px;">
+          <span class="subject-badge">Science</span>
+          <button class="add-fee-btn" style="border:none;">View Details</button>
+        </div>
+      </div>
+      <!-- Card -->
+      <div class="teacher-card">
+        <div class="teacher-card-header">
+          <span class="teacher-id">T849120</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="status-badge active">Active</span>
+            <button class="btn-icon" style="width:24px; height:24px; border:none; background:transparent;"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+        </div>
+        <div class="teacher-profile-block">
+          <div class="profile-img" style="width:40px; height:40px; font-size: 18px; border-radius:50%; background:var(--white); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-hint);"><i class="ti ti-user"></i></div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:14px; font-weight:600; color:var(--text);">Raul</span>
+            <span style="font-size:12px; color:var(--text-muted);">IV</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom: 16px;">
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Email</span>
+            <span style="font-size:13px; font-weight:500;">Raul@example.com</span>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11.5px; color:var(--text-muted); margin-bottom:2px;">Phone</span>
+            <span style="font-size:13px; font-weight:500;">+1 67890 54321</span>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px dashed var(--border); padding-top: 12px;">
+          <span class="subject-badge">Geography</span>
+          <button class="add-fee-btn" style="border:none;">View Details</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Teacher List View -->
+    <div class="student-list" id="studentList">
+      <div class="table-wrapper">
+        <div class="table-header-controls">
+          <div class="entries-control">
+            Row Per Page 
+            <select>
+              <option>10</option>
+              <option>25</option>
+              <option>50</option>
+            </select>
+          </div>
+          <div class="search-control">
+            <i class="ti ti-search"></i>
+            <input type="text" placeholder="Search Teacher..." />
+          </div>
+        </div>
+        
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th><input type="checkbox"></th>
+              <th>Teacher ID <i class="ti ti-arrows-sort"></i></th>
+              <th>Name <i class="ti ti-arrows-sort"></i></th>
+              <th>Class <i class="ti ti-arrows-sort"></i></th>
+              <th>Subject <i class="ti ti-arrows-sort"></i></th>
+              <th>Phone <i class="ti ti-arrows-sort"></i></th>
+              <th>Status <i class="ti ti-arrows-sort"></i></th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td style="color:var(--green); font-weight:500;">T849127</td>
+              <td>
+                <div class="table-avatar">
+                  <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                  Teresa
+                </div>
+              </td>
+              <td>III A</td>
+              <td><span class="subject-badge">Physics</span></td>
+              <td>+1 82392 37359</td>
+              <td><span class="status-badge active">Active</span></td>
+              <td>
+                 <div style="display:flex; gap:8px;">
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-eye"></i></button>
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-edit"></i></button>
+                 </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td style="color:var(--green); font-weight:500;">T849126</td>
+              <td>
+                <div class="table-avatar">
+                  <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                  Daniel
+                </div>
+              </td>
+              <td>II (A)</td>
+              <td><span class="subject-badge">Computer</span></td>
+              <td>+1 56752 86742</td>
+              <td><span class="status-badge active">Active</span></td>
+              <td>
+                 <div style="display:flex; gap:8px;">
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-eye"></i></button>
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-edit"></i></button>
+                 </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td style="color:var(--green); font-weight:500;">T849125</td>
+              <td>
+                <div class="table-avatar">
+                  <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                  Hellana
+                </div>
+              </td>
+              <td>VI (A)</td>
+              <td><span class="subject-badge">English</span></td>
+              <td>+1 23566 52683</td>
+              <td><span class="status-badge active">Active</span></td>
+              <td>
+                 <div style="display:flex; gap:8px;">
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-eye"></i></button>
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-edit"></i></button>
+                 </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td style="color:var(--green); font-weight:500;">T849124</td>
+              <td>
+                <div class="table-avatar">
+                  <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                  Erickson
+                </div>
+              </td>
+              <td>VI (B) , V (A)</td>
+              <td><span class="subject-badge">Spanish</span></td>
+              <td>+1 14259 85573</td>
+              <td><span class="status-badge active">Active</span></td>
+              <td>
+                 <div style="display:flex; gap:8px;">
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-eye"></i></button>
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-edit"></i></button>
+                 </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td style="color:var(--green); font-weight:500;">T849123</td>
+              <td>
+                <div class="table-avatar">
+                  <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                  Morgan
+                </div>
+              </td>
+              <td>VIII</td>
+              <td><span class="subject-badge">Math</span></td>
+              <td>+1 98765 43210</td>
+              <td><span class="status-badge active">Active</span></td>
+              <td>
+                 <div style="display:flex; gap:8px;">
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-eye"></i></button>
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-edit"></i></button>
+                 </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td style="color:var(--green); font-weight:500;">T849122</td>
+              <td>
+                <div class="table-avatar">
+                  <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                  Aaron
+                </div>
+              </td>
+              <td>I (A)</td>
+              <td><span class="subject-badge">History</span></td>
+              <td>+1 12345 67890</td>
+              <td><span class="status-badge inactive">Inactive</span></td>
+              <td>
+                 <div style="display:flex; gap:8px;">
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-eye"></i></button>
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-edit"></i></button>
+                 </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td style="color:var(--green); font-weight:500;">T849121</td>
+              <td>
+                <div class="table-avatar">
+                  <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                  Jacquelin
+                </div>
+              </td>
+              <td>IV</td>
+              <td><span class="subject-badge">Science</span></td>
+              <td>+1 54321 09876</td>
+              <td><span class="status-badge active">Active</span></td>
+              <td>
+                 <div style="display:flex; gap:8px;">
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-eye"></i></button>
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-edit"></i></button>
+                 </div>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td style="color:var(--green); font-weight:500;">T849120</td>
+              <td>
+                <div class="table-avatar">
+                  <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                  Raul
+                </div>
+              </td>
+              <td>IV</td>
+              <td><span class="subject-badge">Geography</span></td>
+              <td>+1 67890 54321</td>
+              <td><span class="status-badge active">Active</span></td>
+              <td>
+                 <div style="display:flex; gap:8px;">
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-eye"></i></button>
+                   <button class="btn-icon" style="width:28px; height:28px;"><i class="ti ti-edit"></i></button>
+                 </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="table-footer">
+          <div class="pagination">
+            <button class="page-btn text-btn">Prev</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn text-btn">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleFilter() {
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.classList.toggle('show');
+  }
+
+  // Close filter dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('filterDropdown');
+    const filterBtn = document.getElementById('filterBtn');
+    if (!filterBtn.contains(event.target) && !dropdown.contains(event.target)) {
+      dropdown.classList.remove('show');
+    }
+  });
+
+  function setView(viewMode) {
+    const grid = document.getElementById('studentGrid');
+    const list = document.getElementById('studentList');
+    const btnGrid = document.getElementById('btnGridView');
+    const btnList = document.getElementById('btnListView');
+    const tbTitle = document.getElementById('toolbarTitle');
+
+    if (viewMode === 'grid') {
+      grid.style.display = 'grid';
+      list.style.display = 'none';
+      btnGrid.classList.add('active');
+      btnGrid.style.background = '';
+      btnList.classList.remove('active');
+      btnList.style.background = 'transparent';
+      tbTitle.textContent = "Teachers Grid";
+    } else {
+      grid.style.display = 'none';
+      list.style.display = 'block';
+      btnList.classList.add('active');
+      btnList.style.background = '';
+      btnGrid.classList.remove('active');
+      btnGrid.style.background = 'transparent';
+      tbTitle.textContent = "Teachers List";
+    }
+  }
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
