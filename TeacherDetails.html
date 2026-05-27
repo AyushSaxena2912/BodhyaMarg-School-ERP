@@ -213,7 +213,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         </div>
 
         <!-- PAN Box -->
-        <div class="card pan-box">
+        <!-- Aadhar Box -->
+        <div class="card pan-box" style="margin-bottom: 16px;">
           <div class="pan-content">
             <div class="contact-icon"><i class="ti ti-id"></i></div>
             <div class="contact-details">
@@ -224,18 +225,46 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <button class="btn-primary" style="padding: 6px; width:28px; height:28px; display:flex; justify-content:center; align-items:center;"><i class="ti ti-copy" style="font-size:16px;"></i></button>
         </div>
 
+        <!-- PAN Box -->
+        <div class="card pan-box">
+          <div class="pan-content">
+            <div class="contact-icon"><i class="ti ti-credit-card"></i></div>
+            <div class="contact-details">
+              <span class="contact-title">PAN Number</span>
+              <span class="contact-text">ABCDE1234F</span>
+            </div>
+          </div>
+          <button class="btn-primary" style="padding: 6px; width:28px; height:28px; display:flex; justify-content:center; align-items:center;"><i class="ti ti-copy" style="font-size:16px;"></i></button>
+        </div>
+
         <!-- Hostel & Transportation -->
         <div class="card" style="padding:0;">
           <div style="display:flex; border-bottom:1px solid var(--border); padding: 0 16px;">
-            <div style="padding: 12px 16px; font-size:13px; font-weight:600; color:var(--green); border-bottom:2px solid var(--green); cursor:pointer;">Hostel</div>
-            <div style="padding: 12px 16px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer;">Transportation</div>
+            <div id="tabHostelBtn" onclick="toggleHT('hostel')" style="padding: 12px 16px; font-size:13px; font-weight:600; color:var(--green); border-bottom:2px solid var(--green); cursor:pointer;">Hostel</div>
+            <div id="tabTransportBtn" onclick="toggleHT('transport')" style="padding: 12px 16px; font-size:13px; font-weight:500; color:var(--text-muted); border-bottom:2px solid transparent; cursor:pointer;">Transportation</div>
           </div>
-          <div style="padding: 16px;">
+          <div style="padding: 16px;" id="contentHostel">
             <div class="contact-block">
               <div class="contact-icon"><i class="ti ti-building"></i></div>
               <div class="contact-details">
                 <span class="contact-title">Girls Hostel, 2nd Floor</span>
                 <span class="contact-text" style="color:var(--green); font-weight:500; font-size:12px;">Room No : 205</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding: 16px; display:none;" id="contentTransport">
+            <div class="contact-block" style="margin-bottom:8px;">
+              <div class="contact-icon"><i class="ti ti-bus"></i></div>
+              <div class="contact-details">
+                <span class="contact-title">Route A</span>
+                <span class="contact-text" style="font-weight:500; font-size:12px;">DL 01 AA 1234</span>
+              </div>
+            </div>
+            <div class="contact-block">
+              <div class="contact-icon"><i class="ti ti-map-pin"></i></div>
+              <div class="contact-details">
+                <span class="contact-title">Pickup Point</span>
+                <span class="contact-text" style="font-weight:500; font-size:12px;">Gate 1</span>
               </div>
             </div>
           </div>
@@ -431,5 +460,37 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 </div>
 
 <script src="sidebar.js"></script>
+<script>
+  function toggleHT(tab) {
+    const btnHostel = document.getElementById('tabHostelBtn');
+    const btnTransport = document.getElementById('tabTransportBtn');
+    const contentHostel = document.getElementById('contentHostel');
+    const contentTransport = document.getElementById('contentTransport');
+
+    if (tab === 'hostel') {
+      btnHostel.style.color = 'var(--green)';
+      btnHostel.style.fontWeight = '600';
+      btnHostel.style.borderBottomColor = 'var(--green)';
+      
+      btnTransport.style.color = 'var(--text-muted)';
+      btnTransport.style.fontWeight = '500';
+      btnTransport.style.borderBottomColor = 'transparent';
+
+      contentHostel.style.display = 'block';
+      contentTransport.style.display = 'none';
+    } else {
+      btnTransport.style.color = 'var(--green)';
+      btnTransport.style.fontWeight = '600';
+      btnTransport.style.borderBottomColor = 'var(--green)';
+      
+      btnHostel.style.color = 'var(--text-muted)';
+      btnHostel.style.fontWeight = '500';
+      btnHostel.style.borderBottomColor = 'transparent';
+
+      contentHostel.style.display = 'none';
+      contentTransport.style.display = 'block';
+    }
+  }
+</script>
 </body>
 </html>
