@@ -14,29 +14,33 @@
   --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
   --bg: #f8fafc; --white: #ffffff; --border: #e2e8f0;
   --text: #1e293b; --text-muted: #64748b; --text-hint: #94a3b8;
-  --primary: #4338ca; --primary-hover: #3730a3; --primary-light: #e0e7ff;
   --radius: 8px; --radius-lg: 12px;
 }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
 
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; justify-content: space-between; }
-.topbar-left { display: flex; align-items: center; gap: 12px; }
-.topbar-title { font-size: 20px; font-weight: 700; color: #1e293b; }
-.breadcrumb { font-size: 13px; color: var(--text-hint); display: flex; align-items: center; gap: 6px; }
-.breadcrumb .current { font-weight: 600; color: var(--text); }
-
-.topbar-right { display: flex; align-items: center; gap: 12px; }
-.btn-icon { width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); transition: all 0.2s; font-size: 16px; }
-.btn-icon:hover { background: var(--bg); color: var(--text); }
-.btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); transition: all 0.2s; white-space: nowrap; }
-.btn:hover { background: var(--bg); }
-.btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
-.btn-primary:hover { background: var(--primary-hover); color: #fff; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.av { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
 .content { flex: 1; overflow-y: auto; padding: 24px; }
 .content::-webkit-scrollbar { width: 4px; }
 .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.bc-green { color: var(--green); font-weight: 500; }
+.page-actions { display: flex; gap: 10px; align-items: center; }
+
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); transition: all 0.2s; white-space: nowrap; }
+.btn:hover { background: var(--bg); }
+.btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-primary:hover { background: var(--green-dark); color: #fff; }
 
 /* Filter & Controls */
 .controls-card { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; background: var(--white); padding: 16px 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
@@ -81,24 +85,37 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 <div id="sidebar-container"></div>
 
 <div class="main">
-  <!-- Topbar -->
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-title">Exam</div>
-      <div class="breadcrumb">
-        Dashboard <span style="margin:0 4px;">/</span> Academic <span style="margin:0 4px;">/</span> <span class="current">Exam</span>
-      </div>
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search..." />
     </div>
     <div class="topbar-right">
-      <button class="btn-icon" title="Refresh"><i class="ti ti-refresh"></i></button>
-      <button class="btn-icon" title="Print"><i class="ti ti-printer"></i></button>
-      <button class="btn"><i class="ti ti-file-export"></i> Export <i class="ti ti-chevron-down" style="font-size:14px;color:var(--text-hint);"></i></button>
-      <button class="btn btn-primary"><i class="ti ti-plus"></i> Add Exam</button>
+      <div class="icon-btn"><i class="ti ti-bell" style="font-size:16px;"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings" style="font-size:16px;"></i></div>
+      <div class="av">AD</div>
     </div>
   </div>
 
   <!-- Content -->
   <div class="content">
+    
+    <div class="page-header">
+      <div>
+        <h1>Exam List</h1>
+        <div class="breadcrumb">
+          Dashboard <i class="ti ti-chevron-right" style="font-size:10px;"></i>
+          Academic <i class="ti ti-chevron-right" style="font-size:10px;"></i>
+          <span class="bc-green">Exam</span>
+        </div>
+      </div>
+      <div class="page-actions">
+        <button class="btn" title="Refresh"><i class="ti ti-refresh"></i> Refresh</button>
+        <button class="btn" title="Print"><i class="ti ti-printer"></i> Print</button>
+        <button class="btn"><i class="ti ti-file-export"></i> Export <i class="ti ti-chevron-down" style="font-size:14px;color:var(--text-hint);"></i></button>
+        <button class="btn btn-primary"><i class="ti ti-plus" style="font-size:15px;"></i> Add Exam</button>
+      </div>
+    </div>
     
     <!-- Controls Card -->
     <div class="controls-card">
