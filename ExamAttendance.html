@@ -158,7 +158,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
       <div class="table-responsive">
         <table>
           <thead><tr>
-            <th class="checkbox-cell"><div class="checkbox-custom"></div></th>
+            <th class="checkbox-cell"><div class="checkbox-custom" id="selectAllCheckbox"></div></th>
             <th>Student Name</th>
             <th>Class & Section</th>
             <th>Exam Date</th>
@@ -300,9 +300,31 @@ function render() {
 
   tbody.innerHTML = html;
 
-  document.querySelectorAll('.checkbox-custom').forEach(cb => {
-    cb.addEventListener('click', function () { this.classList.toggle('checked'); });
+  const selectAllCb = document.getElementById('selectAllCheckbox');
+  const bodyCbs = tbody.querySelectorAll('.checkbox-custom');
+
+  bodyCbs.forEach(cb => {
+    cb.addEventListener('click', function () { 
+      this.classList.toggle('checked'); 
+      const allChecked = Array.from(bodyCbs).every(c => c.classList.contains('checked'));
+      if (allChecked) selectAllCb.classList.add('checked');
+      else selectAllCb.classList.remove('checked');
+    });
   });
+
+  if (selectAllCb) {
+    const newSelectAll = selectAllCb.cloneNode(true);
+    selectAllCb.parentNode.replaceChild(newSelectAll, selectAllCb);
+    
+    newSelectAll.addEventListener('click', function () {
+      this.classList.toggle('checked');
+      const isChecked = this.classList.contains('checked');
+      bodyCbs.forEach(cb => {
+        if (isChecked) cb.classList.add('checked');
+        else cb.classList.remove('checked');
+      });
+    });
+  }
 }
 
 document.addEventListener('DOMContentLoaded', render);
