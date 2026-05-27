@@ -111,7 +111,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 .report-info p { font-size: 13px; color: var(--text-muted); }
 
 .report-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-.report-table th, .report-table td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid var(--border); text-align: left; }
+.report-table th, .report-table td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
 .report-table th { background: #f8fafc; font-weight: 600; color: var(--text-muted); }
 .report-table td { color: var(--text); }
 .report-table tr:last-child td { border-bottom: none; }
@@ -254,7 +254,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
       <div class="report-header" id="modalStudentHeader">
         <!-- Populated by JS -->
       </div>
-      <div style="border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
+      <div style="border: 1px solid var(--border); border-radius: 8px; overflow-x: auto;">
         <table class="report-table">
           <thead>
             <tr>
