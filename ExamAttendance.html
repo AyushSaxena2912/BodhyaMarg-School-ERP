@@ -46,16 +46,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .input-box i { color: var(--text-hint); font-size: 16px; }
 .input-box .ti-chevron-down { font-size: 14px; margin-left: -4px; pointer-events: none; }
 
-/* Summary Cards */
-.summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
-.summary-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; display: flex; align-items: center; gap: 16px; }
-.summary-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-.summary-icon.total { background: #ede9fe; color: #7c3aed; }
-.summary-icon.present { background: #ecfdf5; color: #10b981; }
-.summary-icon.absent { background: #fef2f2; color: #ef4444; }
-.summary-icon.late { background: #fffbeb; color: #f59e0b; }
-.summary-info h3 { font-size: 22px; font-weight: 700; }
-.summary-info p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
 
 .table-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
 .table-toolbar { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
@@ -157,12 +148,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
     </div>
 
     <!-- Summary Cards -->
-    <div class="summary-row">
-      <div class="summary-card"><div class="summary-icon total"><i class="ti ti-users"></i></div><div class="summary-info"><h3 id="totalCount">0</h3><p>Total Students</p></div></div>
-      <div class="summary-card"><div class="summary-icon present"><i class="ti ti-circle-check"></i></div><div class="summary-info"><h3 id="presentCount">0</h3><p>Present</p></div></div>
-      <div class="summary-card"><div class="summary-icon absent"><i class="ti ti-circle-x"></i></div><div class="summary-info"><h3 id="absentCount">0</h3><p>Absent</p></div></div>
-      <div class="summary-card"><div class="summary-icon late"><i class="ti ti-clock-exclamation"></i></div><div class="summary-info"><h3 id="lateCount">0</h3><p>Late</p></div></div>
-    </div>
+
 
     <!-- Table -->
     <div class="table-card">
@@ -179,8 +165,6 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
             <th>Exam Date</th>
             <th>Subject</th>
             <th>Status</th>
-            <th>Time</th>
-            <th>Remarks</th>
           </tr></thead>
           <tbody id="attendanceBody"></tbody>
         </table>
@@ -287,17 +271,7 @@ function getAvColor(status) {
   return { bg: '#fffbeb', text: '#f59e0b' };
 }
 
-function updateSummary() {
-  const total = attendanceData.length;
-  const present = attendanceData.filter(s => s.status === 'present').length;
-  const absent = attendanceData.filter(s => s.status === 'absent').length;
-  const late = attendanceData.filter(s => s.status === 'late').length;
-
-  document.getElementById('totalCount').textContent = total;
-  document.getElementById('presentCount').textContent = `${present} (${((present/total)*100).toFixed(0)}%)`;
-  document.getElementById('absentCount').textContent = `${absent} (${((absent/total)*100).toFixed(0)}%)`;
-  document.getElementById('lateCount').textContent = `${late} (${((late/total)*100).toFixed(0)}%)`;
-}
+// updateSummary removed as per previous request
 
 function render() {
   const tbody = document.getElementById('attendanceBody');
@@ -306,7 +280,6 @@ function render() {
   attendanceData.forEach(item => {
     let av = getAvColor(item.status);
     let statusLabel = item.status.charAt(0).toUpperCase() + item.status.slice(1);
-    let lateInfo = item.lateBy ? `+${item.lateBy} min` : item.arrival;
 
     html += `
       <tr>
@@ -321,8 +294,6 @@ function render() {
         <td>${EXAM_DATE}</td>
         <td style="font-weight:500;">Mathematics</td>
         <td><span class="status-badge ${item.status}">${statusLabel}</span></td>
-        <td style="font-weight:600; color:${item.status === 'late' ? '#f59e0b' : 'var(--text)'};">${item.status === 'absent' ? '—' : item.arrival}${item.lateBy ? ' <span style="font-size:11px;color:#f59e0b;">(+' + item.lateBy + ' min)</span>' : ''}</td>
-        <td><div class="remarks-text">${item.remarks}</div></td>
       </tr>
     `;
   });
