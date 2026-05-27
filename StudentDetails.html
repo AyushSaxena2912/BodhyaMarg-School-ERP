@@ -274,14 +274,37 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <!-- Hostel & Transport -->
         <div class="card" style="padding-bottom: 12px;">
           <div class="small-tabs">
-            <div class="small-tab active">Hostel</div>
-            <div class="small-tab">Transportation</div>
+            <div class="small-tab active" id="tabHostelBtn" onclick="toggleHT('hostel')">Hostel</div>
+            <div class="small-tab" id="tabTransportBtn" onclick="toggleHT('transport')">Transportation</div>
           </div>
-          <div class="contact-item" style="margin-bottom: 8px;">
-            <button class="circle-btn" style="background: var(--bg); border-radius: 8px;"><i class="ti ti-building"></i></button>
-            <div class="contact-info">
-              <span class="contact-value" style="font-size: 13px; font-weight: 600;">HI-Hostel, Floor</span>
-              <span class="contact-label" style="color: var(--green);">Room No : 25</span>
+          
+          <div id="contentHostel">
+            <div class="contact-item" style="margin-bottom: 8px;">
+              <button class="circle-btn" style="background: var(--bg); border-radius: 8px;"><i class="ti ti-building"></i></button>
+              <div class="contact-info">
+                <span class="contact-value" style="font-size: 13px; font-weight: 600;">HI-Hostel, Floor</span>
+                <span class="contact-label" style="color: var(--green);">Room No : 25</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="contentTransport" style="display: none;">
+            <div class="contact-item" style="margin-bottom: 16px;">
+              <button class="circle-btn" style="background: var(--bg); border-radius: 8px;"><i class="ti ti-bus"></i></button>
+              <div class="contact-info">
+                <span class="contact-label">Route</span>
+                <span class="contact-value" style="font-size: 13px; font-weight: 600;">Route 4 - Indiranagar</span>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px;">
+              <div class="contact-info">
+                <span class="contact-label">Bus Number</span>
+                <span class="contact-value" style="font-size: 13px; font-weight: 600;">KA 01 AB 1234</span>
+              </div>
+              <div class="contact-info">
+                <span class="contact-label">Pickup Point</span>
+                <span class="contact-value" style="font-size: 13px; font-weight: 600;">MG Road Metro</span>
+              </div>
             </div>
           </div>
         </div>
@@ -467,6 +490,26 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   </div><!-- /content -->
 </div><!-- /main -->
 
+<script>
+  function toggleHT(tab) {
+    const btnHostel = document.getElementById('tabHostelBtn');
+    const btnTransport = document.getElementById('tabTransportBtn');
+    const contentHostel = document.getElementById('contentHostel');
+    const contentTransport = document.getElementById('contentTransport');
+
+    if (tab === 'hostel') {
+      btnHostel.classList.add('active');
+      btnTransport.classList.remove('active');
+      contentHostel.style.display = 'block';
+      contentTransport.style.display = 'none';
+    } else {
+      btnTransport.classList.add('active');
+      btnHostel.classList.remove('active');
+      contentTransport.style.display = 'block';
+      contentHostel.style.display = 'none';
+    }
+  }
+</script>
 <script src="sidebar.js"></script>
 </body>
 </html>
