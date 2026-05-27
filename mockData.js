@@ -4,13 +4,17 @@ const mockData = {
       parentId: "P124556",
       addedOn: "25 Mar 2024",
       father: {
-        name: "Rakesh Patel"
+        name: "Rakesh Patel",
+        email: "rakesh@example.com",
+        phone: "+91 91234 56789"
       },
       mother: {
-        name: "Kavita Patel"
+        name: "Kavita Patel",
+        email: "kavita@example.com",
+        phone: "+91 99887 76655"
       },
       guardian: {
-        type: "father", // 'father', 'mother', or 'other'
+        type: "father",
         name: "Rakesh Patel",
         email: "rakesh@example.com",
         phone: "+91 91234 56789",
@@ -25,15 +29,19 @@ const mockData = {
       parentId: "P124555",
       addedOn: "18 Mar 2024",
       father: {
-        name: "Anil Gupta"
+        name: "Anil Gupta",
+        email: "anil.dad@example.com",
+        phone: "+91 91111 22222"
       },
       mother: {
-        name: "Sunita Gupta"
+        name: "Sunita Gupta",
+        email: "sunita.mom@example.com",
+        phone: "+91 92222 33333"
       },
       guardian: {
         type: "other",
         name: "Suresh Verma",
-        email: "anil.gupta@example.com", // Keeping as per UI mock
+        email: "anil.gupta@example.com",
         phone: "+91 99887 76655",
         relation: "Uncle"
       },
@@ -45,10 +53,14 @@ const mockData = {
       parentId: "P124554",
       addedOn: "14 Mar 2024",
       father: {
-        name: "Vikram Singh"
+        name: "Vikram Singh",
+        email: "vikram@example.com",
+        phone: "+91 93333 44444"
       },
       mother: {
-        name: "Priya Singh"
+        name: "Priya Singh",
+        email: "priya.s@example.com",
+        phone: "+91 88776 65544"
       },
       guardian: {
         type: "mother",
@@ -65,10 +77,14 @@ const mockData = {
       parentId: "P124553",
       addedOn: "27 Feb 2024",
       father: {
-        name: "Suresh Das"
+        name: "Suresh Das",
+        email: "suresh.father@example.com",
+        phone: "+91 94444 55555"
       },
       mother: {
-        name: "Meera Das"
+        name: "Meera Das",
+        email: "meera.mom@example.com",
+        phone: "+91 95555 66666"
       },
       guardian: {
         type: "other",
@@ -85,10 +101,14 @@ const mockData = {
       parentId: "P124552",
       addedOn: "11 Feb 2024",
       father: {
-        name: "Amit Reddy"
+        name: "Amit Reddy",
+        email: "amit.reddy@example.com",
+        phone: "+91 99001 12233"
       },
       mother: {
-        name: "Sneha Reddy"
+        name: "Sneha Reddy",
+        email: "sneha.reddy@example.com",
+        phone: "+91 96666 77777"
       },
       guardian: {
         type: "father",
@@ -105,10 +125,14 @@ const mockData = {
       parentId: "P124551",
       addedOn: "24 Jan 2024",
       father: {
-        name: "Nitin Patel"
+        name: "Nitin Patel",
+        email: "nitin.dad@example.com",
+        phone: "+91 97777 88888"
       },
       mother: {
-        name: "Aarti Patel"
+        name: "Aarti Patel",
+        email: "nitin.patel@example.com",
+        phone: "+91 88990 01122"
       },
       guardian: {
         type: "mother",
@@ -123,6 +147,3 @@ const mockData = {
     }
   ]
 };
-
-// If using ES6 modules in future
-// export default mockData;
