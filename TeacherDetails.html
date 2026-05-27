@@ -118,8 +118,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .address-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
 
 /* 2-col wrapper for sections */
-.two-col-wrapper { display: flex; gap: 24px; }
+.two-col-wrapper { display: flex; gap: 24px; margin-bottom: 24px; }
+.two-col-wrapper > .section-card { margin-bottom: 0; }
 .two-col-wrapper > * { flex: 1; }
+
+/* Main Tabs */
+.main-tabs { display: flex; gap: 24px; padding: 0 24px; border: 1px solid var(--border); background: var(--white); border-radius: var(--radius-lg); margin-bottom: 0; }
+.main-tab { padding: 16px 0; font-size: 13.5px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+.main-tab:hover { color: var(--text); }
+.main-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
 
 .text-para { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
 
@@ -326,12 +333,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
       <!-- Right Main Panel -->
       <div class="profile-main">
-        <div style="background:var(--white); border-bottom:1px solid var(--border); display:flex; padding:0 24px; gap:24px;">
-          <div class="tab active" id="tabTeacherDetails" onclick="switchMainTab('details')" style="cursor:pointer;"><i class="ti ti-user"></i> Teacher Details</div>
-          <div class="tab" id="tabTeacherRoutine" onclick="switchMainTab('routine')" style="cursor:pointer;"><i class="ti ti-calendar-time"></i> Routine</div>
-          <div class="tab" style="cursor:pointer;"><i class="ti ti-calendar-event"></i> Leave & Attendance</div>
-          <div class="tab" style="cursor:pointer;"><i class="ti ti-wallet"></i> Salary</div>
-          <div class="tab" style="cursor:pointer;"><i class="ti ti-books"></i> Library</div>
+        <div class="main-tabs">
+          <div class="main-tab active" id="tabTeacherDetails" onclick="switchMainTab('details')"><i class="ti ti-user"></i> Teacher Details</div>
+          <div class="main-tab" id="tabTeacherRoutine" onclick="switchMainTab('routine')"><i class="ti ti-calendar-time"></i> Routine</div>
+          <div class="main-tab"><i class="ti ti-calendar-event"></i> Leave & Attendance</div>
+          <div class="main-tab"><i class="ti ti-wallet"></i> Salary</div>
+          <div class="main-tab"><i class="ti ti-books"></i> Library</div>
         </div>
 
         <div id="mainContentDetails">
