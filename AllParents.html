@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – All Parents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+/* Sidebar overrides if any */
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+
+/* Main */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.ay-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* Content */
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* Page Header */
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.page-title h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); display: flex; align-items: center; gap: 4px; }
+.breadcrumb span { color: var(--text); }
+.header-actions { display: flex; gap: 10px; }
+
+/* Toolbar */
+.toolbar { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.toolbar-title { font-size: 15px; font-weight: 600; }
+.toolbar-actions { display: flex; gap: 12px; align-items: center; position: relative; }
+
+/* Controls */
+.control-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--border); background: var(--white); border-radius: var(--radius); font-size: 13px; font-family: inherit; font-weight: 500; cursor: pointer; color: var(--text-muted); transition: background 0.15s; }
+.control-btn:hover { background: var(--bg); }
+.btn-primary { background: var(--green); color: var(--white); border-color: var(--green); border-radius: var(--radius); padding: 8px 16px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; transition: background 0.15s; }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-icon { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--white); border-radius: var(--radius); cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
+.btn-icon:hover { background: var(--bg); }
+.btn-icon.active { background: var(--green); color: var(--white); border-color: var(--green); }
+
+/* Filter Dropdown */
+.filter-dropdown { position: absolute; top: 100%; right: 90px; margin-top: 8px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); width: 340px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 16px; z-index: 100; display: none; }
+.filter-dropdown.show { display: block; }
+.filter-header { font-size: 15px; font-weight: 600; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+.filter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.filter-field { display: flex; flex-direction: column; gap: 6px; }
+.filter-field label { font-size: 12px; font-weight: 600; color: var(--text); }
+.filter-field input, .filter-field select { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; outline: none; background: var(--white); color: var(--text); }
+.filter-field input:focus, .filter-field select:focus { border-color: var(--green); }
+.filter-field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; cursor: pointer; }
+.filter-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.btn-reset { padding: 8px 16px; background: var(--bg); color: var(--text); border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+.btn-reset:hover { background: #e2e8f0; }
+.btn-apply { padding: 8px 16px; background: var(--green); color: var(--white); border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+.btn-apply:hover { background: var(--green-dark); }
+
+/* Grid Layout */
+.student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 20px; }
+
+/* Parent Card */
+.student-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; transition: box-shadow 0.2s, transform 0.2s; display: flex; flex-direction: column; }
+.student-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); transform: translateY(-2px); }
+
+.card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.admission-no { font-size: 13px; color: var(--green); font-weight: 500; }
+.menu-btn { background: none; border: none; color: var(--text-hint); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; padding: 0; }
+
+.card-profile { border-radius: var(--radius); padding: 0; display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.profile-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: #e2e8f0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-hint); }
+.profile-info { display: flex; flex-direction: column; overflow: hidden; }
+.profile-name { font-size: 14.5px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.profile-class { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.card-stats { display: flex; justify-content: space-between; margin-bottom: 18px; gap: 20px; }
+.stat-col { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+.stat-label { font-size: 11.5px; color: var(--text-muted); }
+.stat-value { font-size: 12.5px; font-weight: 400; color: var(--text); word-break: break-all; }
+
+.card-actions { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px dashed var(--border); margin-top: auto; }
+.add-fee-btn { padding: 7px 14px; background: #e2e8f0; color: var(--text); border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.add-fee-btn:hover { background: #cbd5e1; }
+
+/* List View CSS */
+.student-list { display: none; }
+.table-wrapper { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px; }
+.table-header-controls { display: flex; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--border); align-items: center; }
+.entries-control { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+.entries-control select { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 13px; color: var(--text); outline: none; background: var(--white); cursor: pointer; }
+.search-control input { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; width: 220px; outline: none; background: var(--white); color: var(--text); }
+.search-control input:focus { border-color: var(--green); }
+.data-table { width: 100%; border-collapse: collapse; text-align: left; }
+.data-table th, .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.data-table th { background: #f8fafc; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+.data-table th i { font-size: 14px; margin-left: 4px; color: #cbd5e1; }
+.data-table tbody tr:hover { background: #f8fafc; }
+.data-table td { color: var(--text); vertical-align: middle; }
+.table-avatar { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+.table-avatar .avatar-placeholder { width: 34px; height: 34px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--text-hint); }
+
+/* Pagination & Load More */
+.table-footer { padding: 16px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
+.pagination { display: flex; gap: 4px; align-items: center; }
+.page-btn { border: none; background: transparent; color: var(--text-muted); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; }
+.page-btn:hover { background: var(--bg); color: var(--text); }
+.page-btn.active { background: var(--green); color: var(--white); }
+.page-btn.text-btn { font-weight: 500; }
+
+.load-more-container { text-align: center; margin-top: 16px; margin-bottom: 8px; width: 100%; grid-column: 1 / -1; }
+.btn-load-more { display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; background: var(--green); color: var(--white); border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+.btn-load-more:hover { background: var(--green-dark); }
+.btn-load-more i { font-size: 18px; }
+
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div id="sidebar-container"></div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search anything…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill"><i class="ti ti-calendar"></i> Academic Year : 2026 / 2027 <i class="ti ti-chevron-down"></i></div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <div class="page-title">
+          <h1>Parents</h1>
+        </div>
+        <div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Peoples <i class="ti ti-chevron-right"></i> <span>Parents</span></div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-icon"><i class="ti ti-printer"></i></button>
+        <button class="control-btn"><i class="ti ti-file-export"></i> Export <i class="ti ti-chevron-down"></i></button>
+        <button class="btn-primary"><i class="ti ti-plus"></i> Add Parent</button>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar-title" id="toolbarTitle">Parents Grid</div>
+      <div class="toolbar-actions">
+        <div class="control-btn" style="color: var(--text);"><i class="ti ti-calendar"></i> 05/21/2026 - 05/27/2026</div>
+        
+        <div style="position:relative;">
+          <button class="control-btn" id="filterBtn" onclick="toggleFilter()"><i class="ti ti-filter"></i> Filter <i class="ti ti-chevron-down"></i></button>
+          
+          <!-- Filter Dropdown -->
+          <div class="filter-dropdown" id="filterDropdown">
+             <div class="filter-header">Filter</div>
+             <div class="filter-row">
+               <div class="filter-field">
+                 <label>Class</label>
+                 <select>
+                   <option>Select</option>
+                   <option>I</option>
+                   <option>II</option>
+                   <option>III</option>
+                   <option>IV</option>
+                   <option>V</option>
+                 </select>
+               </div>
+               <div class="filter-field">
+                 <label>Section</label>
+                 <select>
+                   <option>Select</option>
+                   <option>A</option>
+                   <option>B</option>
+                   <option>C</option>
+                 </select>
+               </div>
+             </div>
+             <div class="filter-field" style="margin-bottom: 12px;">
+               <label>Search Parent</label>
+               <input type="text" placeholder="Name, Phone, Email..." />
+             </div>
+             <div class="filter-footer">
+               <button class="btn-reset" onclick="toggleFilter()">Reset</button>
+               <button class="btn-apply" onclick="toggleFilter()">Apply</button>
+             </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:4px; background:var(--bg); padding:3px; border-radius:var(--radius); border:1px solid var(--border);">
+          <button id="btnListView" class="btn-icon" style="width:28px; height:28px; border:none; background:transparent;" onclick="setView('list')"><i class="ti ti-list"></i></button>
+          <button id="btnGridView" class="btn-icon active" style="width:28px; height:28px; border:none;" onclick="setView('grid')"><i class="ti ti-grid-dots"></i></button>
+        </div>
+        
+        <button class="control-btn"><i class="ti ti-arrows-sort"></i> Sort by A-Z <i class="ti ti-chevron-down"></i></button>
+      </div>
+    </div>
+
+    <!-- Student List View -->
+    <div class="student-list" id="studentList">
+      <div class="table-wrapper">
+        <div class="table-header-controls">
+          <div class="entries-control">
+            Row Per Page 
+            <select>
+              <option>10</option>
+              <option>25</option>
+              <option>50</option>
+            </select>
+            Entries
+          </div>
+          <div class="search-control">
+            <input type="text" placeholder="Search" />
+          </div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" /></th>
+                <th>ID <i class="ti ti-arrows-sort"></i></th>
+                <th>Parent Name <i class="ti ti-arrows-sort"></i></th>
+                <th>Child <i class="ti ti-arrows-sort"></i></th>
+                <th>Phone <i class="ti ti-arrows-sort"></i></th>
+                <th>Email <i class="ti ti-arrows-sort"></i></th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td style="color: var(--green); font-weight: 500;">P124556</td>
+                <td>
+                  <div class="table-avatar">
+                    <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                       <span style="font-size:13px; font-weight:600;">Rakesh Patel</span>
+                       <span style="font-size:11px; color:var(--text-muted);">Added on 25 Mar 2024</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="table-avatar">
+                    <div class="avatar-placeholder" style="width:28px; height:28px; font-size: 14px;"><i class="ti ti-user"></i></div>
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                       <span style="font-size:13px; font-weight:600;">Ananya Patel</span>
+                       <span style="font-size:11px; color:var(--text-muted);">III, A</span>
+                    </div>
+                  </div>
+                </td>
+                <td>+91 91234 56789</td>
+                <td>rakesh@example.com</td>
+                <td><button class="menu-btn"><i class="ti ti-dots-vertical"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td style="color: var(--green); font-weight: 500;">P124555</td>
+                <td>
+                  <div class="table-avatar">
+                    <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                       <span style="font-size:13px; font-weight:600;">Anil Gupta</span>
+                       <span style="font-size:11px; color:var(--text-muted);">Added on 18 Mar 2024</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="table-avatar">
+                    <div class="avatar-placeholder" style="width:28px; height:28px; font-size: 14px;"><i class="ti ti-user"></i></div>
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                       <span style="font-size:13px; font-weight:600;">Vivaan Gupta</span>
+                       <span style="font-size:11px; color:var(--text-muted);">IV, B</span>
+                    </div>
+                  </div>
+                </td>
+                <td>+91 99887 76655</td>
+                <td>anil.gupta@example.com</td>
+                <td><button class="menu-btn"><i class="ti ti-dots-vertical"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td style="color: var(--green); font-weight: 500;">P124554</td>
+                <td>
+                  <div class="table-avatar">
+                    <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                       <span style="font-size:13px; font-weight:600;">Priya Singh</span>
+                       <span style="font-size:11px; color:var(--text-muted);">Added on 14 Mar 2024</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="table-avatar">
+                    <div class="avatar-placeholder" style="width:28px; height:28px; font-size: 14px;"><i class="ti ti-user"></i></div>
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                       <span style="font-size:13px; font-weight:600;">Diya Singh</span>
+                       <span style="font-size:11px; color:var(--text-muted);">II, A</span>
+                    </div>
+                  </div>
+                </td>
+                <td>+91 88776 65544</td>
+                <td>priya.s@example.com</td>
+                <td><button class="menu-btn"><i class="ti ti-dots-vertical"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td style="color: var(--green); font-weight: 500;">P124553</td>
+                <td>
+                  <div class="table-avatar">
+                    <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                       <span style="font-size:13px; font-weight:600;">Suresh Das</span>
+                       <span style="font-size:11px; color:var(--text-muted);">Added on 27 Feb 2024</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="table-avatar">
+                    <div class="avatar-placeholder" style="width:28px; height:28px; font-size: 14px;"><i class="ti ti-user"></i></div>
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                       <span style="font-size:13px; font-weight:600;">Kabir Das</span>
+                       <span style="font-size:11px; color:var(--text-muted);">I, B</span>
+                    </div>
+                  </div>
+                </td>
+                <td>+91 77665 54433</td>
+                <td>suresh.d@example.com</td>
+                <td><button class="menu-btn"><i class="ti ti-dots-vertical"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td style="color: var(--green); font-weight: 500;">P124552</td>
+                <td>
+                  <div class="table-avatar">
+                    <div class="avatar-placeholder"><i class="ti ti-user"></i></div>
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                       <span style="font-size:13px; font-weight:600;">Amit Reddy</span>
+                       <span style="font-size:11px; color:var(--text-muted);">Added on 11 Feb 2024</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="table-avatar">
+                    <div class="avatar-placeholder" style="width:28px; height:28px; font-size: 14px;"><i class="ti ti-user"></i></div>
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                       <span style="font-size:13px; font-weight:600;">Myra Reddy</span>
+                       <span style="font-size:11px; color:var(--text-muted);">II, B</span>
+                    </div>
+                  </div>
+                </td>
+                <td>+91 99001 12233</td>
+                <td>amit.reddy@example.com</td>
+                <td><button class="menu-btn"><i class="ti ti-dots-vertical"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <div class="pagination">
+            <button class="page-btn text-btn">Prev</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn text-btn">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Grid -->
+    <div class="student-grid" id="studentGrid">
+      
+      <!-- Card 1 -->
+      <div class="student-card">
+        <div class="card-top">
+          <span class="admission-no">P124556</span>
+          <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+        </div>
+        <div class="card-profile">
+          <div class="profile-img"><i class="ti ti-user"></i></div>
+          <div class="profile-info">
+            <div class="profile-name">Rakesh Patel</div>
+            <div class="profile-class">Added on 25 Mar 2024</div>
+          </div>
+        </div>
+        <div class="card-stats">
+          <div class="stat-col">
+            <span class="stat-label">Email</span>
+            <span class="stat-value">rakesh@example.com</span>
+          </div>
+          <div class="stat-col">
+            <span class="stat-label">Phone</span>
+            <span class="stat-value">+91 91234 56789</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <div style="display:flex; align-items:center; gap:8px;">
+             <div class="profile-img" style="width:28px; height:28px; font-size:14px;"><i class="ti ti-user"></i></div>
+             <span style="font-size:13px; font-weight:600;">Ananya</span>
+          </div>
+          <button class="add-fee-btn">View Details</button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="student-card">
+        <div class="card-top">
+          <span class="admission-no">P124555</span>
+          <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+        </div>
+        <div class="card-profile">
+          <div class="profile-img"><i class="ti ti-user"></i></div>
+          <div class="profile-info">
+            <div class="profile-name">Anil Gupta</div>
+            <div class="profile-class">Added on 18 Mar 2024</div>
+          </div>
+        </div>
+        <div class="card-stats">
+          <div class="stat-col">
+            <span class="stat-label">Email</span>
+            <span class="stat-value">anil.gupta@example.com</span>
+          </div>
+          <div class="stat-col">
+            <span class="stat-label">Phone</span>
+            <span class="stat-value">+91 99887 76655</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <div style="display:flex; align-items:center; gap:8px;">
+             <div class="profile-img" style="width:28px; height:28px; font-size:14px;"><i class="ti ti-user"></i></div>
+             <span style="font-size:13px; font-weight:600;">Vivaan</span>
+          </div>
+          <button class="add-fee-btn">View Details</button>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="student-card">
+        <div class="card-top">
+          <span class="admission-no">P124554</span>
+          <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+        </div>
+        <div class="card-profile">
+          <div class="profile-img"><i class="ti ti-user"></i></div>
+          <div class="profile-info">
+            <div class="profile-name">Priya Singh</div>
+            <div class="profile-class">Added on 14 Mar 2024</div>
+          </div>
+        </div>
+        <div class="card-stats">
+          <div class="stat-col">
+            <span class="stat-label">Email</span>
+            <span class="stat-value">priya.s@example.com</span>
+          </div>
+          <div class="stat-col">
+            <span class="stat-label">Phone</span>
+            <span class="stat-value">+91 88776 65544</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <div style="display:flex; align-items:center; gap:8px;">
+             <div class="profile-img" style="width:28px; height:28px; font-size:14px;"><i class="ti ti-user"></i></div>
+             <span style="font-size:13px; font-weight:600;">Diya</span>
+          </div>
+          <button class="add-fee-btn">View Details</button>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="student-card">
+        <div class="card-top">
+          <span class="admission-no">P124553</span>
+          <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+        </div>
+        <div class="card-profile">
+          <div class="profile-img"><i class="ti ti-user"></i></div>
+          <div class="profile-info">
+            <div class="profile-name">Suresh Das</div>
+            <div class="profile-class">Added on 27 Feb 2024</div>
+          </div>
+        </div>
+        <div class="card-stats">
+          <div class="stat-col">
+            <span class="stat-label">Email</span>
+            <span class="stat-value">suresh.d@example.com</span>
+          </div>
+          <div class="stat-col">
+            <span class="stat-label">Phone</span>
+            <span class="stat-value">+91 77665 54433</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <div style="display:flex; align-items:center; gap:8px;">
+             <div class="profile-img" style="width:28px; height:28px; font-size:14px;"><i class="ti ti-user"></i></div>
+             <span style="font-size:13px; font-weight:600;">Kabir</span>
+          </div>
+          <button class="add-fee-btn">View Details</button>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="student-card">
+        <div class="card-top">
+          <span class="admission-no">P124552</span>
+          <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+        </div>
+        <div class="card-profile">
+          <div class="profile-img"><i class="ti ti-user"></i></div>
+          <div class="profile-info">
+            <div class="profile-name">Amit Reddy</div>
+            <div class="profile-class">Added on 11 Feb 2024</div>
+          </div>
+        </div>
+        <div class="card-stats">
+          <div class="stat-col">
+            <span class="stat-label">Email</span>
+            <span class="stat-value">amit.reddy@example.com</span>
+          </div>
+          <div class="stat-col">
+            <span class="stat-label">Phone</span>
+            <span class="stat-value">+91 99001 12233</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <div style="display:flex; align-items:center; gap:8px;">
+             <div class="profile-img" style="width:28px; height:28px; font-size:14px;"><i class="ti ti-user"></i></div>
+             <span style="font-size:13px; font-weight:600;">Myra</span>
+          </div>
+          <button class="add-fee-btn">View Details</button>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="student-card">
+        <div class="card-top">
+          <span class="admission-no">P124551</span>
+          <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+        </div>
+        <div class="card-profile">
+          <div class="profile-img"><i class="ti ti-user"></i></div>
+          <div class="profile-info">
+            <div class="profile-name">Nitin Patel</div>
+            <div class="profile-class">Added on 24 Jan 2024</div>
+          </div>
+        </div>
+        <div class="card-stats">
+          <div class="stat-col">
+            <span class="stat-label">Email</span>
+            <span class="stat-value">nitin.patel@example.com</span>
+          </div>
+          <div class="stat-col">
+            <span class="stat-label">Phone</span>
+            <span class="stat-value">+91 88990 01122</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <div style="display:flex; align-items:center; gap:8px;">
+             <div class="profile-img" style="width:28px; height:28px; font-size:14px;"><i class="ti ti-user"></i></div>
+             <span style="font-size:13px; font-weight:600;">Aarav</span>
+          </div>
+          <button class="add-fee-btn">View Details</button>
+        </div>
+      </div>
+      
+      <div class="load-more-container">
+        <button class="btn-load-more"><i class="ti ti-refresh"></i> Load More</button>
+      </div>
+
+    </div>
+
+  </div><!-- /content -->
+
+</div><!-- /main -->
+
+<script>
+  function toggleFilter() {
+    const dropdown = document.getElementById('filterDropdown');
+    dropdown.classList.toggle('show');
+  }
+
+  // Close filter dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('filterDropdown');
+    const filterBtn = document.getElementById('filterBtn');
+    if (!filterBtn.contains(event.target) && !dropdown.contains(event.target)) {
+      dropdown.classList.remove('show');
+    }
+  });
+
+  function setView(viewMode) {
+    const grid = document.getElementById('studentGrid');
+    const list = document.getElementById('studentList');
+    const btnGrid = document.getElementById('btnGridView');
+    const btnList = document.getElementById('btnListView');
+    const tbTitle = document.getElementById('toolbarTitle');
+
+    if (viewMode === 'grid') {
+      grid.style.display = 'grid';
+      list.style.display = 'none';
+      btnGrid.classList.add('active');
+      btnGrid.style.background = '';
+      btnList.classList.remove('active');
+      btnList.style.background = 'transparent';
+      tbTitle.textContent = "Parents Grid";
+    } else {
+      grid.style.display = 'none';
+      list.style.display = 'block';
+      btnList.classList.add('active');
+      btnList.style.background = '';
+      btnGrid.classList.remove('active');
+      btnGrid.style.background = 'transparent';
+      tbTitle.textContent = "Parents List";
+    }
+  }
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
