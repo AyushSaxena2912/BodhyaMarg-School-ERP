@@ -130,6 +130,19 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .table-actions { display: flex; gap: 6px; }
 .table-actions .circle-btn { width: 30px; height: 30px; font-size: 15px; }
 
+/* Pagination & Load More */
+.table-footer { padding: 16px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
+.pagination { display: flex; gap: 4px; align-items: center; }
+.page-btn { border: none; background: transparent; color: var(--text-muted); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; }
+.page-btn:hover { background: var(--bg); color: var(--text); }
+.page-btn.active { background: var(--green); color: var(--white); }
+.page-btn.text-btn { font-weight: 500; }
+
+.load-more-container { text-align: center; margin-top: 16px; margin-bottom: 8px; width: 100%; grid-column: 1 / -1; }
+.btn-load-more { display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; background: var(--green); color: var(--white); border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+.btn-load-more:hover { background: var(--green-dark); }
+.btn-load-more i { font-size: 18px; }
+
 </style>
 </head>
 <body>
@@ -360,6 +373,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
               </tr>
             </tbody>
           </table>
+        </div>
+        <div class="table-footer">
+          <div class="pagination">
+            <button class="page-btn text-btn">Prev</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn text-btn">Next</button>
+          </div>
         </div>
       </div>
     </div>
@@ -598,6 +619,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           </div>
           <button class="add-fee-btn">Add Fees</button>
         </div>
+      </div>
+      
+      <div class="load-more-container">
+        <button class="btn-load-more"><i class="ti ti-refresh"></i> Load More</button>
       </div>
 
     </div>
