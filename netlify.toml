@@ -1,8 +1,0 @@
-[build]
-  publish = "."
-
-# Redirect root to Login page
-[[redirects]]
-  from = "/"
-  to = "/Login.html"
-  status = 200
