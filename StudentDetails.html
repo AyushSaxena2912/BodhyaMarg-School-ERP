@@ -155,6 +155,22 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 /* Text block */
 .text-block { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
 
+/* Modal */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.modal-overlay.show { display: flex; }
+.modal-content { background: var(--white); width: 100%; max-width: 500px; border-radius: var(--radius-lg); box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+.modal-header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.modal-title { font-size: 16px; font-weight: 600; color: var(--text); }
+.modal-close { background: none; border: none; font-size: 20px; color: var(--text-hint); cursor: pointer; display: flex; }
+.modal-close:hover { color: var(--text); }
+.modal-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; max-height: 70vh; overflow-y: auto; }
+.credential-group { border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; background: var(--bg); }
+.cred-role { font-size: 14px; font-weight: 600; color: var(--green); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.cred-row { display: flex; gap: 24px; }
+.cred-col { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.cred-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.cred-val { font-size: 13.5px; font-weight: 600; color: var(--text); background: var(--white); border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; user-select: all; }
+
 </style>
 </head>
 <body>
@@ -190,7 +206,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Student <i class="ti ti-chevron-right"></i> <span>Student Details</span></div>
       </div>
       <div class="header-actions">
-        <button class="btn-outline"><i class="ti ti-lock"></i> Login Details</button>
+        <button class="btn-outline" onclick="openLoginModal()"><i class="ti ti-lock"></i> Login Details</button>
         <button class="btn-primary"><i class="ti ti-edit"></i> Edit Student</button>
       </div>
     </div>
@@ -344,7 +360,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
               <span class="parent-contact-label">Email</span>
               <span class="parent-contact-val">rakesh@example.com</span>
             </div>
-            <div class="parent-action">
+            <div class="parent-action" onclick="openLoginModal()">
               <i class="ti ti-lock"></i>
             </div>
           </div>
@@ -365,7 +381,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
               <span class="parent-contact-label">Email</span>
               <span class="parent-contact-val">meena@example.com</span>
             </div>
-            <div class="parent-action">
+            <div class="parent-action" onclick="openLoginModal()">
               <i class="ti ti-lock"></i>
             </div>
           </div>
@@ -386,7 +402,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
               <span class="parent-contact-label">Email</span>
               <span class="parent-contact-val">rakesh@example.com</span>
             </div>
-            <div class="parent-action">
+            <div class="parent-action" onclick="openLoginModal()">
               <i class="ti ti-lock"></i>
             </div>
           </div>
@@ -490,6 +506,42 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   </div><!-- /content -->
 </div><!-- /main -->
 
+<!-- Login Details Modal -->
+<div class="modal-overlay" id="loginDetailsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">ERP Login Credentials</h2>
+      <button class="modal-close" onclick="closeLoginModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <!-- Student -->
+      <div class="credential-group">
+        <div class="cred-role"><i class="ti ti-user"></i> Student</div>
+        <div class="cred-row">
+          <div class="cred-col"><span class="cred-label">Email ID (Username)</span><span class="cred-val">ananya@example.com</span></div>
+          <div class="cred-col"><span class="cred-label">Password</span><span class="cred-val">Ananya@2026</span></div>
+        </div>
+      </div>
+      <!-- Father -->
+      <div class="credential-group">
+        <div class="cred-role"><i class="ti ti-user"></i> Father</div>
+        <div class="cred-row">
+          <div class="cred-col"><span class="cred-label">Email ID (Username)</span><span class="cred-val">rakesh@example.com</span></div>
+          <div class="cred-col"><span class="cred-label">Password</span><span class="cred-val">Rakesh#892</span></div>
+        </div>
+      </div>
+      <!-- Mother -->
+      <div class="credential-group">
+        <div class="cred-role"><i class="ti ti-user"></i> Mother</div>
+        <div class="cred-row">
+          <div class="cred-col"><span class="cred-label">Email ID (Username)</span><span class="cred-val">meena@example.com</span></div>
+          <div class="cred-col"><span class="cred-label">Password</span><span class="cred-val">Meena!991</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   function toggleHT(tab) {
     const btnHostel = document.getElementById('tabHostelBtn');
@@ -509,6 +561,21 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       contentHostel.style.display = 'none';
     }
   }
+
+  function openLoginModal() {
+    document.getElementById('loginDetailsModal').classList.add('show');
+  }
+
+  function closeLoginModal() {
+    document.getElementById('loginDetailsModal').classList.remove('show');
+  }
+
+  // Close modal when clicking outside
+  document.getElementById('loginDetailsModal').addEventListener('click', function(e) {
+    if(e.target === this) {
+      closeLoginModal();
+    }
+  });
 </script>
 <script src="sidebar.js"></script>
 </body>
