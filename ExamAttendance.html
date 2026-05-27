@@ -271,7 +271,17 @@ function getAvColor(status) {
   return { bg: '#fffbeb', text: '#f59e0b' };
 }
 
-// updateSummary removed as per previous request
+function updateSummary() {
+  const total = attendanceData.length;
+  const present = attendanceData.filter(s => s.status === 'present').length;
+  const absent = attendanceData.filter(s => s.status === 'absent').length;
+  const late = attendanceData.filter(s => s.status === 'late').length;
+
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('presentCount').textContent = `${present} (${((present/total)*100).toFixed(0)}%)`;
+  document.getElementById('absentCount').textContent = `${absent} (${((absent/total)*100).toFixed(0)}%)`;
+  document.getElementById('lateCount').textContent = `${late} (${((late/total)*100).toFixed(0)}%)`;
+}
 
 function render() {
   const tbody = document.getElementById('attendanceBody');
@@ -280,6 +290,7 @@ function render() {
   attendanceData.forEach(item => {
     let av = getAvColor(item.status);
     let statusLabel = item.status.charAt(0).toUpperCase() + item.status.slice(1);
+    let lateInfo = item.lateBy ? `+${item.lateBy} min` : item.arrival;
 
     html += `
       <tr>
