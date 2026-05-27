@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Teacher Details</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --bg: #f8fafc; --white: #ffffff; --border: #e2e8f0;
+  --text: #1e293b; --text-muted: #64748b; --text-hint: #94a3b8;
+  --radius: 8px; --radius-lg: 12px; --radius-xl: 16px;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+
+/* Main */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.ay-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); transition: background 0.2s; }
+.icon-btn:hover { background: var(--bg); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* Content */
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 6px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+
+/* Page Header */
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.page-title h1 { font-size: 22px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+.breadcrumb { font-size: 12px; color: var(--text-hint); display: flex; align-items: center; gap: 6px; }
+.breadcrumb span { color: var(--text); font-weight: 500; }
+.header-actions { display: flex; gap: 10px; }
+.btn-outline { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid var(--border); background: var(--white); border-radius: var(--radius); font-size: 13px; font-family: inherit; font-weight: 500; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
+.btn-outline:hover { background: var(--bg); color: var(--text); }
+.btn-primary { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: none; background: #3b82f6; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; color: var(--white); transition: background 0.2s; text-decoration: none; }
+.btn-primary:hover { background: #2563eb; }
+
+/* Profile Layout */
+.profile-container { display: flex; gap: 24px; align-items: flex-start; }
+.profile-sidebar { width: 320px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
+.profile-main { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+
+/* Sidebar Cards */
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
+.card-header { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 16px; }
+
+/* Profile Head Card */
+.profile-head { display: flex; gap: 16px; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.profile-head img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; }
+.profile-head .name { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.profile-head .id { font-size: 13px; color: #3b82f6; font-weight: 500; margin-bottom: 4px; }
+.profile-head .date { font-size: 12px; color: var(--text-hint); }
+
+/* Key-Value Lists */
+.info-list { display: flex; flex-direction: column; gap: 14px; }
+.info-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+.info-label { color: var(--text-muted); font-weight: 500; }
+.info-value { color: var(--text); font-weight: 500; text-align: right; }
+.badge { padding: 4px 8px; background: #f1f5f9; color: var(--text); border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; margin-top: 4px; }
+
+/* Contact Blocks */
+.contact-block { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.contact-block:last-child { margin-bottom: 0; }
+.contact-icon { width: 36px; height: 36px; border-radius: 8px; background: #f8fafc; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 16px; }
+.contact-details { display: flex; flex-direction: column; }
+.contact-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.contact-text { font-size: 12.5px; color: var(--text-muted); }
+
+/* Pan Box */
+.pan-box { display: flex; align-items: center; justify-content: space-between; background: var(--white); padding: 0; }
+.pan-content { display: flex; align-items: center; gap: 12px; }
+
+/* Tabs Layout */
+.tab-container { background: var(--white); border-bottom: 1px solid var(--border); display: flex; gap: 24px; padding: 0 20px; }
+.tab { padding: 16px 0; font-size: 13.5px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: #3b82f6; border-bottom-color: #3b82f6; font-weight: 600; }
+.tab i { font-size: 16px; }
+
+/* Sections */
+.section-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.section-title { padding: 16px 20px; font-size: 15px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); }
+.section-content { padding: 20px; }
+
+/* Grid Info */
+.grid-info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.grid-item { display: flex; flex-direction: column; gap: 6px; }
+.grid-item .label { font-size: 12px; font-weight: 600; color: var(--text); }
+.grid-item .val { font-size: 13px; color: var(--text-muted); }
+
+/* Document Rows */
+.doc-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; background: #f8fafc; }
+.doc-row:last-child { margin-bottom: 0; }
+.doc-left { display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 600; color: var(--text); }
+.doc-icon { width: 32px; height: 32px; background: var(--white); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--text-hint); border: 1px solid var(--border); }
+.download-btn { width: 28px; height: 28px; border-radius: 6px; background: #1e293b; color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; }
+.download-btn:hover { background: #0f172a; }
+
+/* Address Row */
+.address-row { display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start; }
+.address-row:last-child { margin-bottom: 0; }
+.address-icon { width: 36px; height: 36px; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-hint); flex-shrink: 0; }
+.address-content { display: flex; flex-direction: column; gap: 4px; }
+.address-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.address-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+/* 2-col wrapper for sections */
+.two-col-wrapper { display: flex; gap: 24px; }
+.two-col-wrapper > * { flex: 1; }
+
+.text-para { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+</style>
+</head>
+<body>
+
+<div id="sidebar-container"></div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search anything…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill"><i class="ti ti-calendar"></i> Academic Year : 2026 / 2027 <i class="ti ti-chevron-down"></i></div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <div class="page-title">
+          <h1>Teacher Details</h1>
+        </div>
+        <div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Teachers <i class="ti ti-chevron-right"></i> <span>Teacher Details</span></div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-outline"><i class="ti ti-lock"></i> Login Details</button>
+        <button class="btn-primary"><i class="ti ti-edit"></i> Edit Teacher</button>
+      </div>
+    </div>
+
+    <div class="profile-container">
+      <!-- Left Sidebar -->
+      <div class="profile-sidebar">
+        <!-- Head & Basic Info -->
+        <div class="card">
+          <div class="profile-head">
+            <img src="https://ui-avatars.com/api/?name=Anjali+Sharma&background=1a7a4a&color=fff&size=128" alt="Anjali Sharma">
+            <div>
+              <div class="name">Anjali Sharma</div>
+              <div class="id">T849126</div>
+              <div class="date">Joined : 25 May 24</div>
+            </div>
+          </div>
+          
+          <div class="card-header" style="margin-top:16px;">Basic Information</div>
+          <div class="info-list">
+            <div class="info-row"><span class="info-label">Class & Section</span><span class="info-value">III, A</span></div>
+            <div class="info-row"><span class="info-label">Subject</span><span class="info-value">Physics</span></div>
+            <div class="info-row"><span class="info-label">Gender</span><span class="info-value">Female</span></div>
+            <div class="info-row"><span class="info-label">Blood Group</span><span class="info-value">O +ve</span></div>
+            <div class="info-row"><span class="info-label">House</span><span class="info-value">Red</span></div>
+            <div class="info-row"><span class="info-label">Language Known</span><span class="info-value">Hindi</span></div>
+            <div class="info-row" style="align-items:flex-start;">
+              <span class="info-label" style="margin-top:4px;">Language</span>
+              <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                <span class="badge">Hindi</span>
+                <span class="badge">English</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Contact -->
+        <div class="card">
+          <div class="card-header">Primary Contact Info</div>
+          <div class="contact-block">
+            <div class="contact-icon"><i class="ti ti-phone-call"></i></div>
+            <div class="contact-details">
+              <span class="contact-title">Phone Number</span>
+              <span class="contact-text">+91 98765 43210</span>
+            </div>
+          </div>
+          <div class="contact-block">
+            <div class="contact-icon"><i class="ti ti-mail"></i></div>
+            <div class="contact-details">
+              <span class="contact-title">Email Address</span>
+              <span class="contact-text">anjali.s@example.com</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAN Box -->
+        <div class="card pan-box">
+          <div class="pan-content">
+            <div class="contact-icon"><i class="ti ti-id"></i></div>
+            <div class="contact-details">
+              <span class="contact-title">PAN Number / ID Number</span>
+              <span class="contact-text">ABCDE1234F</span>
+            </div>
+          </div>
+          <button class="btn-primary" style="padding: 6px; width:28px; height:28px; display:flex; justify-content:center; align-items:center;"><i class="ti ti-copy" style="font-size:16px;"></i></button>
+        </div>
+
+        <!-- Hostel & Transportation -->
+        <div class="card" style="padding:0;">
+          <div style="display:flex; border-bottom:1px solid var(--border); padding: 0 16px;">
+            <div style="padding: 12px 16px; font-size:13px; font-weight:600; color:#3b82f6; border-bottom:2px solid #3b82f6; cursor:pointer;">Hostel</div>
+            <div style="padding: 12px 16px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer;">Transportation</div>
+          </div>
+          <div style="padding: 16px;">
+            <div class="contact-block">
+              <div class="contact-icon"><i class="ti ti-building"></i></div>
+              <div class="contact-details">
+                <span class="contact-title">Girls Hostel, 2nd Floor</span>
+                <span class="contact-text" style="color:#3b82f6; font-weight:500; font-size:12px;">Room No : 205</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Main Panel -->
+      <div class="profile-main">
+        <div style="background:var(--white); border-bottom:1px solid var(--border); display:flex; padding:0 24px; gap:24px;">
+          <div class="tab active"><i class="ti ti-user"></i> Teacher Details</div>
+          <div class="tab"><i class="ti ti-calendar-time"></i> Routine</div>
+          <div class="tab"><i class="ti ti-calendar-event"></i> Leave & Attendance</div>
+          <div class="tab"><i class="ti ti-wallet"></i> Salary</div>
+          <div class="tab"><i class="ti ti-books"></i> Library</div>
+        </div>
+
+        <!-- Profile Details -->
+        <div class="section-card">
+          <div class="section-title">Profile Details</div>
+          <div class="section-content grid-info">
+            <div class="grid-item">
+              <span class="label">Father's Name</span>
+              <span class="val">Ramesh Sharma</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">Mother Name</span>
+              <span class="val">Sunita Sharma</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">DOB</span>
+              <span class="val">25 Jan 1992</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">Martial Status</span>
+              <span class="val">Single</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">Qualification</span>
+              <span class="val">M.Sc, B.Ed</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">Experience</span>
+              <span class="val">4 Years</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Docs & Address 2 Col -->
+        <div class="two-col-wrapper">
+          <div class="section-card">
+            <div class="section-title">Documents</div>
+            <div class="section-content">
+              <div class="doc-row">
+                <div class="doc-left">
+                  <div class="doc-icon">PDF</div> Resume.pdf
+                </div>
+                <button class="download-btn"><i class="ti ti-download"></i></button>
+              </div>
+              <div class="doc-row">
+                <div class="doc-left">
+                  <div class="doc-icon">PDF</div> Joining_Letter.pdf
+                </div>
+                <button class="download-btn"><i class="ti ti-download"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-title">Address</div>
+            <div class="section-content">
+              <div class="address-row">
+                <div class="address-icon"><i class="ti ti-map-pin"></i></div>
+                <div class="address-content">
+                  <div class="address-title">Current Address</div>
+                  <div class="address-text">Flat 402, Sunshine Apartments, MG Road, New Delhi, India 110001</div>
+                </div>
+              </div>
+              <div class="address-row">
+                <div class="address-icon"><i class="ti ti-link"></i></div>
+                <div class="address-content">
+                  <div class="address-title">Permanent Address</div>
+                  <div class="address-text">12/B, Civil Lines, Jaipur, Rajasthan, India 302006</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Previous School -->
+        <div class="section-card">
+          <div class="section-title">Previous School Details</div>
+          <div class="section-content grid-info">
+            <div class="grid-item">
+              <span class="label">Previous School Name</span>
+              <span class="val">Delhi Public School</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">School Address</span>
+              <span class="val">Sector 12, RK Puram, New Delhi 110022</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">Phone Number</span>
+              <span class="val">+91 11 2617 1234</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bank & Work Details 2 Col -->
+        <div class="two-col-wrapper">
+          <div class="section-card">
+            <div class="section-title">Bank Details</div>
+            <div class="section-content grid-info" style="grid-template-columns: repeat(3, 1fr); gap: 16px;">
+              <div class="grid-item">
+                <span class="label">Bank Name</span>
+                <span class="val">State Bank of India</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">Branch</span>
+                <span class="val">Connaught Place</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">IFSC</span>
+                <span class="val">SBIN0000691</span>
+              </div>
+              <div class="grid-item" style="grid-column: span 3;">
+                <span class="label">Account Holder Name</span>
+                <span class="val">Anjali Sharma</span>
+              </div>
+              <div class="grid-item" style="grid-column: span 3;">
+                <span class="label">Account Number</span>
+                <span class="val">30012345678</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-title">Work Details</div>
+            <div class="section-content grid-info" style="grid-template-columns: repeat(3, 1fr); gap: 16px;">
+              <div class="grid-item">
+                <span class="label">Contract Type</span>
+                <span class="val">Permanent</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">Shift</span>
+                <span class="val">Morning</span>
+              </div>
+              <div class="grid-item">
+                <span class="label">Work Location</span>
+                <span class="val">2nd Floor, Block A</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Media -->
+        <div class="section-card">
+          <div class="section-title">Social Media</div>
+          <div class="section-content grid-info" style="grid-template-columns: repeat(5, 1fr);">
+            <div class="grid-item">
+              <span class="label">Facebook</span>
+              <span class="val">www.facebook.com</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">Twitter</span>
+              <span class="val">www.twitter.com</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">Linkedin</span>
+              <span class="val">www.linkedin.com</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">Youtube</span>
+              <span class="val">www.youtube.com</span>
+            </div>
+            <div class="grid-item">
+              <span class="label">Instagram</span>
+              <span class="val">www.instagram.com</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other Info -->
+        <div class="section-card">
+          <div class="section-title">Other Info</div>
+          <div class="section-content">
+            <p class="text-para">Depending on the specific needs of your organization or system, additional information may be collected or tracked. It's important to ensure that any data collected complies with privacy regulations and policies to protect students' sensitive information.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="sidebar.js"></script>
+</body>
+</html>
