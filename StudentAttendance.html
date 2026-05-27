@@ -274,7 +274,7 @@ window.updateRowColor = function(radio, index) {
 }
 
 window.markAll = function(status) {
-  document.querySelectorAll(\`.att-radio[value="\${status}"]\`).forEach(r => {
+  document.querySelectorAll(`.att-radio[value="${status}"]`).forEach(r => {
     r.checked = true;
     // Trigger onchange manually to update colors
     r.dispatchEvent(new Event('change'));
