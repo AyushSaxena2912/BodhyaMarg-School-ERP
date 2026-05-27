@@ -48,8 +48,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .controls-filters { display: flex; align-items: center; gap: 12px; }
 
 .input-box { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 8px 12px; border-radius: var(--radius); font-size: 13px; color: var(--text-muted); background: var(--white); }
-.input-box select { border: none; outline: none; background: transparent; font-family: inherit; font-size: 13px; color: var(--text); padding-right: 8px; cursor: pointer; }
+.input-box select { border: none; outline: none; background: transparent; font-family: inherit; font-size: 13px; color: var(--text); padding-right: 4px; cursor: pointer; -webkit-appearance: none; appearance: none; }
 .input-box i { color: var(--text-hint); font-size: 16px; }
+.input-box .ti-chevron-down { font-size: 14px; margin-left: -4px; pointer-events: none; }
 
 /* Table Wrapper */
 .table-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; }
@@ -172,6 +173,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
             <option>Class IX</option>
             <option>Class X</option>
           </select>
+          <i class="ti ti-chevron-down"></i>
         </div>
         <div class="input-box">
           <i class="ti ti-layout-distribute-vertical"></i>
@@ -182,6 +184,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
             <option>Section D</option>
             <option>Section E</option>
           </select>
+          <i class="ti ti-chevron-down"></i>
         </div>
         <div class="input-box">
           <i class="ti ti-test-pipe"></i>
@@ -193,6 +196,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
             <option>Summative Assessment - 1</option>
             <option>Summative Assessment - 2</option>
           </select>
+          <i class="ti ti-chevron-down"></i>
         </div>
         <button class="btn btn-primary" style="padding: 8px 12px;"><i class="ti ti-search"></i></button>
       </div>
