@@ -172,16 +172,16 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
       <!-- Row 1 -->
       <div class="form-grid g5" style="margin-bottom:14px;">
-        <div class="form-field"><label>Teacher ID</label><input type="text" /></div>
-        <div class="form-field"><label>First Name</label><input type="text" /></div>
-        <div class="form-field"><label>Last Name</label><input type="text" /></div>
+        <div class="form-field"><label>Teacher ID</label><input type="text" value="T849126" /></div>
+        <div class="form-field"><label>First Name</label><input type="text" value="Anjali" /></div>
+        <div class="form-field"><label>Last Name</label><input type="text" value="Sharma" /></div>
         <div class="form-field">
           <label>Class Teacher</label>
-          <select><option value="">Select</option><option>I-A</option><option>II-B</option><option>III-A</option><option>IV-C</option><option>V-A</option></select>
+          <select><option value="">Select</option><option>I-A</option><option>II-B</option><option selected>III-A</option><option>IV-C</option><option>V-A</option></select>
         </div>
         <div class="form-field">
           <label>Subject</label>
-          <select><option value="">Select</option><option>English</option><option>Maths</option><option>Science</option><option>Hindi</option><option>Social Studies</option></select>
+          <select><option value="">Select</option><option>English</option><option>Maths</option><option selected>Science</option><option>Hindi</option><option>Social Studies</option></select>
         </div>
       </div>
 
@@ -196,20 +196,20 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
             <option value="Other">Other</option>
           </select>
         </div>
-        <div class="form-field"><label>Primary Contact Number</label><input type="tel" /></div>
-        <div class="form-field"><label>Email Address</label><input type="email" /></div>
+        <div class="form-field"><label>Primary Contact Number</label><input type="tel" value="+91 98765 43210" /></div>
+        <div class="form-field"><label>Email Address</label><input type="email" value="anjali.s@example.com" /></div>
         <div class="form-field">
           <label>Blood Group</label>
-          <select><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select>
+          <select><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option selected>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select>
         </div>
-        <div class="form-field"><label>Date of Joining</label><input type="date" /></div>
+        <div class="form-field"><label>Date of Joining</label><input type="date" value="2024-05-25" /></div>
       </div>
 
       <!-- Row 3 -->
       <div class="form-grid g5" style="margin-bottom:14px;">
-        <div class="form-field"><label>Father's Name</label><input type="text" /></div>
-        <div class="form-field"><label>Mother's Name</label><input type="text" /></div>
-        <div class="form-field"><label>Date of Birth</label><input type="date" /></div>
+        <div class="form-field"><label>Father's Name</label><input type="text" value="Ramesh Sharma" /></div>
+        <div class="form-field"><label>Mother's Name</label><input type="text" value="Sunita Sharma" /></div>
+        <div class="form-field"><label>Date of Birth</label><input type="date" value="1992-01-25" /></div>
         <div class="form-field">
           <label>Marital Status</label>
           <select id="maritalStatusSelect" onchange="toggleSpouseField()">
@@ -239,22 +239,22 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
       <!-- Row 4 -->
       <div class="form-grid g5" style="margin-bottom:14px;">
-        <div class="form-field"><label>Qualification</label><input type="text" /></div>
-        <div class="form-field"><label>Work Experience</label><input type="text" /></div>
-        <div class="form-field"><label>Previous School if Any</label><input type="text" /></div>
-        <div class="form-field"><label>Previous School Address</label><input type="text" /></div>
-        <div class="form-field"><label>Address</label><input type="text" /></div>
+        <div class="form-field"><label>Qualification</label><input type="text" value="M.Sc, B.Ed" /></div>
+        <div class="form-field"><label>Work Experience</label><input type="text" value="4 Years" /></div>
+        <div class="form-field"><label>Previous School if Any</label><input type="text" value="Delhi Public School" /></div>
+        <div class="form-field"><label>Previous School Address</label><input type="text" value="Sector 12, RK Puram, New Delhi 110022" /></div>
+        <div class="form-field"><label>Address</label><input type="text" value="Flat 402, Sunshine Apartments, MG Road, New Delhi, India 110001" /></div>
       </div>
 
       <!-- Row 5 -->
       <div class="form-grid g5">
-        <div class="form-field"><label>Permanent Address</label><input type="text" /></div>
-        <div class="form-field"><label>PAN Number / ID Number</label><input type="text" /></div>
+        <div class="form-field"><label>Permanent Address</label><input type="text" value="12/B, Civil Lines, Jaipur, Rajasthan, India 302006" /></div>
+        <div class="form-field"><label>PAN Number / ID Number</label><input type="text" value="ABCDE1234F" /></div>
         <div class="form-field">
           <label>Status</label>
-          <select><option value="">Select</option><option>Active</option><option>Inactive</option></select>
+          <select><option value="">Select</option><option selected>Active</option><option>Inactive</option></select>
         </div>
-        <div class="form-field"><label>Religion</label><input type="text" /></div>
+        <div class="form-field"><label>Religion</label><input type="text" value="Hindu" /></div>
         <div class="form-field">
           <label>Mother Tongue</label>
           <select><option value="">Select</option><option>Hindi</option><option>English</option><option>Marathi</option><option>Tamil</option><option>Bengali</option></select>
@@ -340,7 +340,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <button class="btn" style="color: #ef4444; border-color: #fecaca; background: #fef2f2;"><i class="ti ti-trash"></i> Delete Teacher</button>
     <div style="display: flex; gap: 10px;">
       <button class="btn">Cancel</button>
-      <button class="btn btn-primary"><i class="ti ti-plus"></i> Add Teacher</button>
+      <button class="btn btn-primary">Update Teacher</button>
     </div>
   </div>
 </div>
