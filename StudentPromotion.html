@@ -165,6 +165,14 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
             <option>Section E</option>
           </select><i class="ti ti-chevron-down"></i>
         </div>
+        <div class="input-box"><i class="ti ti-calendar"></i>
+          <select id="currentSession">
+            <option value="2024 - 2025">2024 - 2025</option>
+            <option value="2025 - 2026" selected>2025 - 2026</option>
+            <option value="2026 - 2027">2026 - 2027</option>
+            <option value="2027 - 2028">2027 - 2028</option>
+          </select><i class="ti ti-chevron-down"></i>
+        </div>
         <div class="arrow-sep"><i class="ti ti-arrow-narrow-right"></i></div>
         <div class="input-box" style="background:#f1f5f9;"><i class="ti ti-chevrons-up" style="color:var(--green);"></i>
           <select id="targetClass" style="font-weight:600;color:var(--green);">
@@ -188,6 +196,14 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
             <option>Section C</option>
             <option>Section D</option>
             <option>Section E</option>
+          </select><i class="ti ti-chevron-down"></i>
+        </div>
+        <div class="input-box" style="background:#f1f5f9;"><i class="ti ti-calendar" style="color:var(--green);"></i>
+          <select id="targetSession" style="font-weight:600;color:var(--green);">
+            <option value="2025 - 2026">2025 - 2026</option>
+            <option value="2026 - 2027" selected>2026 - 2027</option>
+            <option value="2027 - 2028">2027 - 2028</option>
+            <option value="2028 - 2029">2028 - 2029</option>
           </select><i class="ti ti-chevron-down"></i>
         </div>
       </div>
@@ -254,37 +270,110 @@ const classOrder = [
   'Class VI', 'Class VII', 'Class VIII', 'Class IX', 'Class X', 'Class XI', 'Class XII'
 ];
 
-// Initial mock database of students with exam status (Pass, Grace, Supplementary, Fail)
-// This data will be saved & updated in localStorage so promotions are persistent
+// Session levels order to auto-increment target session selection
+const sessionOrder = [
+  '2024 - 2025', '2025 - 2026', '2026 - 2027', '2027 - 2028', '2028 - 2029'
+];// Initial mock database of students with exam status and sessions
 const defaultStudents = [
+  // --- SESSION: 2024 - 2025 ---
+  // Class I - B
+  { id: 'S011', name: 'Amit Mishra', roll: 'I-B-01', classSec: 'Class I - B', session: '2024 - 2025', status: 'pass', remarks: '' },
+  { id: 'S012', name: 'Sunita Rao', roll: 'I-B-02', classSec: 'Class I - B', session: '2024 - 2025', status: 'grace', remarks: 'English Grace (+2)' },
+  // Class II - B
+  { id: 'S021', name: 'Manish Pandey', roll: 'II-B-01', classSec: 'Class II - B', session: '2024 - 2025', status: 'pass', remarks: '' },
+  { id: 'S022', name: 'Sonia Gandhi', roll: 'II-B-02', classSec: 'Class II - B', session: '2024 - 2025', status: 'supplementary', remarks: 'EVS Supplementary' },
+  // Class III - B
+  { id: 'S031', name: 'Rishi Kapoor', roll: 'III-B-01', classSec: 'Class III - B', session: '2024 - 2025', status: 'pass', remarks: '' },
+  { id: 'S032', name: 'Neha Kakkar', roll: 'III-B-02', classSec: 'Class III - B', session: '2024 - 2025', status: 'fail', remarks: 'Failed in Mathematics' },
+  // Class IX - A
+  { id: 'S091', name: 'Karan Malhotra', roll: 'IX-A-01', classSec: 'Class IX - A', session: '2024 - 2025', status: 'pass', remarks: '' },
+  { id: 'S092', name: 'Preeti Sen', roll: 'IX-A-02', classSec: 'Class IX - A', session: '2024 - 2025', status: 'pass', remarks: '' },
+  { id: 'S093', name: 'Rajiv Dixit', roll: 'IX-A-03', classSec: 'Class IX - A', session: '2024 - 2025', status: 'fail', remarks: 'Failed in Physics' },
   // Class X - A
-  { id: 'S101', name: 'Aarav Sharma', roll: 'X-A-01', classSec: 'Class X - A', status: 'pass', remarks: '' },
-  { id: 'S102', name: 'Diya Patel', roll: 'X-A-02', classSec: 'Class X - A', status: 'pass', remarks: '' },
-  { id: 'S103', name: 'Ishaan Verma', roll: 'X-A-03', classSec: 'Class X - A', status: 'grace', remarks: 'Maths Grace (+3)' },
-  { id: 'S104', name: 'Kavya Singh', roll: 'X-A-04', classSec: 'Class X - A', status: 'supplementary', remarks: 'Failed in Science' },
-  { id: 'S105', name: 'Rohan Gupta', roll: 'X-A-05', classSec: 'Class X - A', status: 'supplementary', remarks: 'Failed in Maths' },
-  { id: 'S106', name: 'Ananya Desai', roll: 'X-A-06', classSec: 'Class X - A', status: 'fail', remarks: 'Failed in 3 subjects' },
-  { id: 'S107', name: 'Vihaan Joshi', roll: 'X-A-07', classSec: 'Class X - A', status: 'supplementary', remarks: 'Failed in 2 subjects' },
-  { id: 'S108', name: 'Myra Shah', roll: 'X-A-08', classSec: 'Class X - A', status: 'grace', remarks: 'Hindi Grace (+2)' },
-  { id: 'S109', name: 'Arjun Reddy', roll: 'X-A-09', classSec: 'Class X - A', status: 'supplementary', remarks: 'Failed in Social Science' },
-  { id: 'S110', name: 'Priya Kumari', roll: 'X-A-10', classSec: 'Class X - A', status: 'fail', remarks: 'Failed in 4 subjects' },
-  { id: 'S111', name: 'Neha Tiwari', roll: 'X-A-11', classSec: 'Class X - A', status: 'supplementary', remarks: 'Failed in 2 subjects' },
-  { id: 'S112', name: 'Rahul Yadav', roll: 'X-A-12', classSec: 'Class X - A', status: 'pass', remarks: '' },
+  { id: 'S1001', name: 'Bobby Deol', roll: 'X-A-01', classSec: 'Class X - A', session: '2024 - 2025', status: 'pass', remarks: '' },
+  { id: 'S1002', name: 'Twinkle Khanna', roll: 'X-A-02', classSec: 'Class X - A', session: '2024 - 2025', status: 'grace', remarks: 'Maths Grace (+3)' },
+
+  // --- SESSION: 2025 - 2026 ---
+  // Class X - A
+  { id: 'S101', name: 'Aarav Sharma', roll: 'X-A-01', classSec: 'Class X - A', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S102', name: 'Diya Patel', roll: 'X-A-02', classSec: 'Class X - A', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S103', name: 'Ishaan Verma', roll: 'X-A-03', classSec: 'Class X - A', session: '2025 - 2026', status: 'grace', remarks: 'Maths Grace (+3)' },
+  { id: 'S104', name: 'Kavya Singh', roll: 'X-A-04', classSec: 'Class X - A', session: '2025 - 2026', status: 'supplementary', remarks: 'Failed in Science' },
+  { id: 'S105', name: 'Rohan Gupta', roll: 'X-A-05', classSec: 'Class X - A', session: '2025 - 2026', status: 'supplementary', remarks: 'Failed in Maths' },
+  { id: 'S106', name: 'Ananya Desai', roll: 'X-A-06', classSec: 'Class X - A', session: '2025 - 2026', status: 'fail', remarks: 'Failed in 3 subjects' },
+  { id: 'S107', name: 'Vihaan Joshi', roll: 'X-A-07', classSec: 'Class X - A', session: '2025 - 2026', status: 'supplementary', remarks: 'Failed in 2 subjects' },
+  { id: 'S108', name: 'Myra Shah', roll: 'X-A-08', classSec: 'Class X - A', session: '2025 - 2026', status: 'grace', remarks: 'Hindi Grace (+2)' },
+  { id: 'S109', name: 'Arjun Reddy', roll: 'X-A-09', classSec: 'Class X - A', session: '2025 - 2026', status: 'supplementary', remarks: 'Failed in Social Science' },
+  { id: 'S110', name: 'Priya Kumari', roll: 'X-A-10', classSec: 'Class X - A', session: '2025 - 2026', status: 'fail', remarks: 'Failed in 4 subjects' },
+  { id: 'S111', name: 'Neha Tiwari', roll: 'X-A-11', classSec: 'Class X - A', session: '2025 - 2026', status: 'supplementary', remarks: 'Failed in 2 subjects' },
+  { id: 'S112', name: 'Rahul Yadav', roll: 'X-A-12', classSec: 'Class X - A', session: '2025 - 2026', status: 'pass', remarks: '' },
 
   // Class IX - A
-  { id: 'S201', name: 'Raj Malhotra', roll: 'IX-A-01', classSec: 'Class IX - A', status: 'pass', remarks: '' },
-  { id: 'S202', name: 'Simran Kaur', roll: 'IX-A-02', classSec: 'Class IX - A', status: 'pass', remarks: '' },
-  { id: 'S203', name: 'Vikram Sethi', roll: 'IX-A-03', classSec: 'Class IX - A', status: 'fail', remarks: 'Failed in 3 subjects' },
-  { id: 'S204', name: 'Neha Sharma', roll: 'IX-A-04', classSec: 'Class IX - A', status: 'supplementary', remarks: 'Failed in Science' },
+  { id: 'S201', name: 'Raj Malhotra', roll: 'IX-A-01', classSec: 'Class IX - A', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S202', name: 'Simran Kaur', roll: 'IX-A-02', classSec: 'Class IX - A', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S203', name: 'Vikram Sethi', roll: 'IX-A-03', classSec: 'Class IX - A', session: '2025 - 2026', status: 'fail', remarks: 'Failed in 3 subjects' },
+  { id: 'S204', name: 'Neha Sharma', roll: 'IX-A-04', classSec: 'Class IX - A', session: '2025 - 2026', status: 'supplementary', remarks: 'Failed in Science' },
 
   // Class VIII - A
-  { id: 'S301', name: 'Devendra Singh', roll: 'VIII-A-01', classSec: 'Class VIII - A', status: 'pass', remarks: '' },
-  { id: 'S302', name: 'Geeta Rao', roll: 'VIII-A-02', classSec: 'Class VIII - A', status: 'pass', remarks: '' }
+  { id: 'S301', name: 'Devendra Singh', roll: 'VIII-A-01', classSec: 'Class VIII - A', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S302', name: 'Geeta Rao', roll: 'VIII-A-02', classSec: 'Class VIII - A', session: '2025 - 2026', status: 'pass', remarks: '' },
+
+  // Class VII - A
+  { id: 'S401', name: 'Kabir Das', roll: 'VII-A-01', classSec: 'Class VII - A', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S402', name: 'Sneha Reddy', roll: 'VII-A-02', classSec: 'Class VII - A', session: '2025 - 2026', status: 'grace', remarks: 'English Grace (+4)' },
+
+  // Class VI - A
+  { id: 'S501', name: 'Aarav Patel', roll: 'VI-A-01', classSec: 'Class VI - A', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S502', name: 'Aditya Sen', roll: 'VI-A-02', classSec: 'Class VI - A', session: '2025 - 2026', status: 'fail', remarks: 'Failed in 3 subjects' },
+
+  // Class V - A
+  { id: 'S601', name: 'Kunal Sen', roll: 'V-A-01', classSec: 'Class V - A', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S602', name: 'Megha Roy', roll: 'V-A-02', classSec: 'Class V - A', session: '2025 - 2026', status: 'supplementary', remarks: 'Failed in Hindi' },
+
+  // Class IV - A
+  { id: 'S701', name: 'Tanvi Joshi', roll: 'IV-A-01', classSec: 'Class IV - A', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S702', name: 'Divya Bose', roll: 'IV-A-02', classSec: 'Class IV - A', session: '2025 - 2026', status: 'pass', remarks: '' },
+
+  // Class III - B
+  { id: 'S801', name: 'Rishi Kapoor', roll: 'III-B-01', classSec: 'Class III - B', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S802', name: 'Neha Kakkar', roll: 'III-B-02', classSec: 'Class III - B', session: '2025 - 2026', status: 'pass', remarks: '' },
+
+  // Class II - B
+  { id: 'S901', name: 'Sanjay Dutt', roll: 'II-B-01', classSec: 'Class II - B', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S902', name: 'Ranbir Kapoor', roll: 'II-B-02', classSec: 'Class II - B', session: '2025 - 2026', status: 'pass', remarks: '' },
+
+  // Class I - B
+  { id: 'S951', name: 'Alia Bhatt', roll: 'I-B-01', classSec: 'Class I - B', session: '2025 - 2026', status: 'pass', remarks: '' },
+  { id: 'S952', name: 'Shraddha Kapoor', roll: 'I-B-02', classSec: 'Class I - B', session: '2025 - 2026', status: 'pass', remarks: '' },
+
+  // --- SESSION: 2026 - 2027 ---
+  // Class X - A
+  { id: 'S3001', name: 'Gaurav Khanna', roll: 'X-A-01', classSec: 'Class X - A', session: '2026 - 2027', status: 'pending', remarks: '' },
+  { id: 'S3002', name: 'Rupali Ganguly', roll: 'X-A-02', classSec: 'Class X - A', session: '2026 - 2027', status: 'pending', remarks: '' },
+  // Class III - B
+  { id: 'S3201', name: 'Bobby Deol', roll: 'III-B-01', classSec: 'Class III - B', session: '2026 - 2027', status: 'pending', remarks: '' }
 ];
 
-// Load from local storage or set default
-if (!localStorage.getItem('bodhyamarg_promotion_students')) {
+// Load from local storage or set default (with version check)
+const DB_VERSION = "v3";
+let saved = localStorage.getItem('bodhyamarg_promotion_students');
+let savedVersion = localStorage.getItem('bodhyamarg_promotion_students_version');
+let needsReset = (savedVersion !== DB_VERSION);
+
+if (saved && !needsReset) {
+  try {
+    const parsed = JSON.parse(saved);
+    if (!parsed[0] || !parsed[0].hasOwnProperty('session')) {
+      needsReset = true;
+    }
+  } catch (e) {
+    needsReset = true;
+  }
+}
+
+if (!saved || needsReset) {
   localStorage.setItem('bodhyamarg_promotion_students', JSON.stringify(defaultStudents));
+  localStorage.setItem('bodhyamarg_promotion_students_version', DB_VERSION);
 }
 
 function getStudents() {
@@ -303,13 +392,15 @@ function getStatusBadge(status) {
   if (status === 'pass') return `<span class="status-badge pass">Passed</span>`;
   if (status === 'grace') return `<span class="status-badge grace">Grace Pass</span>`;
   if (status === 'supplementary') return `<span class="status-badge supplementary">Supplementary</span>`;
-  return `<span class="status-badge fail">Failed</span>`;
+  if (status === 'fail') return `<span class="status-badge fail">Failed</span>`;
+  return `<span class="status-badge" style="background:#f1f5f9;color:var(--text-muted);"><i class="ti ti-hourglass-empty" style="font-size:10px;vertical-align:middle;margin-right:2px;"></i>Studying</span>`;
 }
 
 function getAvColor(status) {
   if (status === 'pass' || status === 'grace') return { bg: '#ecfdf5', text: '#10b981' };
   if (status === 'supplementary') return { bg: '#fffbeb', text: '#f59e0b' };
-  return { bg: '#fef2f2', text: '#ef4444' };
+  if (status === 'fail') return { bg: '#fef2f2', text: '#ef4444' };
+  return { bg: '#f1f5f9', text: '#64748b' };
 }
 
 // Automatically increment Target Class select based on Current Class select
@@ -319,8 +410,18 @@ function updateTargetClass() {
   if (idx !== -1 && idx < classOrder.length - 1) {
     document.getElementById('targetClass').value = classOrder[idx + 1];
   } else {
-    // If XII is selected, target class remains XII (or select default XII)
     document.getElementById('targetClass').value = 'Class XII';
+  }
+}
+
+// Automatically increment Target Session select based on Current Session select
+function updateTargetSession() {
+  const currentSessionVal = document.getElementById('currentSession').value;
+  const idx = sessionOrder.indexOf(currentSessionVal);
+  if (idx !== -1 && idx < sessionOrder.length - 1) {
+    document.getElementById('targetSession').value = sessionOrder[idx + 1];
+  } else {
+    document.getElementById('targetSession').value = '2028 - 2029';
   }
 }
 
@@ -328,15 +429,17 @@ function render() {
   const tbody = document.getElementById('studentBody');
   const currentClassVal = document.getElementById('currentClass').value;
   const currentSecVal = document.getElementById('currentSection').value;
+  const currentSessionVal = document.getElementById('currentSession').value;
   const targetClassVal = document.getElementById('targetClass').value;
   const targetSecVal = document.getElementById('targetSection').value;
+  const targetSessionVal = document.getElementById('targetSession').value;
   const searchQuery = document.getElementById('searchStudentInput').value.toLowerCase().trim();
 
   const students = getStudents();
   const filterClassSec = `${currentClassVal} - ${currentSecVal}`;
 
-  // Filter students by class & section
-  let filtered = students.filter(s => s.classSec === filterClassSec);
+  // Filter students by class, section, and session
+  let filtered = students.filter(s => s.classSec === filterClassSec && s.session === currentSessionVal);
 
   // Filter by search query
   if (searchQuery) {
@@ -349,7 +452,7 @@ function render() {
 
   let html = '';
   if (filtered.length === 0) {
-    html = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);"><i class="ti ti-users-minus" style="font-size:24px;display:block;margin-bottom:8px;"></i>No students found in ${filterClassSec}.</td></tr>`;
+    html = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);"><i class="ti ti-users-minus" style="font-size:24px;display:block;margin-bottom:8px;"></i>No students found in ${filterClassSec} for Session ${currentSessionVal}.</td></tr>`;
     tbody.innerHTML = html;
     document.getElementById('selectAllCheckbox').classList.remove('checked');
     document.getElementById('selectAllCheckbox').classList.add('disabled');
@@ -367,8 +470,11 @@ function render() {
     let targetDetail = '';
     let actionCell = '';
     if (isEligible) {
-      targetDetail = `<div style="font-weight:600;color:var(--green);"><i class="ti ti-chevrons-up"></i> ${targetClassVal} - ${targetSecVal}</div>`;
+      targetDetail = `<div style="font-weight:600;color:var(--green);"><i class="ti ti-chevrons-up"></i> ${targetClassVal} - ${targetSecVal}<br><span style="font-size:11px;color:var(--text-muted);font-weight:normal;">Session: ${targetSessionVal}</span></div>`;
       actionCell = `<span style="color:#10b981;font-weight:600;"><i class="ti ti-circle-check"></i> Eligible for Promotion</span>`;
+    } else if (s.status === 'pending') {
+      targetDetail = `<div style="color:var(--text-hint);">TBD (Exams Pending)</div>`;
+      actionCell = `<span style="color:var(--text-muted);font-weight:500;"><i class="ti ti-hourglass-empty"></i> Session in Progress</span>`;
     } else {
       const reason = s.status === 'fail' ? 'Failed' : 'Supplementary Exam Required';
       targetDetail = `<div style="color:var(--text-hint);text-decoration:line-through;">${targetClassVal} - ${targetSecVal}</div>`;
@@ -389,7 +495,7 @@ function render() {
             </div>
           </div>
         </td>
-        <td style="color:var(--text-muted);font-weight:500;">${s.classSec}</td>
+        <td style="color:var(--text-muted);font-weight:500;">${s.classSec}<br><span style="font-size:11px;color:var(--text-hint);">Session: ${s.session}</span></td>
         <td>${getStatusBadge(s.status)}</td>
         <td>${targetDetail}</td>
         <td>${actionCell}</td>
@@ -444,6 +550,7 @@ function promoteSelected() {
   const promotedIds = Array.from(selectedCbs).map(cb => cb.getAttribute('data-id'));
   const targetClassVal = document.getElementById('targetClass').value;
   const targetSecVal = document.getElementById('targetSection').value;
+  const targetSessionVal = document.getElementById('targetSession').value;
   const newClassSec = `${targetClassVal} - ${targetSecVal}`;
 
   let students = getStudents();
@@ -453,15 +560,18 @@ function promoteSelected() {
     if (promotedIds.includes(s.id)) {
       promotedList.push(s);
       // Increment roll number prefix (e.g. X-A-01 to XI-A-01)
-      const rollNum = s.roll.split('-').pop(); // gets "01"
-      const targetPrefix = targetClassVal.replace('Class ', ''); // gets "XI"
-      const targetSecLetter = targetSecVal.replace('Section ', ''); // gets "A"
+      const rollNum = s.roll.split('-').pop();
+      const targetPrefix = targetClassVal.replace('Class ', '');
+      const targetSecLetter = targetSecVal.replace('Section ', '');
       const newRoll = `${targetPrefix}-${targetSecLetter}-${rollNum}`;
 
       return {
         ...s,
         classSec: newClassSec,
-        roll: newRoll
+        roll: newRoll,
+        session: targetSessionVal,
+        status: 'pending',
+        remarks: ''
       };
     }
     return s;
@@ -470,13 +580,13 @@ function promoteSelected() {
   saveStudents(students);
 
   // Show summary modal
-  document.getElementById('promotionCountText').textContent = `${promotedList.length} student(s) promoted successfully to ${newClassSec}!`;
+  document.getElementById('promotionCountText').textContent = `${promotedList.length} student(s) promoted successfully to ${newClassSec} (Session: ${targetSessionVal})!`;
   let summaryHtml = '';
   promotedList.forEach(s => {
     summaryHtml += `
       <div class="promoted-summary-item">
         <span style="font-weight:600;">${s.name} (Roll: ${s.roll})</span>
-        <span style="color:var(--green);font-weight:500;">Promoted $\\to$ ${targetClassVal} - ${targetSecVal}</span>
+        <span style="color:var(--green);font-weight:500;">Promoted &rarr; ${targetClassVal} - ${targetSecVal} (${targetSessionVal})</span>
       </div>
     `;
   });
@@ -494,15 +604,21 @@ function closeModal() {
 // Setup Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
   updateTargetClass();
+  updateTargetSession();
   render();
 
   document.getElementById('currentClass').addEventListener('change', () => {
     updateTargetClass();
     render();
   });
+  document.getElementById('currentSession').addEventListener('change', () => {
+    updateTargetSession();
+    render();
+  });
   document.getElementById('currentSection').addEventListener('change', render);
   document.getElementById('targetClass').addEventListener('change', render);
   document.getElementById('targetSection').addEventListener('change', render);
+  document.getElementById('targetSession').addEventListener('change', render);
   document.getElementById('searchStudentInput').addEventListener('input', render);
 });
 </script>
