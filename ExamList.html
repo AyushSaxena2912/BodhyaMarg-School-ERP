@@ -185,6 +185,10 @@ const examData = [
   { name: 'Summative Assessment- 2', date: '27 May 2024', start: '09:30 AM', end: '11:00 AM' }
 ];
 
+// Save exam names to localStorage so ExamSchedule can pick them up
+localStorage.setItem('bodhya_exams', JSON.stringify(examData.map(e => e.name)));
+
+
 function renderExams() {
   const tbody = document.getElementById('examBody');
   let html = '';

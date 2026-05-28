@@ -145,14 +145,9 @@ select {
       </div>
     </div>
     
-    <!-- Exam Tabs -->
+    <!-- Exam Tabs (dynamically populated from ExamList) -->
     <div class="exam-tabs" id="examTabs">
-      <div class="exam-tab active" data-exam="all" onclick="setTab(this)">All Exams</div>
-      <div class="exam-tab" data-exam="Formative-1" onclick="setTab(this)">Formative-1</div>
-      <div class="exam-tab" data-exam="Formative-2" onclick="setTab(this)">Formative-2</div>
-      <div class="exam-tab" data-exam="Summative-1" onclick="setTab(this)">Summative-1</div>
-      <div class="exam-tab" data-exam="Summative-2" onclick="setTab(this)">Summative-2</div>
-      <div class="exam-tab" data-exam="Pre-Board" onclick="setTab(this)">Pre-Board</div>
+      <!-- Rendered by JS -->
     </div>
 
     <!-- Controls Card -->
@@ -221,7 +216,7 @@ select {
     <div class="modal-body">
       <div class="form-group">
         <label>Exam Name</label>
-        <select><option>Formative-1</option><option>Formative-2</option><option>Summative-1</option><option>Summative-2</option><option>Pre-Board</option></select>
+        <select id="modalExamSelect"><option>Loading...</option></select>
       </div>
       <div class="form-group">
         <label>Class & Section</label>
@@ -297,20 +292,45 @@ function calculateDuration(startStr, endStr) {
 
 let activeExam = 'all';
 
+// Default schedule data — exam keys match ExamList names
 const scheduleData = [
-  { exam: 'Formative-1', class: 'Class X - A',    subject: 'English',     date: '13 May 2024', start: '09:30 AM', end: '10:45 AM', room: '101', max: 100, min: 35 },
-  { exam: 'Formative-1', class: 'Class X - B',    subject: 'Hindi',       date: '14 May 2024', start: '09:30 AM', end: '11:00 AM', room: '104', max: 100, min: 35 },
-  { exam: 'Formative-1', class: 'Class IX - A',   subject: 'Maths',       date: '15 May 2024', start: '10:00 AM', end: '12:30 PM', room: '103', max: 100, min: 35 },
-  { exam: 'Formative-2', class: 'Class IX - B',   subject: 'Chemistry',   date: '16 May 2024', start: '08:30 AM', end: '11:30 AM', room: '105', max: 100, min: 35 },
-  { exam: 'Formative-2', class: 'Class VIII - C', subject: 'Maths',       date: '17 May 2024', start: '09:30 AM', end: '12:30 PM', room: '106', max: 100, min: 35 },
-  { exam: 'Formative-2', class: 'Class VIII - D', subject: 'Computer',    date: '18 May 2024', start: '13:00 PM', end: '14:30 PM', room: '102', max: 50,  min: 18 },
-  { exam: 'Summative-1', class: 'Class VII - A',  subject: 'Science',     date: '19 May 2024', start: '09:30 AM', end: '11:00 AM', room: '107', max: 80,  min: 28 },
-  { exam: 'Summative-1', class: 'Class X - A',    subject: 'Physics',     date: '20 May 2024', start: '09:00 AM', end: '12:00 PM', room: '108', max: 100, min: 35 },
-  { exam: 'Summative-2', class: 'Class IX - A',   subject: 'English',     date: '22 May 2024', start: '09:30 AM', end: '11:30 AM', room: '101', max: 100, min: 35 },
-  { exam: 'Summative-2', class: 'Class VIII - C', subject: 'Hindi',       date: '23 May 2024', start: '10:00 AM', end: '12:00 PM', room: '103', max: 100, min: 35 },
-  { exam: 'Pre-Board',   class: 'Class X - A',    subject: 'Maths',       date: '25 May 2024', start: '09:00 AM', end: '12:00 PM', room: '109', max: 100, min: 35 },
-  { exam: 'Pre-Board',   class: 'Class X - B',    subject: 'Science',     date: '26 May 2024', start: '09:00 AM', end: '12:00 PM', room: '110', max: 100, min: 35 },
+  { exam: 'Formative Assessment- 1', class: 'Class X - A',    subject: 'English',   date: '13 May 2024', start: '09:30 AM', end: '10:45 AM', room: '101', max: 100, min: 35 },
+  { exam: 'Formative Assessment- 1', class: 'Class X - B',    subject: 'Hindi',     date: '14 May 2024', start: '09:30 AM', end: '11:00 AM', room: '104', max: 100, min: 35 },
+  { exam: 'Formative Assessment- 2', class: 'Class IX - A',   subject: 'Maths',     date: '15 May 2024', start: '10:00 AM', end: '12:30 PM', room: '103', max: 100, min: 35 },
+  { exam: 'Formative Assessment- 2', class: 'Class IX - B',   subject: 'Chemistry', date: '16 May 2024', start: '08:30 AM', end: '11:30 AM', room: '105', max: 100, min: 35 },
+  { exam: 'Formative Assessment- 3', class: 'Class VIII - C', subject: 'Maths',     date: '17 May 2024', start: '09:30 AM', end: '12:30 PM', room: '106', max: 100, min: 35 },
+  { exam: 'Formative Assessment- 3', class: 'Class VIII - D', subject: 'Computer',  date: '18 May 2024', start: '13:00 PM', end: '14:30 PM', room: '102', max: 50,  min: 18 },
+  { exam: 'Summative Assessment- 1', class: 'Class VII - A',  subject: 'Science',   date: '19 May 2024', start: '09:30 AM', end: '11:00 AM', room: '107', max: 80,  min: 28 },
+  { exam: 'Summative Assessment- 1', class: 'Class X - A',    subject: 'Physics',   date: '20 May 2024', start: '09:00 AM', end: '12:00 PM', room: '108', max: 100, min: 35 },
+  { exam: 'Summative Assessment- 2', class: 'Class IX - A',   subject: 'English',   date: '22 May 2024', start: '09:30 AM', end: '11:30 AM', room: '101', max: 100, min: 35 },
+  { exam: 'Summative Assessment- 2', class: 'Class VIII - C', subject: 'Hindi',     date: '23 May 2024', start: '10:00 AM', end: '12:00 PM', room: '103', max: 100, min: 35 },
 ];
+
+// Get exam names from localStorage (saved by ExamList.html)
+function getExamNames() {
+  try {
+    const saved = localStorage.getItem('bodhya_exams');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  // Fallback: derive unique names from scheduleData
+  return [...new Set(scheduleData.map(d => d.exam))];
+}
+
+function buildTabs() {
+  const names = getExamNames();
+  const container = document.getElementById('examTabs');
+  let html = `<div class="exam-tab active" data-exam="all" onclick="setTab(this)">All Exams</div>`;
+  names.forEach(name => {
+    html += `<div class="exam-tab" data-exam="${name}" onclick="setTab(this)">${name}</div>`;
+  });
+  container.innerHTML = html;
+
+  // Also populate modal dropdown
+  const sel = document.getElementById('modalExamSelect');
+  if (sel) {
+    sel.innerHTML = names.map(n => `<option value="${n}">${n}</option>`).join('');
+  }
+}
 
 function setTab(el) {
   document.querySelectorAll('.exam-tab').forEach(t => t.classList.remove('active'));
@@ -356,7 +376,7 @@ function renderSchedule() {
 function openModal() { document.getElementById('scheduleModal').classList.add('show'); }
 function closeModal() { document.getElementById('scheduleModal').classList.remove('show'); }
 
-document.addEventListener('DOMContentLoaded', renderSchedule);
+document.addEventListener('DOMContentLoaded', () => { buildTabs(); renderSchedule(); });
 </script>
 <script src="sidebar.js"></script>
 </body>
