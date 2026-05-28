@@ -307,7 +307,16 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
                 </td>
                 <td>+91 91234 56789</td>
                 <td>rakesh@example.com</td>
-                <td><button class="menu-btn"><i class="ti ti-dots-vertical"></i></button></td>
+                <td>
+                  <div class="menu-container" style="position: relative; display: inline-block;">
+                    <button class="menu-btn" onclick="toggleActionMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+                    <div class="action-menu">
+                      <a href="#" class="action-item" onclick="openParentModal('P124556'); return false;"><i class="ti ti-menu-2"></i> View Parent</a>
+                      <a href="EditStudent.html" class="action-item"><i class="ti ti-pencil"></i> Edit</a>
+                      <a href="EditStudent.html" class="action-item danger"><i class="ti ti-trash"></i> Delete</a>
+                    </div>
+                  </div>
+                </td>
               </tr>
               <tr>
                 <td><input type="checkbox" /></td>
@@ -335,7 +344,16 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
                 </td>
                 <td>+91 99887 76655</td>
                 <td>anil.gupta@example.com</td>
-                <td><button class="menu-btn"><i class="ti ti-dots-vertical"></i></button></td>
+                <td>
+                  <div class="menu-container" style="position: relative; display: inline-block;">
+                    <button class="menu-btn" onclick="toggleActionMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+                    <div class="action-menu">
+                      <a href="#" class="action-item" onclick="openParentModal('P124555'); return false;"><i class="ti ti-menu-2"></i> View Parent</a>
+                      <a href="EditStudent.html" class="action-item"><i class="ti ti-pencil"></i> Edit</a>
+                      <a href="EditStudent.html" class="action-item danger"><i class="ti ti-trash"></i> Delete</a>
+                    </div>
+                  </div>
+                </td>
               </tr>
               <tr>
                 <td><input type="checkbox" /></td>
@@ -363,7 +381,16 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
                 </td>
                 <td>+91 88776 65544</td>
                 <td>priya.s@example.com</td>
-                <td><button class="menu-btn"><i class="ti ti-dots-vertical"></i></button></td>
+                <td>
+                  <div class="menu-container" style="position: relative; display: inline-block;">
+                    <button class="menu-btn" onclick="toggleActionMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+                    <div class="action-menu">
+                      <a href="#" class="action-item" onclick="openParentModal('P124554'); return false;"><i class="ti ti-menu-2"></i> View Parent</a>
+                      <a href="EditStudent.html" class="action-item"><i class="ti ti-pencil"></i> Edit</a>
+                      <a href="EditStudent.html" class="action-item danger"><i class="ti ti-trash"></i> Delete</a>
+                    </div>
+                  </div>
+                </td>
               </tr>
               <tr>
                 <td><input type="checkbox" /></td>
@@ -391,7 +418,16 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
                 </td>
                 <td>+91 77665 54433</td>
                 <td>suresh.d@example.com</td>
-                <td><button class="menu-btn"><i class="ti ti-dots-vertical"></i></button></td>
+                <td>
+                  <div class="menu-container" style="position: relative; display: inline-block;">
+                    <button class="menu-btn" onclick="toggleActionMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+                    <div class="action-menu">
+                      <a href="#" class="action-item" onclick="openParentModal('P124553'); return false;"><i class="ti ti-menu-2"></i> View Parent</a>
+                      <a href="EditStudent.html" class="action-item"><i class="ti ti-pencil"></i> Edit</a>
+                      <a href="EditStudent.html" class="action-item danger"><i class="ti ti-trash"></i> Delete</a>
+                    </div>
+                  </div>
+                </td>
               </tr>
               <tr>
                 <td><input type="checkbox" /></td>
@@ -419,7 +455,16 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
                 </td>
                 <td>+91 99001 12233</td>
                 <td>amit.reddy@example.com</td>
-                <td><button class="menu-btn"><i class="ti ti-dots-vertical"></i></button></td>
+                <td>
+                  <div class="menu-container" style="position: relative; display: inline-block;">
+                    <button class="menu-btn" onclick="toggleActionMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+                    <div class="action-menu">
+                      <a href="#" class="action-item" onclick="openParentModal('P124552'); return false;"><i class="ti ti-menu-2"></i> View Parent</a>
+                      <a href="EditStudent.html" class="action-item"><i class="ti ti-pencil"></i> Edit</a>
+                      <a href="EditStudent.html" class="action-item danger"><i class="ti ti-trash"></i> Delete</a>
+                    </div>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -680,6 +725,25 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 </div>
 
 <script>
+  
+  function toggleActionMenu(btn) {
+    document.querySelectorAll('.action-menu.show').forEach(menu => {
+      if (menu !== btn.nextElementSibling) {
+        menu.classList.remove('show');
+      }
+    });
+    const menu = btn.nextElementSibling;
+    if (menu && menu.classList.contains('action-menu')) {
+      menu.classList.toggle('show');
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.menu-container')) {
+      document.querySelectorAll('.action-menu.show').forEach(menu => menu.classList.remove('show'));
+    }
+  });
+
   function toggleFilter() {
     const dropdown = document.getElementById('filterDropdown');
     dropdown.classList.toggle('show');
