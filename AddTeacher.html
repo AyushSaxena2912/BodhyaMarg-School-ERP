@@ -207,7 +207,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <div class="form-field"><label>Date of Birth</label><input type="date" /></div>
         <div class="form-field">
           <label>Marital Status</label>
-          <select><option value="">Select</option><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option></select>
+          <select id="maritalStatusSelect" onchange="toggleSpouseField()">
+            <option value="">Select</option>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+            <option value="Divorced">Divorced</option>
+            <option value="Widowed">Widowed</option>
+          </select>
+        </div>
+        <div class="form-field" id="spouseField" style="display: none;">
+          <label>Husband/Wife Name</label>
+          <input type="text" placeholder="Enter spouse name" />
         </div>
         <div class="form-field">
           <label>Language Known</label>
@@ -323,6 +333,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   </div>
 </div>
 
+<script>
+  function toggleSpouseField() {
+    const select = document.getElementById('maritalStatusSelect');
+    const spouseField = document.getElementById('spouseField');
+    if (select.value === 'Married') {
+      spouseField.style.display = 'flex';
+    } else {
+      spouseField.style.display = 'none';
+    }
+  }
+</script>
 <script src="sidebar.js"></script>
 </body>
 </html>
