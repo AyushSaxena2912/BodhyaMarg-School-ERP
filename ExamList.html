@@ -59,6 +59,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .table-search { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 6px 12px; border-radius: var(--radius); }
 .table-search input { border: none; outline: none; background: transparent; font-size: 13px; font-family: inherit; width: 200px; }
 
+.table-responsive { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
 thead tr { background: #f8fafc; border-bottom: 1px solid var(--border); }
 thead th { padding: 14px 20px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-align: left; position: relative; }
@@ -70,7 +71,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 
 .checkbox-cell { width: 48px; }
 .checkbox-custom { width: 18px; height: 18px; border: 1.5px solid var(--text-hint); border-radius: 4px; display: inline-block; cursor: pointer; position: relative; }
-.checkbox-custom.checked { background: var(--primary); border-color: var(--primary); }
+.checkbox-custom.checked { background: var(--green); border-color: var(--green); }
 .checkbox-custom.checked::after { content: ''; position: absolute; left: 5px; top: 2px; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
 .action-dots { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; color: var(--text-hint); font-size: 18px; }
