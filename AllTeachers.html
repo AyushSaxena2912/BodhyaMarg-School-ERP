@@ -176,18 +176,42 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
              <div class="filter-header">Filter</div>
              <div class="filter-row">
                <div class="filter-field">
+                 <label>Class Assigned</label>
+                 <select>
+                   <option>All</option>
+                   <option>Class I</option>
+                   <option>Class II</option>
+                   <option>Class III</option>
+                   <option>Class IV</option>
+                   <option>Class V</option>
+                   <option>Class VI</option>
+                 </select>
+               </div>
+               <div class="filter-field">
                  <label>Subject</label>
                  <select>
-                   <option>Select</option>
-                   <option>Physics</option>
-                   <option>Math</option>
+                   <option>All</option>
                    <option>English</option>
+                   <option>Maths</option>
+                   <option>Science</option>
+                   <option>Hindi</option>
+                   <option>Computer</option>
+                 </select>
+               </div>
+             </div>
+             <div class="filter-row">
+               <div class="filter-field">
+                 <label>Status</label>
+                 <select>
+                   <option>All</option>
+                   <option>Active</option>
+                   <option>Inactive</option>
                  </select>
                </div>
              </div>
              <div class="filter-field" style="margin-bottom: 12px;">
                <label>Search Teacher</label>
-               <input type="text" placeholder="Name, Phone, Email..." />
+               <input type="text" placeholder="Name, ID, Phone, Email..." />
              </div>
              <div class="filter-footer">
                <button class="btn-reset" onclick="toggleFilter()">Reset</button>
