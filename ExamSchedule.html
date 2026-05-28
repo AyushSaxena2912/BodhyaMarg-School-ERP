@@ -85,6 +85,26 @@ select {
   background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; cursor: pointer;
 }
 
+/* Exam Tabs */
+.exam-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.exam-tab { padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: var(--white); color: var(--text-muted); transition: all 0.2s; }
+.exam-tab:hover { border-color: var(--green); color: var(--green); }
+.exam-tab.active { background: var(--green); color: #fff; border-color: var(--green); }
+
+/* Modal */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; align-items: center; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal-box { background: var(--white); border-radius: var(--radius-lg); width: 600px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
+.modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid var(--border); }
+.modal-head h2 { font-size: 16px; font-weight: 700; }
+.modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); }
+.modal-body { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.modal-body .full { grid-column: 1 / -1; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+.form-group input, .form-group select { padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; font-family: inherit; outline: none; }
+.form-group input:focus, .form-group select:focus { border-color: var(--green); }
+.modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; border-top: 1px solid var(--border); }
 </style>
 <style>
 .sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
@@ -121,19 +141,28 @@ select {
       <div class="page-actions">
         <button class="btn" title="Print"><i class="ti ti-printer"></i></button>
         <button class="btn"><i class="ti ti-file-export"></i> Export <i class="ti ti-chevron-down" style="font-size:14px;color:var(--text-hint);"></i></button>
-        <button class="btn btn-primary"><i class="ti ti-plus" style="font-size:15px;"></i> Add Exam Schedule</button>
+        <button class="btn btn-primary" onclick="openModal()"><i class="ti ti-plus" style="font-size:15px;"></i> Add Exam Schedule</button>
       </div>
     </div>
     
+    <!-- Exam Tabs -->
+    <div class="exam-tabs" id="examTabs">
+      <div class="exam-tab active" data-exam="all" onclick="setTab(this)">All Exams</div>
+      <div class="exam-tab" data-exam="Formative-1" onclick="setTab(this)">Formative-1</div>
+      <div class="exam-tab" data-exam="Formative-2" onclick="setTab(this)">Formative-2</div>
+      <div class="exam-tab" data-exam="Summative-1" onclick="setTab(this)">Summative-1</div>
+      <div class="exam-tab" data-exam="Summative-2" onclick="setTab(this)">Summative-2</div>
+      <div class="exam-tab" data-exam="Pre-Board" onclick="setTab(this)">Pre-Board</div>
+    </div>
+
     <!-- Controls Card -->
     <div class="controls-card">
-      <div class="controls-title">Exam Schedule List</div>
+      <div class="controls-title" id="examTitle">All Exams – Schedule List</div>
       <div class="controls-right">
         <div class="input-box">
           <i class="ti ti-calendar"></i>
           <input type="text" value="05/21/2026 - 05/27/2026" readonly style="width: 170px;" />
         </div>
-        <button class="btn"><i class="ti ti-filter"></i> Filter <i class="ti ti-chevron-down" style="font-size:14px;color:var(--text-hint);"></i></button>
         <button class="btn"><i class="ti ti-arrows-sort"></i> Sort by A-Z <i class="ti ti-chevron-down" style="font-size:14px;color:var(--text-hint);"></i></button>
       </div>
     </div>
@@ -182,6 +211,58 @@ select {
   </div>
 </div>
 
+<!-- Add Exam Schedule Modal -->
+<div class="modal-overlay" id="scheduleModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2><i class="ti ti-calendar-plus" style="color:var(--green);"></i> Add Exam Schedule</h2>
+      <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Exam Name</label>
+        <select><option>Formative-1</option><option>Formative-2</option><option>Summative-1</option><option>Summative-2</option><option>Pre-Board</option></select>
+      </div>
+      <div class="form-group">
+        <label>Class & Section</label>
+        <select><option>Class X - A</option><option>Class X - B</option><option>Class IX - A</option><option>Class IX - B</option><option>Class VIII - C</option><option>Class VIII - D</option><option>Class VII - A</option></select>
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <select><option>English</option><option>Maths</option><option>Science</option><option>Hindi</option><option>Physics</option><option>Chemistry</option><option>Computer</option></select>
+      </div>
+      <div class="form-group">
+        <label>Exam Date</label>
+        <input type="date" />
+      </div>
+      <div class="form-group">
+        <label>Start Time</label>
+        <input type="time" />
+      </div>
+      <div class="form-group">
+        <label>End Time</label>
+        <input type="time" />
+      </div>
+      <div class="form-group">
+        <label>Room No</label>
+        <input type="text" placeholder="e.g. 101" />
+      </div>
+      <div class="form-group">
+        <label>Max Marks</label>
+        <input type="number" placeholder="100" />
+      </div>
+      <div class="form-group">
+        <label>Min Marks (Pass)</label>
+        <input type="number" placeholder="35" />
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal()"><i class="ti ti-check"></i> Save Schedule</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // Parse time like "09:30 AM" and return minutes from midnight
 function parseTimeStr(timeStr) {
@@ -214,25 +295,48 @@ function calculateDuration(startStr, endStr) {
   return result.join(" ") || "0 mins";
 }
 
+let activeExam = 'all';
+
 const scheduleData = [
-  { class: 'Class X - A', subject: 'English', date: '13 May 2024', start: '09:30 AM', end: '10:45 AM', room: '101', max: 100, min: 35 },
-  { class: 'Class X - B', subject: 'Spanish', date: '14 May 2024', start: '09:30 AM', end: '11:00 AM', room: '104', max: 100, min: 35 },
-  { class: 'Class IX - A', subject: 'Physics', date: '15 May 2024', start: '10:00 AM', end: '12:30 PM', room: '103', max: 100, min: 35 },
-  { class: 'Class IX - B', subject: 'Chemistry', date: '16 May 2024', start: '08:30 AM', end: '11:30 AM', room: '105', max: 100, min: 35 },
-  { class: 'Class VIII - C', subject: 'Maths', date: '17 May 2024', start: '09:30 AM', end: '12:30 PM', room: '106', max: 100, min: 35 },
-  { class: 'Class VIII - D', subject: 'Computer', date: '18 May 2024', start: '13:00 PM', end: '14:30 PM', room: '102', max: 50, min: 18 },
-  { class: 'Class VII - A', subject: 'Env Science', date: '19 May 2024', start: '09:30 AM', end: '11:00 AM', room: '107', max: 80, min: 28 }
+  { exam: 'Formative-1', class: 'Class X - A',    subject: 'English',     date: '13 May 2024', start: '09:30 AM', end: '10:45 AM', room: '101', max: 100, min: 35 },
+  { exam: 'Formative-1', class: 'Class X - B',    subject: 'Hindi',       date: '14 May 2024', start: '09:30 AM', end: '11:00 AM', room: '104', max: 100, min: 35 },
+  { exam: 'Formative-1', class: 'Class IX - A',   subject: 'Maths',       date: '15 May 2024', start: '10:00 AM', end: '12:30 PM', room: '103', max: 100, min: 35 },
+  { exam: 'Formative-2', class: 'Class IX - B',   subject: 'Chemistry',   date: '16 May 2024', start: '08:30 AM', end: '11:30 AM', room: '105', max: 100, min: 35 },
+  { exam: 'Formative-2', class: 'Class VIII - C', subject: 'Maths',       date: '17 May 2024', start: '09:30 AM', end: '12:30 PM', room: '106', max: 100, min: 35 },
+  { exam: 'Formative-2', class: 'Class VIII - D', subject: 'Computer',    date: '18 May 2024', start: '13:00 PM', end: '14:30 PM', room: '102', max: 50,  min: 18 },
+  { exam: 'Summative-1', class: 'Class VII - A',  subject: 'Science',     date: '19 May 2024', start: '09:30 AM', end: '11:00 AM', room: '107', max: 80,  min: 28 },
+  { exam: 'Summative-1', class: 'Class X - A',    subject: 'Physics',     date: '20 May 2024', start: '09:00 AM', end: '12:00 PM', room: '108', max: 100, min: 35 },
+  { exam: 'Summative-2', class: 'Class IX - A',   subject: 'English',     date: '22 May 2024', start: '09:30 AM', end: '11:30 AM', room: '101', max: 100, min: 35 },
+  { exam: 'Summative-2', class: 'Class VIII - C', subject: 'Hindi',       date: '23 May 2024', start: '10:00 AM', end: '12:00 PM', room: '103', max: 100, min: 35 },
+  { exam: 'Pre-Board',   class: 'Class X - A',    subject: 'Maths',       date: '25 May 2024', start: '09:00 AM', end: '12:00 PM', room: '109', max: 100, min: 35 },
+  { exam: 'Pre-Board',   class: 'Class X - B',    subject: 'Science',     date: '26 May 2024', start: '09:00 AM', end: '12:00 PM', room: '110', max: 100, min: 35 },
 ];
+
+function setTab(el) {
+  document.querySelectorAll('.exam-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  activeExam = el.dataset.exam;
+  const title = activeExam === 'all' ? 'All Exams – Schedule List' : activeExam + ' – Schedule List';
+  document.getElementById('examTitle').textContent = title;
+  renderSchedule();
+}
 
 function renderSchedule() {
   const tbody = document.getElementById('scheduleBody');
+  const filtered = activeExam === 'all' ? scheduleData : scheduleData.filter(d => d.exam === activeExam);
+  
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:32px;color:var(--text-muted);">No schedule found for this exam.</td></tr>`;
+    return;
+  }
+
   let html = '';
-  scheduleData.forEach(item => {
+  filtered.forEach(item => {
     const duration = calculateDuration(item.start, item.end);
     html += `
       <tr>
         <td class="checkbox-cell"><div class="checkbox-custom"></div></td>
-        <td style="font-weight: 500;">${item.class}</td>
+        <td style="font-weight:500;">${item.class}</td>
         <td><a href="#" class="subject-link">${item.subject}</a></td>
         <td>${item.date}</td>
         <td>${item.start}</td>
@@ -246,13 +350,11 @@ function renderSchedule() {
     `;
   });
   tbody.innerHTML = html;
-
-  document.querySelectorAll('.checkbox-custom').forEach(cb => {
-    cb.addEventListener('click', function() {
-      this.classList.toggle('checked');
-    });
-  });
+  document.querySelectorAll('.checkbox-custom').forEach(cb => cb.addEventListener('click', function(){ this.classList.toggle('checked'); }));
 }
+
+function openModal() { document.getElementById('scheduleModal').classList.add('show'); }
+function closeModal() { document.getElementById('scheduleModal').classList.remove('show'); }
 
 document.addEventListener('DOMContentLoaded', renderSchedule);
 </script>
