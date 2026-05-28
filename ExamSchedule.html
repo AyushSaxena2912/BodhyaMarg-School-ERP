@@ -176,16 +176,21 @@ select {
             </div>
             <div class="filter-row">
               <div class="filter-field">
-                <label>Class & Section</label>
-                <select id="filterClass" onchange="applyFilter()">
+                <label>Class</label>
+                <select id="filterClass" onchange="onClassChange()">
                   <option value="all">All Classes</option>
-                  <option>Class X - A</option>
-                  <option>Class X - B</option>
-                  <option>Class IX - A</option>
-                  <option>Class IX - B</option>
-                  <option>Class VIII - C</option>
-                  <option>Class VIII - D</option>
-                  <option>Class VII - A</option>
+                  <option value="Class X">Class X</option>
+                  <option value="Class IX">Class IX</option>
+                  <option value="Class VIII">Class VIII</option>
+                  <option value="Class VII">Class VII</option>
+                </select>
+              </div>
+            </div>
+            <div class="filter-row">
+              <div class="filter-field">
+                <label>Section</label>
+                <select id="filterSection" onchange="applyFilter()">
+                  <option value="all">All Sections</option>
                 </select>
               </div>
             </div>
@@ -329,8 +334,9 @@ function calculateDuration(startStr, endStr) {
 
 let activeExam = 'all';
 let activeClass = 'all';
+let activeSection = 'all';
 
-// Default schedule data
+// Schedule data — exam keys match ExamList names
 const scheduleData = [
   { exam: 'Formative Assessment- 1', class: 'Class X - A',    subject: 'English',   date: '13 May 2024', start: '09:30 AM', end: '10:45 AM', room: '101', max: 100, min: 35 },
   { exam: 'Formative Assessment- 1', class: 'Class X - B',    subject: 'Hindi',     date: '14 May 2024', start: '09:30 AM', end: '11:00 AM', room: '104', max: 100, min: 35 },
@@ -344,6 +350,17 @@ const scheduleData = [
   { exam: 'Summative Assessment- 2', class: 'Class VIII - C', subject: 'Hindi',     date: '23 May 2024', start: '10:00 AM', end: '12:00 PM', room: '103', max: 100, min: 35 },
 ];
 
+// Class → sections map (derived from scheduleData)
+const classSectionsMap = {};
+scheduleData.forEach(d => {
+
+  const parts = d.class.split(' - ');
+  const cls = parts[0].trim();
+  const sec = parts[1] ? parts[1].trim() : null;
+  if (!classSectionsMap[cls]) classSectionsMap[cls] = new Set();
+  if (sec) classSectionsMap[cls].add(sec);
+});
+
 function getExamNames() {
   try {
     const saved = localStorage.getItem('bodhya_exams');
@@ -356,10 +373,23 @@ function populateExamFilter() {
   const names = getExamNames();
   const sel = document.getElementById('filterExamName');
   sel.innerHTML = '<option value="all">All Exams</option>' + names.map(n => `<option value="${n}">${n}</option>`).join('');
-
-  // Also populate modal dropdown
   const modalSel = document.getElementById('modalExamSelect');
   if (modalSel) modalSel.innerHTML = names.map(n => `<option value="${n}">${n}</option>`).join('');
+}
+
+function onClassChange() {
+  const cls = document.getElementById('filterClass').value;
+  const secSel = document.getElementById('filterSection');
+  activeClass = cls;
+  activeSection = 'all';
+
+  if (cls === 'all') {
+    secSel.innerHTML = '<option value="all">All Sections</option>';
+  } else {
+    const sections = [...(classSectionsMap[cls] || [])].sort();
+    secSel.innerHTML = '<option value="all">All Sections</option>' + sections.map(s => `<option value="${s}">${s}</option>`).join('');
+  }
+  applyFilter();
 }
 
 function toggleFilter() {
@@ -369,6 +399,7 @@ function toggleFilter() {
 function applyFilter() {
   activeExam = document.getElementById('filterExamName').value;
   activeClass = document.getElementById('filterClass').value;
+  activeSection = document.getElementById('filterSection').value;
   const label = activeExam === 'all' ? 'Exam Schedule List' : activeExam + ' – Schedule List';
   document.getElementById('examTitle').textContent = label;
   renderSchedule();
@@ -377,8 +408,8 @@ function applyFilter() {
 function resetFilter() {
   document.getElementById('filterExamName').value = 'all';
   document.getElementById('filterClass').value = 'all';
-  activeExam = 'all';
-  activeClass = 'all';
+  document.getElementById('filterSection').innerHTML = '<option value="all">All Sections</option>';
+  activeExam = 'all'; activeClass = 'all'; activeSection = 'all';
   document.getElementById('examTitle').textContent = 'Exam Schedule List';
   renderSchedule();
   toggleFilter();
@@ -388,7 +419,12 @@ function renderSchedule() {
   const tbody = document.getElementById('scheduleBody');
   let filtered = scheduleData;
   if (activeExam !== 'all') filtered = filtered.filter(d => d.exam === activeExam);
-  if (activeClass !== 'all') filtered = filtered.filter(d => d.class === activeClass);
+  if (activeClass !== 'all') {
+    filtered = filtered.filter(d => d.class.startsWith(activeClass));
+  }
+  if (activeSection !== 'all') {
+    filtered = filtered.filter(d => d.class.endsWith('- ' + activeSection));
+  }
 
   if (filtered.length === 0) {
     tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:32px;color:var(--text-muted);"><i class="ti ti-calendar-off" style="font-size:24px;display:block;margin-bottom:8px;"></i>No schedule found for selected filters.</td></tr>`;
