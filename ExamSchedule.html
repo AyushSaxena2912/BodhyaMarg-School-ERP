@@ -43,7 +43,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .btn-primary:hover { background: var(--green-dark); color: #fff; }
 
 /* Filter & Controls */
-.controls-card { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; background: var(--white); padding: 16px 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+.controls-card { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; background: var(--white); padding: 16px 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
 .controls-title { font-size: 16px; font-weight: 700; color: var(--text); }
 .controls-right { display: flex; align-items: center; gap: 12px; }
 
@@ -87,7 +87,7 @@ select {
 
 /* Filter Dropdown */
 .filter-wrap { position: relative; }
-.filter-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 340px; padding: 16px; display: none; z-index: 100; }
+.filter-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 340px; padding: 16px; display: none; z-index: 1000; }
 .filter-dropdown.show { display: block; }
 .filter-header { font-size: 14px; font-weight: 600; margin-bottom: 14px; color: var(--text); }
 .filter-row { display: flex; gap: 12px; margin-bottom: 12px; }
