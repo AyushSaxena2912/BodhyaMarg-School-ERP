@@ -51,7 +51,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 /* Profile Layout */
 .profile-container { display: flex; gap: 24px; align-items: flex-start; }
 .profile-sidebar { width: 320px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
-.profile-main { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+.profile-main { flex: 1; display: flex; flex-direction: column; gap: 16px; }
 
 /* Sidebar Cards */
 .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
@@ -91,7 +91,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .tab i { font-size: 16px; }
 
 /* Sections */
-.section-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.section-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 16px; }
 .section-card:last-child { margin-bottom: 0; }
 .section-title { padding: 16px 20px; font-size: 15px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); }
 .section-content { padding: 20px; }
@@ -119,14 +119,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .address-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
 
 /* 2-col wrapper for sections */
-.two-col-wrapper { display: flex; gap: 24px; }
+.two-col-wrapper { display: flex; gap: 16px; margin-bottom: 16px; }
 .two-col-wrapper > .section-card { margin-bottom: 0 !important; }
 .two-col-wrapper > * { flex: 1; }
 
 #mainContentDetails { display: block; }
 
 /* Main Tabs */
-.main-tabs { display: flex; gap: 24px; padding: 0 24px; border: 1px solid var(--border); background: var(--white); border-radius: var(--radius-lg); margin-bottom: 24px; }
+.main-tabs { display: flex; gap: 24px; padding: 0 24px; border: 1px solid var(--border); background: var(--white); border-radius: var(--radius-lg); margin-bottom: 16px; }
 .main-tab { padding: 16px 0; font-size: 13.5px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
 .main-tab:hover { color: var(--text); }
 .main-tab.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
