@@ -158,11 +158,11 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
         </div>
         <div class="input-box"><i class="ti ti-layout-distribute-vertical"></i>
           <select id="currentSection">
-            <option selected>Section A</option>
-            <option>Section B</option>
-            <option>Section C</option>
-            <option>Section D</option>
-            <option>Section E</option>
+            <option value="A" selected>Section A</option>
+            <option value="B">Section B</option>
+            <option value="C">Section C</option>
+            <option value="D">Section D</option>
+            <option value="E">Section E</option>
           </select><i class="ti ti-chevron-down"></i>
         </div>
         <div class="input-box"><i class="ti ti-calendar"></i>
@@ -191,11 +191,11 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
         </div>
         <div class="input-box"><i class="ti ti-layout-distribute-vertical"></i>
           <select id="targetSection">
-            <option selected>Section A</option>
-            <option>Section B</option>
-            <option>Section C</option>
-            <option>Section D</option>
-            <option>Section E</option>
+            <option value="A" selected>Section A</option>
+            <option value="B">Section B</option>
+            <option value="C">Section C</option>
+            <option value="D">Section D</option>
+            <option value="E">Section E</option>
           </select><i class="ti ti-chevron-down"></i>
         </div>
         <div class="input-box" style="background:#f1f5f9;"><i class="ti ti-calendar" style="color:var(--green);"></i>
@@ -355,7 +355,7 @@ const defaultStudents = [
 ];
 
 // Load from local storage or set default (with version check)
-const DB_VERSION = "v3";
+const DB_VERSION = "v4";
 let saved = localStorage.getItem('bodhyamarg_promotion_students');
 let savedVersion = localStorage.getItem('bodhyamarg_promotion_students_version');
 let needsReset = (savedVersion !== DB_VERSION);
