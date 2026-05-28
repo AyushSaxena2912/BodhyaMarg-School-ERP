@@ -233,6 +233,21 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
                <label>Search Parent</label>
                <input type="text" placeholder="Name, Phone, Email..." />
              </div>
+             <div class="filter-row">
+               <div class="filter-field">
+                 <label>Relation</label>
+                 <select>
+                   <option>All</option>
+                   <option>Father</option>
+                   <option>Mother</option>
+                   <option>Guardian</option>
+                 </select>
+               </div>
+             </div>
+             <div class="filter-field" style="margin-bottom: 12px;">
+               <label>Search Student</label>
+               <input type="text" placeholder="Student Name, Admission No..." />
+             </div>
              <div class="filter-footer">
                <button class="btn-reset" onclick="toggleFilter()">Reset</button>
                <button class="btn-apply" onclick="toggleFilter()">Apply</button>
