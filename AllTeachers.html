@@ -109,6 +109,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .page-btn.active { background: var(--green); color: var(--white); }
 .page-btn.text-btn { font-weight: 500; }
 
+.load-more-container { text-align: center; margin-top: 16px; margin-bottom: 8px; width: 100%; grid-column: 1 / -1; }
+.btn-load-more { display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; background: var(--green); color: var(--white); border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+.btn-load-more:hover { background: var(--green-dark); }
+.btn-load-more i { font-size: 18px; }
+
 .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
 .status-badge.active { background: #ecfdf5; color: #10b981; }
 .status-badge.active::before { content:''; width:6px; height:6px; border-radius:50%; background:#10b981; }
@@ -449,6 +454,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <span class="subject-badge">Geography</span>
           <a href="TeacherDetails.html" class="add-fee-btn" style="border:none; text-decoration:none; display:inline-block;">View Details</a>
         </div>
+      </div>
+      <!-- Load More -->
+      <div class="load-more-container">
+        <button class="btn-load-more"><i class="ti ti-loader"></i> Load More</button>
       </div>
     </div>
 
