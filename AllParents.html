@@ -146,6 +146,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .status-badge.inactive { background: #fef2f2; color: #ef4444; }
 .status-badge.inactive::before { content:''; width:6px; height:6px; border-radius:50%; background:#ef4444; }
 
+
+.action-menu { position: absolute; right: 0; top: 100%; margin-top: 4px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 170px; z-index: 10; display: none; flex-direction: column; padding: 4px; }
+.action-menu.show { display: flex; }
+.action-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; color: var(--text); text-decoration: none; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.action-item:hover { background: var(--bg); }
+.action-item i { font-size: 16px; color: var(--text-muted); }
+.action-item.danger { color: #ef4444; }
+.action-item.danger i { color: #ef4444; }
+
 </style>
 </head>
 <body>
