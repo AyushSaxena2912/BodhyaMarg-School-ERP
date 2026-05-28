@@ -505,39 +505,8 @@ function render() {
 
   tbody.innerHTML = html;
 
-  // Setup checkboxes listeners
-  const selectAllCb = document.getElementById('selectAllCheckbox');
-  const bodyCbs = tbody.querySelectorAll('.checkbox-custom.student-cb');
-
-  bodyCbs.forEach(cb => {
-    cb.addEventListener('click', function() {
-      this.classList.toggle('checked');
-      const allChecked = Array.from(bodyCbs).every(c => c.classList.contains('checked'));
-      if (allChecked) selectAllCb.classList.add('checked');
-      else selectAllCb.classList.remove('checked');
-    });
-  });
-
-  // Re-attach select all event listener
-  const newSelectAll = selectAllCb.cloneNode(true);
-  selectAllCb.parentNode.replaceChild(newSelectAll, selectAllCb);
-  
   // Set initial selectAll checkbox status
-  if (bodyCbs.length > 0 && Array.from(bodyCbs).every(c => c.classList.contains('checked'))) {
-    newSelectAll.classList.add('checked');
-  } else {
-    newSelectAll.classList.remove('checked');
-  }
-
-  newSelectAll.addEventListener('click', function () {
-    if (this.classList.contains('disabled')) return;
-    this.classList.toggle('checked');
-    const isChecked = this.classList.contains('checked');
-    bodyCbs.forEach(cb => {
-      if (isChecked) cb.classList.add('checked');
-      else cb.classList.remove('checked');
-    });
-  });
+  updateSelectAllState();
 }
 
 function promoteSelected() {
@@ -601,6 +570,23 @@ function closeModal() {
   document.getElementById('successModal').classList.remove('active');
 }
 
+function updateSelectAllState() {
+  const selectAllCb = document.getElementById('selectAllCheckbox');
+  const bodyCbs = document.querySelectorAll('.checkbox-custom.student-cb');
+  if (bodyCbs.length === 0) {
+    selectAllCb.classList.remove('checked');
+    selectAllCb.classList.add('disabled');
+    return;
+  }
+  selectAllCb.classList.remove('disabled');
+  const allChecked = Array.from(bodyCbs).every(cb => cb.classList.contains('checked'));
+  if (allChecked) {
+    selectAllCb.classList.add('checked');
+  } else {
+    selectAllCb.classList.remove('checked');
+  }
+}
+
 // Setup Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
   updateTargetClass();
@@ -620,6 +606,26 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('targetSection').addEventListener('change', render);
   document.getElementById('targetSession').addEventListener('change', render);
   document.getElementById('searchStudentInput').addEventListener('input', render);
+
+  // Setup Event Delegation for student checkboxes
+  document.getElementById('studentBody').addEventListener('click', (e) => {
+    const cb = e.target.closest('.checkbox-custom.student-cb');
+    if (cb) {
+      cb.classList.toggle('checked');
+      updateSelectAllState();
+    }
+  });
+
+  // Setup click listener for select all checkbox
+  document.getElementById('selectAllCheckbox').addEventListener('click', function() {
+    if (this.classList.contains('disabled')) return;
+    this.classList.toggle('checked');
+    const isChecked = this.classList.contains('checked');
+    document.querySelectorAll('.checkbox-custom.student-cb').forEach(cb => {
+      if (isChecked) cb.classList.add('checked');
+      else cb.classList.remove('checked');
+    });
+  });
 });
 </script>
 <script src="sidebar.js"></script>
