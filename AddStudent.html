@@ -502,7 +502,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 <script>
 function toggleGuardianForm() {
-  const selected = document.querySelector('input[name="guardian"]:checked').value;
+  const selectedElement = document.querySelector('input[name="guardian"]:checked');
+  if (!selectedElement) return;
+  const selected = selectedElement.value;
   const form = document.getElementById('guardianForm');
   if (selected === 'other') {
     form.style.display = 'block';
@@ -510,6 +512,10 @@ function toggleGuardianForm() {
     form.style.display = 'none';
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  toggleGuardianForm();
+});
 
 function toggleYN(btn, val) {
   btn.closest('.yn-group, div').querySelectorAll('.yn-btn').forEach(b => b.classList.remove('sel'));
