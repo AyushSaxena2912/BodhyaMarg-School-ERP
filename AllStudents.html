@@ -801,6 +801,16 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       btnGrid.classList.remove('active');
       btnGrid.style.background = 'transparent';
     }
+    const breadcrumbSpan = document.querySelector('.breadcrumb span');
+    const toolbarTitle = document.querySelector('.toolbar-title');
+    if (viewMode === 'grid') {
+      if (breadcrumbSpan) breadcrumbSpan.textContent = 'Students Grid';
+      if (toolbarTitle) toolbarTitle.textContent = 'Students Grid';
+    } else {
+      if (breadcrumbSpan) breadcrumbSpan.textContent = 'Students List';
+      if (toolbarTitle) toolbarTitle.textContent = 'Students List';
+    }
+
   }
 </script>
 <script src="sidebar.js"></script>

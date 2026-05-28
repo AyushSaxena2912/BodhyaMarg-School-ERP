@@ -714,7 +714,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       btnGrid.style.background = '';
       btnList.classList.remove('active');
       btnList.style.background = 'transparent';
-      tbTitle.textContent = "Parents Grid";
     } else {
       grid.style.display = 'none';
       list.style.display = 'block';
@@ -722,7 +721,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       btnList.style.background = '';
       btnGrid.classList.remove('active');
       btnGrid.style.background = 'transparent';
-      tbTitle.textContent = "Parents List";
+    }
+    const breadcrumbSpan = document.querySelector('.breadcrumb span');
+    const toolbarTitle = document.querySelector('.toolbar-title');
+    if (viewMode === 'grid') {
+      if (breadcrumbSpan) breadcrumbSpan.textContent = 'Parents Grid';
+      if (toolbarTitle) toolbarTitle.textContent = 'Parents Grid';
+    } else {
+      if (breadcrumbSpan) breadcrumbSpan.textContent = 'Parents List';
+      if (toolbarTitle) toolbarTitle.textContent = 'Parents List';
     }
   }
 
