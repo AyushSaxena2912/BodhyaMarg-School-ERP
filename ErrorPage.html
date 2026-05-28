@@ -141,8 +141,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <div class="dev-controls">
       <span class="dev-label"><i class="ti ti-tool"></i> Developer Simulator:</span>
       <div class="dev-btn-group">
-        <button class="dev-btn active" onclick="switchState(404)">Case 1: 404 Not Found</button>
-        <button class="dev-btn" onclick="switchState(500)">Case 2: 500 System Error</button>
+        <button class="dev-btn active" onclick="switchState(404)">Case 1: Page Not Found (404)</button>
+        <button class="dev-btn" onclick="switchState(500)">Case 2: Connection Problem (500)</button>
       </div>
     </div>
 
@@ -194,24 +194,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
       <!-- Error Content Details -->
       <span class="error-code" id="errorCode">Error Code: 404</span>
-      <h2 class="error-title" id="errorTitle">Page Not Found</h2>
-      <p class="error-desc" id="errorDesc">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable. Please verify the URL address.</p>
+      <h2 class="error-title" id="errorTitle">Oops! Page Not Found</h2>
+      <p class="error-desc" id="errorDesc">We couldn't find the page you are looking for. It might have been moved, deleted, or perhaps there is a typo in the web address.</p>
 
-      <!-- Mock Status Indicator Widget -->
-      <div class="status-bar" id="statusBar">
-        <div class="status-item">
-          <span class="status-label">Database Connection</span>
-          <span class="status-indicator"><span class="status-dot ok"></span> Online</span>
-        </div>
-        <div class="status-item">
-          <span class="status-label">API Gateway</span>
-          <span class="status-indicator" id="apiStatus"><span class="status-dot ok"></span> Active</span>
-        </div>
-        <div class="status-item">
-          <span class="status-label">Auth Provider</span>
-          <span class="status-indicator"><span class="status-dot ok"></span> Online</span>
-        </div>
-      </div>
+
 
       <!-- Action Buttons -->
       <div class="actions-layout">
@@ -222,7 +208,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <!-- Collapsible Stack Trace (500 Error Only) -->
       <div class="tech-details-container" id="techDetailsContainer" style="display:none;">
         <div class="tech-toggle" id="techToggle" onclick="toggleTechTrace()">
-          <i class="ti ti-chevron-right"></i> View Technical Crash Report
+          <i class="ti ti-chevron-right"></i> View Technical Crash Report (For IT Staff)
         </div>
         <div class="tech-content" id="techContent">
           <button class="copy-btn" onclick="copyTrace()" title="Copy Stack Trace"><i class="ti ti-copy"></i></button>
@@ -293,11 +279,8 @@ function switchState(state) {
       errCode.textContent = "Error Code: 404";
       errCode.className = "error-code c-404";
       
-      document.getElementById('errorTitle').textContent = "Page Not Found";
-      document.getElementById('errorDesc').textContent = "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable. Please verify the URL address.";
-      
-      // Update Status Bar
-      document.getElementById('apiStatus').innerHTML = '<span class="status-dot ok"></span> Active';
+      document.getElementById('errorTitle').textContent = "Oops! Page Not Found";
+      document.getElementById('errorDesc').textContent = "We couldn't find the page you are looking for. It might have been moved, deleted, or perhaps there is a typo in the web address. Let's get you back to the dashboard.";
       
       // Action layout buttons
       document.getElementById('retryBtn').style.display = 'inline-flex';
@@ -312,11 +295,8 @@ function switchState(state) {
       errCode.textContent = "Error Code: 500";
       errCode.className = "error-code";
       
-      document.getElementById('errorTitle').textContent = "Internal Server Glitch";
-      document.getElementById('errorDesc').textContent = "We hit an unexpected database deadlock. Our telemetry has logged the stack trace, and engineers are working to resolve the memory overload.";
-      
-      // Update Status Bar to error
-      document.getElementById('apiStatus').innerHTML = '<span class="status-dot error"></span> Offline';
+      document.getElementById('errorTitle').textContent = "Temporary Connection Issue";
+      document.getElementById('errorDesc').textContent = "Our portal is experiencing a temporary glitch. Don't worry, all your school records and data are completely safe. We are already looking into this to get everything back to normal. Please try reloading the system.";
       
       // Tech Details Show
       document.getElementById('techDetailsContainer').style.display = 'block';
