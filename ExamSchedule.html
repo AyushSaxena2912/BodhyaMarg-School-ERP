@@ -85,11 +85,20 @@ select {
   background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; cursor: pointer;
 }
 
-/* Exam Tabs */
-.exam-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-.exam-tab { padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: var(--white); color: var(--text-muted); transition: all 0.2s; }
-.exam-tab:hover { border-color: var(--green); color: var(--green); }
-.exam-tab.active { background: var(--green); color: #fff; border-color: var(--green); }
+/* Filter Dropdown */
+.filter-wrap { position: relative; }
+.filter-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 340px; padding: 16px; display: none; z-index: 100; }
+.filter-dropdown.show { display: block; }
+.filter-header { font-size: 14px; font-weight: 600; margin-bottom: 14px; color: var(--text); }
+.filter-row { display: flex; gap: 12px; margin-bottom: 12px; }
+.filter-field { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.filter-field label { font-size: 11.5px; color: var(--text-muted); font-weight: 500; }
+.filter-field select, .filter-field input { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; outline: none; background: var(--white); color: var(--text); }
+.filter-field select:focus, .filter-field input:focus { border-color: var(--green); }
+.filter-field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; cursor: pointer; }
+.filter-footer { display: flex; justify-content: space-between; margin-top: 16px; }
+.btn-reset { background: transparent; border: 1px solid var(--border); padding: 6px 14px; border-radius: 6px; font-size: 12.5px; cursor: pointer; color: var(--text-muted); }
+.btn-apply { background: var(--green); border: none; padding: 6px 14px; border-radius: 6px; font-size: 12.5px; cursor: pointer; color: var(--white); font-weight: 600; }
 
 /* Modal */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; align-items: center; justify-content: center; }
@@ -145,18 +154,46 @@ select {
       </div>
     </div>
     
-    <!-- Exam Tabs (dynamically populated from ExamList) -->
-    <div class="exam-tabs" id="examTabs">
-      <!-- Rendered by JS -->
-    </div>
-
     <!-- Controls Card -->
     <div class="controls-card">
-      <div class="controls-title" id="examTitle">All Exams – Schedule List</div>
+      <div class="controls-title" id="examTitle">Exam Schedule List</div>
       <div class="controls-right">
         <div class="input-box">
           <i class="ti ti-calendar"></i>
           <input type="text" value="05/21/2026 - 05/27/2026" readonly style="width: 170px;" />
+        </div>
+        <div class="filter-wrap">
+          <button class="btn" id="filterBtn" onclick="toggleFilter()"><i class="ti ti-filter"></i> Filter <i class="ti ti-chevron-down" style="font-size:14px;color:var(--text-hint);"></i></button>
+          <div class="filter-dropdown" id="filterDropdown">
+            <div class="filter-header">Filter</div>
+            <div class="filter-row">
+              <div class="filter-field">
+                <label>Exam Name</label>
+                <select id="filterExamName" onchange="applyFilter()">
+                  <option value="all">All Exams</option>
+                </select>
+              </div>
+            </div>
+            <div class="filter-row">
+              <div class="filter-field">
+                <label>Class & Section</label>
+                <select id="filterClass" onchange="applyFilter()">
+                  <option value="all">All Classes</option>
+                  <option>Class X - A</option>
+                  <option>Class X - B</option>
+                  <option>Class IX - A</option>
+                  <option>Class IX - B</option>
+                  <option>Class VIII - C</option>
+                  <option>Class VIII - D</option>
+                  <option>Class VII - A</option>
+                </select>
+              </div>
+            </div>
+            <div class="filter-footer">
+              <button class="btn-reset" onclick="resetFilter()">Reset</button>
+              <button class="btn-apply" onclick="toggleFilter()">Apply</button>
+            </div>
+          </div>
         </div>
         <button class="btn"><i class="ti ti-arrows-sort"></i> Sort by A-Z <i class="ti ti-chevron-down" style="font-size:14px;color:var(--text-hint);"></i></button>
       </div>
@@ -291,8 +328,9 @@ function calculateDuration(startStr, endStr) {
 }
 
 let activeExam = 'all';
+let activeClass = 'all';
 
-// Default schedule data — exam keys match ExamList names
+// Default schedule data
 const scheduleData = [
   { exam: 'Formative Assessment- 1', class: 'Class X - A',    subject: 'English',   date: '13 May 2024', start: '09:30 AM', end: '10:45 AM', room: '101', max: 100, min: 35 },
   { exam: 'Formative Assessment- 1', class: 'Class X - B',    subject: 'Hindi',     date: '14 May 2024', start: '09:30 AM', end: '11:00 AM', room: '104', max: 100, min: 35 },
@@ -306,47 +344,54 @@ const scheduleData = [
   { exam: 'Summative Assessment- 2', class: 'Class VIII - C', subject: 'Hindi',     date: '23 May 2024', start: '10:00 AM', end: '12:00 PM', room: '103', max: 100, min: 35 },
 ];
 
-// Get exam names from localStorage (saved by ExamList.html)
 function getExamNames() {
   try {
     const saved = localStorage.getItem('bodhya_exams');
     if (saved) return JSON.parse(saved);
   } catch(e) {}
-  // Fallback: derive unique names from scheduleData
   return [...new Set(scheduleData.map(d => d.exam))];
 }
 
-function buildTabs() {
+function populateExamFilter() {
   const names = getExamNames();
-  const container = document.getElementById('examTabs');
-  let html = `<div class="exam-tab active" data-exam="all" onclick="setTab(this)">All Exams</div>`;
-  names.forEach(name => {
-    html += `<div class="exam-tab" data-exam="${name}" onclick="setTab(this)">${name}</div>`;
-  });
-  container.innerHTML = html;
+  const sel = document.getElementById('filterExamName');
+  sel.innerHTML = '<option value="all">All Exams</option>' + names.map(n => `<option value="${n}">${n}</option>`).join('');
 
   // Also populate modal dropdown
-  const sel = document.getElementById('modalExamSelect');
-  if (sel) {
-    sel.innerHTML = names.map(n => `<option value="${n}">${n}</option>`).join('');
-  }
+  const modalSel = document.getElementById('modalExamSelect');
+  if (modalSel) modalSel.innerHTML = names.map(n => `<option value="${n}">${n}</option>`).join('');
 }
 
-function setTab(el) {
-  document.querySelectorAll('.exam-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  activeExam = el.dataset.exam;
-  const title = activeExam === 'all' ? 'All Exams – Schedule List' : activeExam + ' – Schedule List';
-  document.getElementById('examTitle').textContent = title;
+function toggleFilter() {
+  document.getElementById('filterDropdown').classList.toggle('show');
+}
+
+function applyFilter() {
+  activeExam = document.getElementById('filterExamName').value;
+  activeClass = document.getElementById('filterClass').value;
+  const label = activeExam === 'all' ? 'Exam Schedule List' : activeExam + ' – Schedule List';
+  document.getElementById('examTitle').textContent = label;
   renderSchedule();
+}
+
+function resetFilter() {
+  document.getElementById('filterExamName').value = 'all';
+  document.getElementById('filterClass').value = 'all';
+  activeExam = 'all';
+  activeClass = 'all';
+  document.getElementById('examTitle').textContent = 'Exam Schedule List';
+  renderSchedule();
+  toggleFilter();
 }
 
 function renderSchedule() {
   const tbody = document.getElementById('scheduleBody');
-  const filtered = activeExam === 'all' ? scheduleData : scheduleData.filter(d => d.exam === activeExam);
-  
+  let filtered = scheduleData;
+  if (activeExam !== 'all') filtered = filtered.filter(d => d.exam === activeExam);
+  if (activeClass !== 'all') filtered = filtered.filter(d => d.class === activeClass);
+
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:32px;color:var(--text-muted);">No schedule found for this exam.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:32px;color:var(--text-muted);"><i class="ti ti-calendar-off" style="font-size:24px;display:block;margin-bottom:8px;"></i>No schedule found for selected filters.</td></tr>`;
     return;
   }
 
@@ -376,7 +421,13 @@ function renderSchedule() {
 function openModal() { document.getElementById('scheduleModal').classList.add('show'); }
 function closeModal() { document.getElementById('scheduleModal').classList.remove('show'); }
 
-document.addEventListener('DOMContentLoaded', () => { buildTabs(); renderSchedule(); });
+// Close filter on outside click
+document.addEventListener('click', e => {
+  const wrap = document.querySelector('.filter-wrap');
+  if (wrap && !wrap.contains(e.target)) document.getElementById('filterDropdown').classList.remove('show');
+});
+
+document.addEventListener('DOMContentLoaded', () => { populateExamFilter(); renderSchedule(); });
 </script>
 <script src="sidebar.js"></script>
 </body>
