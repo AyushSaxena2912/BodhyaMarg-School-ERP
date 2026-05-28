@@ -134,12 +134,17 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
         </div>
         <div class="input-box"><i class="ti ti-sitemap"></i>
           <select id="filterDepartment">
-            <option selected>All Departments</option>
-            <option>Science</option>
-            <option>Mathematics</option>
-            <option>Arts</option>
-            <option>Sports</option>
-            <option>Computer Science</option>
+            <!-- Populated dynamically -->
+          </select><i class="ti ti-chevron-down"></i>
+        </div>
+        <div class="input-box"><i class="ti ti-activity"></i>
+          <select id="filterStatus">
+            <option selected>All Statuses</option>
+            <option value="present">Present</option>
+            <option value="absent">Absent</option>
+            <option value="late">Late</option>
+            <option value="halfday">Half Day</option>
+            <option value="holiday">Holiday</option>
           </select><i class="ti ti-chevron-down"></i>
         </div>
       </div>
@@ -152,7 +157,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
         
         <div style="display:flex; gap:10px; align-items:center;">
           <button class="btn" onclick="markAll('present')" style="font-size:12px; padding:6px 12px; color:#10b981;"><i class="ti ti-check"></i> Mark All Present</button>
-          <div class="table-search"><input type="text" placeholder="Search Staff..." /></div>
+          <div class="table-search"><input type="text" id="searchStaffInput" placeholder="Search Staff..." /></div>
         </div>
       </div>
       <div class="table-responsive">
@@ -200,22 +205,73 @@ function getAvColor(status) {
   return { bg: '#f0fdfa', text: '#0d9488' }; // halfday
 }
 
+function populateDepartments() {
+  const select = document.getElementById('filterDepartment');
+  const depts = new Set();
+  staffData.forEach(s => {
+    const dept = s.deptRole.split(' / ')[0].trim();
+    depts.add(dept);
+  });
+  
+  let html = '<option selected>All Departments</option>';
+  Array.from(depts).sort().forEach(dept => {
+    html += `<option>${dept}</option>`;
+  });
+  select.innerHTML = html;
+}
+
+function getFilteredData() {
+  const deptFilter = document.getElementById('filterDepartment').value;
+  const statusFilter = document.getElementById('filterStatus').value;
+  const searchQuery = document.getElementById('searchStaffInput').value.toLowerCase().trim();
+
+  return staffData.filter(s => {
+    // 1. Department Filter
+    if (deptFilter !== 'All Departments') {
+      const dept = s.deptRole.split(' / ')[0].trim();
+      if (dept !== deptFilter) return false;
+    }
+
+    // 2. Status Filter
+    if (statusFilter !== 'All Statuses') {
+      if (s.status !== statusFilter) return false;
+    }
+
+    // 3. Search Query
+    if (searchQuery) {
+      const matchesName = s.name.toLowerCase().includes(searchQuery);
+      const matchesId = s.empId.toLowerCase().includes(searchQuery);
+      const matchesDeptRole = s.deptRole.toLowerCase().includes(searchQuery);
+      if (!matchesName && !matchesId && !matchesDeptRole) return false;
+    }
+
+    return true;
+  });
+}
+
 function render() {
   const tbody = document.getElementById('attendanceBody');
+  const filtered = getFilteredData();
   let html = '';
 
-  staffData.forEach((item, index) => {
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);"><i class="ti ti-users-minus" style="font-size:24px;display:block;margin-bottom:8px;"></i>No staff members found matching the criteria.</td></tr>`;
+    document.getElementById('selectAllCheckbox').classList.remove('checked');
+    return;
+  }
+
+  filtered.forEach(item => {
     let av = getAvColor(item.status);
     
     html += `
       <tr>
-        <td class="checkbox-cell"><div class="checkbox-custom"></div></td>
+        <td class="checkbox-cell"><div class="checkbox-custom" data-id="${item.empId}"></div></td>
         <td>
           <div class="staff-info">
-            <div class="staff-av" style="background:${av.bg};color:${av.text};">${getInitials(item.name)}</div>
+            <div class="staff-av" style="background:${av.bg};color:${av.text};width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:12px;">${getInitials(item.name)}</div>
             <div>
-              <div class="staff-name">${item.name}</div>
-              <div class="staff-id">Emp ID: ${item.empId}</div>
+              <div class="staff-name" style="font-weight:600;">${item.name}</div>
+              <div class="staff-id" style="font-size:11px;color:var(--text-hint);margin-top:2px;">Emp ID: ${item.empId}</div>
             </div>
           </div>
         </td>
@@ -223,28 +279,28 @@ function render() {
         <td>
           <div class="att-options">
             <label>
-              <input type="radio" class="att-radio" name="att_${index}" value="present" ${item.status === 'present' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
+              <input type="radio" class="att-radio" name="att_${item.empId}" value="present" ${item.status === 'present' ? 'checked' : ''} onchange="updateRowColor(this, '${item.empId}')">
               <span class="att-label">Present</span>
             </label>
             <label>
-              <input type="radio" class="att-radio" name="att_${index}" value="absent" ${item.status === 'absent' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
+              <input type="radio" class="att-radio" name="att_${item.empId}" value="absent" ${item.status === 'absent' ? 'checked' : ''} onchange="updateRowColor(this, '${item.empId}')">
               <span class="att-label">Absent</span>
             </label>
             <label>
-              <input type="radio" class="att-radio" name="att_${index}" value="late" ${item.status === 'late' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
+              <input type="radio" class="att-radio" name="att_${item.empId}" value="late" ${item.status === 'late' ? 'checked' : ''} onchange="updateRowColor(this, '${item.empId}')">
               <span class="att-label">Late</span>
             </label>
             <label>
-              <input type="radio" class="att-radio" name="att_${index}" value="halfday" ${item.status === 'halfday' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
+              <input type="radio" class="att-radio" name="att_${item.empId}" value="halfday" ${item.status === 'halfday' ? 'checked' : ''} onchange="updateRowColor(this, '${item.empId}')">
               <span class="att-label">Half Day</span>
             </label>
             <label>
-              <input type="radio" class="att-radio" name="att_${index}" value="holiday" ${item.status === 'holiday' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
+              <input type="radio" class="att-radio" name="att_${item.empId}" value="holiday" ${item.status === 'holiday' ? 'checked' : ''} onchange="updateRowColor(this, '${item.empId}')">
               <span class="att-label">Holiday</span>
             </label>
           </div>
         </td>
-        <td><input type="text" class="remark-input" placeholder="Add remark..." value="${item.remarks}"></td>
+        <td><input type="text" class="remark-input" placeholder="Add remark..." value="${item.remarks}" onchange="updateRemark('${item.empId}', this.value)"></td>
       </tr>
     `;
   });
@@ -278,25 +334,38 @@ function render() {
   }
 }
 
-// Just to update avatar color dynamically when clicked
-window.updateRowColor = function(radio, index) {
+window.updateRowColor = function(radio, empId) {
   const tr = radio.closest('tr');
   const avDiv = tr.querySelector('.staff-av');
   const colors = getAvColor(radio.value);
   avDiv.style.background = colors.bg;
   avDiv.style.color = colors.text;
-  staffData[index].status = radio.value;
+  
+  const staff = staffData.find(s => s.empId === empId);
+  if (staff) staff.status = radio.value;
+}
+
+window.updateRemark = function(empId, value) {
+  const staff = staffData.find(s => s.empId === empId);
+  if (staff) staff.remarks = value;
 }
 
 window.markAll = function(status) {
-  document.querySelectorAll(`.att-radio[value="${status}"]`).forEach(r => {
-    r.checked = true;
-    // Trigger onchange manually to update colors
-    r.dispatchEvent(new Event('change'));
+  const filtered = getFilteredData();
+  filtered.forEach(s => {
+    s.status = status;
   });
+  render();
 }
 
-document.addEventListener('DOMContentLoaded', render);
+document.addEventListener('DOMContentLoaded', () => {
+  populateDepartments();
+  render();
+
+  document.getElementById('filterDepartment').addEventListener('change', render);
+  document.getElementById('filterStatus').addEventListener('change', render);
+  document.getElementById('searchStaffInput').addEventListener('input', render);
+});
 </script>
 <script src="sidebar.js"></script>
 </body>
