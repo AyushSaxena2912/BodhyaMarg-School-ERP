@@ -189,7 +189,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <div class="form-grid g5" style="margin-bottom:14px;">
         <div class="form-field">
           <label>Gender</label>
-          <select><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select>
+          <select id="genderSelect" onchange="toggleSpouseField()">
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
         </div>
         <div class="form-field"><label>Primary Contact Number</label><input type="tel" /></div>
         <div class="form-field"><label>Email Address</label><input type="email" /></div>
@@ -215,9 +220,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
             <option value="Widowed">Widowed</option>
           </select>
         </div>
-        <div class="form-field" id="spouseField" style="display: none;">
-          <label>Husband/Wife Name</label>
-          <input type="text" placeholder="Enter spouse name" />
+        <div class="form-field" id="spouseNameField" style="display: none;">
+          <label id="spouseNameLabel">Spouse Name</label>
+          <input type="text" placeholder="Enter name" />
+        </div>
+        <div class="form-field" id="spouseMobileField" style="display: none;">
+          <label id="spouseMobileLabel">Spouse Mobile No.</label>
+          <input type="tel" placeholder="Enter mobile no." />
         </div>
         <div class="form-field">
           <label>Language Known</label>
@@ -335,12 +344,30 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 <script>
   function toggleSpouseField() {
-    const select = document.getElementById('maritalStatusSelect');
-    const spouseField = document.getElementById('spouseField');
-    if (select.value === 'Married') {
-      spouseField.style.display = 'flex';
+    const mStatus = document.getElementById('maritalStatusSelect').value;
+    const gender = document.getElementById('genderSelect').value;
+    const spouseNameField = document.getElementById('spouseNameField');
+    const spouseMobileField = document.getElementById('spouseMobileField');
+    const nameLabel = document.getElementById('spouseNameLabel');
+    const mobileLabel = document.getElementById('spouseMobileLabel');
+
+    if (mStatus === 'Married') {
+      spouseNameField.style.display = 'flex';
+      spouseMobileField.style.display = 'flex';
+      
+      if (gender === 'Female') {
+        nameLabel.textContent = "Husband's Name";
+        mobileLabel.textContent = "Husband's Mobile No.";
+      } else if (gender === 'Male') {
+        nameLabel.textContent = "Wife's Name";
+        mobileLabel.textContent = "Wife's Mobile No.";
+      } else {
+        nameLabel.textContent = "Spouse Name";
+        mobileLabel.textContent = "Spouse Mobile No.";
+      }
     } else {
-      spouseField.style.display = 'none';
+      spouseNameField.style.display = 'none';
+      spouseMobileField.style.display = 'none';
     }
   }
 </script>
