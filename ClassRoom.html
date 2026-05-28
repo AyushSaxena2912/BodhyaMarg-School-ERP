@@ -472,6 +472,9 @@ const rooms = [
   { room: 301, building: "Arts Block",    floor: "Ground Floor", cls: "V-A",   capacity: 40, students: 35, status: "maintenance" },
 ];
 
+localStorage.setItem('bodhya_rooms', JSON.stringify(rooms.map(r => r.room)));
+
+
 const tbody = document.getElementById("table-body");
 rooms.forEach(r => {
   const pct = Math.min(Math.round((r.students / r.capacity) * 100), 100);

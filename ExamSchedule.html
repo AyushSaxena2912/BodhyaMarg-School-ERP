@@ -282,7 +282,7 @@ select {
       </div>
       <div class="form-group">
         <label>Room No</label>
-        <input type="text" placeholder="e.g. 101" />
+        <select id="modalRoomSelect"><option>Loading...</option></select>
       </div>
       <div class="form-group">
         <label>Max Marks</label>
@@ -369,12 +369,26 @@ function getExamNames() {
   return [...new Set(scheduleData.map(d => d.exam))];
 }
 
-function populateExamFilter() {
-  const names = getExamNames();
-  const sel = document.getElementById('filterExamName');
-  sel.innerHTML = '<option value="all">All Exams</option>' + names.map(n => `<option value="${n}">${n}</option>`).join('');
-  const modalSel = document.getElementById('modalExamSelect');
-  if (modalSel) modalSel.innerHTML = names.map(n => `<option value="${n}">${n}</option>`).join('');
+function getRoomNumbers() {
+  try {
+    const saved = localStorage.getItem('bodhya_rooms');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return [...new Set(scheduleData.map(d => d.room))].sort((a,b) => a - b);
+}
+
+function populateDropdowns() {
+  // Exams
+  const examNames = getExamNames();
+  const filterExamSel = document.getElementById('filterExamName');
+  filterExamSel.innerHTML = '<option value="all">All Exams</option>' + examNames.map(n => `<option value="${n}">${n}</option>`).join('');
+  const modalExamSel = document.getElementById('modalExamSelect');
+  if (modalExamSel) modalExamSel.innerHTML = examNames.map(n => `<option value="${n}">${n}</option>`).join('');
+
+  // Rooms
+  const roomNumbers = getRoomNumbers();
+  const modalRoomSel = document.getElementById('modalRoomSelect');
+  if (modalRoomSel) modalRoomSel.innerHTML = roomNumbers.map(n => `<option value="${n}">${n}</option>`).join('');
 }
 
 function onClassChange() {
@@ -463,7 +477,7 @@ document.addEventListener('click', e => {
   if (wrap && !wrap.contains(e.target)) document.getElementById('filterDropdown').classList.remove('show');
 });
 
-document.addEventListener('DOMContentLoaded', () => { populateExamFilter(); renderSchedule(); });
+document.addEventListener('DOMContentLoaded', () => { populateDropdowns(); renderSchedule(); });
 </script>
 <script src="sidebar.js"></script>
 </body>
