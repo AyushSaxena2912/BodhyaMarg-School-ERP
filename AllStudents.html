@@ -83,7 +83,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .admission-no { font-size: 13px; color: var(--green); font-weight: 500; }
-.card-top-right { display: flex; align-items: center; gap: 8px; }
+.card-top-right { display: flex; align-items: center; gap: 8px; position: relative; }
+.action-menu { position: absolute; right: 0; top: 100%; margin-top: 4px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 170px; z-index: 10; display: none; flex-direction: column; padding: 4px; }
+.action-menu.show { display: flex; }
+.action-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; color: var(--text); text-decoration: none; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.action-item:hover { background: var(--bg); }
+.action-item i { font-size: 16px; color: var(--text-muted); }
+.action-item.danger { color: #ef4444; }
+.action-item.danger i { color: #ef4444; }
+
 .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
 .status-badge.active { background: #ecfdf5; color: #10b981; }
 .status-badge.active::before { content:''; width:6px; height:6px; border-radius:50%; background:#10b981; }
@@ -392,7 +400,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <span class="admission-no">AD9892434</span>
           <div class="card-top-right">
             <span class="status-badge active">Active</span>
-            <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+            <button class="menu-btn" onclick="toggleActionMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+            <div class="action-menu">
+              <a href="StudentDetails.html" class="action-item"><i class="ti ti-eye"></i> View Student</a>
+              <a href="EditStudent.html" class="action-item"><i class="ti ti-pencil"></i> Edit</a>
+              <a href="#" class="action-item"><i class="ti ti-arrow-up-right"></i> Promote Student</a>
+              <a href="#" class="action-item danger"><i class="ti ti-trash"></i> Delete</a>
+            </div>
           </div>
         </div>
         <div class="card-profile">
@@ -431,7 +445,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <span class="admission-no">AD9892433</span>
           <div class="card-top-right">
             <span class="status-badge active">Active</span>
-            <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+            <button class="menu-btn" onclick="toggleActionMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+            <div class="action-menu">
+              <a href="StudentDetails.html" class="action-item"><i class="ti ti-eye"></i> View Student</a>
+              <a href="EditStudent.html" class="action-item"><i class="ti ti-pencil"></i> Edit</a>
+              <a href="#" class="action-item"><i class="ti ti-arrow-up-right"></i> Promote Student</a>
+              <a href="#" class="action-item danger"><i class="ti ti-trash"></i> Delete</a>
+            </div>
           </div>
         </div>
         <div class="card-profile">
@@ -470,7 +490,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <span class="admission-no">AD9892432</span>
           <div class="card-top-right">
             <span class="status-badge active">Active</span>
-            <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+            <button class="menu-btn" onclick="toggleActionMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+            <div class="action-menu">
+              <a href="StudentDetails.html" class="action-item"><i class="ti ti-eye"></i> View Student</a>
+              <a href="EditStudent.html" class="action-item"><i class="ti ti-pencil"></i> Edit</a>
+              <a href="#" class="action-item"><i class="ti ti-arrow-up-right"></i> Promote Student</a>
+              <a href="#" class="action-item danger"><i class="ti ti-trash"></i> Delete</a>
+            </div>
           </div>
         </div>
         <div class="card-profile">
@@ -509,7 +535,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <span class="admission-no">AD9892431</span>
           <div class="card-top-right">
             <span class="status-badge inactive">Inactive</span>
-            <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+            <button class="menu-btn" onclick="toggleActionMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+            <div class="action-menu">
+              <a href="StudentDetails.html" class="action-item"><i class="ti ti-eye"></i> View Student</a>
+              <a href="EditStudent.html" class="action-item"><i class="ti ti-pencil"></i> Edit</a>
+              <a href="#" class="action-item"><i class="ti ti-arrow-up-right"></i> Promote Student</a>
+              <a href="#" class="action-item danger"><i class="ti ti-trash"></i> Delete</a>
+            </div>
           </div>
         </div>
         <div class="card-profile">
@@ -548,7 +580,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <span class="admission-no">AD9892430</span>
           <div class="card-top-right">
             <span class="status-badge active">Active</span>
-            <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+            <button class="menu-btn" onclick="toggleActionMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+            <div class="action-menu">
+              <a href="StudentDetails.html" class="action-item"><i class="ti ti-eye"></i> View Student</a>
+              <a href="EditStudent.html" class="action-item"><i class="ti ti-pencil"></i> Edit</a>
+              <a href="#" class="action-item"><i class="ti ti-arrow-up-right"></i> Promote Student</a>
+              <a href="#" class="action-item danger"><i class="ti ti-trash"></i> Delete</a>
+            </div>
           </div>
         </div>
         <div class="card-profile">
@@ -587,7 +625,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <span class="admission-no">AD9892429</span>
           <div class="card-top-right">
             <span class="status-badge active">Active</span>
-            <button class="menu-btn"><i class="ti ti-dots-vertical"></i></button>
+            <button class="menu-btn" onclick="toggleActionMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+            <div class="action-menu">
+              <a href="StudentDetails.html" class="action-item"><i class="ti ti-eye"></i> View Student</a>
+              <a href="EditStudent.html" class="action-item"><i class="ti ti-pencil"></i> Edit</a>
+              <a href="#" class="action-item"><i class="ti ti-arrow-up-right"></i> Promote Student</a>
+              <a href="#" class="action-item danger"><i class="ti ti-trash"></i> Delete</a>
+            </div>
           </div>
         </div>
         <div class="card-profile">
@@ -631,6 +675,25 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 </div><!-- /main -->
 
 <script>
+  
+  function toggleActionMenu(btn) {
+    document.querySelectorAll('.action-menu.show').forEach(menu => {
+      if (menu !== btn.nextElementSibling) {
+        menu.classList.remove('show');
+      }
+    });
+    const menu = btn.nextElementSibling;
+    if (menu && menu.classList.contains('action-menu')) {
+      menu.classList.toggle('show');
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.card-top-right')) {
+      document.querySelectorAll('.action-menu.show').forEach(menu => menu.classList.remove('show'));
+    }
+  });
+
   function toggleFilter() {
     const dropdown = document.getElementById('filterDropdown');
     dropdown.classList.toggle('show');
