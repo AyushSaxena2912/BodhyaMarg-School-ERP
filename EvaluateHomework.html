@@ -270,12 +270,24 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 
 <script>
 // Mock Homeworks database
-var hwDatabase = {
+var defaultHwDatabase = {
   1: { topic: 'Algebra Equations Ex 1.2', subject: 'Mathematics', classSec: 'Class X - Section A', teacher: 'Ramesh Patel', assigned: '24 May 2026', deadline: '27 May 2026', desc: 'Please solve all the linear equations in exercise 1.2 on pages 45-47. Write out all step-by-step calculations neatly on your worksheets, scan them to a single PDF document, and upload it.' },
   2: { topic: 'Photosynthesis Diagram', subject: 'Science', classSec: 'Class X - Section B', teacher: 'Meera Sharma', assigned: '20 May 2026', deadline: '22 May 2026', desc: 'Draw a detailed, labeled diagram of plant photosynthesis. Explain the light and dark reaction cycles in detail. Scan and submit your sheets.' },
   3: { topic: 'Essay on Environment', subject: 'English', classSec: 'Class IX - Section A', teacher: 'Suresh Yadav', assigned: '26 May 2026', deadline: '30 May 2026', desc: 'Write an essay of 500 words on the impact of global warming on polar caps. Structure it with introduction, current facts, and solution steps.' },
   4: { topic: 'History Chapter 4 Q&A', subject: 'History', classSec: 'Class VIII - Section C', teacher: 'Priya Gupta', assigned: '25 May 2026', deadline: '28 May 2026', desc: 'Answer all the textual questions at the end of Chapter 4: Industrialization in Europe. Word count should be around 100-150 words per answer.' }
 };
+
+var hwDatabase = {};
+function initHwDatabase() {
+  const cachedDb = localStorage.getItem('bodhyamarg_hw_database');
+  if (cachedDb) {
+    hwDatabase = JSON.parse(cachedDb);
+  } else {
+    hwDatabase = defaultHwDatabase;
+    localStorage.setItem('bodhyamarg_hw_database', JSON.stringify(hwDatabase));
+  }
+}
+initHwDatabase();
 
 // Mock student submissions dataset corresponding to Homework IDs
 var submissionsData = {

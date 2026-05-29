@@ -244,32 +244,58 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
       <div class="form-grid">
         <div class="form-field">
           <label>Class *</label>
-          <select><option>Select Class</option><option>Class X</option><option>Class IX</option></select>
+          <select id="newHwClass">
+            <option value="">Select Class</option>
+            <option value="Class X">Class X</option>
+            <option value="Class IX">Class IX</option>
+          </select>
         </div>
         <div class="form-field">
           <label>Section *</label>
-          <select><option>Select Section</option><option>Section A</option><option>Section B</option></select>
+          <select id="newHwSection">
+            <option value="">Select Section</option>
+            <option value="Section A">Section A</option>
+            <option value="Section B">Section B</option>
+          </select>
         </div>
         <div class="form-field full">
           <label>Subject *</label>
-          <select><option>Select Subject</option><option>Mathematics</option><option>Science</option><option>English</option></select>
+          <select id="newHwSubject">
+            <option value="">Select Subject</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Science">Science</option>
+            <option value="English">English</option>
+          </select>
         </div>
         <div class="form-field full">
           <label>Topic / Title *</label>
-          <input type="text" placeholder="e.g. Algebra Basics Exercise 1" />
+          <input type="text" id="newHwTitle" placeholder="e.g. Algebra Basics Exercise 1" />
         </div>
         <div class="form-field full">
           <label>Homework Details / Message</label>
-          <textarea rows="3" placeholder="Enter detailed instructions for the students..."></textarea>
+          <textarea id="newHwDesc" rows="3" placeholder="Enter detailed instructions for the students..."></textarea>
         </div>
         <div class="form-field">
           <label>Assign Date</label>
-          <input type="date" value="2026-05-26" />
+          <input type="date" id="newHwAssignDate" value="2026-05-26" />
         </div>
         <div class="form-field">
           <label>Deadline (Due Date) *</label>
-          <input type="date" />
+          <input type="date" id="newHwDeadline" />
         </div>
+        
+        <!-- Enable Grading (Marks) Settings Toggle Card -->
+        <div class="form-field full" style="flex-direction: row; align-items: center; justify-content: space-between; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: #fafbfc; margin-top: 4px; gap: 12px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 0;">Enable Numerical Grading (Marks)</label>
+            <span style="font-size: 11px; color: var(--text-hint);">Enable setting marks (out of 50) and evaluating student performance numerically.</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="newHwGrading" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
         <div class="form-field full">
           <label>Attachment (Optional)</label>
           <div class="file-upload">
@@ -288,13 +314,28 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
 </div>
 
 <script>
-// Dummy Homework Data
-var hwData = [
+// Default Mock Homework Data
+var defaultHwData = [
   { id: 1, title: 'Algebra Equations Ex 1.2', subject: 'Mathematics', class: 'Class X - Section A', teacher: 'Ramesh Patel', assignDate: '24 May 2026', deadline: '27 May 2026', completed: 25, total: 30, status: 'Active', hasAttachment: true },
   { id: 2, title: 'Photosynthesis Diagram', subject: 'Science', class: 'Class X - Section B', teacher: 'Meera Sharma', assignDate: '20 May 2026', deadline: '22 May 2026', completed: 28, total: 28, status: 'Expired', hasAttachment: false },
   { id: 3, title: 'Essay on Environment', subject: 'English', class: 'Class IX - Section A', teacher: 'Suresh Yadav', assignDate: '26 May 2026', deadline: '30 May 2026', completed: 0, total: 32, status: 'Active', hasAttachment: true },
   { id: 4, title: 'History Chapter 4 Q&A', subject: 'History', class: 'Class VIII - Section C', teacher: 'Priya Gupta', assignDate: '25 May 2026', deadline: '28 May 2026', completed: 12, total: 25, status: 'Active', hasAttachment: false }
 ];
+
+var hwData = [];
+
+// Load homework list from localStorage or default
+function initHomeworkList() {
+  const localKey = 'bodhyamarg_homework_list';
+  const cached = localStorage.getItem(localKey);
+  if (cached) {
+    hwData = JSON.parse(cached);
+  } else {
+    hwData = defaultHwData;
+    localStorage.setItem(localKey, JSON.stringify(hwData));
+  }
+}
+initHomeworkList();
 
 var students = [
   { id: 101, name: 'Aarav Sharma', roll: 'Roll: 01', done: true },
@@ -325,21 +366,122 @@ function renderHomeworks() {
     html += '<td style="text-align:right;">';
     html += '  <a href="EvaluateHomework.html?id=' + hw.id + '" class="action-btn primary" title="Evaluate Progress" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;"><i class="ti ti-checklist"></i></a>';
     html += '  <button class="action-btn" title="Edit"><i class="ti ti-edit"></i></button>';
-    html += '  <button class="action-btn" style="color:#ef4444;" title="Delete"><i class="ti ti-trash"></i></button>';
+    html += '  <button class="action-btn" style="color:#ef4444;" title="Delete" onclick="deleteHomework(' + hw.id + ')"><i class="ti ti-trash"></i></button>';
     html += '</td>';
     html += '</tr>';
   });
   document.getElementById('hwBody').innerHTML = html;
 }
 
-function openCreateModal() { document.getElementById('createModal').classList.add('open'); }
+function openCreateModal() { 
+  document.getElementById('newHwClass').value = '';
+  document.getElementById('newHwSection').value = '';
+  document.getElementById('newHwSubject').value = '';
+  document.getElementById('newHwTitle').value = '';
+  document.getElementById('newHwDesc').value = '';
+  document.getElementById('newHwAssignDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('newHwDeadline').value = '';
+  document.getElementById('newHwGrading').checked = true;
+  document.getElementById('createModal').classList.add('open'); 
+}
 
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function closeModalOutside(e, id) { if(e.target===document.getElementById(id)) closeModal(id); }
 
+function formatDateString(dateStr) {
+  if (!dateStr) return '';
+  var parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  var year = parts[0];
+  var monthNum = parseInt(parts[1]) - 1;
+  var day = parseInt(parts[2]);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return day + ' ' + months[monthNum] + ' ' + year;
+}
+
 function saveHomework() {
+  var classVal = document.getElementById('newHwClass').value;
+  var sectionVal = document.getElementById('newHwSection').value;
+  var subjectVal = document.getElementById('newHwSubject').value;
+  var titleVal = document.getElementById('newHwTitle').value;
+  var descVal = document.getElementById('newHwDesc').value;
+  var assignDateVal = document.getElementById('newHwAssignDate').value;
+  var deadlineVal = document.getElementById('newHwDeadline').value;
+  var gradingVal = document.getElementById('newHwGrading').checked;
+
+  if (!classVal || !sectionVal || !subjectVal || !titleVal || !deadlineVal) {
+    alert('Please fill out all mandatory fields marked with an asterisk (*).');
+    return;
+  }
+
+  // Calculate next ID
+  var nextId = 1;
+  if (hwData.length > 0) {
+    nextId = Math.max.apply(Math, hwData.map(function(h) { return h.id; })) + 1;
+  }
+
+  // 1. Save homework item to list
+  var newHwObj = {
+    id: nextId,
+    title: titleVal,
+    subject: subjectVal,
+    class: classVal + ' - ' + sectionVal,
+    teacher: 'Ramesh Patel',
+    assignDate: formatDateString(assignDateVal),
+    deadline: formatDateString(deadlineVal),
+    completed: 4,
+    total: 6,
+    status: 'Active',
+    hasAttachment: false
+  };
+
+  hwData.push(newHwObj);
+  localStorage.setItem('bodhyamarg_homework_list', JSON.stringify(hwData));
+
+  // 2. Save homework details to evaluation database
+  var defaultHwDatabase = {
+    1: { topic: 'Algebra Equations Ex 1.2', subject: 'Mathematics', classSec: 'Class X - Section A', teacher: 'Ramesh Patel', assigned: '24 May 2026', deadline: '27 May 2026', desc: 'Please solve all the linear equations in exercise 1.2 on pages 45-47. Write out all step-by-step calculations neatly on your worksheets, scan them to a single PDF document, and upload it.' },
+    2: { topic: 'Photosynthesis Diagram', subject: 'Science', classSec: 'Class X - Section B', teacher: 'Meera Sharma', assigned: '20 May 2026', deadline: '22 May 2026', desc: 'Draw a detailed, labeled diagram of plant photosynthesis. Explain the light and dark reaction cycles in detail. Scan and submit your sheets.' },
+    3: { topic: 'Essay on Environment', subject: 'English', classSec: 'Class IX - Section A', teacher: 'Suresh Yadav', assigned: '26 May 2026', deadline: '30 May 2026', desc: 'Write an essay of 500 words on the impact of global warming on polar caps. Structure it with introduction, current facts, and solution steps.' },
+    4: { topic: 'History Chapter 4 Q&A', subject: 'History', classSec: 'Class VIII - Section C', teacher: 'Priya Gupta', assigned: '25 May 2026', deadline: '28 May 2026', desc: 'Answer all the textual questions at the end of Chapter 4: Industrialization in Europe. Word count should be around 100-150 words per answer.' }
+  };
+  var hwDatabase = JSON.parse(localStorage.getItem('bodhyamarg_hw_database')) || defaultHwDatabase;
+  hwDatabase[nextId] = {
+    topic: titleVal,
+    subject: subjectVal,
+    classSec: classVal + ' - ' + sectionVal,
+    teacher: 'Ramesh Patel',
+    assigned: formatDateString(assignDateVal),
+    deadline: formatDateString(deadlineVal),
+    desc: descVal || 'No instructions provided.'
+  };
+  localStorage.setItem('bodhyamarg_hw_database', JSON.stringify(hwDatabase));
+
+  // 3. Save homework grading enabled state
+  localStorage.setItem('bodhyamarg_grading_enabled_hw_' + nextId, gradingVal ? 'true' : 'false');
+
+  // 4. Save mock submissions for evaluating this homework
+  var mockSubmissions = [
+    { id: 101, name: 'Aarav Sharma', roll: 'Roll: 01', status: 'Submitted', file: 'aarav_homework.pdf', size: '1.2 MB', date: '26 May 2026, 03:30 PM', marks: '', remarks: '' },
+    { id: 102, name: 'Diya Patel', roll: 'Roll: 02', status: 'Submitted', file: 'diya_patel_ex.pdf', size: '950 KB', date: '26 May 2026, 04:15 PM', marks: '', remarks: '' },
+    { id: 103, name: 'Vihaan Singh', roll: 'Roll: 03', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' },
+    { id: 104, name: 'Ananya Gupta', roll: 'Roll: 04', status: 'Submitted', file: 'ananya_gupta.pdf', size: '2.1 MB', date: '25 May 2026, 06:10 PM', marks: '', remarks: '' },
+    { id: 105, name: 'Rohan Verma', roll: 'Roll: 05', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' },
+    { id: 106, name: 'Meera Rajput', roll: 'Roll: 06', status: 'Submitted', file: 'meera_r.jpg', size: '1.8 MB', date: '27 May 2026, 08:20 AM', marks: '', remarks: '' }
+  ];
+  localStorage.setItem('bodhyamarg_submissions_hw_' + nextId, JSON.stringify(mockSubmissions));
+
   alert('Homework assigned successfully!');
   closeModal('createModal');
+  renderHomeworks();
+}
+
+function deleteHomework(id) {
+  if (confirm('Are you sure you want to delete this homework assignment?')) {
+    hwData = hwData.filter(function(h) { return h.id !== id; });
+    localStorage.setItem('bodhyamarg_homework_list', JSON.stringify(hwData));
+    renderHomeworks();
+  }
 }
 
 // Initial Render
