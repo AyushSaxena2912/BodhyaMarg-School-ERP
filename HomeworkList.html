@@ -287,33 +287,6 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
   </div>
 </div>
 
-<!-- Evaluate (Track) Modal -->
-<div class="modal-overlay" id="evalModal" onclick="closeModalOutside(event, 'evalModal')">
-  <div class="modal" style="width: 550px;">
-    <div class="modal-header">
-      <div class="modal-title"><i class="ti ti-checklist"></i> Evaluate Homework</div>
-      <button class="modal-close" onclick="closeModal('evalModal')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="modal-body" style="background:#fcfdfe;">
-      <div class="eval-header">
-        <div>
-          <div class="eval-title" id="evalTitle">Mathematics - Algebra Basics</div>
-          <div style="font-size:12px;color:var(--green-dark);margin-top:2px;">Class X - Section A</div>
-        </div>
-        <div class="eval-stats">25 / 30 Completed</div>
-      </div>
-      
-      <div class="student-list" id="studentList">
-        <!-- Rendered via JS -->
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('evalModal')">Close</button>
-      <button class="btn btn-primary" onclick="closeModal('evalModal')">Save Progress</button>
-    </div>
-  </div>
-</div>
-
 <script>
 // Dummy Homework Data
 var hwData = [
@@ -350,7 +323,7 @@ function renderHomeworks() {
     html += '  <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ' + perc + '%;"></div></div>';
     html += '</td>';
     html += '<td style="text-align:right;">';
-    html += '  <button class="action-btn primary" title="Evaluate Progress" onclick="openEvalModal(' + hw.id + ')"><i class="ti ti-checklist"></i></button>';
+    html += '  <a href="EvaluateHomework.html?id=' + hw.id + '" class="action-btn primary" title="Evaluate Progress" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;"><i class="ti ti-checklist"></i></a>';
     html += '  <button class="action-btn" title="Edit"><i class="ti ti-edit"></i></button>';
     html += '  <button class="action-btn" style="color:#ef4444;" title="Delete"><i class="ti ti-trash"></i></button>';
     html += '</td>';
@@ -359,50 +332,7 @@ function renderHomeworks() {
   document.getElementById('hwBody').innerHTML = html;
 }
 
-function renderStudents() {
-  var html = '';
-  students.forEach(function(s) {
-    var initials = s.name.split(' ').map(function(n){return n[0]}).join('');
-    var lblId = 'statusLbl_' + s.id;
-    var chk = s.done ? 'checked' : '';
-    var lblClass = s.done ? 'status-completed' : 'status-pending';
-    var lblText = s.done ? 'Completed' : 'Pending';
-    
-    html += '<div class="student-row">';
-    html += '  <div class="student-info">';
-    html += '    <div class="student-avatar">' + initials + '</div>';
-    html += '    <div><div class="student-name">' + s.name + '</div><div class="student-roll">' + s.roll + '</div></div>';
-    html += '  </div>';
-    html += '  <div class="status-wrapper">';
-    html += '    <div class="status-label ' + lblClass + '" id="' + lblId + '">' + lblText + '</div>';
-    html += '    <label class="toggle-switch">';
-    html += '      <input type="checkbox" ' + chk + ' onchange="toggleStudentStatus(this, \'' + lblId + '\')">';
-    html += '      <span class="toggle-slider"></span>';
-    html += '    </label>';
-    html += '  </div>';
-    html += '</div>';
-  });
-  document.getElementById('studentList').innerHTML = html;
-}
-
-function toggleStudentStatus(checkbox, labelId) {
-  var lbl = document.getElementById(labelId);
-  if(checkbox.checked) {
-    lbl.textContent = 'Completed';
-    lbl.className = 'status-label status-completed';
-  } else {
-    lbl.textContent = 'Pending';
-    lbl.className = 'status-label status-pending';
-  }
-}
-
 function openCreateModal() { document.getElementById('createModal').classList.add('open'); }
-function openEvalModal(id) { 
-  var hw = hwData.find(function(h){return h.id === id});
-  if(hw) document.getElementById('evalTitle').textContent = hw.subject + ' - ' + hw.title;
-  renderStudents();
-  document.getElementById('evalModal').classList.add('open'); 
-}
 
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function closeModalOutside(e, id) { if(e.target===document.getElementById(id)) closeModal(id); }

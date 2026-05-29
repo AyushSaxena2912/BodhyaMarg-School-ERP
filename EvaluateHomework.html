@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Evaluate Homework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+  --red: #ef4444; --red-light: #fee2e2;
+  --blue: #3b82f6; --blue-light: #eff6ff;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.av { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.bc-green { color: var(--green); font-weight: 500; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); transition: background .12s; white-space: nowrap; }
+.btn:hover { background: var(--bg); }
+.btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-primary:hover { background: var(--green-dark); }
+
+/* Homework Header Card */
+.hw-header-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: grid; grid-template-columns: 1fr 240px; gap: 24px; }
+.hw-details h2 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.hw-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+.hw-meta-item { font-size: 12.5px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.hw-meta-item i { color: var(--text-hint); font-size: 15px; }
+.hw-description { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; background: #fafbfc; border-radius: var(--radius); padding: 12px; border: 1px solid var(--border); }
+.hw-stats-panel { display: flex; flex-direction: column; justify-content: center; background: var(--green-light); border: 1px solid #c5e8d6; border-radius: var(--radius); padding: 16px; }
+.stats-title { font-size: 12px; font-weight: 700; color: var(--green-dark); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.stats-big { font-size: 24px; font-weight: 700; color: var(--green); }
+.stats-progress { font-size: 12px; color: var(--green-dark); font-weight: 600; margin-top: 4px; display: flex; justify-content: space-between; }
+.progress-bar-bg { width: 100%; height: 6px; background: #c5e8d6; border-radius: 4px; margin-top: 6px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--green); border-radius: 4px; }
+
+/* Submissions Section */
+.submissions-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+.table-toolbar { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+.table-title { font-size: 15px; font-weight: 600; }
+.table-search { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 6px 12px; border-radius: var(--radius); }
+.table-search input { border: none; outline: none; background: transparent; font-size: 13px; font-family: inherit; width: 220px; }
+
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 900px; }
+thead tr { background: #fcfdfe; border-bottom: 1px solid var(--border); }
+thead th { padding: 14px 20px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-align: left; white-space: nowrap; }
+tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #fafbfc; }
+tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-align: middle; }
+
+/* Student Identity */
+.student-profile { display: flex; align-items: center; gap: 12px; }
+.student-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--text-muted); border: 1px solid var(--border); font-size: 12.5px; }
+.student-name { font-weight: 600; color: var(--text); }
+.student-roll { font-size: 11px; color: var(--text-hint); margin-top: 2px; }
+
+/* Status Badges */
+.badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; gap: 4px; }
+.badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.badge-submitted { background: var(--green-light); color: var(--green); }
+.badge-submitted::before { background: var(--green); }
+.badge-pending { background: #fee2e2; color: var(--red); }
+.badge-pending::before { background: var(--red); }
+
+/* File Link */
+.file-attachment { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius); border: 1px solid var(--border); background: #fafbfc; font-size: 12.5px; color: var(--green); font-weight: 600; cursor: pointer; text-decoration: none; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: all 0.15s; }
+.file-attachment:hover { background: var(--green-light); border-color: #c5e8d6; }
+.file-attachment i { font-size: 15px; }
+
+/* Grade inputs */
+.grade-input-group { display: flex; align-items: center; gap: 6px; }
+.grade-box { width: 60px; font-family: inherit; font-size: 13.5px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 8px; outline: none; text-align: center; }
+.grade-box:focus { border-color: var(--green); }
+.max-marks { font-size: 12.5px; color: var(--text-hint); font-weight: 500; }
+.remarks-box { width: 100%; min-width: 150px; font-family: inherit; font-size: 13px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 10px; outline: none; }
+.remarks-box:focus { border-color: var(--green); }
+
+/* Action Panel */
+.footer-panel { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 20px; background: #fafbfc; border-top: 1px solid var(--border); }
+
+/* Toast Notification */
+.toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: var(--radius); font-size: 13.5px; font-weight: 600; color: #fff; background: var(--green); z-index: 999; opacity: 0; pointer-events: none; transition: opacity .2s; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.toast.show { opacity: 1; }
+
+/* Modal Preview */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(2px); }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--white); border-radius: var(--radius-lg); width: 600px; max-width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.15); overflow: hidden; display: flex; flex-direction: column; }
+.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: #fafbfc; }
+.modal-title { font-size: 15px; font-weight: 600; }
+.modal-close { cursor: pointer; color: var(--text-hint); transition: 0.2s; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border); background: transparent; }
+.modal-close:hover { background: var(--border); color: var(--text); }
+.modal-body { padding: 24px; text-align: center; background: #f8fafc; }
+.preview-box { border: 1px solid var(--border); border-radius: var(--radius); background: var(--white); padding: 40px; text-align: center; }
+.preview-icon { font-size: 48px; color: var(--green); margin-bottom: 12px; }
+.preview-filename { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+.preview-size { font-size: 12px; color: var(--text-muted); }
+.modal-footer { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+</style>
+</head>
+<body>
+
+<div id="sidebar-container"></div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search"><i class="ti ti-search"></i><input type="text" placeholder="Search..." /></div>
+    <div class="topbar-right">
+      <div class="icon-btn"><i class="ti ti-bell" style="font-size:16px;"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings" style="font-size:16px;"></i></div>
+      <div class="av">AD</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Evaluate Submissions</h1>
+        <div class="breadcrumb">
+          Dashboard <i class="ti ti-chevron-right" style="font-size:10px;"></i>
+          Academic <i class="ti ti-chevron-right" style="font-size:10px;"></i>
+          Homework <i class="ti ti-chevron-right" style="font-size:10px;"></i>
+          <span class="bc-green">Evaluation</span>
+        </div>
+      </div>
+      <div class="page-actions">
+        <a href="HomeworkList.html" class="btn"><i class="ti ti-arrow-left"></i> Back to Homeworks</a>
+      </div>
+    </div>
+
+    <!-- Homework Header Info -->
+    <div class="hw-header-card">
+      <div class="hw-details">
+        <h2 id="hwTopic">Algebra Equations Ex 1.2</h2>
+        <div class="hw-meta">
+          <div class="hw-meta-item"><i class="ti ti-books"></i><span id="hwSubject">Mathematics</span></div>
+          <div class="hw-meta-item"><i class="ti ti-users"></i><span id="hwClass">Class X - Section A</span></div>
+          <div class="hw-meta-item"><i class="ti ti-calendar"></i>Assigned: <span id="hwAssigned">24 May 2026</span></div>
+          <div class="hw-meta-item"><i class="ti ti-calendar-due"></i>Due Date: <span id="hwDeadline" style="color:var(--red); font-weight: 500;">27 May 2026</span></div>
+          <div class="hw-meta-item"><i class="ti ti-user"></i>Teacher: <span id="hwTeacher">Ramesh Patel</span></div>
+        </div>
+        <div class="hw-description" id="hwDesc">
+          Please solve all the linear equations in exercise 1.2 on pages 45-47. Write out all step-by-step calculations neatly on your worksheets, scan them to a single PDF document, and upload it here before the due date.
+        </div>
+      </div>
+      <div class="hw-stats-panel">
+        <div class="stats-title">Submission Progress</div>
+        <div class="stats-big" id="statsCount">25 / 30</div>
+        <div class="stats-progress">
+          <span>Completed</span>
+          <span id="statsPerc">83%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="statsFill" style="width: 83%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submissions List Table -->
+    <div class="submissions-card">
+      <div class="table-toolbar">
+        <div class="table-title">Student Submission Details</div>
+        <div class="table-search">
+          <i class="ti ti-search" style="color:var(--text-hint);"></i>
+          <input type="text" id="searchBox" placeholder="Search student name..." oninput="handleSearch()" />
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Student Details</th>
+              <th>Status</th>
+              <th>Uploaded File</th>
+              <th>Submitted Date</th>
+              <th>Marks Obtained</th>
+              <th>Remarks</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="submissionBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer-panel">
+        <button class="btn" onclick="window.location.href='HomeworkList.html'">Discard Changes</button>
+        <button class="btn btn-primary" onclick="saveAllGrades()"><i class="ti ti-device-floppy"></i> Save All Evaluations</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal Attachment Preview -->
+<div class="modal-overlay" id="previewModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Attachment Preview</div>
+      <button class="modal-close" onclick="closePreview()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="preview-box">
+        <i class="ti ti-file-text preview-icon" id="previewIcon"></i>
+        <div class="preview-filename" id="previewFilename">assignment_submission.pdf</div>
+        <div class="preview-size" id="previewSize">1.2 MB</div>
+        <div style="margin-top:20px; color:var(--text-muted); font-size:13px;">
+          Mock Previewer: This file is securely stored on BodhyaMarg Cloud.
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closePreview()">Close Preview</button>
+      <button class="btn btn-primary" onclick="downloadMock()"><i class="ti ti-download"></i> Download File</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="ti ti-circle-check"></i> <span id="toastMsg">Grades updated successfully!</span></div>
+
+<script>
+// Mock Homeworks database
+var hwDatabase = {
+  1: { topic: 'Algebra Equations Ex 1.2', subject: 'Mathematics', classSec: 'Class X - Section A', teacher: 'Ramesh Patel', assigned: '24 May 2026', deadline: '27 May 2026', desc: 'Please solve all the linear equations in exercise 1.2 on pages 45-47. Write out all step-by-step calculations neatly on your worksheets, scan them to a single PDF document, and upload it.' },
+  2: { topic: 'Photosynthesis Diagram', subject: 'Science', classSec: 'Class X - Section B', teacher: 'Meera Sharma', assigned: '20 May 2026', deadline: '22 May 2026', desc: 'Draw a detailed, labeled diagram of plant photosynthesis. Explain the light and dark reaction cycles in detail. Scan and submit your sheets.' },
+  3: { topic: 'Essay on Environment', subject: 'English', classSec: 'Class IX - Section A', teacher: 'Suresh Yadav', assigned: '26 May 2026', deadline: '30 May 2026', desc: 'Write an essay of 500 words on the impact of global warming on polar caps. Structure it with introduction, current facts, and solution steps.' },
+  4: { topic: 'History Chapter 4 Q&A', subject: 'History', classSec: 'Class VIII - Section C', teacher: 'Priya Gupta', assigned: '25 May 2026', deadline: '28 May 2026', desc: 'Answer all the textual questions at the end of Chapter 4: Industrialization in Europe. Word count should be around 100-150 words per answer.' }
+};
+
+// Mock student submissions dataset corresponding to Homework IDs
+var submissionsData = {
+  1: [
+    { id: 101, name: 'Aarav Sharma', roll: 'Roll: 01', status: 'Submitted', file: 'aarav_algebra_ex_12.pdf', size: '1.2 MB', date: '26 May 2026, 03:30 PM', marks: '45', remarks: 'Good step by step explanations.' },
+    { id: 102, name: 'Diya Patel', roll: 'Roll: 02', status: 'Submitted', file: 'diya_patel_ex12.pdf', size: '950 KB', date: '26 May 2026, 04:15 PM', marks: '48', remarks: 'Neat work! Very accurate calculations.' },
+    { id: 103, name: 'Vihaan Singh', roll: 'Roll: 03', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' },
+    { id: 104, name: 'Ananya Gupta', roll: 'Roll: 04', status: 'Submitted', file: 'ananya_gupta_sol.pdf', size: '2.1 MB', date: '25 May 2026, 06:10 PM', marks: '42', remarks: 'Check question number 4 calculations.' },
+    { id: 105, name: 'Rohan Verma', roll: 'Roll: 05', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' },
+    { id: 106, name: 'Meera Rajput', roll: 'Roll: 06', status: 'Submitted', file: 'meera_r_ex1_2.jpg', size: '1.8 MB', date: '27 May 2026, 08:20 AM', marks: '50', remarks: 'Excellent! Outstanding results.' }
+  ],
+  2: [
+    { id: 201, name: 'Tanvi Joshi', roll: 'Roll: 12', status: 'Submitted', file: 'tanvi_photosynthesis.jpg', size: '1.4 MB', date: '21 May 2026, 11:20 AM', marks: '49', remarks: 'Exquisite drawings and labeling.' },
+    { id: 202, name: 'Devendra Singh', roll: 'Roll: 09', status: 'Submitted', file: 'devendra_science.pdf', size: '2.8 MB', date: '22 May 2026, 02:40 PM', marks: '44', remarks: 'Good details about dark reaction cycles.' }
+  ],
+  3: [
+    { id: 301, name: 'Rahul Yadav', roll: 'Roll: 15', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' },
+    { id: 302, name: 'Neha Tiwari', roll: 'Roll: 18', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' }
+  ],
+  4: [
+    { id: 401, name: 'Kabir Das', roll: 'Roll: 07', status: 'Submitted', file: 'kabir_history_ch4.pdf', size: '890 KB', date: '27 May 2026, 10:15 AM', marks: '40', remarks: 'Good explanation of facts.' },
+    { id: 402, name: 'Geeta Rao', roll: 'Roll: 11', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' }
+  ]
+};
+
+// Get current homework ID from URL parameter or default to 1
+function getHomeworkId() {
+  const params = new URLSearchParams(window.location.search);
+  const id = parseInt(params.get('id'));
+  return hwDatabase[id] ? id : 1;
+}
+
+var currentHwId = getHomeworkId();
+var currentSubmissions = [];
+
+// Load submissions from localStorage or default
+function initData() {
+  const localKey = 'bodhyamarg_submissions_hw_' + currentHwId;
+  const cached = localStorage.getItem(localKey);
+  if (cached) {
+    currentSubmissions = JSON.parse(cached);
+  } else {
+    currentSubmissions = submissionsData[currentHwId] || [];
+    localStorage.setItem(localKey, JSON.stringify(currentSubmissions));
+  }
+  
+  // Render details
+  const hw = hwDatabase[currentHwId];
+  document.getElementById('hwTopic').textContent = hw.topic;
+  document.getElementById('hwSubject').textContent = hw.subject;
+  document.getElementById('hwClass').textContent = hw.classSec;
+  document.getElementById('hwAssigned').textContent = hw.assigned;
+  document.getElementById('hwDeadline').textContent = hw.deadline;
+  document.getElementById('hwTeacher').textContent = hw.teacher;
+  document.getElementById('hwDesc').textContent = hw.desc;
+
+  updateStats();
+}
+
+function updateStats() {
+  const completed = currentSubmissions.filter(s => s.status === 'Submitted').length;
+  const total = currentSubmissions.length;
+  const perc = total > 0 ? Math.round((completed / total) * 100) : 0;
+  
+  document.getElementById('statsCount').textContent = `${completed} / ${total}`;
+  document.getElementById('statsPerc').textContent = `${perc}%`;
+  document.getElementById('statsFill').style.width = `${perc}%`;
+}
+
+function getInitials(name) {
+  return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+}
+
+function render(filterName = '') {
+  const tbody = document.getElementById('submissionBody');
+  let html = '';
+
+  let filtered = currentSubmissions;
+  if (filterName) {
+    filtered = filtered.filter(s => s.name.toLowerCase().includes(filterName.toLowerCase()));
+  }
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted);"><i class="ti ti-users-minus" style="font-size:24px;display:block;margin-bottom:8px;"></i>No student submissions found.</td></tr>`;
+    return;
+  }
+
+  filtered.forEach(s => {
+    const isSubmitted = s.status === 'Submitted';
+    const initials = getInitials(s.name);
+    
+    // Status column
+    const statusCell = isSubmitted 
+      ? `<span class="badge badge-submitted">Completed</span>`
+      : `<span class="badge badge-pending">Pending</span>`;
+      
+    // File attachment column
+    const fileCell = isSubmitted 
+      ? `<a href="#" class="file-attachment" onclick="openPreview('${s.file}', '${s.size}')"><i class="ti ti-paperclip"></i> ${s.file}</a>`
+      : `<span style="color:var(--text-hint); font-style:italic;">No upload</span>`;
+
+    // Date submitted column
+    const dateCell = isSubmitted 
+      ? `<div>${s.date.split(',')[0]}<div style="font-size:11px;color:var(--text-hint);margin-top:2px;">${s.date.split(',')[1] || ''}</div></div>`
+      : `<span style="color:var(--text-hint);">-</span>`;
+
+    // Marks obtained inputs
+    const marksCell = isSubmitted
+      ? `<div class="grade-input-group">
+           <input type="number" class="grade-box" data-id="${s.id}" value="${s.marks}" min="0" max="50" onchange="updateIndividualGrade(${s.id}, 'marks', this.value)" />
+           <span class="max-marks">/ 50</span>
+         </div>`
+      : `<div class="grade-input-group">
+           <input type="text" class="grade-box" disabled style="background:#f1f5f9; cursor:not-allowed;" value="-" />
+           <span class="max-marks">/ 50</span>
+         </div>`;
+
+    // Remarks inputs
+    const remarksCell = isSubmitted
+      ? `<input type="text" class="remarks-box" data-id="${s.id}" value="${s.remarks}" placeholder="Enter feedback..." onchange="updateIndividualGrade(${s.id}, 'remarks', this.value)" />`
+      : `<input type="text" class="remarks-box" disabled style="background:#f1f5f9; cursor:not-allowed;" value="Student hasn't submitted yet" />`;
+
+    // Action toggle button
+    const actionCell = isSubmitted
+      ? `<button class="btn btn-outline" style="color:var(--red); border-color:#fca5a5; background:#fff5f5; padding:6px 12px; font-size:12px;" onclick="toggleSubmissionStatus(${s.id})"><i class="ti ti-rotate"></i> Reset</button>`
+      : `<button class="btn btn-primary" style="padding:6px 12px; font-size:12px;" onclick="toggleSubmissionStatus(${s.id})"><i class="ti ti-check"></i> Mark Done</button>`;
+
+    html += `
+      <tr>
+        <td>
+          <div class="student-profile">
+            <div class="student-avatar">${initials}</div>
+            <div>
+              <div class="student-name">${s.name}</div>
+              <div class="student-roll">${s.roll} &nbsp;|&nbsp; ID: S00${s.id}</div>
+            </div>
+          </div>
+        </td>
+        <td>${statusCell}</td>
+        <td>${fileCell}</td>
+        <td>${dateCell}</td>
+        <td>${marksCell}</td>
+        <td>${remarksCell}</td>
+        <td>${actionCell}</td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = html;
+}
+
+function handleSearch() {
+  const query = document.getElementById('searchBox').value;
+  render(query);
+}
+
+function updateIndividualGrade(studentId, field, value) {
+  currentSubmissions = currentSubmissions.map(s => {
+    if (s.id === studentId) {
+      return { ...s, [field]: value };
+    }
+    return s;
+  });
+}
+
+function toggleSubmissionStatus(studentId) {
+  currentSubmissions = currentSubmissions.map(s => {
+    if (s.id === studentId) {
+      const isSubmitted = s.status === 'Submitted';
+      if (isSubmitted) {
+        // Reset to pending
+        return {
+          ...s,
+          status: 'Pending',
+          file: '',
+          size: '',
+          date: '',
+          marks: '',
+          remarks: ''
+        };
+      } else {
+        // Mark as submitted (mock uploads)
+        const formatName = s.name.toLowerCase().replace(' ', '_');
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const now = new Date();
+        const formattedDate = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}, ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+        
+        return {
+          ...s,
+          status: 'Submitted',
+          file: `${formatName}_assignment.pdf`,
+          size: '1.4 MB',
+          date: formattedDate,
+          marks: '',
+          remarks: ''
+        };
+      }
+    }
+    return s;
+  });
+  
+  localStorage.setItem('bodhyamarg_submissions_hw_' + currentHwId, JSON.stringify(currentSubmissions));
+  updateStats();
+  render(document.getElementById('searchBox').value);
+  showToast('Submission status updated.');
+}
+
+function saveAllGrades() {
+  localStorage.setItem('bodhyamarg_submissions_hw_' + currentHwId, JSON.stringify(currentSubmissions));
+  updateStats();
+  showToast('All evaluations saved successfully!');
+  setTimeout(() => {
+    window.location.href = 'HomeworkList.html';
+  }, 1000);
+}
+
+// Toast indicator
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
+
+// Modal Attachment Preview functions
+function openPreview(filename, size) {
+  document.getElementById('previewFilename').textContent = filename;
+  document.getElementById('previewSize').textContent = size;
+  
+  const ext = filename.split('.').pop().toLowerCase();
+  const icon = document.getElementById('previewIcon');
+  if (ext === 'pdf') {
+    icon.className = "ti ti-file-type-pdf preview-icon";
+    icon.style.color = "#dc2626";
+  } else if (ext === 'jpg' || ext === 'jpeg' || ext === 'png') {
+    icon.className = "ti ti-file-type-jpg preview-icon";
+    icon.style.color = "#3b82f6";
+  } else {
+    icon.className = "ti ti-file-text preview-icon";
+    icon.style.color = "var(--green)";
+  }
+  
+  document.getElementById('previewModal').classList.add('open');
+}
+
+function closePreview() {
+  document.getElementById('previewModal').classList.remove('open');
+}
+
+function downloadMock() {
+  alert('Mock Download: File ' + document.getElementById('previewFilename').textContent + ' downloaded successfully!');
+  closePreview();
+}
+
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', () => {
+  initData();
+  render();
+});
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
