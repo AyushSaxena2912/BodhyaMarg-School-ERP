@@ -93,11 +93,24 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 
 /* Grade inputs */
 .grade-input-group { display: flex; align-items: center; gap: 6px; }
-.grade-box { width: 60px; font-family: inherit; font-size: 13.5px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 8px; outline: none; text-align: center; }
+.grade-box { width: 80px; font-family: inherit; font-size: 12.5px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 8px; outline: none; text-align: center; }
 .grade-box:focus { border-color: var(--green); }
 .max-marks { font-size: 12.5px; color: var(--text-hint); font-weight: 500; }
 .remarks-box { width: 100%; min-width: 150px; font-family: inherit; font-size: 13px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 10px; outline: none; }
 .remarks-box:focus { border-color: var(--green); }
+
+/* Custom Toggle Switch */
+.toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px; }
+.toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+.toggle-switch input:checked + .toggle-slider { background-color: var(--green); }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+/* Small Toggle Switch */
+.toggle-switch-sm { width: 34px; height: 18px; }
+.toggle-switch-sm .toggle-slider:before { height: 12px; width: 12px; left: 3px; bottom: 3px; }
+.toggle-switch-sm input:checked + .toggle-slider:before { transform: translateX(16px); }
 
 /* Action Panel */
 .footer-panel { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 20px; background: #fafbfc; border-top: 1px solid var(--border); }
@@ -164,6 +177,14 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
           <div class="hw-meta-item"><i class="ti ti-calendar"></i>Assigned: <span id="hwAssigned">24 May 2026</span></div>
           <div class="hw-meta-item"><i class="ti ti-calendar-due"></i>Due Date: <span id="hwDeadline" style="color:var(--red); font-weight: 500;">27 May 2026</span></div>
           <div class="hw-meta-item"><i class="ti ti-user"></i>Teacher: <span id="hwTeacher">Ramesh Patel</span></div>
+          <div class="hw-meta-item" style="margin-left: auto; border-left: 1px solid var(--border); padding-left: 16px; display: flex; align-items: center; gap: 8px;">
+            <i class="ti ti-settings" style="color: var(--green);"></i>
+            <span style="font-weight:600; font-size:12.5px;">Enable Grading (Marks):</span>
+            <label class="toggle-switch toggle-switch-sm">
+              <input type="checkbox" id="toggleGrading" checked onchange="toggleGrading(this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
         </div>
         <div class="hw-description" id="hwDesc">
           Please solve all the linear equations in exercise 1.2 on pages 45-47. Write out all step-by-step calculations neatly on your worksheets, scan them to a single PDF document, and upload it here before the due date.
@@ -200,7 +221,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
               <th>Status</th>
               <th>Uploaded File</th>
               <th>Submitted Date</th>
-              <th>Marks Obtained</th>
+              <th class="marks-col">Marks Obtained</th>
               <th>Remarks</th>
               <th>Action</th>
             </tr>
@@ -289,6 +310,7 @@ function getHomeworkId() {
 
 var currentHwId = getHomeworkId();
 var currentSubmissions = [];
+var gradingEnabled = true;
 
 // Load submissions from localStorage or default
 function initData() {
@@ -300,6 +322,16 @@ function initData() {
     currentSubmissions = submissionsData[currentHwId] || [];
     localStorage.setItem(localKey, JSON.stringify(currentSubmissions));
   }
+  
+  // Load grading toggle state
+  const gradingKey = 'bodhyamarg_grading_enabled_hw_' + currentHwId;
+  const cachedGrading = localStorage.getItem(gradingKey);
+  if (cachedGrading !== null) {
+    gradingEnabled = cachedGrading === 'true';
+  } else {
+    gradingEnabled = true;
+  }
+  document.getElementById('toggleGrading').checked = gradingEnabled;
   
   // Render details
   const hw = hwDatabase[currentHwId];
@@ -338,7 +370,7 @@ function render(filterName = '') {
   }
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted);"><i class="ti ti-users-minus" style="font-size:24px;display:block;margin-bottom:8px;"></i>No student submissions found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="${gradingEnabled ? 7 : 6}" style="text-align:center;padding:32px;color:var(--text-muted);"><i class="ti ti-users-minus" style="font-size:24px;display:block;margin-bottom:8px;"></i>No student submissions found.</td></tr>`;
     return;
   }
 
@@ -364,7 +396,7 @@ function render(filterName = '') {
     // Marks obtained inputs
     const marksCell = isSubmitted
       ? `<div class="grade-input-group">
-           <input type="number" class="grade-box" data-id="${s.id}" value="${s.marks}" min="0" max="50" onchange="updateIndividualGrade(${s.id}, 'marks', this.value)" />
+           <input type="number" class="grade-box" data-id="${s.id}" value="${s.marks}" placeholder="Optional" min="0" max="50" onchange="updateIndividualGrade(${s.id}, 'marks', this.value)" />
            <span class="max-marks">/ 50</span>
          </div>`
       : `<div class="grade-input-group">
@@ -396,7 +428,7 @@ function render(filterName = '') {
         <td>${statusCell}</td>
         <td>${fileCell}</td>
         <td>${dateCell}</td>
-        <td>${marksCell}</td>
+        <td class="marks-col">${marksCell}</td>
         <td>${remarksCell}</td>
         <td>${actionCell}</td>
       </tr>
@@ -404,6 +436,19 @@ function render(filterName = '') {
   });
 
   tbody.innerHTML = html;
+  
+  // Apply current grading column visibility
+  document.querySelectorAll('.marks-col').forEach(el => {
+    el.style.display = gradingEnabled ? '' : 'none';
+  });
+}
+
+function toggleGrading(enabled) {
+  gradingEnabled = enabled;
+  localStorage.setItem('bodhyamarg_grading_enabled_hw_' + currentHwId, enabled);
+  document.querySelectorAll('.marks-col').forEach(el => {
+    el.style.display = enabled ? '' : 'none';
+  });
 }
 
 function handleSearch() {
