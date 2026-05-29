@@ -285,15 +285,21 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
         </div>
         
         <!-- Enable Grading (Marks) Settings Toggle Card -->
-        <div class="form-field full" style="flex-direction: row; align-items: center; justify-content: space-between; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: #fafbfc; margin-top: 4px; gap: 12px;">
-          <div style="display: flex; flex-direction: column; gap: 4px;">
-            <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 0;">Enable Numerical Grading (Marks)</label>
-            <span style="font-size: 11px; color: var(--text-hint);">Enable setting marks (out of 50) and evaluating student performance numerically.</span>
+        <div class="form-field full" style="border: 1px solid var(--border); border-radius: var(--radius); background: #fafbfc; padding: 16px; margin-top: 4px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 0;">Enable Numerical Grading (Marks)</label>
+              <span style="font-size: 11px; color: var(--text-hint);">Allow setting marks and evaluating student performance numerically.</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="newHwGrading" checked onchange="toggleMaxMarksInput(this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
           </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="newHwGrading" checked>
-            <span class="toggle-slider"></span>
-          </label>
+          <div id="maxMarksContainer" style="display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border); padding-top: 12px;">
+            <label style="font-size: 12.5px; font-weight: 600; color: var(--text);">Maximum Marks *</label>
+            <input type="number" id="newHwMaxMarks" value="50" min="1" max="1000" style="width: 100px; padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; outline: none;" />
+          </div>
         </div>
 
         <div class="form-field full">
@@ -382,7 +388,18 @@ function openCreateModal() {
   document.getElementById('newHwAssignDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('newHwDeadline').value = '';
   document.getElementById('newHwGrading').checked = true;
+  document.getElementById('maxMarksContainer').style.display = 'flex';
+  document.getElementById('newHwMaxMarks').value = '50';
   document.getElementById('createModal').classList.add('open'); 
+}
+
+function toggleMaxMarksInput(checked) {
+  var container = document.getElementById('maxMarksContainer');
+  if (checked) {
+    container.style.display = 'flex';
+  } else {
+    container.style.display = 'none';
+  }
 }
 
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
@@ -408,6 +425,7 @@ function saveHomework() {
   var assignDateVal = document.getElementById('newHwAssignDate').value;
   var deadlineVal = document.getElementById('newHwDeadline').value;
   var gradingVal = document.getElementById('newHwGrading').checked;
+  var maxMarksVal = gradingVal ? parseInt(document.getElementById('newHwMaxMarks').value) || 50 : 0;
 
   if (!classVal || !sectionVal || !subjectVal || !titleVal || !deadlineVal) {
     alert('Please fill out all mandatory fields marked with an asterisk (*).');
@@ -440,10 +458,10 @@ function saveHomework() {
 
   // 2. Save homework details to evaluation database
   var defaultHwDatabase = {
-    1: { topic: 'Algebra Equations Ex 1.2', subject: 'Mathematics', classSec: 'Class X - Section A', teacher: 'Ramesh Patel', assigned: '24 May 2026', deadline: '27 May 2026', desc: 'Please solve all the linear equations in exercise 1.2 on pages 45-47. Write out all step-by-step calculations neatly on your worksheets, scan them to a single PDF document, and upload it.' },
-    2: { topic: 'Photosynthesis Diagram', subject: 'Science', classSec: 'Class X - Section B', teacher: 'Meera Sharma', assigned: '20 May 2026', deadline: '22 May 2026', desc: 'Draw a detailed, labeled diagram of plant photosynthesis. Explain the light and dark reaction cycles in detail. Scan and submit your sheets.' },
-    3: { topic: 'Essay on Environment', subject: 'English', classSec: 'Class IX - Section A', teacher: 'Suresh Yadav', assigned: '26 May 2026', deadline: '30 May 2026', desc: 'Write an essay of 500 words on the impact of global warming on polar caps. Structure it with introduction, current facts, and solution steps.' },
-    4: { topic: 'History Chapter 4 Q&A', subject: 'History', classSec: 'Class VIII - Section C', teacher: 'Priya Gupta', assigned: '25 May 2026', deadline: '28 May 2026', desc: 'Answer all the textual questions at the end of Chapter 4: Industrialization in Europe. Word count should be around 100-150 words per answer.' }
+    1: { topic: 'Algebra Equations Ex 1.2', subject: 'Mathematics', classSec: 'Class X - Section A', teacher: 'Ramesh Patel', assigned: '24 May 2026', deadline: '27 May 2026', desc: 'Please solve all the linear equations in exercise 1.2 on pages 45-47. Write out all step-by-step calculations neatly on your worksheets, scan them to a single PDF document, and upload it.', maxMarks: 50 },
+    2: { topic: 'Photosynthesis Diagram', subject: 'Science', classSec: 'Class X - Section B', teacher: 'Meera Sharma', assigned: '20 May 2026', deadline: '22 May 2026', desc: 'Draw a detailed, labeled diagram of plant photosynthesis. Explain the light and dark reaction cycles in detail. Scan and submit your sheets.', maxMarks: 50 },
+    3: { topic: 'Essay on Environment', subject: 'English', classSec: 'Class IX - Section A', teacher: 'Suresh Yadav', assigned: '26 May 2026', deadline: '30 May 2026', desc: 'Write an essay of 500 words on the impact of global warming on polar caps. Structure it with introduction, current facts, and solution steps.', maxMarks: 50 },
+    4: { topic: 'History Chapter 4 Q&A', subject: 'History', classSec: 'Class VIII - Section C', teacher: 'Priya Gupta', assigned: '25 May 2026', deadline: '28 May 2026', desc: 'Answer all the textual questions at the end of Chapter 4: Industrialization in Europe. Word count should be around 100-150 words per answer.', maxMarks: 50 }
   };
   var hwDatabase = JSON.parse(localStorage.getItem('bodhyamarg_hw_database')) || defaultHwDatabase;
   hwDatabase[nextId] = {
@@ -453,7 +471,8 @@ function saveHomework() {
     teacher: 'Ramesh Patel',
     assigned: formatDateString(assignDateVal),
     deadline: formatDateString(deadlineVal),
-    desc: descVal || 'No instructions provided.'
+    desc: descVal || 'No instructions provided.',
+    maxMarks: maxMarksVal
   };
   localStorage.setItem('bodhyamarg_hw_database', JSON.stringify(hwDatabase));
 
