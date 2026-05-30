@@ -196,7 +196,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
         </div>
         <div class="input-box">
           <i class="ti ti-test-pipe"></i>
-          <select>
+          <select id="examTypeSelect">
             <option>Formative Assessment - 1</option>
             <option>Formative Assessment - 2</option>
             <option>Formative Assessment - 3</option>
@@ -493,7 +493,30 @@ function renderResults() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', renderResults);
+document.addEventListener('DOMContentLoaded', () => {
+  renderResults();
+  
+  // Populate Exam Type dropdown with custom exam names if available
+  const select = document.getElementById('examTypeSelect');
+  if (select) {
+    try {
+      const cached = localStorage.getItem('bodhya_exams');
+      if (cached) {
+        const exams = JSON.parse(cached);
+        if (Array.isArray(exams) && exams.length > 0) {
+          select.innerHTML = '';
+          exams.forEach(exam => {
+            const opt = document.createElement('option');
+            opt.textContent = exam;
+            select.appendChild(opt);
+          });
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load custom exams into filter dropdown:', e);
+    }
+  }
+});
 </script>
 <script src="sidebar.js"></script>
 </body>

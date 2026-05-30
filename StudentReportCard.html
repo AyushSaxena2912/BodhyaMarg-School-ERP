@@ -156,7 +156,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 const PASS_MARKS = 33;
 const MAX_GRACE = 5;
 const subjectsList = ['Mathematics', 'Science', 'English', 'Hindi', 'Social Science'];
-const EXAM_TYPES = [
+const defaultExamTypes = [
   'Formative Assessment - 1',
   'Formative Assessment - 2',
   'Formative Assessment - 3',
@@ -164,6 +164,15 @@ const EXAM_TYPES = [
   'Summative Assessment - 1',
   'Summative Assessment - 2'
 ];
+let EXAM_TYPES = defaultExamTypes;
+try {
+  const cachedExams = localStorage.getItem('bodhya_exams');
+  if (cachedExams) {
+    EXAM_TYPES = JSON.parse(cachedExams);
+  }
+} catch (e) {
+  console.error('Failed to load custom exam names:', e);
+}
 
 const studentsRaw = [
   { name: 'Aarav Sharma',  roll: 'X-A-01', classSec: 'Class X - A', admissionNo: 'AD9892401', marks: [92, 88, 85, 79, 91] },
@@ -393,7 +402,7 @@ function renderReportCard() {
               <span style="color:var(--border);">|</span>
               <span><strong>Class:</strong> ${student.classSec}</span>
               <span style="color:var(--border);">|</span>
-              <span><strong>Term:</strong> ${termName}</span>
+              <span><strong>Exam:</strong> ${termName}</span>
             </p>
           </div>
         </div>

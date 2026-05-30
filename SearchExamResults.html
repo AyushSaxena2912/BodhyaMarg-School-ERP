@@ -167,7 +167,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 const PASS_MARKS = 33;
 const MAX_GRACE = 5;
 const subjectsList = ['Mathematics', 'Science', 'English', 'Hindi', 'Social Science'];
-const EXAM_TYPES = [
+const defaultExamTypes = [
   'Formative Assessment - 1',
   'Formative Assessment - 2',
   'Formative Assessment - 3',
@@ -175,6 +175,15 @@ const EXAM_TYPES = [
   'Summative Assessment - 1',
   'Summative Assessment - 2'
 ];
+let EXAM_TYPES = defaultExamTypes;
+try {
+  const cachedExams = localStorage.getItem('bodhya_exams');
+  if (cachedExams) {
+    EXAM_TYPES = JSON.parse(cachedExams);
+  }
+} catch (e) {
+  console.error('Failed to load custom exam names:', e);
+}
 
 const studentsRaw = [
   { name: 'Aarav Sharma',  roll: 'X-A-01', classSec: 'Class X - A', admissionNo: 'AD9892401', marks: [92, 88, 85, 79, 91] },
@@ -357,9 +366,9 @@ function selectStudent(rollNo) {
     chartBarsHtml += `
       <div class="chart-bar-container">
         <div class="chart-bar" style="height: ${res.percent}%; background: ${barColor}; border-top-color: ${barColor};" onclick="window.location.href='StudentReportCard.html?roll=${studentRaw.roll}&term=${index}'">
-          <div class="chart-tooltip">${res.percent}% (${res.grade})</div>
+          <div class="chart-tooltip">${EXAM_TYPES[index] || 'Exam'}: ${res.percent}% (${res.grade})</div>
         </div>
-        <div class="chart-bar-label">Term ${index + 1}</div>
+        <div class="chart-bar-label" style="font-size: 9px; line-height: 1.2; word-break: break-word; max-width: 50px; text-align: center;">${EXAM_TYPES[index] || ('Term ' + (index + 1))}</div>
       </div>
     `;
   });
@@ -368,18 +377,15 @@ function selectStudent(rollNo) {
   let cardsHtml = '';
   termResults.forEach((res, index) => {
     let statusText = getStatusText(res.status);
+    let currentExamName = EXAM_TYPES[index] || ('Term ' + (index + 1));
     
     cardsHtml += `
       <div class="term-card">
         <div class="term-header">
-          <div class="term-name">Term ${index + 1}</div>
+          <div class="term-name" style="font-size: 12.5px; max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${currentExamName}">${currentExamName}</div>
           <span class="status-badge ${res.status}">${statusText}</span>
         </div>
         <div class="term-metrics">
-          <div class="metric-row">
-            <span>Exam Type</span>
-            <span style="font-size: 11px; max-width: 140px; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${EXAM_TYPES[index]}">${EXAM_TYPES[index]}</span>
-          </div>
           <div class="metric-row">
             <span>Score</span>
             <span>${res.obtained} / ${res.total}</span>
@@ -418,7 +424,7 @@ function selectStudent(rollNo) {
 
     <!-- Performance Chart Card -->
     <div class="chart-card">
-      <div class="chart-title"><i class="ti ti-chart-bar"></i> Performance Trajectory (Terms 1 to 6 Percentage Progress)</div>
+      <div class="chart-title"><i class="ti ti-chart-bar"></i> Performance Trajectory (Exam Percentage Progress)</div>
       <div class="chart-grid">
         ${chartBarsHtml}
       </div>
