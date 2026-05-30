@@ -200,13 +200,14 @@ const studentsRaw = [
   { name: 'Rahul Yadav',   roll: 'X-A-12', classSec: 'Class X - A', admissionNo: 'AD9892412', marks: [34, 35, 33, 36, 33] }
 ];
 
-function getGrade(mark) {
-  if (mark >= 90) return 'O';
-  if (mark >= 80) return 'A+';
-  if (mark >= 70) return 'A';
-  if (mark >= 60) return 'B+';
-  if (mark >= 50) return 'B';
-  if (mark >= 33) return 'C';
+function getGrade(mark, total = 100) {
+  const pct = (mark / total) * 100;
+  if (pct >= 90) return 'O';
+  if (pct >= 80) return 'A+';
+  if (pct >= 70) return 'A';
+  if (pct >= 60) return 'B+';
+  if (pct >= 50) return 'B';
+  if (pct >= 33) return 'C';
   return 'F';
 }
 
@@ -219,14 +220,35 @@ function getMarksForExam(studentBaseMarks, examIndex) {
   });
 }
 
+function getGradingRules(examName) {
+  const defaultRules = { passMarks: 33, maxGrace: 5, maxSupplementary: 2, totalMarks: 100 };
+  try {
+    const saved = localStorage.getItem('bodhya_grading_rules');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed[examName]) return parsed[examName];
+    }
+  } catch(e) {}
+  return defaultRules;
+}
+
 function processStudentData(student, termIndex = 5) {
-  const termMarks = getMarksForExam(student.marks, termIndex);
+  const examName = EXAM_TYPES[termIndex] || ('Term ' + (termIndex + 1));
+  const rules = getGradingRules(examName);
+  const PASS_MARKS = rules.passMarks;
+  const MAX_GRACE = rules.maxGrace;
+  const MAX_SUPPLEMENTARY = rules.maxSupplementary;
+  const TOTAL_MARKS = rules.totalMarks;
+
+  const baseMarksScaled = student.marks.map(m => Math.round((m / 100) * TOTAL_MARKS));
+  const termMarks = getMarksForExam(baseMarksScaled, termIndex);
+
   let subjects = termMarks.map((mark, i) => ({
     name: subjectsList[i],
     originalMark: mark,
     mark: mark,
     graceApplied: 0,
-    grade: getGrade(mark)
+    grade: getGrade(mark, TOTAL_MARKS)
   }));
 
   let failedSubjects = subjects.filter(s => s.mark < PASS_MARKS);
@@ -234,7 +256,7 @@ function processStudentData(student, termIndex = 5) {
   let graceAmount = 0;
   let graceSubject = '';
 
-  if (failedSubjects.length > 0) {
+  if (failedSubjects.length > 0 && MAX_GRACE > 0) {
     let graceEligible = failedSubjects
       .filter(s => (PASS_MARKS - s.mark) <= MAX_GRACE)
       .sort((a, b) => (PASS_MARKS - a.mark) - (PASS_MARKS - b.mark));
@@ -244,7 +266,7 @@ function processStudentData(student, termIndex = 5) {
       let graceNeeded = PASS_MARKS - target.mark;
       target.graceApplied = graceNeeded;
       target.mark = PASS_MARKS;
-      target.grade = getGrade(target.mark);
+      target.grade = getGrade(target.mark, TOTAL_MARKS);
       graceUsed = true;
       graceAmount = graceNeeded;
       graceSubject = target.name;
@@ -253,22 +275,23 @@ function processStudentData(student, termIndex = 5) {
 
   let finalFailCount = subjects.filter(s => s.mark < PASS_MARKS).length;
   let status = 'pass';
-  if (finalFailCount >= 3) {
+  if (finalFailCount > MAX_SUPPLEMENTARY) {
     status = 'fail';
-  } else if (finalFailCount === 1 || finalFailCount === 2) {
+  } else if (finalFailCount > 0) {
     status = 'supplementary';
   } else if (graceUsed) {
     status = 'grace';
   }
 
   let obtained = subjects.reduce((sum, s) => sum + s.mark, 0);
-  let percent = (obtained / 500 * 100).toFixed(1);
+  let overallTotal = TOTAL_MARKS * 5;
+  let percent = (obtained / overallTotal * 100).toFixed(1);
 
   let overallGrade;
   if (status === 'fail' || status === 'supplementary') {
     overallGrade = 'F';
   } else {
-    overallGrade = getGrade(parseFloat(percent));
+    overallGrade = getGrade(parseFloat(percent), 100);
   }
 
   return {
@@ -278,7 +301,7 @@ function processStudentData(student, termIndex = 5) {
     admissionNo: student.admissionNo,
     subjects,
     obtained,
-    total: 500,
+    total: overallTotal,
     percent: percent,
     grade: overallGrade,
     status
