@@ -258,37 +258,6 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
   </div>
 </div>
 
-<!-- Detailed Report Modal -->
-<div class="modal-overlay" id="reportModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Subject-wise Marks</div>
-      <div class="modal-close" onclick="closeModal()"><i class="ti ti-x" style="font-size:20px;"></i></div>
-    </div>
-    <div class="modal-body">
-      <div class="report-header" id="modalStudentHeader">
-        <!-- Populated by JS -->
-      </div>
-      <div style="border: 1px solid var(--border); border-radius: 8px; overflow-x: auto;">
-        <table class="report-table">
-          <thead>
-            <tr>
-              <th>Subject</th>
-              <th>Full Marks</th>
-              <th>Passing Marks</th>
-              <th>Obtained Marks</th>
-              <th>Grade</th>
-              <th>Remarks</th>
-            </tr>
-          </thead>
-          <tbody id="modalSubjectsBody">
-            <!-- Populated by JS -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script>
 /*
@@ -491,7 +460,7 @@ function renderResults() {
         <td style="font-weight: 600;">${item.percent}</td>
         <td style="font-weight: 600; color: ${item.grade === 'F' ? '#ef4444' : 'var(--green)'};">${item.grade}</td>
         <td><span class="status-badge ${badgeClass}">${statusText}</span></td>
-        <td><div class="action-dots" title="View Report" onclick="openModal('${item.roll}')"><i class="ti ti-file-report"></i></div></td>
+        <td><a href="StudentReportCard.html?roll=${item.roll}" class="action-dots" title="View Report Card" style="text-decoration:none;"><i class="ti ti-file-report"></i></a></td>
       </tr>
     `;
   });
@@ -522,72 +491,6 @@ function renderResults() {
       });
     });
   }
-}
-
-function openModal(rollNo) {
-  const student = resultData.find(s => s.roll === rollNo);
-  if (!student) return;
-
-  let avColor = getAvatarColor(student.status);
-  let statusText = getStatusText(student.status);
-
-  document.getElementById('modalStudentHeader').innerHTML = `
-    <div class="report-av" style="background:${avColor.bg}; color:${avColor.text};">${getInitials(student.name)}</div>
-    <div class="report-info">
-      <h3>${student.name}</h3>
-      <p>Roll: ${student.roll} &nbsp;|&nbsp; ${student.classSec} &nbsp;|&nbsp; Result: <strong style="color:${avColor.text}">${statusText.toUpperCase()}</strong></p>
-    </div>
-  `;
-
-  let subjHtml = '';
-
-  student.subjects.forEach(sub => {
-    let isFail = sub.mark < PASS_MARKS;
-
-    // Determine remarks
-    let remarks = 'PASS';
-    let remarkColor = 'var(--text-hint)';
-    let displayMark = sub.mark;
-
-    if (sub.graceApplied > 0) {
-      remarks = `GRACE (+${sub.graceApplied})`;
-      remarkColor = '#10b981';
-      displayMark = sub.originalMark; // Show original mark in obtained
-    } else if (isFail) {
-      remarks = 'SUPPLEMENTARY';
-      remarkColor = '#f59e0b';
-    }
-
-    let markColor = isFail ? '#ef4444' : 'var(--text)';
-    let gradeColor = isFail ? '#ef4444' : 'var(--green)';
-    let displayGrade = isFail ? 'F' : sub.grade;
-
-    // If grace was applied, show the boosted mark and passing grade
-    if (sub.graceApplied > 0) {
-      markColor = '#10b981';
-      gradeColor = '#10b981';
-      displayMark = `${sub.originalMark} → ${sub.mark}`;
-      displayGrade = sub.grade;
-    }
-
-    subjHtml += `
-      <tr>
-        <td style="font-weight: 500;">${sub.name}</td>
-        <td>100</td>
-        <td>33</td>
-        <td style="font-weight: 600; color: ${markColor};">${displayMark}</td>
-        <td style="font-weight: 600; color: ${gradeColor};">${displayGrade}</td>
-        <td style="font-weight: 600; font-size: 11px; color: ${remarkColor};">${remarks}</td>
-      </tr>
-    `;
-  });
-
-  document.getElementById('modalSubjectsBody').innerHTML = subjHtml;
-  document.getElementById('reportModal').classList.add('active');
-}
-
-function closeModal() {
-  document.getElementById('reportModal').classList.remove('active');
 }
 
 document.addEventListener('DOMContentLoaded', renderResults);
