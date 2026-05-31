@@ -16,6 +16,9 @@ function applySidebarRoleFilters() {
   const currentRole = (localStorage.getItem('bodhya_user_role') || 'admin').toLowerCase();
   document.body.setAttribute('data-current-role', currentRole);
   
+  const switcher = document.getElementById('sidebarRoleSwitcher');
+  if (switcher) switcher.value = currentRole;
+  
   // Wait a tick for CSS to apply, then hide empty nav-groups
   setTimeout(() => {
     document.querySelectorAll('.sidebar .nav-group').forEach(group => {
