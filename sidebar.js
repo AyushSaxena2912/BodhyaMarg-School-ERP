@@ -6,10 +6,29 @@ document.addEventListener('DOMContentLoaded', function() {
       if (container) {
         container.outerHTML = html;
         initSidebar();
+        applySidebarRoleFilters();
       }
     })
     .catch(err => console.error('Failed to load sidebar:', err));
 });
+
+function applySidebarRoleFilters() {
+  const currentRole = (localStorage.getItem('bodhya_user_role') || 'admin').toLowerCase();
+  document.body.setAttribute('data-current-role', currentRole);
+  
+  // Wait a tick for CSS to apply, then hide empty nav-groups
+  setTimeout(() => {
+    document.querySelectorAll('.sidebar .nav-group').forEach(group => {
+      const visibleLinks = Array.from(group.querySelectorAll('.nav-item')).filter(link => {
+        return window.getComputedStyle(link).display !== 'none' && 
+               window.getComputedStyle(link.closest('.nav-sub-container') || link).display !== 'none';
+      });
+      if (visibleLinks.length === 0) {
+        group.style.display = 'none';
+      }
+    });
+  }, 10);
+}
 
 function initSidebar() {
   // Get path and remove .html for Netlify clean URLs

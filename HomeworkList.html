@@ -181,7 +181,7 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
         </div>
       </div>
       <div class="page-actions">
-        <button class="btn btn-primary" onclick="openCreateModal()"><i class="ti ti-circle-plus" style="font-size:15px;"></i> Assign Homework</button>
+        <button class="btn btn-primary" onclick="openCreateModal()" data-allowed-roles="admin,teacher"><i class="ti ti-circle-plus" style="font-size:15px;"></i> Assign Homework</button>
       </div>
     </div>
 
@@ -370,9 +370,9 @@ function renderHomeworks() {
     html += '  <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ' + perc + '%;"></div></div>';
     html += '</td>';
     html += '<td style="text-align:right;">';
-    html += '  <a href="EvaluateHomework.html?id=' + hw.id + '" class="action-btn primary" title="Evaluate Progress" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;"><i class="ti ti-checklist"></i></a>';
-    html += '  <button class="action-btn" title="Edit"><i class="ti ti-edit"></i></button>';
-    html += '  <button class="action-btn" style="color:#ef4444;" title="Delete" onclick="deleteHomework(' + hw.id + ')"><i class="ti ti-trash"></i></button>';
+    html += '  <a href="EvaluateHomework.html?id=' + hw.id + '" class="action-btn primary" title="Evaluate Progress" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;" data-allowed-roles="admin,teacher"><i class="ti ti-checklist"></i></a>';
+    html += '  <button class="action-btn" title="Edit" data-allowed-roles="admin,teacher"><i class="ti ti-edit"></i></button>';
+    html += '  <button class="action-btn" style="color:#ef4444;" title="Delete" onclick="deleteHomework(' + hw.id + ')" data-allowed-roles="admin,teacher"><i class="ti ti-trash"></i></button>';
     html += '</td>';
     html += '</tr>';
   });
