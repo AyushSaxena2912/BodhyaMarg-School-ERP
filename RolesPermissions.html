@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Roles & Permissions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+  --shadow: 0 4px 12px rgba(26, 29, 35, 0.04);
+  --shadow-lg: 0 10px 25px rgba(26, 29, 35, 0.08);
+  --red: #ef4444; --red-light: #fef2f2;
+}
+
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+/* Sidebar overrides */
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+
+/* Main Layout */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.ay-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* Content Area */
+.content { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+.content::-webkit-scrollbar { width: 6px; }
+.content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+/* Header block */
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.page-title h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); display: flex; align-items: center; gap: 4px; }
+.breadcrumb span { color: var(--text); }
+.header-actions { display: flex; gap: 10px; }
+
+/* Navigation Tabs */
+.tabs-container { display: flex; border-bottom: 1px solid var(--border); background: var(--white); border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 12px 16px 0; margin-bottom: -20px; }
+.tab-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: none; background: none; font-size: 13.5px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; position: relative; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
+.tab-badge { font-size: 10px; padding: 2px 6px; background: var(--green-light); color: var(--green); border-radius: 20px; font-weight: 600; }
+.tab-badge.neutral { background: var(--bg); color: var(--text-muted); }
+
+/* Card Wrapper Styles */
+.view-panel { display: none; flex-direction: column; gap: 20px; }
+.view-panel.active { display: flex; }
+.card-wrapper { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); }
+
+/* Search & Actions Bar */
+.control-bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.search-box { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; width: 300px; background: var(--white); }
+.search-box i { color: var(--text-hint); font-size: 14px; }
+.search-box input { border: none; background: transparent; font-size: 13px; outline: none; width: 100%; font-family: inherit; }
+.btn-primary { background: var(--green); color: var(--white); border: 1px solid var(--green); border-radius: var(--radius); padding: 8px 16px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-secondary { background: var(--white); color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 16px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-secondary:hover { background: var(--bg); color: var(--text); }
+.btn-danger-outline { background: var(--white); color: var(--red); border: 1px solid var(--red); border-radius: var(--radius); padding: 8px 16px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-danger-outline:hover { background: var(--red-light); }
+
+/* Roles Grid */
+.roles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 20px; }
+.role-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 14px; position: relative; transition: all 0.2s; box-shadow: var(--shadow); }
+.role-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.role-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.role-card-title { font-size: 15.5px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.system-badge { font-size: 10px; padding: 2px 6px; background: #f1f5f9; color: #475569; border-radius: 4px; font-weight: 600; text-transform: uppercase; }
+.status-pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; }
+.status-pill.active { background: #ecfdf5; color: #10b981; }
+.status-pill.active::before { content:''; width:5px; height:5px; border-radius:50%; background:#10b981; }
+.status-pill.inactive { background: #fef2f2; color: var(--red); }
+.status-pill.inactive::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--red); }
+
+.role-card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; min-height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.role-card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px dashed var(--border); margin-top: auto; }
+.role-users-count { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.role-users-count i { color: var(--text-hint); }
+.role-actions { display: flex; gap: 4px; position: relative; }
+
+/* Dropdown Menu styling */
+.action-dropdown { position: absolute; right: 0; top: 100%; margin-top: 6px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); width: 150px; z-index: 100; display: none; flex-direction: column; padding: 4px; }
+.action-dropdown.show { display: flex; }
+.action-dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; font-size: 12px; color: var(--text); border-radius: 6px; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background 0.1s; }
+.action-dropdown-item:hover { background: var(--bg); }
+.action-dropdown-item.danger { color: var(--red); }
+.action-dropdown-item.danger:hover { background: var(--red-light); }
+.action-dropdown-item i { font-size: 14px; color: var(--text-muted); }
+.action-dropdown-item.danger i { color: var(--red); }
+
+/* Create/Edit Screen Layout */
+.edit-screen-container { display: none; flex-direction: column; gap: 20px; }
+.edit-screen-container.active { display: flex; }
+.form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.form-group label { font-size: 12.5px; font-weight: 600; color: var(--text); }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; font-family: inherit; outline: none; background: var(--white); color: var(--text); transition: border 0.15s; }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--green); }
+.form-group textarea { height: 90px; resize: none; }
+
+/* Custom Checkbox Toggle Switch */
+.toggle-switch-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.toggle-label { font-size: 12.5px; font-weight: 600; color: var(--text); }
+.switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--green); }
+input:checked + .slider:before { transform: translateX(22px); }
+
+/* Matrix Styling */
+.matrix-card { display: flex; flex-direction: column; gap: 16px; }
+.matrix-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+.matrix-title { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.matrix-actions-quick { display: flex; gap: 8px; }
+
+.matrix-table { width: 100%; border-collapse: collapse; text-align: left; }
+.matrix-table th, .matrix-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 12.5px; }
+.matrix-table th { background: #f8fafc; font-weight: 600; color: var(--text-muted); }
+.matrix-module-row { background: #f1f5f9; font-weight: 600; color: var(--text); }
+.matrix-module-row td { padding: 8px 14px; }
+.matrix-feature-name { font-weight: 500; padding-left: 24px !important; display: flex; align-items: center; gap: 6px; }
+.matrix-table tbody tr:not(.matrix-module-row):hover { background: #f8fafc; }
+
+/* Matrix Custom Checkbox */
+.check-container { display: inline-flex; align-items: center; justify-content: center; position: relative; cursor: pointer; font-size: 16px; user-select: none; }
+.check-container input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+.checkmark { height: 18px; width: 18px; background-color: #f1f5f9; border: 1.5px solid #cbd5e1; border-radius: 4px; transition: all 0.1s ease; }
+.check-container:hover input ~ .checkmark { border-color: var(--green); }
+.check-container input:checked ~ .checkmark { background-color: var(--green); border-color: var(--green); }
+.checkmark:after { content: ""; position: absolute; display: none; }
+.check-container input:checked ~ .checkmark:after { display: block; }
+.check-container .checkmark:after { left: 5px; top: 1.5px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
+/* Quick toggle buttons */
+.btn-matrix-link { background: none; border: none; color: var(--green); font-size: 11.5px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.btn-matrix-link:hover { color: var(--green-dark); text-decoration: underline; }
+
+/* User Assignment styles */
+.user-avatar-placeholder { width: 30px; height: 30px; border-radius: 50%; background: var(--green-light); color: var(--green); display: flex; align-items: center; justify-content: center; font-size: 11.5px; font-weight: 600; }
+.role-badge-pill { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 600; text-transform: capitalize; background: #e0f2fe; color: #0369a1; display: inline-block; }
+.role-badge-pill.superadmin { background: #faf5ff; color: #7e22ce; }
+.role-badge-pill.admin { background: #ffe4e6; color: #b91c1c; }
+.role-badge-pill.teacher { background: #fef3c7; color: #d97706; }
+.role-badge-pill.student { background: #ecfdf5; color: #047857; }
+
+/* User DataTable */
+.user-table { width: 100%; border-collapse: collapse; text-align: left; }
+.user-table th, .user-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.user-table th { background: #f8fafc; font-weight: 600; color: var(--text-muted); }
+.user-table tbody tr:hover { background: #f8fafc; }
+.role-assign-select { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--white); font-size: 12.5px; font-family: inherit; color: var(--text); outline: none; cursor: pointer; max-width: 160px; }
+.role-assign-select:focus { border-color: var(--green); }
+
+/* Floating action bar for bulk actions */
+.floating-bulk-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: rgba(26, 29, 35, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; padding: 12px 24px; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); z-index: 500; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: var(--white); }
+.floating-bulk-bar.show { transform: translateX(-50%) translateY(0); }
+.bulk-count-label { font-size: 13.5px; font-weight: 500; }
+.bulk-count-num { color: var(--green-light); font-weight: 700; margin: 0 2px; }
+
+/* Modals */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.modal-overlay.show { display: flex; }
+.modal-content { background: var(--white); border-radius: var(--radius-lg); width: 440px; max-width: 100%; box-shadow: var(--shadow-lg); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; }
+.modal-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.modal-header h3 { font-size: 15.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.modal-close-btn { background: none; border: none; font-size: 18px; color: var(--text-hint); cursor: pointer; }
+.modal-close-btn:hover { color: var(--text); }
+.modal-body { padding: 20px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+.modal-footer { padding: 14px 20px; background: #f8fafc; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+/* Audit Logs View */
+.log-table { width: 100%; border-collapse: collapse; text-align: left; }
+.log-table th, .log-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 12.5px; }
+.log-table th { background: #f8fafc; font-weight: 600; color: var(--text-muted); }
+.log-table td { color: var(--text); }
+.log-table tbody tr:hover { background: #f8fafc; }
+.log-timestamp { font-family: monospace; font-size: 11.5px; color: var(--text-hint); white-space: nowrap; }
+.log-badge-action { font-size: 10.5px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; background: #f1f5f9; color: #475569; display: inline-block; }
+.log-badge-action.create { background: #ecfdf5; color: #047857; }
+.log-badge-action.update { background: #eff6ff; color: #1d4ed8; }
+.log-badge-action.delete { background: #fef2f2; color: #b91c1c; }
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .control-bar { flex-direction: column; align-items: stretch; }
+  .search-box { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div id="sidebar-container"></div>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<div class="main">
+  <!-- Topbar Header -->
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search operations, features, settings…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill"><i class="ti ti-calendar"></i> Academic Year : 2026 / 2027 <i class="ti ti-chevron-down"></i></div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+    
+    <!-- Page Breadcrumb Header -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">
+          <h1 id="pageTitleText">Roles & Permissions</h1>
+        </div>
+        <div class="breadcrumb" id="breadcrumbText">Dashboard <i class="ti ti-chevron-right"></i> User Management <i class="ti ti-chevron-right"></i> <span>Roles List</span></div>
+      </div>
+      <div class="header-actions" id="headerActionsBlock">
+        <button class="btn-secondary" onclick="exportData()"><i class="ti ti-file-export"></i> Export</button>
+        <button class="btn-primary" onclick="openCreateRoleScreen()"><i class="ti ti-plus"></i> Create Role</button>
+      </div>
+    </div>
+
+    <!-- TABS SELECTION BAR -->
+    <div class="tabs-container" id="tabsBar">
+      <button class="tab-btn active" onclick="switchTab('roles-view', this)">
+        <i class="ti ti-shield-lock"></i> Roles Management <span class="tab-badge" id="rolesBadgeCount">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('users-view', this)">
+        <i class="ti ti-users"></i> User Assignment <span class="tab-badge neutral" id="usersBadgeCount">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('logs-view', this)">
+        <i class="ti ti-activity-heartbeat"></i> Security Audit Logs <span class="tab-badge neutral" id="logsBadgeCount">0</span>
+      </button>
+    </div>
+
+    <!-- VIEW PANEL 1: ROLES LIST -->
+    <div id="roles-view" class="view-panel active">
+      <div class="control-bar">
+        <div class="search-box">
+          <i class="ti ti-search"></i>
+          <input type="text" id="rolesSearchInput" oninput="renderRolesList()" placeholder="Search roles by name or details..." />
+        </div>
+        <div style="display:flex; gap:8px;">
+          <select id="rolesStatusFilter" class="role-assign-select" onchange="renderRolesList()">
+            <option value="all">All Status</option>
+            <option value="active">Active Only</option>
+            <option value="inactive">Inactive Only</option>
+          </select>
+          <button class="btn-secondary" onclick="resetToSystemDefaults()" title="Reset workspace back to original sample presets"><i class="ti ti-refresh"></i> Reset Defaults</button>
+        </div>
+      </div>
+
+      <div class="roles-grid" id="rolesGridContainer">
+        <!-- Roles Cards Dynamic Injection -->
+      </div>
+    </div>
+
+    <!-- VIEW PANEL 2: USER ASSIGNMENT -->
+    <div id="users-view" class="view-panel">
+      <div class="control-bar">
+        <div class="search-box">
+          <i class="ti ti-search"></i>
+          <input type="text" id="usersSearchInput" oninput="renderUsersList()" placeholder="Search users by name or email..." />
+        </div>
+        <div>
+          <select id="usersRoleFilter" class="role-assign-select" onchange="renderUsersList()">
+            <!-- Options dynamically populated with existing roles -->
+          </select>
+        </div>
+      </div>
+
+      <div class="card-wrapper" style="overflow-x: auto; padding: 0;">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th width="40"><input type="checkbox" id="userSelectAllCheckbox" onclick="toggleAllUserSelections(this)" /></th>
+              <th>User Name</th>
+              <th>Email</th>
+              <th>Role Assigned</th>
+              <th>Date Assigned</th>
+              <th width="200" style="text-align: right;">Change Role</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <!-- Dynamic Users Injection -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VIEW PANEL 3: SECURITY AUDIT LOGS -->
+    <div id="logs-view" class="view-panel">
+      <div class="control-bar">
+        <div class="search-box">
+          <i class="ti ti-search"></i>
+          <input type="text" id="logsSearchInput" oninput="renderAuditLogsList()" placeholder="Search audit logs..." />
+        </div>
+        <button class="btn-danger-outline" onclick="triggerClearLogsModal()"><i class="ti ti-trash"></i> Clear Audit Logs</button>
+      </div>
+
+      <div class="card-wrapper" style="overflow-x: auto; padding: 0;">
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Actor</th>
+              <th>Action Type</th>
+              <th>Target Scope</th>
+              <th>Details & Description</th>
+            </tr>
+          </thead>
+          <tbody id="logsTableBody">
+            <!-- Dynamic Logs Injection -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CREATE / EDIT ROLE SCREEN CONTAINER -->
+    <div id="edit-role-screen" class="edit-screen-container">
+      <div class="card-wrapper">
+        <form id="roleDetailsForm" onsubmit="saveRoleForm(event)">
+          <input type="hidden" id="editRoleId" />
+          
+          <div class="form-grid">
+            <div>
+              <div class="form-group">
+                <label for="editRoleName">Role Name <span style="color:var(--red);">*</span></label>
+                <input type="text" id="editRoleName" required placeholder="e.g. Bus Supervisor" />
+              </div>
+              <div class="form-group">
+                <label for="editRoleDesc">Description</label>
+                <textarea id="editRoleDesc" placeholder="Describe the responsibilities and scope of this access role..."></textarea>
+              </div>
+            </div>
+            
+            <div style="border-left: 1px solid var(--border); padding-left: 20px;">
+              <div class="form-group">
+                <label for="editRoleStatus">Status</label>
+                <div class="toggle-switch-container">
+                  <label class="switch">
+                    <input type="checkbox" id="editRoleStatus" checked />
+                    <span class="slider"></span>
+                  </label>
+                  <span class="toggle-label" id="editRoleStatusText">Active</span>
+                </div>
+                <p style="font-size: 11px; color: var(--text-hint); margin-top: 8px; line-height:1.4;">Inactive roles will temporarily suspend system access for all users currently assigned to it.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Permissions Matrix Section -->
+          <div class="matrix-card" style="margin-top: 24px;">
+            <div class="matrix-header">
+              <div class="matrix-title"><i class="ti ti-grid-dots" style="color: var(--green);"></i> Permissions Matrix</div>
+              <div class="matrix-actions-quick">
+                <button type="button" class="btn-matrix-link" onclick="toggleAllMatrixCheckboxes(true)">Grant All Full-Access</button>
+                <span style="color: var(--border);">|</span>
+                <button type="button" class="btn-matrix-link" onclick="toggleAllMatrixCheckboxes(false)">Clear All Checkboxes</button>
+              </div>
+            </div>
+
+            <div style="overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-lg);">
+              <table class="matrix-table">
+                <thead>
+                  <tr>
+                    <th>Module / Feature Option</th>
+                    <th width="90" style="text-align: center;">View</th>
+                    <th width="90" style="text-align: center;">Create</th>
+                    <th width="90" style="text-align: center;">Edit</th>
+                    <th width="90" style="text-align: center;">Delete</th>
+                    <th width="90" style="text-align: center;">Approve</th>
+                    <th width="90" style="text-align: center;">Export</th>
+                  </tr>
+                </thead>
+                <tbody id="matrixTableBody">
+                  <!-- Dynamic matrix rows pre-built dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Bottom Footer Action Panel -->
+          <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border);">
+            <button type="button" class="btn-secondary" onclick="closeEditRoleScreen()"><i class="ti ti-x"></i> Cancel Changes</button>
+            <button type="submit" class="btn-primary"><i class="ti ti-device-floppy"></i> Save Access Role</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FLOATING BAR FOR BULK ROLE SELECTIONS -->
+<div class="floating-bulk-bar" id="floatingBulkActionPanel">
+  <div class="bulk-count-label">
+    <i class="ti ti-checks" style="color: var(--green-light); font-size:18px; vertical-align:middle;"></i>
+    Selected <span class="bulk-count-num" id="bulkSelectedCount">0</span> users
+  </div>
+  <div style="display:flex; gap:10px;">
+    <button class="btn-primary" onclick="openBulkAssignModal()" style="background: var(--green); border-color:#22c55e;"><i class="ti ti-user-plus"></i> Bulk Change Role</button>
+    <button class="btn-secondary" onclick="clearAllUserCheckboxSelections()" style="background:transparent; border-color: rgba(255,255,255,0.2); color: #fff;"><i class="ti ti-square-x"></i> Cancel</button>
+  </div>
+</div>
+
+<!-- ═══ MODAL DIALOGS ═══ -->
+
+<!-- DELETE CONFIRMATION DIALOG -->
+<div class="modal-overlay" id="deleteConfirmModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="ti ti-alert-triangle" style="color: var(--red);"></i> Confirm Role Deletion</h3>
+      <button class="modal-close-btn" onclick="closeModal('deleteConfirmModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom: 12px;">Are you sure you want to permanently delete the custom access role <strong id="deleteRoleNameSpan" style="color: var(--text);">[Role Name]</strong>?</p>
+      <p>This action is **irreversible**. Historical audit logs referencing this role will remain, but all assignments are canceled.</p>
+      <input type="hidden" id="deleteRoleIdInput" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('deleteConfirmModal')">Cancel</button>
+      <button class="btn-primary" style="background: var(--red); border-color: var(--red);" onclick="executeDeleteRole()">Confirm Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- SYSTEM ROLE RESTRICTION DIALOG -->
+<div class="modal-overlay" id="systemRoleModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="ti ti-shield-alert" style="color: #f59e0b;"></i> Action Restricted</h3>
+      <button class="modal-close-btn" onclick="closeModal('systemRoleModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom: 12px;">The access role <strong id="systemRoleNameSpan" style="color:var(--text);">[Role Name]</strong> is a system-critical role protected from modification.</p>
+      <p>System roles are hardcoded to core school functions and cannot be edited, renamed, or deleted to safeguard operational integrity.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="closeModal('systemRoleModal')">Understood</button>
+    </div>
+  </div>
+</div>
+
+<!-- DYNAMIC WARNING DIALOG -->
+<div class="modal-overlay" id="warningModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="ti ti-info-circle" style="color: #3b82f6;"></i> Cannot Perform Operation</h3>
+      <button class="modal-close-btn" onclick="closeModal('warningModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p id="warningModalText">Error description here.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="closeModal('warningModal')">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<!-- BULK ROLE CHANGE ASSIGNMENT DIALOG -->
+<div class="modal-overlay" id="bulkChangeRoleModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="ti ti-user-check" style="color: var(--green);"></i> Change Access Role in Bulk</h3>
+      <button class="modal-close-btn" onclick="closeModal('bulkChangeRoleModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom: 16px;">Select the target access role to be assigned to the <strong id="bulkUserCountSpan" style="color:var(--text);">0</strong> selected school users:</p>
+      <div class="form-group">
+        <label for="bulkTargetRoleSelect">Select New Target Role</label>
+        <select id="bulkTargetRoleSelect" class="role-assign-select" style="max-width: 100%; width: 100%;">
+          <!-- Populated dynamically -->
+        </select>
+      </div>
+      <p style="font-size: 11.5px; color: var(--text-hint); margin-top: 12px; line-height: 1.4;">Applying this change will instantly re-map their dashboard paths and user authorization settings across modules.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('bulkChangeRoleModal')">Cancel</button>
+      <button class="btn-primary" onclick="executeBulkRoleChange()">Apply Role Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLEAR LOGS MODAL -->
+<div class="modal-overlay" id="clearLogsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="ti ti-trash" style="color: var(--red);"></i> Clear Audit Trail</h3>
+      <button class="modal-close-btn" onclick="closeModal('clearLogsModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom: 12px;">Are you sure you want to completely clear the Security Audit Logs?</p>
+      <p>This action will discard the historical trails of role creations, configuration modifications, and administrative assignments. This action is permanently logged as a singular entry.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('clearLogsModal')">Cancel</button>
+      <button class="btn-primary" style="background: var(--red); border-color: var(--red);" onclick="executeClearAuditLogs()">Confirm Clear</button>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript Logic Engine -->
+<script>
+// ERP Modules and Features List Structure
+const ERP_STRUCTURE = [
+  {
+    module: "Academics",
+    features: [
+      { id: "students", name: "Students" },
+      { id: "teachers", name: "Teachers" },
+      { id: "attendance", name: "Attendance" },
+      { id: "marks", name: "Marks" },
+      { id: "assignments", name: "Assignments" },
+      { id: "exams", name: "Exams" }
+    ]
+  },
+  {
+    module: "Hostel",
+    features: [
+      { id: "rooms", name: "Rooms" },
+      { id: "hostel_apps", name: "Hostel Applications" },
+      { id: "hostel_students", name: "Hostel Students" }
+    ]
+  },
+  {
+    module: "Transport",
+    features: [
+      { id: "buses", name: "Buses" },
+      { id: "routes", name: "Routes" },
+      { id: "student_allocation", name: "Student Transport Allocation" }
+    ]
+  },
+  {
+    module: "Finance",
+    features: [
+      { id: "fees", name: "Fees" },
+      { id: "invoices", name: "Invoices" },
+      { id: "payments", name: "Payments" }
+    ]
+  },
+  {
+    module: "Library",
+    features: [
+      { id: "books", name: "Books" },
+      { id: "issued_books", name: "Issued Books" }
+    ]
+  },
+  {
+    module: "Administration",
+    features: [
+      { id: "users", name: "Users" },
+      { id: "roles", name: "Roles" },
+      { id: "settings", name: "Settings" },
+      { id: "reports", name: "Reports" }
+    ]
+  }
+];
+
+// Seed Core Roles Presets
+const PRESET_ROLES = [
+  {
+    id: "superadmin",
+    name: "Super Admin",
+    desc: "Provides full unchecked administrator privileges across all school system modules and system tools.",
+    status: "active",
+    isSystem: true,
+    lastUpdated: "01 Jun 2026, 09:30 AM",
+    permissions: {} // Dynamic full permission seeding
+  },
+  {
+    id: "admin",
+    name: "Admin",
+    desc: "Provides access to standard administrative tools, academics, hostels, transport, finance, and user listings.",
+    status: "active",
+    isSystem: true,
+    lastUpdated: "01 Jun 2026, 09:30 AM",
+    permissions: {}
+  },
+  {
+    id: "principal",
+    name: "Principal",
+    desc: "High-level visual reporting metrics, operational overview, global syllabus review, and leave approvals.",
+    status: "active",
+    isSystem: false,
+    lastUpdated: "01 Jun 2026, 09:35 AM",
+    permissions: {}
+  },
+  {
+    id: "teacher",
+    name: "Teacher",
+    desc: "Academic module privileges: Student tracking, attendance registers, exam uploads, grading, and homework sheets.",
+    status: "active",
+    isSystem: true,
+    lastUpdated: "01 Jun 2026, 09:40 AM",
+    permissions: {}
+  },
+  {
+    id: "student",
+    name: "Student",
+    desc: "View-only access for academic routines, syllabi, exam schedules, transport routes, hostel room allocations.",
+    status: "active",
+    isSystem: true,
+    lastUpdated: "01 Jun 2026, 09:42 AM",
+    permissions: {}
+  },
+  {
+    id: "parent",
+    name: "Parent",
+    desc: "Access channels mapped directly to child reports: student report cards, homework schedules, fee balances.",
+    status: "active",
+    isSystem: true,
+    lastUpdated: "01 Jun 2026, 09:45 AM",
+    permissions: {}
+  },
+  {
+    id: "hostelwarden",
+    name: "Hostel Warden",
+    desc: "Complete operational control of dormitory rooms, check-in requests, student lists, facilities allocation.",
+    status: "active",
+    isSystem: false,
+    lastUpdated: "01 Jun 2026, 09:50 AM",
+    permissions: {}
+  },
+  {
+    id: "accountant",
+    name: "Accountant",
+    desc: "Full module clearance across fees collection, invoicing ledger books, receipt processing, and bank transfers.",
+    status: "active",
+    isSystem: false,
+    lastUpdated: "01 Jun 2026, 10:00 AM",
+    permissions: {}
+  },
+  {
+    id: "librarian",
+    name: "Librarian",
+    desc: "Clearance for catalog library books inventory registry, library card tracking, fine collections, and overdue reminders.",
+    status: "active",
+    isSystem: false,
+    lastUpdated: "01 Jun 2026, 10:10 AM",
+    permissions: {}
+  },
+  {
+    id: "bus supervisor",
+    name: "Bus Supervisor",
+    desc: "Monitoring status reports for school buses, checking pickup route schedules, student passenger counts.",
+    status: "active",
+    isSystem: false,
+    lastUpdated: "01 Jun 2026, 10:15 AM",
+    permissions: {}
+  }
+];
+
+// Seed Core Users Presets
+const PRESET_USERS = [
+  { id: "U101", name: "Ayush Saxena", email: "ayush@bodhyamarg.com", role: "superadmin", dateAssigned: "22 Mar 2024" },
+  { id: "U102", name: "Dr. Anita Roy", email: "principal@bodhyamarg.com", role: "principal", dateAssigned: "12 Apr 2024" },
+  { id: "U103", name: "Vikram Singh", email: "vikram.singh@bodhyamarg.com", role: "teacher", dateAssigned: "05 Jun 2024" },
+  { id: "U104", name: "Rajesh Kumar", email: "rajesh.k@bodhyamarg.com", role: "accountant", dateAssigned: "18 Jun 2024" },
+  { id: "U105", name: "Sunita Sharma", email: "sunita.s@bodhyamarg.com", role: "librarian", dateAssigned: "20 Jun 2024" },
+  { id: "U106", name: "Ananya Patel", email: "ananya@student.com", role: "student", dateAssigned: "15 Jan 2025" },
+  { id: "U107", name: "Vivaan Gupta", email: "vivaan@student.com", role: "student", dateAssigned: "28 Jan 2025" },
+  { id: "U108", name: "Rakesh Patel", email: "rakesh.patel@parent.com", role: "parent", dateAssigned: "15 Feb 2025" },
+  { id: "U109", name: "Karan Johar", email: "karan@staff.com", role: "hostelwarden", dateAssigned: "01 Mar 2025" },
+  { id: "U110", name: "Gopal Prasad", email: "gopal@transport.com", role: "bus supervisor", dateAssigned: "10 Mar 2025" }
+];
+
+// Seed Sample System Logs
+const PRESET_LOGS = [
+  { timestamp: "01 Jun 2026, 09:30 AM", actor: "System Database", action: "create", target: "System Default", desc: "Initialized default system settings and pre-seeded administrative roles successfully." },
+  { timestamp: "01 Jun 2026, 09:40 AM", actor: "Ayush Saxena", action: "update", target: "Role Permissions", desc: "Super Admin verified academics module routing rules for teachers and parents." }
+];
+
+// Global State
+let rolesDB = [];
+let usersDB = [];
+let auditLogsDB = [];
+let currentActiveView = "roles-view";
+let matrixState = {}; // Temp store for permissions edits
+
+// Lifecycle Entrypoint
+document.addEventListener('DOMContentLoaded', () => {
+  initializeLocalDatabase();
+  buildPermissionMatrixHTML();
+  
+  // Set UI state values
+  updateCountsBadges();
+  renderRolesList();
+  populateRolesFilters();
+  renderUsersList();
+  renderAuditLogsList();
+  
+  // Apply visual trigger switch listener
+  document.getElementById('editRoleStatus').addEventListener('change', function() {
+    document.getElementById('editRoleStatusText').textContent = this.checked ? "Active" : "Inactive";
+  });
+});
+
+// Setup dynamic initial DB files or load from localStorage
+function initializeLocalDatabase() {
+  // Pre-seed roles matrix presets
+  if (!localStorage.getItem('bodhya_roles')) {
+    const defaultSeededRoles = JSON.parse(JSON.stringify(PRESET_ROLES));
+    
+    // Seed permissions for preset roles
+    defaultSeededRoles.forEach(role => {
+      ERP_STRUCTURE.forEach(mod => {
+        mod.features.forEach(feat => {
+          role.permissions[feat.id] = {
+            view: false, create: false, edit: false, delete: false, approve: false, export: false
+          };
+          
+          // Role-specific granular checks
+          if (role.id === "superadmin") {
+            role.permissions[feat.id] = {
+              view: true, create: true, edit: true, delete: true, approve: true, export: true
+            };
+          } else if (role.id === "admin") {
+            role.permissions[feat.id] = {
+              view: true, create: true, edit: true, delete: feat.id !== "roles", approve: true, export: true
+            };
+          } else if (role.id === "principal") {
+            role.permissions[feat.id].view = true;
+            role.permissions[feat.id].export = true;
+            role.permissions[feat.id].approve = true;
+            if (mod.module === "Academics" || mod.module === "Administration") {
+              role.permissions[feat.id].create = true;
+              role.permissions[feat.id].edit = true;
+            }
+          } else if (role.id === "teacher") {
+            if (mod.module === "Academics") {
+              role.permissions[feat.id] = {
+                view: true, create: true, edit: true, delete: false, approve: true, export: true
+              };
+            } else if (mod.module === "Library" || mod.module === "Transport" || mod.module === "Hostel") {
+              role.permissions[feat.id].view = true;
+            }
+          } else if (role.id === "student") {
+            if (mod.module === "Academics" || mod.module === "Library" || mod.module === "Hostel" || mod.module === "Transport") {
+              role.permissions[feat.id].view = true;
+            }
+          } else if (role.id === "parent") {
+            if (feat.id === "students" || feat.id === "attendance" || feat.id === "marks" || feat.id === "assignments" || feat.id === "fees") {
+              role.permissions[feat.id].view = true;
+            }
+          } else if (role.id === "hostelwarden" && mod.module === "Hostel") {
+            role.permissions[feat.id] = {
+              view: true, create: true, edit: true, delete: true, approve: true, export: true
+            };
+          } else if (role.id === "accountant" && mod.module === "Finance") {
+            role.permissions[feat.id] = {
+              view: true, create: true, edit: true, delete: true, approve: true, export: true
+            };
+          } else if (role.id === "librarian" && mod.module === "Library") {
+            role.permissions[feat.id] = {
+              view: true, create: true, edit: true, delete: true, approve: true, export: true
+            };
+          } else if (role.id === "bus supervisor" && mod.module === "Transport") {
+            role.permissions[feat.id] = {
+              view: true, create: false, edit: true, delete: false, approve: false, export: true
+            };
+          }
+        });
+      });
+    });
+    
+    localStorage.setItem('bodhya_roles', JSON.stringify(defaultSeededRoles));
+  }
+  
+  if (!localStorage.getItem('bodhya_users')) {
+    localStorage.setItem('bodhya_users', JSON.stringify(PRESET_USERS));
+  }
+  
+  if (!localStorage.getItem('bodhya_audit_logs')) {
+    localStorage.setItem('bodhya_audit_logs', JSON.stringify(PRESET_LOGS));
+  }
+  
+  // Assign arrays to scope
+  rolesDB = JSON.parse(localStorage.getItem('bodhya_roles'));
+  usersDB = JSON.parse(localStorage.getItem('bodhya_users'));
+  auditLogsDB = JSON.parse(localStorage.getItem('bodhya_audit_logs'));
+}
+
+// Write arrays back to local browser cache
+function syncDatabase() {
+  localStorage.setItem('bodhya_roles', JSON.stringify(rolesDB));
+  localStorage.setItem('bodhya_users', JSON.stringify(usersDB));
+  localStorage.setItem('bodhya_audit_logs', JSON.stringify(auditLogsDB));
+  updateCountsBadges();
+}
+
+// Reset data to defaults
+function resetToSystemDefaults() {
+  if (confirm("Caution: This will restore all default system permissions, delete custom roles, and clear custom user assignments. Do you want to proceed?")) {
+    localStorage.removeItem('bodhya_roles');
+    localStorage.removeItem('bodhya_users');
+    localStorage.removeItem('bodhya_audit_logs');
+    initializeLocalDatabase();
+    
+    // Refresh page components
+    renderRolesList();
+    populateRolesFilters();
+    renderUsersList();
+    renderAuditLogsList();
+    updateCountsBadges();
+    
+    logSecurityEvent("Ayush Saxena", "update", "Workspace Settings", "Reset module state and user authorizations back to system presets.");
+    alert("Workspace successfully reset to default presets.");
+  }
+}
+
+// Get user count for a specific role ID
+function getUserCountForRole(roleId) {
+  return usersDB.filter(u => u.role.toLowerCase() === roleId.toLowerCase()).length;
+}
+
+// Refresh count tags dynamically
+function updateCountsBadges() {
+  document.getElementById('rolesBadgeCount').textContent = rolesDB.length;
+  document.getElementById('usersBadgeCount').textContent = usersDB.length;
+  document.getElementById('logsBadgeCount').textContent = auditLogsDB.length;
+}
+
+// Build matrix dynamic lines in DOM
+function buildPermissionMatrixHTML() {
+  const container = document.getElementById('matrixTableBody');
+  container.innerHTML = "";
+  
+  ERP_STRUCTURE.forEach(group => {
+    // Header for module
+    const modHeader = document.createElement('tr');
+    modHeader.className = "matrix-module-row";
+    modHeader.innerHTML = `
+      <td colspan="7">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span><i class="ti ti-folder-open"></i> ${group.module} Module</span>
+          <button type="button" class="btn-matrix-link" style="color:var(--green-dark);" onclick="toggleModuleAllCheckboxes('${group.module}', true)">Check All</button>
+        </div>
+      </td>
+    `;
+    container.appendChild(modHeader);
+    
+    // Feature rows
+    group.features.forEach(feat => {
+      const row = document.createElement('tr');
+      row.setAttribute('data-module', group.module);
+      row.setAttribute('data-feature-id', feat.id);
+      row.innerHTML = `
+        <td class="matrix-feature-name">
+          <i class="ti ti-point" style="color: var(--text-hint);"></i> ${feat.name}
+        </td>
+        <td style="text-align: center;">
+          <label class="check-container">
+            <input type="checkbox" data-feature="${feat.id}" data-action="view" onchange="updateMatrixState('${feat.id}', 'view', this.checked)" />
+            <span class="checkmark"></span>
+          </label>
+        </td>
+        <td style="text-align: center;">
+          <label class="check-container">
+            <input type="checkbox" data-feature="${feat.id}" data-action="create" onchange="updateMatrixState('${feat.id}', 'create', this.checked)" />
+            <span class="checkmark"></span>
+          </label>
+        </td>
+        <td style="text-align: center;">
+          <label class="check-container">
+            <input type="checkbox" data-feature="${feat.id}" data-action="edit" onchange="updateMatrixState('${feat.id}', 'edit', this.checked)" />
+            <span class="checkmark"></span>
+          </label>
+        </td>
+        <td style="text-align: center;">
+          <label class="check-container">
+            <input type="checkbox" data-feature="${feat.id}" data-action="delete" onchange="updateMatrixState('${feat.id}', 'delete', this.checked)" />
+            <span class="checkmark"></span>
+          </label>
+        </td>
+        <td style="text-align: center;">
+          <label class="check-container">
+            <input type="checkbox" data-feature="${feat.id}" data-action="approve" onchange="updateMatrixState('${feat.id}', 'approve', this.checked)" />
+            <span class="checkmark"></span>
+          </label>
+        </td>
+        <td style="text-align: center;">
+          <label class="check-container">
+            <input type="checkbox" data-feature="${feat.id}" data-action="export" onchange="updateMatrixState('${feat.id}', 'export', this.checked)" />
+            <span class="checkmark"></span>
+          </label>
+        </td>
+      `;
+      container.appendChild(row);
+    });
+  });
+}
+
+// Track temporary matrix checkbox configurations
+function updateMatrixState(featId, action, isChecked) {
+  if (!matrixState[featId]) {
+    matrixState[featId] = { view: false, create: false, edit: false, delete: false, approve: false, export: false };
+  }
+  matrixState[featId][action] = isChecked;
+  
+  // Logical Constraint: Checking any sub-permission (create/edit/delete/etc) auto-enables view
+  if (isChecked && action !== 'view') {
+    const viewCheck = document.querySelector(`input[data-feature="${featId}"][data-action="view"]`);
+    if (viewCheck && !viewCheck.checked) {
+      viewCheck.checked = true;
+      matrixState[featId]['view'] = true;
+    }
+  }
+  
+  // Logical Constraint: Unchecking view auto-clears all other permissions for that feature
+  if (!isChecked && action === 'view') {
+    const actions = ['create', 'edit', 'delete', 'approve', 'export'];
+    actions.forEach(act => {
+      const actCheck = document.querySelector(`input[data-feature="${featId}"][data-action="${act}"]`);
+      if (actCheck && actCheck.checked) {
+        actCheck.checked = false;
+        matrixState[featId][act] = false;
+      }
+    });
+  }
+}
+
+// Toggle checkboxes for a full module group
+function toggleModuleAllCheckboxes(moduleName, isChecked) {
+  const rows = document.querySelectorAll(`tr[data-module="${moduleName}"]`);
+  rows.forEach(row => {
+    const featId = row.getAttribute('data-feature-id');
+    const checks = row.querySelectorAll('input[type="checkbox"]');
+    checks.forEach(check => {
+      check.checked = isChecked;
+      const action = check.getAttribute('data-action');
+      updateMatrixState(featId, action, isChecked);
+    });
+  });
+}
+
+// Toggle every single matrix checkbox (Grant/Clear All)
+function toggleAllMatrixCheckboxes(isChecked) {
+  ERP_STRUCTURE.forEach(group => {
+    group.features.forEach(feat => {
+      if (!matrixState[feat.id]) {
+        matrixState[feat.id] = { view: false, create: false, edit: false, delete: false, approve: false, export: false };
+      }
+      const actions = ['view', 'create', 'edit', 'delete', 'approve', 'export'];
+      actions.forEach(act => {
+        matrixState[feat.id][act] = isChecked;
+        const check = document.querySelector(`input[data-feature="${feat.id}"][data-action="${act}"]`);
+        if (check) check.checked = isChecked;
+      });
+    });
+  });
+}
+
+// Navigation Tabs Switcher Logic
+function switchTab(targetPanelId, activeBtn) {
+  // Hide form view if active
+  closeEditRoleScreen();
+  
+  // Update view panel displays
+  document.querySelectorAll('.view-panel').forEach(panel => {
+    panel.classList.remove('active');
+  });
+  const target = document.getElementById(targetPanelId);
+  if (target) target.classList.add('active');
+  
+  // Set tab button highlighting
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  activeBtn.classList.add('active');
+  
+  currentActiveView = targetPanelId;
+  
+  // Update headers and actions based on selection
+  const title = document.getElementById('pageTitleText');
+  const breadcrumb = document.getElementById('breadcrumbText');
+  const actions = document.getElementById('headerActionsBlock');
+  
+  if (targetPanelId === 'roles-view') {
+    title.textContent = "Roles & Permissions";
+    breadcrumb.innerHTML = `Dashboard <i class="ti ti-chevron-right"></i> User Management <i class="ti ti-chevron-right"></i> <span>Roles List</span>`;
+    actions.style.display = "flex";
+  } else if (targetPanelId === 'users-view') {
+    title.textContent = "User Access Assignment";
+    breadcrumb.innerHTML = `Dashboard <i class="ti ti-chevron-right"></i> User Management <i class="ti ti-chevron-right"></i> <span>User Assignments</span>`;
+    actions.style.display = "none";
+    clearAllUserCheckboxSelections(); // Reset bulk selectors
+  } else if (targetPanelId === 'logs-view') {
+    title.textContent = "Security Audit Trails";
+    breadcrumb.innerHTML = `Dashboard <i class="ti ti-chevron-right"></i> System Logs <i class="ti ti-chevron-right"></i> <span>Security Audit Logs</span>`;
+    actions.style.display = "none";
+  }
+}
+
+// ═══════════════════════════════════════
+// TAB 1: ROLES MANAGEMENT VIEW
+// ═══════════════════════════════════════
+
+// Populate grid cards
+function renderRolesList() {
+  const container = document.getElementById('rolesGridContainer');
+  container.innerHTML = "";
+  
+  const searchVal = document.getElementById('rolesSearchInput').value.toLowerCase().trim();
+  const filterVal = document.getElementById('rolesStatusFilter').value;
+  
+  const filteredRoles = rolesDB.filter(role => {
+    const matchesSearch = role.name.toLowerCase().includes(searchVal) || role.desc.toLowerCase().includes(searchVal);
+    const matchesFilter = filterVal === 'all' || (filterVal === 'active' && role.status === 'active') || (filterVal === 'inactive' && role.status === 'inactive');
+    return matchesSearch && matchesFilter;
+  });
+  
+  if (filteredRoles.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-hint); background:var(--white); border-radius: var(--radius-lg); border:1px solid var(--border);">
+        <i class="ti ti-folder-off" style="font-size:36px; margin-bottom:8px; display:inline-block;"></i>
+        <p style="font-size:13.5px; font-weight:500;">No access roles found matching your filter options.</p>
+      </div>
+    `;
+    return;
+  }
+  
+  filteredRoles.forEach(role => {
+    const usersCount = getUserCountForRole(role.id);
+    const card = document.createElement('div');
+    card.className = "role-card";
+    
+    card.innerHTML = `
+      <div class="role-card-header">
+        <div class="role-card-title">
+          <i class="ti ti-shield-check" style="color: ${role.status === 'active' ? 'var(--green)' : 'var(--text-hint)'}; font-size:18px;"></i>
+          ${role.name}
+          ${role.isSystem ? '<span class="system-badge">System</span>' : ''}
+        </div>
+        <span class="status-pill ${role.status}">${role.status}</span>
+      </div>
+      
+      <p class="role-card-desc">${role.desc || 'No description provided.'}</p>
+      
+      <div class="role-card-footer">
+        <div class="role-users-count" title="${usersCount} school users assigned to this role">
+          <i class="ti ti-users"></i>
+          <span>${usersCount} User${usersCount !== 1 ? 's' : ''}</span>
+        </div>
+        
+        <div class="role-actions">
+          <button class="icon-btn" onclick="toggleCardActionDropdown(event, '${role.id}')" style="width:30px; height:30px;"><i class="ti ti-dots-vertical"></i></button>
+          
+          <div class="action-dropdown" id="dropdown-${role.id}">
+            <button class="action-dropdown-item" onclick="openEditRoleScreen('${role.id}')"><i class="ti ti-pencil"></i> Edit Permissions</button>
+            <button class="action-dropdown-item" onclick="executeRoleDuplication('${role.id}')"><i class="ti ti-copy"></i> Duplicate Role</button>
+            ${!role.isSystem ? `
+              <button class="action-dropdown-item danger" onclick="triggerDeleteRoleModal('${role.id}', '${role.name}')"><i class="ti ti-trash"></i> Delete Role</button>
+            ` : `
+              <button class="action-dropdown-item" style="opacity: 0.4;" onclick="triggerSystemRoleWarning('${role.name}')"><i class="ti ti-lock"></i> Protected Role</button>
+            `}
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Toggle option dropdown on role cards
+function toggleCardActionDropdown(event, roleId) {
+  event.stopPropagation();
+  const dropdown = document.getElementById(`dropdown-${roleId}`);
+  
+  // Close any other open dropdowns first
+  document.querySelectorAll('.action-dropdown.show').forEach(el => {
+    if (el !== dropdown) el.classList.remove('show');
+  });
+  
+  if (dropdown) dropdown.classList.toggle('show');
+}
+
+// Hide dropdowns when clicking anywhere on screen
+document.addEventListener('click', () => {
+  document.querySelectorAll('.action-dropdown.show').forEach(el => {
+    el.classList.remove('show');
+  });
+});
+
+// Trigger warning if editing system roles
+function triggerSystemRoleWarning(roleName) {
+  document.getElementById('systemRoleNameSpan').textContent = roleName;
+  openModal('systemRoleModal');
+}
+
+// Duplicate logic
+function executeRoleDuplication(roleId) {
+  const sourceRole = rolesDB.find(r => r.id === roleId);
+  if (!sourceRole) return;
+  
+  let newName = `${sourceRole.name} Copy`;
+  let newId = `${sourceRole.id.replace(/\s+/g, '')}copy`;
+  
+  // Ensure unique ID and Name
+  let suffix = 1;
+  while (rolesDB.some(r => r.id === newId)) {
+    suffix++;
+    newName = `${sourceRole.name} Copy ${suffix}`;
+    newId = `${sourceRole.id.replace(/\s+/g, '')}copy${suffix}`;
+  }
+  
+  const duplicatedRole = {
+    id: newId,
+    name: newName,
+    desc: `Duplicated duplicate copy of ${sourceRole.name}. ${sourceRole.desc}`,
+    status: sourceRole.status,
+    isSystem: false,
+    lastUpdated: getFormattedCurrentDate(),
+    permissions: JSON.parse(JSON.stringify(sourceRole.permissions)) // Deep clone matrix permissions
+  };
+  
+  rolesDB.push(duplicatedRole);
+  syncDatabase();
+  renderRolesList();
+  populateRolesFilters();
+  
+  logSecurityEvent("Ayush Saxena", "create", `Role Duplicated`, `Duplicated access role "${sourceRole.name}" into new custom role "${newName}".`);
+}
+
+// Delete warning validation checks
+function triggerDeleteRoleModal(roleId, roleName) {
+  // Check if role is system role
+  const roleObj = rolesDB.find(r => r.id === roleId);
+  if (roleObj && roleObj.isSystem) {
+    triggerSystemRoleWarning(roleName);
+    return;
+  }
+  
+  // Check if users are assigned
+  const usersCount = getUserCountForRole(roleId);
+  if (usersCount > 0) {
+    document.getElementById('warningModalText').innerHTML = `The role <strong style="color:var(--text);">${roleName}</strong> cannot be deleted because there are <strong style="color:var(--text);">${usersCount}</strong> users currently assigned to it.<br/><br/>Please reassign these users to another role in the **User Assignment** tab first before deleting this role.`;
+    openModal('warningModal');
+    return;
+  }
+  
+  document.getElementById('deleteRoleNameSpan').textContent = roleName;
+  document.getElementById('deleteRoleIdInput').value = roleId;
+  openModal('deleteConfirmModal');
+}
+
+// Delete execution
+function executeDeleteRole() {
+  const roleId = document.getElementById('deleteRoleIdInput').value;
+  const roleObj = rolesDB.find(r => r.id === roleId);
+  if (!roleObj) return;
+  
+  rolesDB = rolesDB.filter(r => r.id !== roleId);
+  syncDatabase();
+  renderRolesList();
+  populateRolesFilters();
+  closeModal('deleteConfirmModal');
+  
+  logSecurityEvent("Ayush Saxena", "delete", `Role Deleted`, `Permanently deleted the custom role "${roleObj.name}".`);
+}
+
+// ═══════════════════════════════════════
+// TAB 2: CREATE / EDIT ROLE SCREEN
+// ═══════════════════════════════════════
+
+// Form toggler opening
+function openCreateRoleScreen() {
+  // Setup interface header
+  document.getElementById('pageTitleText').textContent = "Create Access Role";
+  document.getElementById('breadcrumbText').innerHTML = `Dashboard <i class="ti ti-chevron-right"></i> User Management <i class="ti ti-chevron-right"></i> <span onclick="closeEditRoleScreen()" style="cursor:pointer; text-decoration:underline;">Roles List</span> <i class="ti ti-chevron-right"></i> <span>Create Role</span>`;
+  document.getElementById('headerActionsBlock').style.display = "none";
+  document.getElementById('tabsBar').style.display = "none";
+  
+  // Reset form inputs
+  document.getElementById('editRoleId').value = "";
+  document.getElementById('editRoleName').value = "";
+  document.getElementById('editRoleName').disabled = false;
+  document.getElementById('editRoleDesc').value = "";
+  document.getElementById('editRoleStatus').checked = true;
+  document.getElementById('editRoleStatusText').textContent = "Active";
+  
+  // Clear permissions temp matrix state
+  matrixState = {};
+  ERP_STRUCTURE.forEach(group => {
+    group.features.forEach(feat => {
+      matrixState[feat.id] = { view: false, create: false, edit: false, delete: false, approve: false, export: false };
+    });
+  });
+  
+  // Sync checkboxes to view
+  syncMatrixStateToCheckboxes();
+  
+  // Activate form page view
+  document.getElementById('roles-view').classList.remove('active');
+  document.getElementById('edit-role-screen').classList.add('active');
+}
+
+// Trigger Form for editing permissions
+function openEditRoleScreen(roleId) {
+  const roleObj = rolesDB.find(r => r.id === roleId);
+  if (!roleObj) return;
+  
+  // Check elevation permissions mock constraint: cannot grant permissions higher than Super Admin, but since Ayush Saxena is Super Admin, we proceed.
+  
+  document.getElementById('pageTitleText').textContent = `Edit Role: ${roleObj.name}`;
+  document.getElementById('breadcrumbText').innerHTML = `Dashboard <i class="ti ti-chevron-right"></i> User Management <i class="ti ti-chevron-right"></i> <span onclick="closeEditRoleScreen()" style="cursor:pointer; text-decoration:underline;">Roles List</span> <i class="ti ti-chevron-right"></i> <span>Edit permissions</span>`;
+  document.getElementById('headerActionsBlock').style.display = "none";
+  document.getElementById('tabsBar').style.display = "none";
+  
+  // Hydrate fields
+  document.getElementById('editRoleId').value = roleObj.id;
+  document.getElementById('editRoleName').value = roleObj.name;
+  
+  // System role protections: names cannot be modified
+  document.getElementById('editRoleName').disabled = roleObj.isSystem;
+  
+  document.getElementById('editRoleDesc').value = roleObj.desc || "";
+  document.getElementById('editRoleStatus').checked = roleObj.status === 'active';
+  document.getElementById('editRoleStatusText').textContent = roleObj.status === 'active' ? "Active" : "Inactive";
+  
+  // Clone permission settings to matrix
+  matrixState = JSON.parse(JSON.stringify(roleObj.permissions));
+  
+  // Sync view
+  syncMatrixStateToCheckboxes();
+  
+  document.getElementById('roles-view').classList.remove('active');
+  document.getElementById('edit-role-screen').classList.add('active');
+}
+
+// Sync the matrix checkboxes based on matrixState data structure
+function syncMatrixStateToCheckboxes() {
+  ERP_STRUCTURE.forEach(group => {
+    group.features.forEach(feat => {
+      const featPerms = matrixState[feat.id] || { view: false, create: false, edit: false, delete: false, approve: false, export: false };
+      
+      const actions = ['view', 'create', 'edit', 'delete', 'approve', 'export'];
+      actions.forEach(act => {
+        const checkbox = document.querySelector(`input[data-feature="${feat.id}"][data-action="${act}"]`);
+        if (checkbox) {
+          checkbox.checked = featPerms[act] || false;
+        }
+      });
+    });
+  });
+}
+
+// Close form and return to grid
+function closeEditRoleScreen() {
+  document.getElementById('edit-role-screen').classList.remove('active');
+  
+  // Restore dashboard header layouts
+  if (currentActiveView === 'roles-view') {
+    document.getElementById('roles-view').classList.add('active');
+    switchTab('roles-view', document.querySelector('.tab-btn:first-child'));
+  } else if (currentActiveView === 'users-view') {
+    document.getElementById('users-view').classList.add('active');
+    switchTab('users-view', document.querySelector('.tab-btn:nth-child(2)'));
+  } else {
+    document.getElementById('logs-view').classList.add('active');
+    switchTab('logs-view', document.querySelector('.tab-btn:last-child'));
+  }
+  
+  document.getElementById('tabsBar').style.display = "flex";
+}
+
+// Form save event handler
+function saveRoleForm(event) {
+  event.preventDefault();
+  
+  const roleId = document.getElementById('editRoleId').value;
+  const roleName = document.getElementById('editRoleName').value.trim();
+  const roleDesc = document.getElementById('editRoleDesc').value.trim();
+  const isActive = document.getElementById('editRoleStatus').checked;
+  const statusStr = isActive ? 'active' : 'inactive';
+  
+  if (roleId) {
+    // ════ EDITING EXISTING ROLE ════
+    const roleIndex = rolesDB.findIndex(r => r.id === roleId);
+    if (roleIndex === -1) return;
+    
+    // Safety block: active Super Admin system role cannot be inactivated or renamed
+    if (rolesDB[roleIndex].isSystem && rolesDB[roleIndex].id === "superadmin") {
+      if (!isActive) {
+        alert("Security Rule Blocked: The Super Admin role must remain active to prevent lockouts.");
+        return;
+      }
+    }
+    
+    rolesDB[roleIndex].name = roleName;
+    rolesDB[roleIndex].desc = roleDesc;
+    rolesDB[roleIndex].status = statusStr;
+    rolesDB[roleIndex].lastUpdated = getFormattedCurrentDate();
+    rolesDB[roleIndex].permissions = JSON.parse(JSON.stringify(matrixState));
+    
+    logSecurityEvent("Ayush Saxena", "update", "Role Permissions", `Modified configuration permissions matrix for access role "${roleName}".`);
+  } else {
+    // ════ CREATING NEW ACCESS ROLE ════
+    // Generate safe custom id
+    const newId = roleName.toLowerCase().replace(/[^a-z0-9]/g, '');
+    
+    if (rolesDB.some(r => r.id === newId)) {
+      alert("Validation Conflict: An access role with this name already exists. Please choose a unique name.");
+      return;
+    }
+    
+    const newRole = {
+      id: newId,
+      name: roleName,
+      desc: roleDesc,
+      status: statusStr,
+      isSystem: false,
+      lastUpdated: getFormattedCurrentDate(),
+      permissions: JSON.parse(JSON.stringify(matrixState))
+    };
+    
+    rolesDB.push(newRole);
+    logSecurityEvent("Ayush Saxena", "create", "Role Created", `Successfully created new custom access role "${roleName}".`);
+  }
+  
+  syncDatabase();
+  renderRolesList();
+  populateRolesFilters();
+  renderUsersList(); // Update any tables referencing active roles
+  
+  closeEditRoleScreen();
+}
+
+// ═══════════════════════════════════════
+// TAB 3: USER ACCESS ASSIGNMENT
+// ═══════════════════════════════════════
+
+// Populate filter select options
+function populateRolesFilters() {
+  const userFilter = document.getElementById('usersRoleFilter');
+  const bulkSelect = document.getElementById('bulkTargetRoleSelect');
+  
+  userFilter.innerHTML = '<option value="all">All Access Roles</option>';
+  bulkSelect.innerHTML = '<option value="" disabled selected>-- Choose Role --</option>';
+  
+  rolesDB.forEach(role => {
+    if (role.status === 'active') {
+      userFilter.innerHTML += `<option value="${role.id}">${role.name}</option>`;
+      bulkSelect.innerHTML += `<option value="${role.id}">${role.name}</option>`;
+    }
+  });
+}
+
+// Render Users list grid
+function renderUsersList() {
+  const body = document.getElementById('usersTableBody');
+  body.innerHTML = "";
+  
+  const searchVal = document.getElementById('usersSearchInput').value.toLowerCase().trim();
+  const roleFilterVal = document.getElementById('usersRoleFilter').value;
+  
+  const filteredUsers = usersDB.filter(user => {
+    const matchesSearch = user.name.toLowerCase().includes(searchVal) || user.email.toLowerCase().includes(searchVal);
+    const matchesFilter = roleFilterVal === 'all' || user.role === roleFilterVal;
+    return matchesSearch && matchesFilter;
+  });
+  
+  if (filteredUsers.length === 0) {
+    body.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center; padding: 40px; color: var(--text-hint);">
+          <i class="ti ti-user-exclamation" style="font-size:32px; margin-bottom:8px; display:inline-block;"></i>
+          <p style="font-size:13px; font-weight:500;">No school user assignments match your filters.</p>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+  
+  filteredUsers.forEach(user => {
+    const userRoleObj = rolesDB.find(r => r.id === user.role) || { name: user.role, status: 'inactive' };
+    
+    // Select dropdown options injection
+    let selectOptions = "";
+    rolesDB.forEach(r => {
+      if (r.status === 'active' || r.id === user.role) {
+        selectOptions += `<option value="${r.id}" ${r.id === user.role ? 'selected' : ''}>${r.name}</option>`;
+      }
+    });
+    
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><input type="checkbox" class="user-row-checkbox" value="${user.id}" onclick="handleUserCheckboxClick()" /></td>
+      <td>
+        <div style="display:flex; align-items:center; gap:10px; font-weight:600;">
+          <div class="user-avatar-placeholder">${user.name.charAt(0)}</div>
+          <span>${user.name}</span>
+        </div>
+      </td>
+      <td>${user.email}</td>
+      <td>
+        <span class="role-badge-pill ${user.role}">
+          ${userRoleObj.name}
+        </span>
+      </td>
+      <td style="color: var(--text-muted); font-size:12px;">${user.dateAssigned}</td>
+      <td style="text-align: right;">
+        <select class="role-assign-select" onchange="executeSingleUserRoleChange('${user.id}', this.value)">
+          ${selectOptions}
+        </select>
+      </td>
+    `;
+    body.appendChild(row);
+  });
+}
+
+// Single User role assignment change
+function executeSingleUserRoleChange(userId, newRoleId) {
+  const user = usersDB.find(u => u.id === userId);
+  if (!user) return;
+  
+  const oldRoleObj = rolesDB.find(r => r.id === user.role) || { name: user.role };
+  const newRoleObj = rolesDB.find(r => r.id === newRoleId) || { name: newRoleId };
+  
+  // Super Admin security loop limit check
+  if (user.id === "U101" && newRoleId !== "superadmin") {
+    alert("Security Loop Violation: You cannot demote the core developer Super Admin account Ayush Saxena to prevent total system lockout.");
+    renderUsersList(); // Restore original select option
+    return;
+  }
+  
+  user.role = newRoleId;
+  user.dateAssigned = getFormattedCurrentDate();
+  syncDatabase();
+  renderUsersList();
+  renderRolesList(); // Update counts in first tab
+  
+  logSecurityEvent("Ayush Saxena", "update", "User Assignment", `Reassigned user "${user.name}" role from "${oldRoleObj.name}" to "${newRoleObj.name}".`);
+}
+
+// Multi-select actions logic
+function toggleAllUserSelections(masterCheckbox) {
+  const checkboxes = document.querySelectorAll('.user-row-checkbox');
+  checkboxes.forEach(cb => {
+    cb.checked = masterCheckbox.checked;
+  });
+  updateFloatingBulkActionPanel();
+}
+
+function handleUserCheckboxClick() {
+  const checkboxes = document.querySelectorAll('.user-row-checkbox');
+  const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+  document.getElementById('userSelectAllCheckbox').checked = allChecked;
+  updateFloatingBulkActionPanel();
+}
+
+function updateFloatingBulkActionPanel() {
+  const checkedBoxes = document.querySelectorAll('.user-row-checkbox:checked');
+  const count = checkedBoxes.length;
+  const panel = document.getElementById('floatingBulkActionPanel');
+  
+  if (count > 0) {
+    document.getElementById('bulkSelectedCount').textContent = count;
+    panel.classList.add('show');
+  } else {
+    panel.classList.remove('show');
+  }
+}
+
+function clearAllUserCheckboxSelections() {
+  document.getElementById('userSelectAllCheckbox').checked = false;
+  const checkboxes = document.querySelectorAll('.user-row-checkbox');
+  checkboxes.forEach(cb => cb.checked = false);
+  updateFloatingBulkActionPanel();
+}
+
+// Bulk assignments modal
+function openBulkAssignModal() {
+  const checkedBoxes = document.querySelectorAll('.user-row-checkbox:checked');
+  document.getElementById('bulkUserCountSpan').textContent = checkedBoxes.length;
+  openModal('bulkChangeRoleModal');
+}
+
+// Bulk assignment trigger save
+function executeBulkRoleChange() {
+  const targetRoleId = document.getElementById('bulkTargetRoleSelect').value;
+  if (!targetRoleId) {
+    alert("Please select a target role to apply.");
+    return;
+  }
+  
+  const targetRoleObj = rolesDB.find(r => r.id === targetRoleId);
+  if (!targetRoleObj) return;
+  
+  const checkedBoxes = document.querySelectorAll('.user-row-checkbox:checked');
+  const selectedUserIds = Array.from(checkedBoxes).map(cb => cb.value);
+  
+  let successCount = 0;
+  let skippedNames = [];
+  
+  selectedUserIds.forEach(uid => {
+    const user = usersDB.find(u => u.id === uid);
+    if (user) {
+      // Prevent demoting primary administrator account
+      if (user.id === "U101" && targetRoleId !== "superadmin") {
+        skippedNames.push(user.name);
+        return;
+      }
+      user.role = targetRoleId;
+      user.dateAssigned = getFormattedCurrentDate();
+      successCount++;
+    }
+  });
+  
+  syncDatabase();
+  renderUsersList();
+  renderRolesList();
+  clearAllUserCheckboxSelections();
+  closeModal('bulkChangeRoleModal');
+  
+  if (skippedNames.length > 0) {
+    alert(`Bulk role changes processed.\nAssigned to ${successCount} users.\nSkipped core developer ${skippedNames.join(', ')} to protect system access.`);
+  } else {
+    alert(`Successfully reassigned ${successCount} school users to role: ${targetRoleObj.name}`);
+  }
+  
+  logSecurityEvent("Ayush Saxena", "update", "Bulk Assignments", `Reassigned ${successCount} school user credentials in bulk to "${targetRoleObj.name}" role.`);
+}
+
+// ═══════════════════════════════════════
+// TAB 4: SECURITY AUDIT LOGS VIEW
+// ═══════════════════════════════════════
+
+function renderAuditLogsList() {
+  const body = document.getElementById('logsTableBody');
+  body.innerHTML = "";
+  
+  const searchVal = document.getElementById('logsSearchInput').value.toLowerCase().trim();
+  
+  const filteredLogs = auditLogsDB.filter(log => {
+    return log.actor.toLowerCase().includes(searchVal) || 
+           log.target.toLowerCase().includes(searchVal) || 
+           log.desc.toLowerCase().includes(searchVal) ||
+           log.action.toLowerCase().includes(searchVal);
+  });
+  
+  if (filteredLogs.length === 0) {
+    body.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center; padding: 40px; color: var(--text-hint);">
+          <i class="ti ti-activity" style="font-size:32px; margin-bottom:8px; display:inline-block;"></i>
+          <p style="font-size:13px; font-weight:500;">No security audit trail matches found.</p>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+  
+  // Render chronologically backwards
+  const reversedLogs = [...filteredLogs].reverse();
+  
+  reversedLogs.forEach(log => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td class="log-timestamp">${log.timestamp}</td>
+      <td style="font-weight:600;"><div style="display:flex; align-items:center; gap:8px;"><div class="user-avatar-placeholder" style="width:24px; height:24px; font-size:9.5px;">${log.actor.charAt(0)}</div><span>${log.actor}</span></div></td>
+      <td><span class="log-badge-action ${log.action}">${log.action}</span></td>
+      <td style="font-weight:500; font-size:12px; color:var(--green);">${log.target}</td>
+      <td style="font-size:12px; line-height:1.4; max-width: 320px; overflow-wrap: break-word;">${log.desc}</td>
+    `;
+    body.appendChild(row);
+  });
+}
+
+// Log builder utility
+function logSecurityEvent(actor, action, target, desc) {
+  const log = {
+    timestamp: getFormattedCurrentDate(),
+    actor: actor,
+    action: action,
+    target: target,
+    desc: desc
+  };
+  auditLogsDB.push(log);
+  syncDatabase();
+  renderAuditLogsList();
+}
+
+// Clear logs modal triggers
+function triggerClearLogsModal() {
+  openModal('clearLogsModal');
+}
+
+function executeClearAuditLogs() {
+  auditLogsDB = [];
+  closeModal('clearLogsModal');
+  
+  // Always log the clear event itself as the sole survivor log
+  logSecurityEvent("Ayush Saxena", "delete", "Audit Trail", "Cleared security log registry archives permanently.");
+}
+
+// Export mock capability
+function exportData() {
+  let exportSource = "";
+  if (currentActiveView === 'roles-view') {
+    exportSource = "Roles_Permissions_Dataset";
+  } else if (currentActiveView === 'users-view') {
+    exportSource = "User_Access_Mapping_Dataset";
+  } else {
+    exportSource = "Security_Audit_Trail";
+  }
+  
+  const timestamp = new Date().toISOString().slice(0,10);
+  alert(`Triggered Export: ${exportSource}_${timestamp}.xlsx generated. Check your local desktop downloads.`);
+  
+  logSecurityEvent("Ayush Saxena", "export", exportSource, `Triggered bulk file export format XLS representing current system configurations.`);
+}
+
+// Helper: current formatted date
+function getFormattedCurrentDate() {
+  const now = new Date();
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = months[now.getMonth()];
+  const year = now.getFullYear();
+  
+  let hours = now.getHours();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // convert 0 to 12
+  const mins = String(now.getMinutes()).padStart(2, '0');
+  
+  return `${day} ${month} ${year}, ${hours}:${mins} ${ampm}`;
+}
+
+// Simple dynamic Modal controllers
+function openModal(modalId) {
+  document.getElementById(modalId).classList.add('show');
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).classList.remove('show');
+}
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
