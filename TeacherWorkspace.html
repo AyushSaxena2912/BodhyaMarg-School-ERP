@@ -163,14 +163,15 @@ body {
 
 /* Dashboard Layout */
 .dashboard-grid { display: grid; grid-template-columns: 2.2fr 1fr; gap: 24px; }
-.col-main { display: flex; flex-direction: column; gap: 24px; }
-.col-side { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 0; height: fit-content; z-index: 5; }
+.col-main { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.col-side { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 0; height: fit-content; z-index: 5; min-width: 0; }
 
 /* Premium Cards */
 .card { 
   background: var(--surface); border: 1px solid var(--border); 
   border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); 
   padding: 24px; transition: box-shadow 0.3s;
+  min-width: 0;
 }
 .card:hover { box-shadow: var(--shadow); }
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
