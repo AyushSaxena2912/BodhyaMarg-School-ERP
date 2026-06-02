@@ -517,7 +517,7 @@ function renderReportCard() {
             <tr>
               <th rowspan="3" style="text-align:left; padding-left:12px; min-width:140px;">SUBJECTS</th>
               <th colspan="5" class="term-header">TERM - I</th>
-              <th colspan="6" class="term2-header">TERM - II</th>
+              <th colspan="5" class="term2-header">TERM - II</th>
               <th colspan="2" class="final-header">FINAL</th>
               <th colspan="2" class="personality-header">PERSONALITY<br>ASSESSMENT</th>
             </tr>
@@ -527,7 +527,7 @@ function renderReportCard() {
               <th class="term-header">SA 1</th>
               <th class="term2-header" colspan="2">FA 3</th>
               <th class="term2-header" colspan="2">FA 4</th>
-              <th class="term2-header" colspan="2">SA 2</th>
+              <th class="term2-header">SA 2</th>
               <th class="final-header" style="font-size:9px;">SA 1 + SA 2<br>20%+80%</th>
               <th class="final-header">Grade</th>
               <th class="personality-header">Trait</th>
@@ -539,7 +539,7 @@ function renderReportCard() {
               <th class="term-header">Marks</th>
               <th class="term2-header">Marks</th><th class="term2-header">Grade</th>
               <th class="term2-header">Marks</th><th class="term2-header">Grade</th>
-              <th class="term2-header">Marks</th><th class="term2-header">Grade</th>
+              <th class="term2-header">Marks</th>
               <th class="final-header">Marks</th>
               <th class="final-header">Grade</th>
               <th class="personality-header" colspan="2"></th>
@@ -587,7 +587,7 @@ function renderReportCard() {
               <td class="sub-name">TOTAL MARKS</td>
               <td colspan="4" style="font-size:11px; color:var(--text-muted);">—</td>
               <td style="font-weight:700;">${calc.totalS1}</td>
-              <td colspan="5" style="font-size:11px; color:var(--text-muted);">—</td>
+              <td colspan="4" style="font-size:11px; color:var(--text-muted);">—</td>
               <td style="font-weight:700;">${calc.totalS2}</td>
               <td style="font-weight:700;" class="${gTotal.css}">${calc.totalFinal}</td>
               <td class="${gTotal.css}">${gTotal.g}</td>
@@ -596,7 +596,7 @@ function renderReportCard() {
             <tr class="total-row">
               <td class="sub-name">Percentage</td>
               <td colspan="5" style="font-weight:700; font-size:12px;">${calc.pctS1}%</td>
-              <td colspan="6" style="font-weight:700; font-size:12px;">${calc.pctS2}%</td>
+              <td colspan="5" style="font-weight:700; font-size:12px;">${calc.pctS2}%</td>
               <td colspan="2" style="font-weight:700; font-size:13px;" class="${gTotal.css}">${calc.pctFin}%</td>
               <td colspan="2"></td>
             </tr>
