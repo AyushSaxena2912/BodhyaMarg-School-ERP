@@ -59,6 +59,7 @@ body {
 /* Base Layout */
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
 .content { flex: 1; overflow-y: auto; padding: 24px 32px; display: flex; flex-direction: column; gap: 24px; scroll-behavior: smooth; }
+.content > * { flex-shrink: 0; }
 .content::-webkit-scrollbar { width: 6px; }
 .content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
@@ -746,10 +747,6 @@ let currentUser = TEACHERS.mohan;
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   renderUI();
-  // Load sidebar
-  const script = document.createElement('script');
-  script.src = 'sidebar.js';
-  document.body.appendChild(script);
 });
 
 function switchPersona(id) {
@@ -865,5 +862,6 @@ function submitLeave(e) {
   closeLeaveModal();
 }
 </script>
+<script src="sidebar.js"></script>
 </body>
 </html>
