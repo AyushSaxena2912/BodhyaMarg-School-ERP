@@ -279,7 +279,10 @@ const STUDENTS = [
       com: { f1:23, f2:25, s1:82, f3:24, f4:23, s2:85 },
       gk:  { f1:20, f2:21, s1:75, f3:19, f4:22, s2:78 },
     },
-    attendance: { working: 220, present: 198 },
+    attendance: { 
+      f1: { w: 38, p: 18 }, f2: { w: 62, p: 47 }, s1: { w: 105, p: 86 },
+      f3: { w: 149, p: 121 }, f4: { w: 172, p: 137 }, s2: { w: 206, p: 175 }
+    },
     personality: [4, 4, 3, 4, 5, 4, 4, 3, 4],
     remarks: { s1: 'Satisfactory Performance', s2: 'Satisfactory Performance' }
   },
@@ -296,27 +299,13 @@ const STUDENTS = [
       com: { f1:20, f2:22, s1:72, f3:21, f4:20, s2:75 },
       gk:  { f1:18, f2:17, s1:60, f3:16, f4:19, s2:63 },
     },
-    attendance: { working: 220, present: 172 },
+    attendance: { 
+      f1: { w: 38, p: 25 }, f2: { w: 62, p: 50 }, s1: { w: 105, p: 90 },
+      f3: { w: 149, p: 130 }, f4: { w: 172, p: 150 }, s2: { w: 206, p: 180 }
+    },
     personality: [3, 3, 3, 3, 2, 3, 3, 3, 3],
     remarks: { s1: 'Needs Improvement', s2: 'Needs Improvement' }
-  },
-  {
-    name: 'Ishaan Verma', roll: 'X-A-03', cls: 'VIII', sec: 'A',
-    admissionNo: 'ADM2021003', dob: '22-Nov-2010', fatherName: 'Suresh Verma', motherName: 'Meena Verma',
-    marks: {
-      eng: { f1:8,  f2:10, s1:28, f3:9,  f4:11, s2:30 },
-      hin: { f1:12, f2:11, s1:40, f3:10, f4:12, s2:42 },
-      mat: { f1:6,  f2:8,  s1:22, f3:7,  f4:9,  s2:25 },
-      sci: { f1:10, f2:9,  s1:32, f3:11, f4:10, s2:35 },
-      sst: { f1:14, f2:13, s1:45, f3:12, f4:14, s2:48 },
-      san: { f1:7,  f2:8,  s1:25, f3:8,  f4:9,  s2:28 },
-      com: { f1:15, f2:16, s1:52, f3:14, f4:15, s2:55 },
-      gk:  { f1:11, f2:10, s1:38, f3:10, f4:12, s2:40 },
-    },
-    attendance: { working: 220, present: 145 },
-    personality: [2, 2, 2, 3, 1, 2, 2, 2, 2],
-    remarks: { s1: 'Very Poor Performance', s2: 'Very Poor Performance' }
-  },
+  }
 ];
 
 // =====================================================================
@@ -324,24 +313,30 @@ const STUDENTS = [
 // =====================================================================
 function gradeFromPct(pct) {
   if (pct >= 90) return { g: 'O',  css: 'grade-O' };
-  if (pct >= 80) return { g: 'A+', css: 'grade-Ap' };
-  if (pct >= 70) return { g: 'A',  css: 'grade-A' };
-  if (pct >= 60) return { g: 'B+', css: 'grade-Bp' };
-  if (pct >= 50) return { g: 'B',  css: 'grade-B' };
-  if (pct >= 33) return { g: 'C',  css: 'grade-C' };
-  return { g: 'F', css: 'grade-F' };
+  if (pct >= 80) return { g: 'A1', css: 'grade-Ap' };
+  if (pct >= 70) return { g: 'A2', css: 'grade-A' };
+  if (pct >= 60) return { g: 'B1', css: 'grade-Bp' };
+  if (pct >= 50) return { g: 'B2', css: 'grade-B' };
+  if (pct >= 40) return { g: 'C1', css: 'grade-C' };
+  if (pct >= 33) return { g: 'C2', css: 'grade-C' };
+  if (pct >= 20) return { g: 'D',  css: 'grade-F' };
+  return { g: 'E1', css: 'grade-F' };
 }
 
 function gradeFromMark(mark, max) {
+  if (max === 0) return { g: '', css: '' };
   return gradeFromPct((mark / max) * 100);
 }
 
 function processStudent(student) {
   const rows = [];
-  let totalS1 = 0, totalS2 = 0, totalFinal = 0;
-  let totalMaxS1 = 0, totalMaxS2 = 0, totalMaxFinal = 0;
-  let anyFail = false;
-
+  
+  const cols = {
+    f1: { marks: 0, max: 0 }, f2: { marks: 0, max: 0 }, s1: { marks: 0, max: 0 },
+    f3: { marks: 0, max: 0 }, f4: { marks: 0, max: 0 }, s2: { marks: 0, max: 0 },
+    fin: { marks: 0, max: 0 }
+  };
+  
   SUBJECTS.forEach(sub => {
     const m = student.marks[sub.id] || {};
     const f1 = m.f1 || 0, f2 = m.f2 || 0;
@@ -350,15 +345,6 @@ function processStudent(student) {
 
     const maxF = sub.maxF, maxS = sub.maxS;
 
-    // S1 total = best of (F1+F2) + S1 exam
-    const termISub = f1 + f2 + s1;
-    const maxTermI  = maxF + maxF + maxS;
-
-    // S2 total = best of (F3+F4) + S2 exam
-    const termIISub = f3 + f4 + s2;
-    const maxTermII = maxF + maxF + maxS;
-
-    // Final = 20% of S1-exam + 80% of S2-exam
     const finalMark = Math.round((s1 * 0.20) + (s2 * 0.80));
     const maxFinal  = Math.round((maxS * 0.20) + (maxS * 0.80));
 
@@ -370,24 +356,26 @@ function processStudent(student) {
     const gs2   = gradeFromMark(s2, maxS);
     const gFin  = gradeFromMark(finalMark, maxFinal);
 
-    if (gFin.g === 'F') anyFail = true;
-
-    totalS1    += termISub;  totalMaxS1  += maxTermI;
-    totalS2    += termIISub; totalMaxS2  += maxTermII;
-    totalFinal += finalMark; totalMaxFinal += maxFinal;
+    cols.f1.marks += f1; cols.f1.max += maxF;
+    cols.f2.marks += f2; cols.f2.max += maxF;
+    cols.s1.marks += s1; cols.s1.max += maxS;
+    cols.f3.marks += f3; cols.f3.max += maxF;
+    cols.f4.marks += f4; cols.f4.max += maxF;
+    cols.s2.marks += s2; cols.s2.max += maxS;
+    cols.fin.marks += finalMark; cols.fin.max += maxFinal;
 
     rows.push({ sub, f1, gf1, f2, gf2, s1, gs1, f3, gf3, f4, gf4, s2, gs2, finalMark, gFin });
   });
 
-  const pctS1  = ((totalS1  / totalMaxS1)  * 100).toFixed(1);
-  const pctS2  = ((totalS2  / totalMaxS2)  * 100).toFixed(1);
-  const pctFin = ((totalFinal / totalMaxFinal) * 100).toFixed(1);
-  const finalGrade = gradeFromPct(parseFloat(pctFin));
+  Object.keys(cols).forEach(k => {
+    cols[k].pct = cols[k].max > 0 ? ((cols[k].marks / cols[k].max) * 100).toFixed(1) : 0;
+    cols[k].res = cols[k].pct >= 33 ? 'Pass' : 'Fail';
+  });
+
+  const finalGrade = gradeFromPct(parseFloat(cols.fin.pct));
 
   return {
-    rows, totalS1, totalMaxS1, totalS2, totalMaxS2,
-    totalFinal, totalMaxFinal, pctS1, pctS2, pctFin,
-    finalGrade, anyFail
+    rows, cols, finalGrade
   };
 }
 
@@ -397,6 +385,12 @@ function processStudent(student) {
 function mkCell(mark, gradeObj) {
   return `<td>${mark}</td><td class="${gradeObj.css}">${gradeObj.g}</td>`;
 }
+function makeCol(val, cs=2, css='') {
+  return `<td colspan="${cs}" style="font-weight:700; ${css}">${val}</td>`;
+}
+function getResCss(res) {
+  return `color:${res==='Pass'?'#146e38':'#dc2626'}; font-family: 'Brush Script MT', cursive; font-size:16px;`;
+}
 
 function renderReportCard() {
   const params = new URLSearchParams(window.location.search);
@@ -404,16 +398,14 @@ function renderReportCard() {
 
   const student = STUDENTS.find(s => s.roll === rollNo) || STUDENTS[0];
   const calc = processStudent(student);
-  const att = student.attendance;
-  const attPct = ((att.present / att.working) * 100).toFixed(1);
-  const attColor = attPct >= 90 ? '#059669' : attPct >= 75 ? '#d97706' : '#dc2626';
-  const resultClass = calc.anyFail ? 'fail' : 'pass';
-  const resultText  = calc.anyFail ? 'FAILED' : 'PROMOTED';
 
   // Subject rows
-  let subjectRows = '';
-  calc.rows.forEach(r => {
-    subjectRows += `
+  let html = '';
+  calc.rows.forEach((r, i) => {
+    const hasPers = i < PERSONALITY.length;
+    const persLabel = hasPers ? PERSONALITY[i] : '';
+    const persGrade = hasPers ? (GRADE_LABELS[student.personality[i]] || 'B') : '';
+    html += `
       <tr>
         <td class="sub-name">${r.sub.name}</td>
         ${mkCell(r.f1, r.gf1)}
@@ -422,47 +414,128 @@ function renderReportCard() {
         ${mkCell(r.f3, r.gf3)}
         ${mkCell(r.f4, r.gf4)}
         ${mkCell(r.s2, r.gs2)}
-        <td class="${r.gFin.css}" style="font-weight:700;">${r.finalMark}</td>
-        <td class="${r.gFin.css}">${r.gFin.g}</td>
+        <td style="font-weight:700; color:#0f172a;">${r.finalMark}</td>
+        <td class="${r.gFin.css}" style="font-weight:700;">${r.gFin.g}</td>
+        <td class="pers-trait">${persLabel}</td>
+        <td style="font-weight:800; color:#0f172a;">${persGrade}</td>
       </tr>`;
   });
-
-  // Total row
-  const gTotal = gradeFromPct(parseFloat(calc.pctFin));
-  subjectRows += `
-    <tr class="total-row">
-      <td class="sub-name">TOTAL MARKS</td>
-      <td colspan="2">—</td>
-      <td colspan="2">—</td>
-      <td style="font-weight:700;">${calc.totalS1}</td>
-      <td colspan="2">—</td>
-      <td colspan="2">—</td>
-      <td style="font-weight:700;">${calc.totalS2}</td>
-      <td style="font-weight:700;" class="${gTotal.css}">${calc.totalFinal}</td>
-      <td class="${gTotal.css}">${gTotal.g}</td>
-    </tr>
-    <tr class="total-row">
-      <td class="sub-name">Percentage</td>
-      <td colspan="5" style="font-weight:700;">${calc.pctS1}%</td>
-      <td colspan="5" style="font-weight:700;">${calc.pctS2}%</td>
-      <td colspan="2" style="font-weight:700;" class="${gTotal.css}">${calc.pctFin}%</td>
-    </tr>`;
-
-  // Personality rows
-  let persRows = '';
-  PERSONALITY.forEach((trait, i) => {
-    const grade = GRADE_LABELS[student.personality[i]] || 'B';
-    persRows += `
+  
+  // Extra personality rows
+  for (let i = calc.rows.length; i < PERSONALITY.length; i++) {
+    const persGrade = GRADE_LABELS[student.personality[i]] || 'B';
+    html += `
       <tr>
-        <td style="text-align:left; padding-left:10px; font-size:11px;">${trait}</td>
-        <td style="font-weight:700; color:#7c2d12;">${grade}</td>
+        <td class="sub-name"></td>
+        <td colspan="14"></td>
+        <td class="pers-trait">${PERSONALITY[i]}</td>
+        <td style="font-weight:800; color:#0f172a;">${persGrade}</td>
       </tr>`;
-  });
+  }
+
+  // Summary Rows
+  html += `
+  <tr class="total-row">
+    <td class="sub-name">TOTAL MARKS</td>
+    ${makeCol(`${calc.cols.f1.marks}/${calc.cols.f1.max}`)}
+    ${makeCol(`${calc.cols.f2.marks}/${calc.cols.f2.max}`)}
+    ${makeCol(`${calc.cols.s1.marks}/${calc.cols.s1.max}`)}
+    ${makeCol(`${calc.cols.f3.marks}/${calc.cols.f3.max}`)}
+    ${makeCol(`${calc.cols.f4.marks}/${calc.cols.f4.max}`)}
+    ${makeCol(`${calc.cols.s2.marks}/${calc.cols.s2.max}`)}
+    ${makeCol(`${calc.cols.fin.marks}/${calc.cols.fin.max}`)}
+    <td colspan="2" style="background:#fff;"></td>
+  </tr>
+  <tr class="total-row">
+    <td class="sub-name">Percentage</td>
+    ${makeCol(calc.cols.f1.pct+'%')}
+    ${makeCol(calc.cols.f2.pct+'%')}
+    ${makeCol(calc.cols.s1.pct+'%')}
+    ${makeCol(calc.cols.f3.pct+'%')}
+    ${makeCol(calc.cols.f4.pct+'%')}
+    ${makeCol(calc.cols.s2.pct+'%')}
+    ${makeCol(calc.cols.fin.pct+'%')}
+    <td colspan="2" style="background:#fff;"></td>
+  </tr>
+  <tr class="total-row">
+    <td class="sub-name">Result</td>
+    <td colspan="2" style="${getResCss(calc.cols.f1.res)}">${calc.cols.f1.res}</td>
+    <td colspan="2" style="${getResCss(calc.cols.f2.res)}">${calc.cols.f2.res}</td>
+    <td colspan="2" style="${getResCss(calc.cols.s1.res)}">${calc.cols.s1.res}</td>
+    <td colspan="2" style="${getResCss(calc.cols.f3.res)}">${calc.cols.f3.res}</td>
+    <td colspan="2" style="${getResCss(calc.cols.f4.res)}">${calc.cols.f4.res}</td>
+    <td colspan="2" style="${getResCss(calc.cols.s2.res)}">${calc.cols.s2.res}</td>
+    <td colspan="2" style="${getResCss(calc.cols.fin.res)}">${calc.cols.fin.res}</td>
+    <td colspan="2" style="background:#fff;"></td>
+  </tr>
+  `;
+
+  // Attendance
+  const att = student.attendance || {};
+  const aF1 = att.f1 || {w:'', p:''};
+  const aF2 = att.f2 || {w:'', p:''};
+  const aS1 = att.s1 || {w:'', p:''};
+  const aF3 = att.f3 || {w:'', p:''};
+  const aF4 = att.f4 || {w:'', p:''};
+  const aS2 = att.s2 || {w:'', p:''};
+
+  const attPct = (w, p) => (w && p) ? Math.round((p/w)*100)+'%' : '';
+
+  html += `
+  <tr>
+    <td class="sub-name" style="font-weight:600; color:#334155;">Total Working Days</td>
+    ${makeCol(aF1.w, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(aF2.w, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(aS1.w, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(aF3.w, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(aF4.w, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(aS2.w, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol('', 2)}
+    <td colspan="2"></td>
+  </tr>
+  <tr>
+    <td class="sub-name" style="font-weight:600; color:#334155;">Total Days Attended</td>
+    ${makeCol(aF1.p, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(aF2.p, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(aS1.p, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(aF3.p, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(aF4.p, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(aS2.p, 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol('', 2)}
+    <td colspan="2"></td>
+  </tr>
+  <tr>
+    <td class="sub-name" style="font-weight:600; color:#334155;">Percentage of Attendance</td>
+    ${makeCol(attPct(aF1.w, aF1.p), 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(attPct(aF2.w, aF2.p), 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(attPct(aS1.w, aS1.p), 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(attPct(aF3.w, aF3.p), 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(attPct(aF4.w, aF4.p), 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol(attPct(aS2.w, aS2.p), 2, 'font-weight:600; color:#0f172a;')}
+    ${makeCol('', 2)}
+    <td colspan="2"></td>
+  </tr>
+  <tr>
+    <td class="sub-name" style="text-transform:uppercase; font-weight:700;">Class Teacher Signature :</td>
+    ${makeCol('<div style="height:28px;"></div>')}
+    ${makeCol('')}
+    ${makeCol('')}
+    ${makeCol('')}
+    ${makeCol('')}
+    ${makeCol('')}
+    ${makeCol('')}
+    <td colspan="2"></td>
+  </tr>
+  <tr>
+    <td class="sub-name" style="text-transform:uppercase; font-weight:700;">Parents Signature :</td>
+    <td colspan="14" style="text-align:left;"></td>
+    <td colspan="2"></td>
+  </tr>
+  `;
 
   const container = document.getElementById('reportContainer');
   container.innerHTML = `
   <div class="rc-wrapper">
-
     <!-- School Header -->
     <div class="school-header-wrap">
       <img src="school_logo.png" class="school-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/90x100?text=Logo'">
@@ -516,201 +589,77 @@ function renderReportCard() {
         <table class="rc-table">
           <thead>
             <tr>
-              <th rowspan="3" style="text-align:left; padding-left:12px; min-width:140px;">SUBJECTS</th>
-              <th colspan="5" class="term-header">TERM - I</th>
-              <th colspan="5" class="term2-header">TERM - II</th>
+              <th rowspan="3" style="text-align:left; padding-left:12px; min-width:160px; text-transform:uppercase; letter-spacing:4px;">S U B J E C T S</th>
+              <th colspan="6" class="term-header">TERM - I</th>
+              <th colspan="6" class="term2-header">TERM - II</th>
               <th colspan="2" class="final-header">FINAL</th>
-              <th colspan="2" class="personality-header">PERSONALITY<br>ASSESSMENT</th>
+              <th rowspan="2" class="personality-header" style="max-width:100px; white-space:normal;">PERSONALITY<br>ASSESSMENTS</th>
+              <th rowspan="2" class="personality-header">Grades</th>
             </tr>
             <tr>
-              <th class="term-header" colspan="2">FA 1</th>
-              <th class="term-header" colspan="2">FA 2</th>
-              <th class="term-header">SA 1</th>
-              <th class="term2-header" colspan="2">FA 3</th>
-              <th class="term2-header" colspan="2">FA 4</th>
-              <th class="term2-header">SA 2</th>
-              <th class="final-header" style="font-size:9px;">SA 1 + SA 2<br>20%+80%</th>
-              <th class="final-header">Grade</th>
-              <th class="personality-header">Trait</th>
-              <th class="personality-header">Grade</th>
+              <th class="term-header" colspan="2">F1</th>
+              <th class="term-header" colspan="2">F2</th>
+              <th class="term-header" colspan="2">S1</th>
+              <th class="term2-header" colspan="2">F3</th>
+              <th class="term2-header" colspan="2">F4</th>
+              <th class="term2-header" colspan="2">S2</th>
+              <th class="final-header" colspan="2" style="font-size:9px;">S1+S2<br>20%+80%</th>
             </tr>
             <tr>
-              <th class="term-header">Marks</th><th class="term-header">Grade</th>
-              <th class="term-header">Marks</th><th class="term-header">Grade</th>
-              <th class="term-header">Marks</th>
-              <th class="term2-header">Marks</th><th class="term2-header">Grade</th>
-              <th class="term2-header">Marks</th><th class="term2-header">Grade</th>
-              <th class="term2-header">Marks</th>
-              <th class="final-header">Marks</th>
-              <th class="final-header">Grade</th>
-              <th class="personality-header" colspan="2"></th>
+              <th class="term-header">Mark</th><th class="term-header">Grade</th>
+              <th class="term-header">Mark</th><th class="term-header">Grade</th>
+              <th class="term-header">Mark</th><th class="term-header">Grade</th>
+              <th class="term2-header">Mark</th><th class="term2-header">Grade</th>
+              <th class="term2-header">Mark</th><th class="term2-header">Grade</th>
+              <th class="term2-header">Mark</th><th class="term2-header">Grade</th>
+              <th class="final-header">Mark</th><th class="final-header">Grade</th>
+              <th class="personality-header" colspan="2" style="border-top:none; background:#f8fafc!important;"></th>
             </tr>
           </thead>
           <tbody id="subjectTableBody">
-            ${(() => {
-              // Merge subject rows with personality rows
-              const sRows = calc.rows;
-              let html = '';
-              sRows.forEach((r, i) => {
-                const hasPers = i < PERSONALITY.length;
-                const persLabel = hasPers ? PERSONALITY[i] : '';
-                const persGrade = hasPers ? (GRADE_LABELS[student.personality[i]] || 'B') : '';
-                html += `
-                  <tr>
-                    <td class="sub-name">${r.sub.name}</td>
-                    ${mkCell(r.f1, r.gf1)}
-                    ${mkCell(r.f2, r.gf2)}
-                    <td>${r.s1}</td>
-                    ${mkCell(r.f3, r.gf3)}
-                    ${mkCell(r.f4, r.gf4)}
-                    <td>${r.s2}</td>
-                    <td class="${r.gFin.css}" style="font-weight:700;">${r.finalMark}</td>
-                    <td class="${r.gFin.css}">${r.gFin.g}</td>
-                    <td class="pers-trait">${persLabel}</td>
-                    <td style="font-weight:800; color:#0f172a;">${persGrade}</td>
-                  </tr>`;
-              });
-              // Extra personality rows that exceed subject count
-              for (let i = sRows.length; i < PERSONALITY.length; i++) {
-                const persGrade = GRADE_LABELS[student.personality[i]] || 'B';
-                html += `
-                  <tr>
-                    <td class="sub-name"></td>
-                    <td colspan="12"></td>
-                    <td class="pers-trait">${PERSONALITY[i]}</td>
-                    <td style="font-weight:800; color:#0f172a;">${persGrade}</td>
-                  </tr>`;
-              }
-              return html;
-            })()}
-            <!-- Total + Pct rows -->
-            <tr class="total-row">
-              <td class="sub-name">TOTAL MARKS</td>
-              <td colspan="4" style="font-size:10px; color:var(--text-muted);">—</td>
-              <td style="font-weight:700;">${calc.totalS1}</td>
-              <td colspan="4" style="font-size:10px; color:var(--text-muted);">—</td>
-              <td style="font-weight:700;">${calc.totalS2}</td>
-              <td style="font-weight:700;" class="${gTotal.css}">${calc.totalFinal}</td>
-              <td class="${gTotal.css}">${gTotal.g}</td>
-              <td colspan="2"></td>
-            </tr>
-            <tr class="total-row">
-              <td class="sub-name">Percentage</td>
-              <td colspan="4" style="font-weight:700; font-size:11px;">${calc.pctS1}%</td>
-              <td></td>
-              <td colspan="4" style="font-weight:700; font-size:11px;">${calc.pctS2}%</td>
-              <td></td>
-              <td colspan="2" style="font-weight:700; font-size:12px;" class="${gTotal.css}">${calc.pctFin}%</td>
-              <td colspan="2"></td>
-            </tr>
-            <tr class="total-row">
-              <td class="sub-name">Result</td>
-              <td colspan="4">
-                <span style="font-weight:800; color:${resultClass==='pass'?'#059669':'#dc2626'}; font-size:11px;">${resultText}</span>
-              </td>
-              <td></td>
-              <td colspan="4"></td>
-              <td></td>
-              <td colspan="2" style="font-weight:800; font-size:13px; color:${resultClass==='pass'?'#059669':'#dc2626'};">${calc.finalGrade.g}</td>
-              <td colspan="2" style="font-size:10px; font-weight:700; color:#b91c1c;">Final Grade</td>
-            </tr>
+            ${html}
           </tbody>
         </table>
+        
+        <!-- Bottom Layout: Remarks & Final Result -->
+        <div style="display:flex; border-top: none;">
+          <!-- Left: Remarks -->
+          <div style="flex: 1; border-right: 1px solid var(--border);">
+             <div style="display:flex; height: 100%;">
+               <div style="width: 30px; border-right: 1px solid var(--border); writing-mode: vertical-lr; transform: rotate(180deg); text-align: center; font-weight: 700; font-size: 11px; padding: 10px 0; letter-spacing: 2px; color:#475569;">REMARKS</div>
+               <div style="flex:1; padding: 12px 20px; display:flex; flex-direction:column;">
+                  <div style="display:flex; padding: 6px 0; border-bottom: 1px dashed var(--border); align-items:center;">
+                    <div style="width: 140px; font-weight: 600; font-size: 11px; color:#334155;">1st Summative</div>
+                    <div style="font-family: 'Brush Script MT', cursive; font-size: 20px; color: #1e3a8a;">${student.remarks.s1}</div>
+                  </div>
+                  <div style="display:flex; padding: 6px 0; align-items:center;">
+                    <div style="width: 140px; font-weight: 600; font-size: 11px; color:#334155;">2nd Summative</div>
+                    <div style="font-family: 'Brush Script MT', cursive; font-size: 20px; color: #1e3a8a;">${student.remarks.s2}</div>
+                  </div>
+                  <div style="margin-top: auto; padding-left: 10px; padding-top:20px;">
+                     <div style="width: 120px; border-top: 1px solid var(--text); text-align: center; font-size: 10px; font-weight: 600; color:#475569; padding-top:4px;">Class Teacher</div>
+                  </div>
+               </div>
+             </div>
+          </div>
+          <!-- Right: Final Result -->
+          <div style="width: 220px; display: flex; flex-direction: column; align-items: center; padding: 12px 10px;">
+             <div style="text-align:center; font-weight: 700; font-size: 11px; color:#475569;">FINAL RESULT / GRADE</div>
+             <div style="font-family: 'Brush Script MT', cursive; font-size: 32px; color: #1e3a8a; margin-top: 12px; line-height:1;">${calc.cols.fin.res}</div>
+             <div style="font-size: 20px; font-weight: 800; color: #146e38; margin-top: 12px;">${calc.finalGrade.g}</div>
+             
+             <div style="margin-top: auto; width: 120px; border-top: 1px solid var(--text); text-align: center; font-size: 10px; font-weight: 600; color:#475569; padding-top: 4px;">Principal</div>
+          </div>
+        </div>
+
       </div>
-
-      <!-- Bottom: Attendance + Remarks -->
-      <div class="rc-bottom">
-
-        <div>
-          <!-- Attendance -->
-          <div class="att-card" style="margin-bottom:16px;">
-            <h4><i class="ti ti-calendar-check" style="color:var(--primary);"></i> Attendance Summary</h4>
-            <div class="att-row">
-              <span style="color:var(--text-muted); font-size:12px;">Total Working Days</span>
-              <strong>${att.working}</strong>
-            </div>
-            <div class="att-row">
-              <span style="color:var(--text-muted); font-size:12px;">Days Attended</span>
-              <strong>${att.present}</strong>
-            </div>
-            <div class="att-row">
-              <span style="color:var(--text-muted); font-size:12px;">Attendance %</span>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <div class="att-bar-wrap">
-                  <div class="att-bar-fill" style="width:${attPct}%; background:${attColor};"></div>
-                </div>
-                <strong style="color:${attColor};">${attPct}%</strong>
-              </div>
-            </div>
-          </div>
-
-          <!-- Grade Scale -->
-          <div class="att-card">
-            <h4><i class="ti ti-ruler" style="color:var(--primary);"></i> Grade Scale</h4>
-            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; font-size:11px;">
-              <div style="text-align:center; padding:8px 6px; background:#ecfdf5; border-radius:6px;"><strong class="grade-O">O</strong><br><span style="color:var(--text-muted);">90-100%</span></div>
-              <div style="text-align:center; padding:8px 6px; background:#dbeafe; border-radius:6px;"><strong class="grade-Ap">A+</strong><br><span style="color:var(--text-muted);">80-89%</span></div>
-              <div style="text-align:center; padding:8px 6px; background:#e0e7ff; border-radius:6px;"><strong class="grade-A">A</strong><br><span style="color:var(--text-muted);">70-79%</span></div>
-              <div style="text-align:center; padding:8px 6px; background:#f5f3ff; border-radius:6px;"><strong class="grade-Bp">B+</strong><br><span style="color:var(--text-muted);">60-69%</span></div>
-              <div style="text-align:center; padding:8px 6px; background:#fffbeb; border-radius:6px;"><strong class="grade-B">B</strong><br><span style="color:var(--text-muted);">50-59%</span></div>
-              <div style="text-align:center; padding:8px 6px; background:#fff7ed; border-radius:6px;"><strong class="grade-C">C</strong><br><span style="color:var(--text-muted);">33-49%</span></div>
-              <div style="text-align:center; padding:8px 6px; background:#fef2f2; border-radius:6px; grid-column:span 2;"><strong class="grade-F">F</strong><br><span style="color:var(--text-muted);">Below 33%</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <!-- Remarks -->
-          <div class="remarks-card" style="margin-bottom:16px;">
-            <h4><i class="ti ti-message-2" style="color:var(--primary);"></i> Teacher's Remarks</h4>
-            <div class="remark-row">
-              <span style="color:var(--text-muted); font-size:12px;">1st Summative (Term I)</span>
-              <span style="font-weight:600; font-size:12px;">${student.remarks.s1}</span>
-            </div>
-            <div class="remark-row">
-              <span style="color:var(--text-muted); font-size:12px;">2nd Summative (Term II)</span>
-              <span style="font-weight:600; font-size:12px;">${student.remarks.s2}</span>
-            </div>
-          </div>
-
-          <!-- Result Banner -->
-          <div class="result-banner ${resultClass}">
-            <div>
-              <div style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Final Result</div>
-              <div class="result-text ${resultClass}">${resultText}</div>
-              <div style="font-size:11.5px; color:var(--text-muted); margin-top:4px;">
-                ${resultClass==='pass'
-                  ? `Promoted to next grade with <strong>${calc.pctFin}%</strong>`
-                  : `Did not qualify for promotion. Percentage: <strong>${calc.pctFin}%</strong>`}
-              </div>
-            </div>
-            <div class="result-grade" style="color:${resultClass==='pass'?'#059669':'#dc2626'};">${gTotal.g}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Signatures -->
-      <div class="sig-row">
-        <div class="sig-box">
-          <div class="sig-line"></div>
-          <div class="sig-label">Class Teacher's Signature</div>
-        </div>
-        <div class="sig-box">
-          <div class="sig-line"></div>
-          <div class="sig-label">Parent's Signature</div>
-        </div>
-        <div class="sig-box">
-          <div class="sig-line"></div>
-          <div class="sig-label">Principal's Signature</div>
-        </div>
-      </div>
-
     </div><!-- rc-body -->
   </div><!-- rc-wrapper -->
   `;
 }
 
 // =====================================================================
+document.addEventListener('DOMContentLoaded', renderReportCard);
 const gTotal = gradeFromPct(0); // placeholder — overridden at render time
 document.addEventListener('DOMContentLoaded', renderReportCard);
 </script>
