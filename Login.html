@@ -298,16 +298,18 @@
           <h1 class="login-title">Welcome Back</h1>
           <p class="login-subtitle">Please enter your details to login</p>
           
-          <form onsubmit="event.preventDefault(); window.location.href='AddClasses.html';">
+          <div id="loginError" style="display: none; background: var(--red-light, #fee2e2); color: var(--red, #ef4444); padding: 12px; border-radius: 6px; font-size: 13px; font-weight: 600; margin-bottom: 20px;"></div>
+
+          <form onsubmit="doLogin(event)">
             <div class="form-group">
               <label>Email</label>
-              <input type="email" class="form-control" />
+              <input type="email" id="emailField" class="form-control" placeholder="Enter your email" required />
             </div>
             
             <div class="form-group">
               <label>Password</label>
               <div class="input-wrapper">
-                <input type="password" id="passwordField" class="form-control" />
+                <input type="password" id="passwordField" class="form-control" placeholder="Enter your password" required />
                 <i class="ti ti-eye-off eye-icon" onclick="togglePassword()"></i>
               </div>
             </div>
@@ -322,8 +324,15 @@
             
             <button type="submit" class="btn-login">Login</button>
             
-            <div class="create-account">
-              Don't have an account? <a href="#">Create Account</a>
+            <div style="margin-top: 24px; border-top: 1px solid var(--border); padding-top: 16px;">
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; text-align: center;">Quick Demo Login</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+                <button type="button" onclick="quickLogin('admin')" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Admin</button>
+                <button type="button" onclick="quickLogin('teacher')" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Teacher</button>
+                <button type="button" onclick="quickLogin('student')" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Student</button>
+                <button type="button" onclick="quickLogin('parent')" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Parent</button>
+                <button type="button" onclick="quickLogin('staff')" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Staff</button>
+              </div>
             </div>
           </form>
         </div>
@@ -336,20 +345,57 @@
     </div>
   </main>
 
+  <script src="permissions.js"></script>
   <script>
+    // If already logged in → redirect to dashboard immediately
+    if (BodhyaAuth.isLoggedIn()) {
+      window.location.href = BodhyaAuth.getDashboard(BodhyaAuth.getRole());
+    }
+
     function togglePassword() {
       const field = document.getElementById('passwordField');
-      const icon = document.querySelector('.eye-icon');
+      const icon  = document.querySelector('.eye-icon');
       if (field.type === 'password') {
         field.type = 'text';
-        icon.classList.remove('ti-eye-off');
-        icon.classList.add('ti-eye');
+        icon.classList.replace('ti-eye-off', 'ti-eye');
       } else {
         field.type = 'password';
-        icon.classList.remove('ti-eye');
-        icon.classList.add('ti-eye-off');
+        icon.classList.replace('ti-eye', 'ti-eye-off');
+      }
+    }
+
+    function doLogin(e) {
+      e.preventDefault();
+      const email    = document.getElementById('emailField').value.trim();
+      const password = document.getElementById('passwordField').value;
+      const errEl    = document.getElementById('loginError');
+
+      const user = BodhyaAuth.verify(email, password);
+      if (user) {
+        errEl.style.display = 'none';
+        BodhyaAuth.login(user.role, user.name, user.id);
+      } else {
+        errEl.style.display = 'block';
+        errEl.textContent = '⚠ Invalid email or password. Please try again.';
+      }
+    }
+
+    function quickLogin(role) {
+      const demoMap = {
+        admin:      { email: 'admin@school.com',    password: 'admin123'   },
+        teacher:    { email: 'teacher@school.com',  password: 'teacher123' },
+        student:    { email: 'student@school.com',  password: 'student123' },
+        parent:     { email: 'parent@school.com',   password: 'parent123'  },
+        staff:      { email: 'staff@school.com',    password: 'staff123'   },
+        superadmin: { email: 'superadmin@school.com', password: 'super123' },
+      };
+      const cred = demoMap[role];
+      if (cred) {
+        const user = BodhyaAuth.verify(cred.email, cred.password);
+        if (user) BodhyaAuth.login(user.role, user.name, user.id);
       }
     }
   </script>
 </body>
 </html>
+

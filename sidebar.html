@@ -99,14 +99,20 @@ body[data-current-role="admin"]   [data-allowed-roles]:not([data-allowed-roles*=
   </div>
   
   <div class="role-switcher" style="padding: 10px 16px; border-bottom: 1px solid var(--border);">
-    <select id="sidebarRoleSwitcher" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 12px; outline: none; cursor: pointer; font-weight: 600;" onchange="localStorage.setItem('bodhya_user_role', this.value); window.location.reload();">
-      <option value="student">Student</option>
-      <option value="teacher">Teacher</option>
-      <option value="parent">Parent</option>
-      <option value="staff">Staff</option>
-      <option value="admin">Admin</option>
-      <option value="superadmin">Superadmin</option>
-    </select>
+    <div style="font-size: 10px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; margin-bottom: 6px;" id="sidebarUserName">Demo Mode: Role</div>
+    <div style="display: flex; gap: 8px;">
+      <select id="sidebarRoleSwitcher" style="flex: 1; padding: 6px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 12px; outline: none; cursor: pointer; font-weight: 600;">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+        <option value="parent">Parent</option>
+        <option value="staff">Staff</option>
+        <option value="admin">Admin</option>
+        <option value="superadmin">Superadmin</option>
+      </select>
+      <button onclick="if(window.BodhyaAuth) BodhyaAuth.logout();" style="background: var(--red-light, #fee2e2); color: var(--red, #ef4444); border: none; border-radius: 4px; width: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Logout">
+        <i class="ti ti-power" style="font-size: 14px;"></i>
+      </button>
+    </div>
   </div>
   
   <div class="nav-group">

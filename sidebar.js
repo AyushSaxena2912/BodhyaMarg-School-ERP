@@ -17,7 +17,32 @@ function applySidebarRoleFilters() {
   document.body.setAttribute('data-current-role', currentRole);
   
   const switcher = document.getElementById('sidebarRoleSwitcher');
-  if (switcher) switcher.value = currentRole;
+  if (switcher) {
+    switcher.value = currentRole;
+    switcher.addEventListener('change', function(e) {
+      if (window.BodhyaAuth) {
+        const role = e.target.value;
+        const d = {
+          admin:      { name: 'System Admin',  id: 'USR001' },
+          teacher:    { name: 'Teacher',       id: 'USR002' },
+          student:    { name: 'Student',       id: 'USR003' },
+          parent:     { name: 'Parent',        id: 'USR004' },
+          staff:      { name: 'Staff',         id: 'USR005' },
+          superadmin: { name: 'Super Admin',   id: 'USR006' }
+        }[role];
+        BodhyaAuth.login(role, d.name, d.id);
+      } else {
+        localStorage.setItem('bodhya_user_role', e.target.value);
+        window.location.reload();
+      }
+    });
+  }
+
+  const userNameEl = document.getElementById('sidebarUserName');
+  if (userNameEl && window.BodhyaAuth) {
+    const user = BodhyaAuth.getUser();
+    userNameEl.textContent = user.name + ' (' + BodhyaAuth.getRoleLabel(user.role) + ')';
+  }
   
   // Wait a tick for CSS to apply, then hide empty nav-groups
   setTimeout(() => {

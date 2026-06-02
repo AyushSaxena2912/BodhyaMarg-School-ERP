@@ -202,6 +202,8 @@ input:checked + .slider:before { transform: translateX(22px); }
   .search-box { width: 100%; }
 }
 </style>
+<script src="permissions.js"></script>
+<script>BodhyaAuth.guardPage(['admin', 'superadmin']);</script>
 </head>
 <body>
 
