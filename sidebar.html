@@ -252,11 +252,11 @@ body[data-current-role="admin"] [data-allowed-roles="superadmin"] { display: non
 
   <div class="nav-group" data-allowed-roles="admin,superadmin">
     <div class="nav-label">Settings</div>
-    <div class="nav-sub-container" data-allowed-roles="superadmin">
+    <div class="nav-sub-container" data-allowed-roles="admin,superadmin">
       <a href="#" class="nav-item"><i class="ti ti-building-community"></i> School Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
-        <a href="ManageSchools.html" class="nav-item">Manage Schools / Branches</a>
-        <a href="AppUiSettings.html" class="nav-item">CMS & UI Settings</a>
+        <a href="ManageSchools.html" class="nav-item" data-allowed-roles="superadmin">Manage Schools / Branches</a>
+        <a href="AppUiSettings.html" class="nav-item" data-allowed-roles="admin,superadmin">CMS & UI Settings</a>
       </div>
     </div>
     <a href="RolesPermissions.html" class="nav-item"><i class="ti ti-shield-lock"></i> Roles & Permissions</a>
