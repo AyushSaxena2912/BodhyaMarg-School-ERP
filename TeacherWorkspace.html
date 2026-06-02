@@ -738,8 +738,8 @@ const TEACHERS = {
     ],
     leaves: [
       { id: "L03", type: "Medical Leave", dates: "16 Jun 2026", status: "pending", reason: "Severe migraine and fever. Need a day off for medical consultation." },
-      { id: "L02", type: "Casual Leave", dates: "10 Jun 2026 - 11 Jun 2026", status: "approved", reason: "Attending a family wedding in hometown." },
-      { id: "L01", type: "Emergency Leave", dates: "02 May 2026", status: "declined", reason: "Personal emergency work." }
+      { id: "L02", type: "Casual Leave", dates: "10 Jun 2026 - 11 Jun 2026", status: "approved", reason: "Attending a family wedding in hometown.", actionBy: "Principal (Dr. Sharma)" },
+      { id: "L01", type: "Emergency Leave", dates: "02 May 2026", status: "declined", reason: "Personal emergency work.", actionBy: "Vice Principal", actionReason: "Exams approaching" }
     ],
     isClassTeacher: true
   },
@@ -751,7 +751,7 @@ const TEACHERS = {
       { time: "10:30 AM - 11:15 AM", name: "Social Studies", room: "Room 205", cls: "Class 9B", active: false }
     ],
     leaves: [
-      { id: "L04", type: "Casual Leave", dates: "20 Jun 2026", status: "approved", reason: "Bank work." }
+      { id: "L04", type: "Casual Leave", dates: "20 Jun 2026", status: "approved", reason: "Bank work.", actionBy: "Principal (Dr. Sharma)" }
     ],
     isClassTeacher: false
   }
@@ -869,8 +869,8 @@ function renderLeaves() {
         </div>
         <div class="leave-reason">
           <strong>Reason:</strong> ${l.reason}
-          ${l.status === 'approved' ? '<div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--success); font-weight:600;"><i class="ti ti-check-circle"></i> Approved by Principal</div>' : ''}
-          ${l.status === 'declined' ? '<div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--danger); font-weight:600;"><i class="ti ti-info-circle"></i> Declined: Exams approaching</div>' : ''}
+          ${l.status === 'approved' ? `<div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--success); font-weight:600;"><i class="ti ti-check-circle"></i> Approved by ${l.actionBy || 'Principal'}</div>` : ''}
+          ${l.status === 'declined' ? `<div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--danger); font-weight:600;"><i class="ti ti-info-circle"></i> Declined by ${l.actionBy || 'Admin'}: ${l.actionReason || 'Not specified'}</div>` : ''}
         </div>
       </div>
     </div>
