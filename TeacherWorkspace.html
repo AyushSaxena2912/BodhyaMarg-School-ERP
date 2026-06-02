@@ -246,6 +246,7 @@ body {
   padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;
   background: white; border: 1px solid var(--border); color: var(--text-muted);
   cursor: pointer; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 6px;
+  flex-shrink: 0;
 }
 .segment-chip:hover { background: var(--surface); border-color: var(--primary-light); color: var(--primary); }
 .segment-chip.active { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 2px 6px rgba(26,122,74,0.3); }
@@ -1180,7 +1181,11 @@ const CLASS_SUBJECTS = [
   { id: 'my_subject', name: 'Mathematics', icon: 'ti-math' },
   { id: 'science', name: 'Science', icon: 'ti-flask' },
   { id: 'english', name: 'English', icon: 'ti-book' },
-  { id: 'hindi', name: 'Hindi', icon: 'ti-language' }
+  { id: 'hindi', name: 'Hindi', icon: 'ti-language' },
+  { id: 'sst', name: 'Social Studies', icon: 'ti-globe' },
+  { id: 'computer', name: 'Computer', icon: 'ti-device-laptop' },
+  { id: 'art', name: 'Art & Craft', icon: 'ti-palette' },
+  { id: 'pe', name: 'Physical Ed.', icon: 'ti-run' }
 ];
 
 function selectGridSubject(id) {
