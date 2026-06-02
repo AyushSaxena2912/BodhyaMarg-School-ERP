@@ -76,6 +76,11 @@ const BodhyaAuth = {
     }
     const role = this.getRole();
     if (allowedRoles && allowedRoles.length > 0) {
+      // Allow superadmin and admin to view all pages
+      if (role === 'superadmin' || role === 'admin') {
+        return;
+      }
+      
       if (!allowedRoles.includes(role)) {
         // Redirect to their own dashboard instead of an error page
         window.location.href = this.getDashboard(role);
@@ -131,10 +136,16 @@ const BodhyaAuth = {
   // ── ELEMENT-LEVEL RESTRICTION ───────────────────────────────
   // Hides elements that have data-allowed-roles attribute
   applyRoleRestrictions: function() {
-    const currentRole = this.getRole();
+    const currentRole = this.getRole().toLowerCase();
     document.querySelectorAll('[data-allowed-roles]').forEach(el => {
       const allowed = el.getAttribute('data-allowed-roles').split(',').map(r => r.trim().toLowerCase());
-      if (!allowed.includes(currentRole.toLowerCase())) {
+      
+      // Allow superadmin and admin to see all elements
+      if (currentRole === 'superadmin' || currentRole === 'admin') {
+        return;
+      }
+      
+      if (!allowed.includes(currentRole)) {
         el.style.display = 'none';
       }
     });
