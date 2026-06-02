@@ -991,13 +991,19 @@ function openNoticeModal() {
   let optionsHtml = '';
   
   if (currentUser.isClassTeacher && currentUser.classTeacherOf) {
-    optionsHtml += `<option value="class_${currentUser.classTeacherOf}">${currentUser.classTeacherOf} (All Students - Class Teacher)</option>`;
+    optionsHtml += `<optgroup label="As Class Teacher">
+      <option value="class_${currentUser.classTeacherOf}">${currentUser.classTeacherOf} (All Students)</option>
+    </optgroup>`;
   }
   
   const uniqueClasses = [...new Set(currentUser.classes.map(c => `${c.cls} - ${c.name}`))];
-  uniqueClasses.forEach(c => {
-    optionsHtml += `<option value="subject_${c}">${c} (Subject Notice)</option>`;
-  });
+  if (uniqueClasses.length > 0) {
+    optionsHtml += `<optgroup label="As Subject Teacher">`;
+    uniqueClasses.forEach(c => {
+      optionsHtml += `<option value="subject_${c}">${c}</option>`;
+    });
+    optionsHtml += `</optgroup>`;
+  }
   
   select.innerHTML = optionsHtml;
   document.getElementById('noticeModal').classList.add('show');
