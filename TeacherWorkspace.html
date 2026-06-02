@@ -180,24 +180,21 @@ body {
 
 /* Welcome Banner */
 .welcome-banner { 
-  background: linear-gradient(120deg, #1e293b 0%, #0f172a 100%); 
-  border-radius: var(--radius-lg); padding: 32px; color: white;
+  background: linear-gradient(135deg, #185fce 0%, #1550b0 100%); 
+  border-radius: var(--radius-lg); padding: 32px 40px; color: white;
   display: flex; justify-content: space-between; align-items: center;
-  position: relative; overflow: hidden; box-shadow: var(--shadow-lg);
+  position: relative; overflow: hidden; box-shadow: var(--shadow-md);
+  margin-top: 16px; margin-bottom: 24px;
 }
 .welcome-banner::after {
-  content: ''; position: absolute; right: -20px; bottom: -40px;
-  width: 250px; height: 250px;
-  background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%);
+  content: ''; position: absolute; right: -50px; top: -50px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
   border-radius: 50%; pointer-events: none;
 }
-.welcome-text h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
-.welcome-text p { font-size: 14px; color: #94a3b8; font-weight: 500; }
-.notice-ticker { 
-  margin-top: 20px; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);
-  padding: 10px 16px; border-radius: var(--radius); border-left: 4px solid var(--warning);
-  display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 600;
-}
+.welcome-text h2 { font-size: 32px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+.welcome-text p.sub-text { font-size: 16px; font-weight: 500; margin-bottom: 24px; color: rgba(255,255,255,0.9); }
+.welcome-notice { font-size: 15px; font-weight: 500; }
 .notice-ticker i { color: var(--warning); font-size: 18px; animation: pulse 2s infinite; }
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
@@ -427,7 +424,22 @@ select.form-control {
           </div>
         </div>
       </div>
-      <div class="tabs" style="margin-top: 24px;">
+      
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h2 id="greetingMsg">Good Morning, Mohan!</h2>
+          <p class="sub-text">Have a Good day at work</p>
+          <div class="welcome-notice">
+            Notice : There is a staff meeting at 9AM today, Dont forget to Attend!!!
+          </div>
+        </div>
+        <div>
+          <img src="https://cdn-icons-png.flaticon.com/512/3429/3429237.png" alt="Education" style="width: 140px; opacity: 0.9; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3)); position: relative; z-index: 2;" />
+        </div>
+      </div>
+      
+      <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('dashboard', this)"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
         <button class="tab-btn" onclick="switchTab('attendance', this)"><i class="ti ti-calendar-user"></i> Attendance</button>
         <button class="tab-btn" onclick="switchTab('marks', this)"><i class="ti ti-file-certificate"></i> Marks & Grades</button>
@@ -443,21 +455,7 @@ select.form-control {
         <!-- Left Column -->
         <div class="col-main">
           
-          <!-- Welcome Banner -->
-          <div class="welcome-banner">
-            <div class="welcome-text">
-              <h2 id="greetingMsg">Good Morning, Mohan!</h2>
-              <p>Here's what's happening in your classes today.</p>
-              
-              <div class="notice-ticker">
-                <i class="ti ti-alert-triangle"></i>
-                Staff Meeting at 2:00 PM in the Main Hall. Please be on time.
-              </div>
-            </div>
-            <div>
-              <img src="https://cdn-icons-png.flaticon.com/512/3429/3429237.png" alt="Education" style="width: 140px; opacity: 0.9; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3));" />
-            </div>
-          </div>
+
 
           <!-- KPI Stats -->
           <div class="stats-grid">
