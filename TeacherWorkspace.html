@@ -660,24 +660,26 @@ select.form-control {
             </div>
           </div>
 
-          <div style="display: flex; align-items: flex-end; gap: 16px; margin-bottom: 24px; padding: 16px; background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-lg);">
-            <div style="flex: 1;">
-              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Class & Section</label>
-              <select class="form-control" id="attClass" disabled style="background: white; width: 100%;"><option value="Class 8A">Class 8A</option></select>
+          <div style="margin-bottom: 24px; padding: 16px; background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+            <div style="display: flex; align-items: flex-end; gap: 16px; margin-bottom: 16px;">
+              <div style="flex: 1;">
+                <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Class & Section</label>
+                <select class="form-control" id="attClass" disabled style="background: white; width: 100%;"><option value="Class 8A">Class 8A</option></select>
+              </div>
+              <div style="flex: 1;">
+                <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Date</label>
+                <input type="date" class="form-control" value="2026-06-02" style="background: white; width: 100%;" />
+              </div>
+              <div>
+                <button class="btn btn-primary" id="saveAttBtn" style="height: 38px; padding: 0 20px;"><i class="ti ti-device-floppy"></i> Save Attendance</button>
+              </div>
             </div>
-            <div style="flex: 3;">
-              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Subject</label>
+            <div>
+              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">Subject</label>
               <div id="subjectSegmentContainer" class="drag-scroll" style="display: flex; gap: 8px; padding-bottom: 2px;">
                  <!-- Populated by JS -->
               </div>
               <input type="hidden" id="attSubject" value="my_subject">
-            </div>
-            <div style="flex: 1;">
-              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Date</label>
-              <input type="date" class="form-control" value="2026-06-02" style="background: white; width: 100%;" />
-            </div>
-            <div>
-              <button class="btn btn-primary" id="saveAttBtn" style="height: 38px; padding: 0 20px;"><i class="ti ti-device-floppy"></i> Save Attendance</button>
             </div>
           </div>
           
