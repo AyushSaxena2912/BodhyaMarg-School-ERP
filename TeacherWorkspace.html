@@ -234,21 +234,15 @@ body {
 .class-time { font-size: 12px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
 .class-details h5 { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
 .class-details p { font-size: 13px; color: var(--text-muted); font-weight: 500; }
-.class-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 12px; border-top: 1px dashed var(--border); }
-.room-badge { background: var(--bg-app); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; color: var(--text-main); }
-
-/* Subject Grid */
-.subject-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; display: none; }
-.subject-card {
-  flex: 1; min-width: 120px; text-align: center; padding: 12px;
-  background: white; border: 1px solid var(--border); border-radius: var(--radius);
-  cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 600; color: var(--text-muted);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center;
+/* Segment Chips */
+.segment-chip {
+  padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  background: white; border: 1px solid var(--border); color: var(--text-muted);
+  cursor: pointer; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 6px;
 }
-.subject-card i { font-size: 22px; color: var(--primary-light); transition: all 0.2s; }
-.subject-card:hover { border-color: var(--primary-light); background: var(--bg-app); color: var(--primary); }
-.subject-card.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark); }
-.subject-card.active i { color: var(--primary-dark); }
+.segment-chip:hover { background: var(--surface); border-color: var(--primary-light); color: var(--primary); }
+.segment-chip.active { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 2px 6px rgba(26,122,74,0.3); }
+.segment-chip.active i { color: white; }
 
 /* Attendance Radios */
 .att-options { display: flex; gap: 6px; }
@@ -659,21 +653,17 @@ select.form-control {
             </div>
           </div>
 
-          <div id="subjectGridContainer" class="subject-grid">
-             <!-- Populated by JS -->
-          </div>
-
           <div style="display: flex; align-items: flex-end; gap: 16px; margin-bottom: 24px; padding: 16px; background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-lg);">
             <div style="flex: 1;">
               <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Class & Section</label>
               <select class="form-control" id="attClass" disabled style="background: white; width: 100%;"><option value="Class 8A">Class 8A</option></select>
             </div>
-            <div style="flex: 2; display: none;" id="attSubjectContainer">
+            <div style="flex: 3;">
               <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Subject</label>
-              <select class="form-control" id="attSubject" onchange="renderWorkspaceAtt()" style="background: white; width: 100%;">
-                <option value="my_subject">Mathematics</option>
-                <option value="all">View All Subjects (Overview)</option>
-              </select>
+              <div id="subjectSegmentContainer" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px;">
+                 <!-- Populated by JS -->
+              </div>
+              <input type="hidden" id="attSubject" value="my_subject">
             </div>
             <div style="flex: 1;">
               <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Date</label>
@@ -1182,46 +1172,36 @@ const CLASS_SUBJECTS = [
 ];
 
 function selectGridSubject(id) {
-  const subjSelect = document.getElementById('attSubject');
-  if(!subjSelect) return;
-  if (!Array.from(subjSelect.options).find(opt => opt.value === id)) {
-    subjSelect.innerHTML += `<option value="${id}">${id}</option>`;
-  }
-  subjSelect.value = id;
+  const subjInput = document.getElementById('attSubject');
+  if(!subjInput) return;
+  subjInput.value = id;
   updateWorkspaceRole();
 }
 
 function updateWorkspaceRole() {
   const role = document.getElementById('workspaceRoleSim').value;
-  const filterSubject = document.getElementById('attSubject');
-  const gridContainer = document.getElementById('subjectGridContainer');
-  const subjContainer = document.getElementById('attSubjectContainer');
+  const subjInput = document.getElementById('attSubject');
+  const segmentContainer = document.getElementById('subjectSegmentContainer');
   
   if (role === 'class_teacher') {
     document.getElementById('attClass').innerHTML = '<option value="Class 8A">Class 8A</option>';
-    if(gridContainer) gridContainer.style.display = 'flex';
-    if(subjContainer) subjContainer.style.display = 'none';
-    
-    if(!CLASS_SUBJECTS.find(s => s.id === filterSubject.value)) {
-       filterSubject.innerHTML += `<option value="${filterSubject.value}">${filterSubject.value}</option>`;
-    }
-    
-    if(gridContainer) {
-      gridContainer.innerHTML = CLASS_SUBJECTS.map(sub => `
-        <div class="subject-card ${filterSubject.value === sub.id ? 'active' : ''}" onclick="selectGridSubject('${sub.id}')">
-          <i class="ti ${sub.icon}"></i>
-          <span>${sub.name}</span>
+    if(segmentContainer) {
+      segmentContainer.innerHTML = CLASS_SUBJECTS.map(sub => `
+        <div class="segment-chip ${subjInput.value === sub.id ? 'active' : ''}" onclick="selectGridSubject('${sub.id}')">
+          <i class="ti ${sub.icon}"></i> ${sub.name}
         </div>
       `).join('');
     }
   } else {
     document.getElementById('attClass').innerHTML = '<option value="Class 9B">Class 9B</option>';
-    if(gridContainer) gridContainer.style.display = 'none';
-    if(subjContainer) subjContainer.style.display = 'block';
-    
-    filterSubject.innerHTML = `
-      <option value="my_subject">Mathematics</option>
-    `;
+    subjInput.value = 'my_subject';
+    if(segmentContainer) {
+      segmentContainer.innerHTML = `
+        <div class="segment-chip active">
+          <i class="ti ti-math"></i> Mathematics
+        </div>
+      `;
+    }
   }
   renderWorkspaceAtt();
 }
