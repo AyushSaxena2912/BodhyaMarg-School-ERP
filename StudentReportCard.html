@@ -11,16 +11,13 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --primary: #1a7a4a; --primary-light: #e6f4ee; --primary-dark: #145e38;
-  --bg: #f1f5f9; --surface: #ffffff; --border: #e2e8f0;
-  --text: #1e293b; --text-muted: #64748b; --text-hint: #94a3b8;
-  --radius: 8px; --radius-lg: 14px;
-  --danger: #ef4444; --danger-light: #fee2e2;
-  --warning: #f59e0b; --warning-light: #fef3c7;
-  --info: #3b82f6; --info-light: #dbeafe;
-  --shadow: 0 4px 20px rgba(0,0,0,0.06);
+  --primary: #146e38; --primary-light: #e6f4ee; --primary-dark: #0f4a2d;
+  --bg: #f1f5f9; --surface: #ffffff; --border: #cbd5e1;
+  --text: #334155; --text-muted: #64748b; --text-hint: #94a3b8;
+  --radius: 8px; --radius-lg: 12px;
+  --shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
-body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
 
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
@@ -38,7 +35,7 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 
 /* Page Header */
 .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
-.page-header h1 { font-size: 20px; font-weight: 700; }
+.page-header h1 { font-size: 20px; font-weight: 700; color: #1e293b; }
 .breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
 .page-actions { display: flex; gap: 10px; align-items: center; }
 .btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text); transition: all 0.2s; white-space: nowrap; }
@@ -55,130 +52,126 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 
 /* School Header - Professional Print Style */
 .school-header-wrap {
-  text-align: center; padding: 40px 20px 20px; background: white; position: relative;
+  text-align: center; padding: 30px 20px 10px; background: white; position: relative;
 }
 .school-logo {
-  width: 90px; height: auto; margin-bottom: 12px;
+  width: 80px; height: auto; margin-bottom: 12px;
 }
 .school-name {
-  font-size: 32px; font-weight: 800; color: #0b7b3f; /* Deep Green */
-  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;
+  font-family: 'Arial', sans-serif;
+  font-size: 32px; font-weight: 900; color: #146e38; 
+  letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px;
 }
 .school-motto {
-  font-size: 14px; color: #d97706; /* Golden Yellow */
-  font-weight: 600; font-style: italic; letter-spacing: 1px;
+  font-size: 14px; color: #ea580c; 
+  font-weight: 600; font-style: italic; letter-spacing: 1px; margin-bottom: 15px;
 }
 
 /* Green curve block */
 .curved-bg {
-  background: #0b7b3f;
+  background: #146e38;
   padding: 30px 20px 60px;
   position: relative;
   text-align: center;
   color: white;
-  border-top: 10px solid #fbbf24;
-  border-top-left-radius: 100% 30px;
-  border-top-right-radius: 100% 30px;
-  margin-top: -15px;
+  border-top: 5px solid #eab308;
+  border-top-left-radius: 50% 15px;
+  border-top-right-radius: 50% 15px;
+  margin-top: 5px;
 }
 
 .report-badge {
-  display: inline-block; padding: 8px 32px;
-  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 30px; font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-}
-.report-badge {
-  display: inline-block; margin-top: 12px; padding: 4px 20px;
-  background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
-  border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  display: inline-block; padding: 6px 24px;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 20px; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
 }
 
 /* Student Info Row (Overlaid on green) */
 .student-info-row {
-  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
   background: #ffffff;
-  border: 1px solid #0b7b3f;
-  border-radius: 16px;
-  margin: -40px 32px 24px; /* Pull up over the green background */
+  border: 1px solid #146e38;
+  border-radius: 12px;
+  margin: -40px 32px 24px; 
   position: relative;
   z-index: 10;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
-.info-cell { padding: 16px 24px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.info-cell:nth-child(3n) { border-right: none; }
-.info-cell:nth-child(n+4) { border-bottom: none; }
-.info-label { font-weight: 600; color: var(--text-muted); margin-bottom: 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
-.info-val { font-weight: 700; color: #0b7b3f; font-size: 14px; }
+.info-cell { padding: 14px 20px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.info-cell:nth-child(4n) { border-right: none; }
+.info-cell:nth-child(n+5) { border-bottom: none; }
+.info-label { font-weight: 600; color: #64748b; margin-bottom: 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.info-val { font-weight: 700; color: #146e38; font-size: 14px; }
 
 /* Main Report Table */
-.rc-body { padding: 20px 24px; }
+.rc-body { padding: 0 24px 24px; }
 .rc-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
 
 table.rc-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
 .rc-table th, .rc-table td {
-  border: 1px solid #dde1e7; padding: 7px 6px; text-align: center; vertical-align: middle;
+  border: 1px solid #cbd5e1; padding: 8px 6px; text-align: center; vertical-align: middle;
 }
-.rc-table thead th { background: #f1f5f9; font-weight: 700; color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
-.rc-table td.sub-name { text-align: left; font-weight: 600; color: var(--text); padding-left: 12px; white-space: nowrap; }
-.rc-table tr.total-row td { background: #f8fafc; font-weight: 700; }
-.rc-table tr.total-row td.sub-name { color: var(--primary); }
+.rc-table thead th { background: #f8fafc; font-weight: 700; color: #475569; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
+.rc-table td.sub-name { text-align: left; font-weight: 700; color: #334155; padding-left: 12px; white-space: nowrap; font-size: 11.5px; }
+.rc-table tr.total-row td { background: #f8fafc; font-weight: 700; color: #146e38; }
+.rc-table tr.total-row td.sub-name { color: #146e38; font-weight: 800; }
 
 /* Grade colouring - Toned down for professional look */
-.grade-O, .grade-Ap, .grade-A, .grade-Bp, .grade-B, .grade-C { color: #1e293b; font-weight: 700; }
-.grade-F   { color: #dc2626; font-weight: 700; }
+.grade-O, .grade-Ap, .grade-A, .grade-Bp, .grade-B, .grade-C { color: #0f172a; font-weight: 800; }
+.grade-F   { color: #dc2626; font-weight: 800; }
 
 /* Term group header - Uniform sophisticated color */
 .term-header, .term2-header, .final-header, .personality-header { 
-  background: #0f4a2d !important; /* Unified dark green */
+  background: #145e38 !important; 
   color: white !important; 
   font-size: 10px !important; 
   letter-spacing: 1px; 
 }
 
 /* Bottom Section */
-.rc-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+.rc-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
 
 /* Attendance Card */
-.att-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
-.att-card h4 { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-.att-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 12.5px; }
+.att-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; background: #f8fafc; }
+.att-card h4 { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.att-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed #cbd5e1; font-size: 12.5px; }
 .att-row:last-child { border-bottom: none; }
-.att-bar-wrap { flex: 1; margin: 0 12px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.att-bar-wrap { flex: 1; margin: 0 12px; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
 .att-bar-fill { height: 100%; border-radius: 3px; }
 
 /* Remarks */
-.remarks-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
-.remarks-card h4 { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-.remark-row { font-size: 12.5px; padding: 6px 0; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; }
+.remarks-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; background: #f8fafc; }
+.remarks-card h4 { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+.remark-row { font-size: 12.5px; padding: 8px 0; border-bottom: 1px dashed #cbd5e1; display: flex; justify-content: space-between; color: #334155; }
 .remark-row:last-child { border-bottom: none; }
 
 /* Result Banner */
 .result-banner {
-  margin-top: 20px; padding: 14px 20px; border-radius: var(--radius);
+  margin-top: 20px; padding: 16px 20px; border-radius: var(--radius);
   display: flex; align-items: center; justify-content: space-between;
 }
 .result-banner.pass { background: #ecfdf5; border: 1px solid #a7f3d0; }
 .result-banner.fail { background: #fef2f2; border: 1px solid #fca5a5; }
 .result-banner.supp { background: #fffbeb; border: 1px solid #fde68a; }
-.result-text { font-weight: 700; font-size: 14px; }
+.result-text { font-weight: 800; font-size: 15px; letter-spacing: 0.5px; }
 .result-text.pass { color: #059669; }
 .result-text.fail { color: #dc2626; }
 .result-text.supp { color: #d97706; }
-.result-grade { font-size: 28px; font-weight: 800; }
+.result-grade { font-size: 32px; font-weight: 900; }
 
 /* Signatures */
-.sig-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; padding-top: 20px; border-top: 1px dashed var(--border); }
+.sig-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; padding-top: 20px; border-top: 1px dashed #94a3b8; }
 .sig-box { text-align: center; }
-.sig-line { border-bottom: 1px solid var(--text-hint); height: 36px; margin-bottom: 6px; }
-.sig-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.sig-line { border-bottom: 1px solid #94a3b8; height: 40px; margin-bottom: 8px; margin-left: 20px; margin-right: 20px; }
+.sig-label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* Error */
 .error-card { text-align: center; padding: 48px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); max-width: 500px; margin: 40px auto; }
 
 /* Print */
 @media print {
-  @page { margin: 15mm; size: A4; }
-  body { background: white; height: auto; overflow: visible; }
+  @page { margin: 10mm; size: A4; }
+  body { background: white; height: auto; overflow: visible; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
   .main { overflow: visible; }
   .topbar, .page-header, .page-actions { display: none !important; }
   .content { padding: 0 !important; overflow: visible !important; }
@@ -187,6 +180,7 @@ table.rc-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
   .term-header, .term2-header, .final-header, .personality-header { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .result-banner { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .student-info-row { box-shadow: none !important; }
+  .att-card, .remarks-card { background: #f8fafc !important; }
 }
 .sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
 </style>
@@ -271,8 +265,8 @@ const GRADE_LABELS = { 5:'A+', 4:'A', 3:'B+', 2:'B', 1:'C', 0:'D' };
 // =====================================================================
 const STUDENTS = [
   {
-    name: 'Aarav Sharma', roll: 'X-A-01', cls: 'Class VIII - A',
-    admissionNo: 'ADM2021001', dob: '12-Mar-2010', fatherName: 'Rajesh Sharma',
+    name: 'Aarav Sharma', roll: 'X-A-01', cls: 'VIII', sec: 'A',
+    admissionNo: 'ADM2021001', dob: '12-Mar-2010', fatherName: 'Rajesh Sharma', motherName: 'Priya Sharma',
     // F1, F2, S1, F3, F4, S2 for each subject (marks out of maxF/maxS)
     marks: {
       eng: { f1:20, f2:22, s1:78, f3:21, f4:19, s2:80 },
@@ -289,8 +283,8 @@ const STUDENTS = [
     remarks: { s1: 'Satisfactory Performance', s2: 'Satisfactory Performance' }
   },
   {
-    name: 'Diya Patel', roll: 'X-A-02', cls: 'Class VIII - A',
-    admissionNo: 'ADM2021002', dob: '05-Jul-2010', fatherName: 'Nilesh Patel',
+    name: 'Diya Patel', roll: 'X-A-02', cls: 'VIII', sec: 'A',
+    admissionNo: 'ADM2021002', dob: '05-Jul-2010', fatherName: 'Nilesh Patel', motherName: 'Kavita Patel',
     marks: {
       eng: { f1:14, f2:16, s1:50, f3:15, f4:17, s2:55 },
       hin: { f1:18, f2:15, s1:60, f3:16, f4:18, s2:62 },
@@ -306,8 +300,8 @@ const STUDENTS = [
     remarks: { s1: 'Needs Improvement', s2: 'Needs Improvement' }
   },
   {
-    name: 'Ishaan Verma', roll: 'X-A-03', cls: 'Class VIII - A',
-    admissionNo: 'ADM2021003', dob: '22-Nov-2010', fatherName: 'Suresh Verma',
+    name: 'Ishaan Verma', roll: 'X-A-03', cls: 'VIII', sec: 'A',
+    admissionNo: 'ADM2021003', dob: '22-Nov-2010', fatherName: 'Suresh Verma', motherName: 'Meena Verma',
     marks: {
       eng: { f1:8,  f2:10, s1:28, f3:9,  f4:11, s2:30 },
       hin: { f1:12, f2:11, s1:40, f3:10, f4:12, s2:42 },
@@ -482,28 +476,36 @@ function renderReportCard() {
     <!-- Student Info Strip -->
     <div class="student-info-row">
       <div class="info-cell">
-        <div class="info-label">Student Name</div>
+        <div class="info-label">Student's Name</div>
         <div class="info-val">${student.name}</div>
       </div>
       <div class="info-cell">
-        <div class="info-label">Admission No</div>
-        <div class="info-val">${student.admissionNo}</div>
+        <div class="info-label">Father's Name</div>
+        <div class="info-val">${student.fatherName}</div>
       </div>
       <div class="info-cell">
-        <div class="info-label">Class & Section</div>
-        <div class="info-val">${student.cls}</div>
+        <div class="info-label">Mother's Name</div>
+        <div class="info-val">${student.motherName}</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Date of Birth</div>
+        <div class="info-val">${student.dob}</div>
       </div>
       <div class="info-cell">
         <div class="info-label">Roll No</div>
         <div class="info-val">${student.roll}</div>
       </div>
       <div class="info-cell">
-        <div class="info-label">Date of Birth</div>
-        <div class="info-val">${student.dob}</div>
+        <div class="info-label">Class</div>
+        <div class="info-val">${student.cls}</div>
       </div>
-      <div class="info-cell" style="border-bottom:none;">
-        <div class="info-label">Father's Name</div>
-        <div class="info-val">${student.fatherName}</div>
+      <div class="info-cell">
+        <div class="info-label">Section</div>
+        <div class="info-val">${student.sec}</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Admission No</div>
+        <div class="info-val">${student.admissionNo}</div>
       </div>
     </div>
 
@@ -563,8 +565,8 @@ function renderReportCard() {
                     <td>${r.s2}</td>
                     <td class="${r.gFin.css}" style="font-weight:700;">${r.finalMark}</td>
                     <td class="${r.gFin.css}">${r.gFin.g}</td>
-                    <td style="text-align:left; font-size:11px; padding:4px 6px; max-width:130px;">${persLabel}</td>
-                    <td style="font-weight:700; color:#7c2d12;">${persGrade}</td>
+                    <td style="text-align:left; font-size:11px; padding:4px 6px; max-width:130px; font-weight: 600; color: #475569;">${persLabel}</td>
+                    <td style="font-weight:800; color:#b91c1c;">${persGrade}</td>
                   </tr>`;
               });
               // Extra personality rows that exceed subject count
@@ -574,8 +576,8 @@ function renderReportCard() {
                   <tr>
                     <td class="sub-name"></td>
                     <td colspan="12"></td>
-                    <td style="text-align:left; font-size:11px; padding:4px 6px;">${PERSONALITY[i]}</td>
-                    <td style="font-weight:700; color:#7c2d12;">${persGrade}</td>
+                    <td style="text-align:left; font-size:11px; padding:4px 6px; font-weight: 600; color: #475569;">${PERSONALITY[i]}</td>
+                    <td style="font-weight:800; color:#b91c1c;">${persGrade}</td>
                   </tr>`;
               }
               return html;
@@ -601,11 +603,11 @@ function renderReportCard() {
             <tr class="total-row">
               <td class="sub-name">Result</td>
               <td colspan="5">
-                <span style="font-weight:700; color:${resultClass==='pass'?'#059669':'#dc2626'}; font-size:12px;">${resultText}</span>
+                <span style="font-weight:800; color:${resultClass==='pass'?'#059669':'#dc2626'}; font-size:12px;">${resultText}</span>
               </td>
               <td colspan="6"></td>
-              <td colspan="2" style="font-weight:700; font-size:14px; color:${resultClass==='pass'?'#059669':'#dc2626'};">${calc.finalGrade.g}</td>
-              <td colspan="2" style="font-size:11px; font-weight:600; color:#7c2d12;">Final Grade</td>
+              <td colspan="2" style="font-weight:800; font-size:14px; color:${resultClass==='pass'?'#059669':'#dc2626'};">${calc.finalGrade.g}</td>
+              <td colspan="2" style="font-size:11px; font-weight:700; color:#b91c1c;">Final Grade</td>
             </tr>
           </tbody>
         </table>
@@ -641,13 +643,13 @@ function renderReportCard() {
           <div class="att-card">
             <h4><i class="ti ti-ruler" style="color:var(--primary);"></i> Grade Scale</h4>
             <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; font-size:11px;">
-              <div style="text-align:center; padding:6px; background:#ecfdf5; border-radius:6px;"><strong class="grade-O">O</strong><br><span style="color:var(--text-muted);">90-100%</span></div>
-              <div style="text-align:center; padding:6px; background:#dbeafe; border-radius:6px;"><strong class="grade-Ap">A+</strong><br><span style="color:var(--text-muted);">80-89%</span></div>
-              <div style="text-align:center; padding:6px; background:#e0e7ff; border-radius:6px;"><strong class="grade-A">A</strong><br><span style="color:var(--text-muted);">70-79%</span></div>
-              <div style="text-align:center; padding:6px; background:#f5f3ff; border-radius:6px;"><strong class="grade-Bp">B+</strong><br><span style="color:var(--text-muted);">60-69%</span></div>
-              <div style="text-align:center; padding:6px; background:#fffbeb; border-radius:6px;"><strong class="grade-B">B</strong><br><span style="color:var(--text-muted);">50-59%</span></div>
-              <div style="text-align:center; padding:6px; background:#fff7ed; border-radius:6px;"><strong class="grade-C">C</strong><br><span style="color:var(--text-muted);">33-49%</span></div>
-              <div style="text-align:center; padding:6px; background:#fef2f2; border-radius:6px; grid-column:span 2;"><strong class="grade-F">F</strong><br><span style="color:var(--text-muted);">Below 33%</span></div>
+              <div style="text-align:center; padding:8px 6px; background:#ecfdf5; border-radius:6px;"><strong class="grade-O">O</strong><br><span style="color:var(--text-muted);">90-100%</span></div>
+              <div style="text-align:center; padding:8px 6px; background:#dbeafe; border-radius:6px;"><strong class="grade-Ap">A+</strong><br><span style="color:var(--text-muted);">80-89%</span></div>
+              <div style="text-align:center; padding:8px 6px; background:#e0e7ff; border-radius:6px;"><strong class="grade-A">A</strong><br><span style="color:var(--text-muted);">70-79%</span></div>
+              <div style="text-align:center; padding:8px 6px; background:#f5f3ff; border-radius:6px;"><strong class="grade-Bp">B+</strong><br><span style="color:var(--text-muted);">60-69%</span></div>
+              <div style="text-align:center; padding:8px 6px; background:#fffbeb; border-radius:6px;"><strong class="grade-B">B</strong><br><span style="color:var(--text-muted);">50-59%</span></div>
+              <div style="text-align:center; padding:8px 6px; background:#fff7ed; border-radius:6px;"><strong class="grade-C">C</strong><br><span style="color:var(--text-muted);">33-49%</span></div>
+              <div style="text-align:center; padding:8px 6px; background:#fef2f2; border-radius:6px; grid-column:span 2;"><strong class="grade-F">F</strong><br><span style="color:var(--text-muted);">Below 33%</span></div>
             </div>
           </div>
         </div>
