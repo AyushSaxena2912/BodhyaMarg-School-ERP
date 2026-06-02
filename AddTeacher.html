@@ -98,9 +98,21 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 }
 .form-field input[type="password"] { letter-spacing: 2px; }
 
-/* Tag chip */
+/* Tag chip & input box */
 .tag-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--green-light); color: var(--green); }
 .tag-chip button { border: none; background: transparent; cursor: pointer; color: var(--green); font-size: 13px; line-height: 1; padding: 0; }
+.tag-input-box {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 4px 8px; background: var(--white); min-height: 35px;
+  transition: border-color .15s; cursor: text;
+}
+.tag-input-box:focus-within { border-color: var(--green); }
+.tag-input-box input {
+  border: none !important; outline: none !important; background: transparent !important;
+  padding: 0 !important; font-size: 12.5px !important; font-family: inherit;
+  flex: 1; min-width: 60px; color: var(--text); box-shadow: none !important;
+}
 
 /* Divider */
 .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
@@ -181,8 +193,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         </div>
         <div class="form-field">
           <label>Subject</label>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:5px 0;">
-            <input type="text" placeholder="Add…" style="border:1px dashed var(--border);border-radius:6px;padding:4px 8px;font-size:12px;font-family:inherit;outline:none;width:90px;" />
+          <div class="tag-input-box">
+            <input type="text" placeholder="Add…" />
           </div>
         </div>
       </div>
@@ -232,9 +244,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         </div>
         <div class="form-field">
           <label>Language Known</label>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:5px 0;">
+          <div class="tag-input-box">
             <span class="tag-chip">Hindi <button>×</button></span>
-            <input type="text" placeholder="Add…" style="border:1px dashed var(--border);border-radius:6px;padding:4px 8px;font-size:12px;font-family:inherit;outline:none;width:90px;" />
+            <input type="text" placeholder="Add…" />
           </div>
         </div>
       </div>
