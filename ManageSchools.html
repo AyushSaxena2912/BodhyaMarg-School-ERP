@@ -111,7 +111,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <h1>Manage Schools / Branches</h1>
         <div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Settings <i class="ti ti-chevron-right"></i> <span>Manage Schools</span></div>
       </div>
-      <button class="btn btn-primary" onclick="openModal()"><i class="ti ti-circle-plus"></i> Add New Branch</button>
+      <a href="AddBranch.html" class="btn btn-primary"><i class="ti ti-circle-plus"></i> Add New Branch</a>
     </div>
 
     <!-- Stats -->
@@ -127,53 +127,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) closeModal()">
-  <div class="modal">
-    <div class="modal-title"><i class="ti ti-building"></i> <span id="modalHeading">Add New Branch</span></div>
-    <div class="modal-field"><label>School / Branch Name *</label><input type="text" id="inpName" placeholder="e.g. Delhi Public School - South Campus" /></div>
-    <div class="modal-row">
-      <div class="modal-field">
-        <label>City *</label>
-        <input type="text" id="inpCity" placeholder="e.g. New Delhi" list="citySuggestions" autocomplete="off" />
-        <datalist id="citySuggestions"></datalist>
-      </div>
-      <div class="modal-field">
-        <label>State</label>
-        <select id="inpState">
-          <option value="">-- Select State/UT --</option>
-          <optgroup label="States">
-            <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
-          </optgroup>
-          <optgroup label="Union Territories">
-            <option>Andaman and Nicobar Islands</option><option>Chandigarh</option><option>Dadra and Nagar Haveli and Daman and Diu</option><option>Delhi</option><option>Jammu and Kashmir</option><option>Ladakh</option><option>Lakshadweep</option><option>Puducherry</option>
-          </optgroup>
-        </select>
-      </div>
-    </div>
-    <div class="modal-field"><label>Full Address</label><textarea id="inpAddress" placeholder="Branch full address…"></textarea></div>
-    <div class="modal-row">
-      <div class="modal-field"><label>Principal Name</label><input type="text" id="inpPrincipal" placeholder="e.g. Dr. Sharma" /></div>
-      <div class="modal-field"><label>Contact Number</label><input type="text" id="inpContact" placeholder="e.g. 011-26537890" /></div>
-    </div>
-    <div class="modal-row">
-      <div class="modal-field"><label>Email</label><input type="email" id="inpEmail" placeholder="e.g. south@dps.edu.in" /></div>
-      <div class="modal-field"><label>Affiliation No.</label><input type="text" id="inpAffil" placeholder="e.g. 2730098" /></div>
-    </div>
-    <div class="modal-row">
-      <div class="modal-field"><label>Established Year</label><input type="text" id="inpYear" placeholder="e.g. 2005" /></div>
-      <div class="modal-field">
-        <label>Status</label>
-        <select id="inpStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option></select>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveSchool()"><i class="ti ti-check"></i> Save</button>
-    </div>
-  </div>
 </div>
-
 <script>
 const indianCities = ["Agra","Ahmedabad","Ajmer","Akola","Aligarh","Allahabad","Ambattur","Amravati","Amritsar","Asansol","Aurangabad","Bareilly","Belgaum","Bengaluru","Bhavnagar","Bhilai","Bhiwandi","Bhopal","Bhubaneswar","Bikaner","Chandigarh","Chennai","Coimbatore","Cuttack","Dehradun","Delhi","Dhanbad","Durgapur","Erode","Faridabad","Firozabad","Gaya","Ghaziabad","Gorakhpur","Gulbarga","Guntur","Gurgaon","Guwahati","Gwalior","Howrah","Hubli-Dharwad","Hyderabad","Indore","Jabalpur","Jaipur","Jalandhar","Jammu","Jamnagar","Jamshedpur","Jhansi","Jodhpur","Kalyan-Dombivli","Kanpur","Kochi","Kolhapur","Kolkata","Kota","Kurnool","Ladakh","Loni","Lucknow","Ludhiana","Madurai","Malegaon","Mangalore","Meerut","Mira-Bhayandar","Moradabad","Mumbai","Mysore","Nagpur","Nanded","Nashik","Navi Mumbai","Nellore","New Delhi","Noida","Patna","Pimpri-Chinchwad","Pune","Raipur","Rajahmundry","Rajkot","Ranchi","Rourkela","Saharanpur","Salem","Sangli-Miraj & Kupwad","Siliguri","Solapur","Srinagar","Surat","Thane","Thiruvananthapuram","Tiruchirappalli","Tirunelveli","Tiruppur","Udaipur","Ujjain","Ulhasnagar","Vadodara","Varanasi","Vasai-Virar","Vijayawada","Visakhapatnam"];
 document.addEventListener("DOMContentLoaded", () => {
@@ -208,7 +162,7 @@ function render() {
       <div class="school-card-footer">
         <span class="badge badge-${s.status.toLowerCase()}">${s.status}</span>
         <div class="card-actions">
-          <button class="card-btn" onclick="editSchool(${s.id})" title="Edit"><i class="ti ti-edit"></i></button>
+          <a href="AddBranch.html?id=${s.id}" class="card-btn" style="text-decoration:none" title="Edit"><i class="ti ti-edit"></i></a>
           <button class="card-btn danger" onclick="deleteSchool(${s.id})" title="Delete"><i class="ti ti-trash"></i></button>
         </div>
       </div>
@@ -221,39 +175,6 @@ function render() {
   document.getElementById('statActive').textContent = schools.filter(s => s.status === 'Active').length;
 }
 
-function openModal() {
-  editingId = null;
-  document.getElementById('modalHeading').textContent = 'Add New Branch';
-  ['inpName','inpCity','inpState','inpAddress','inpPrincipal','inpContact','inpEmail','inpAffil','inpYear'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('inpStatus').value = 'Active';
-  document.getElementById('modalOverlay').classList.add('open');
-}
-function editSchool(id) {
-  const s = schools.find(x => x.id === id); if (!s) return;
-  editingId = id;
-  document.getElementById('modalHeading').textContent = 'Edit Branch';
-  document.getElementById('inpName').value = s.name;
-  document.getElementById('inpCity').value = s.city;
-  document.getElementById('inpState').value = s.state;
-  document.getElementById('inpAddress').value = s.address;
-  document.getElementById('inpPrincipal').value = s.principal;
-  document.getElementById('inpContact').value = s.contact;
-  document.getElementById('inpEmail').value = s.email;
-  document.getElementById('inpAffil').value = s.affil;
-  document.getElementById('inpYear').value = s.year;
-  document.getElementById('inpStatus').value = s.status;
-  document.getElementById('modalOverlay').classList.add('open');
-}
-function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
-function saveSchool() {
-  const name = document.getElementById('inpName').value.trim();
-  const city = document.getElementById('inpCity').value.trim();
-  if (!name || !city) { alert('Please fill in Name and City.'); return; }
-  const data = { name, city, state: document.getElementById('inpState').value.trim(), address: document.getElementById('inpAddress').value.trim(), principal: document.getElementById('inpPrincipal').value.trim(), contact: document.getElementById('inpContact').value.trim(), email: document.getElementById('inpEmail').value.trim(), affil: document.getElementById('inpAffil').value.trim(), year: document.getElementById('inpYear').value.trim(), status: document.getElementById('inpStatus').value };
-  if (editingId) { const s = schools.find(x => x.id === editingId); if (s) Object.assign(s, data); }
-  else { schools.push({ id: nextId++, ...data, students: 0 }); }
-  closeModal(); render();
-}
 function deleteSchool(id) { if (confirm('Delete this branch?')) { schools = schools.filter(s => s.id !== id); render(); } }
 
 render();

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Add/Edit Branch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38; --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea; --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af; --radius: 8px; --radius-lg: 12px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); } .topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; } .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; } .breadcrumb span { color: var(--green); } .breadcrumb a { color: inherit; text-decoration: none; } .breadcrumb a:hover { text-decoration: underline; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); white-space: nowrap; text-decoration: none; }
+.btn:hover { background: var(--bg); } .btn-primary { background: var(--green); color: #fff; border-color: var(--green); } .btn-primary:hover { background: var(--green-dark); }
+.btn-lg { padding: 10px 20px; font-size: 13.5px; }
+
+/* Form Layout */
+.form-layout { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.form-section { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; }
+.section-header { font-size: 15px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+.section-header i { color: var(--green); font-size: 18px; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field.full { grid-column: 1 / -1; }
+.form-field label { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+.form-field input, .form-field select, .form-field textarea { font-family: inherit; font-size: 13px; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; outline: none; background: var(--white); color: var(--text); transition: border-color .15s; }
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--green); }
+.form-field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; cursor: pointer; }
+.form-field textarea { resize: vertical; min-height: 80px; }
+
+/* Logo Upload Area */
+.logo-upload { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+.logo-preview { width: 72px; height: 72px; border-radius: 12px; border: 1px dashed var(--border); background: #fafbfc; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--text-hint); overflow: hidden; }
+.logo-preview img { width: 100%; height: 100%; object-fit: cover; display: none; }
+.logo-actions { display: flex; flex-direction: column; gap: 8px; }
+.logo-hint { font-size: 11px; color: var(--text-hint); }
+
+.bottom-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div id="sidebar-container"></div>
+<div class="main">
+  <div class="topbar"><div class="topbar-search"><i class="ti ti-search"></i><input placeholder="Search anything…" /></div><div class="topbar-right"><div class="icon-btn"><i class="ti ti-bell"></i></div><div class="avatar">S</div></div></div>
+  <div class="content">
+    
+    <div class="form-layout">
+      <div class="page-header" style="margin-bottom:0">
+        <div><h1 id="pageTitle">Add New Branch</h1><div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Settings <i class="ti ti-chevron-right"></i> <a href="ManageSchools.html">Manage Schools</a> <i class="ti ti-chevron-right"></i> <span id="breadcrumbTitle">Add Branch</span></div></div>
+        <div class="bottom-actions">
+          <a href="ManageSchools.html" class="btn"><i class="ti ti-arrow-left"></i> Back</a>
+          <button class="btn btn-primary" onclick="saveData()"><i class="ti ti-device-floppy"></i> Save Branch</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-header"><i class="ti ti-building-estate"></i> Basic Information</div>
+        <div class="form-grid">
+          <div class="form-field full">
+            <label>School Logo</label>
+            <div class="logo-upload">
+              <div class="logo-preview" id="logoPreview"><i class="ti ti-photo"></i><img id="logoImg" src="" /></div>
+              <div class="logo-actions">
+                <input type="file" id="inpLogo" accept="image/*" style="display:none" onchange="previewLogo(this)" />
+                <button class="btn" onclick="document.getElementById('inpLogo').click()" style="padding:6px 12px; font-size:11.5px">Choose File</button>
+                <div class="logo-hint">Recommended size: 200x200px (JPG/PNG)</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-field full"><label>School / Branch Name *</label><input type="text" id="inpName" placeholder="e.g. Delhi Public School - South Campus" /></div>
+          
+          <div class="form-field"><label>School Code</label><input type="text" id="inpCode" placeholder="e.g. DPS101" /></div>
+          <div class="form-field"><label>Affiliation Number</label><input type="text" id="inpAffil" placeholder="e.g. 2730098" /></div>
+          
+          <div class="form-field"><label>UDISE Number (India)</label><input type="text" id="inpUdise" placeholder="e.g. 0915011" /></div>
+          <div class="form-field"><label>Board Type</label>
+            <select id="inpBoard"><option>CBSE</option><option>ICSE</option><option>State Board</option><option>IB</option><option>IGCSE</option><option>Other</option></select>
+          </div>
+          
+          <div class="form-field"><label>Established Year</label><input type="number" id="inpYear" placeholder="e.g. 2005" /></div>
+          <div class="form-field"><label>School Type</label>
+            <select id="inpType"><option>Co-Ed (Boys & Girls)</option><option>Boys Only</option><option>Girls Only</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-header"><i class="ti ti-address-book"></i> Contact Details</div>
+        <div class="form-grid">
+          <div class="form-field"><label>Principal Name</label><input type="text" id="inpPrincipal" placeholder="e.g. Dr. Asha Gupta" /></div>
+          <div class="form-field"><label>Contact Number</label><input type="text" id="inpContact" placeholder="e.g. +91 9876543210" /></div>
+          <div class="form-field"><label>Email Address</label><input type="email" id="inpEmail" placeholder="e.g. info@dps.edu.in" /></div>
+          <div class="form-field"><label>Website URL</label><input type="url" id="inpWebsite" placeholder="e.g. https://www.dps.edu.in" /></div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-header"><i class="ti ti-map-pin"></i> Location & Status</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>City *</label>
+            <input type="text" id="inpCity" placeholder="e.g. New Delhi" list="citySuggestions" autocomplete="off" />
+            <datalist id="citySuggestions"></datalist>
+          </div>
+          <div class="form-field">
+            <label>State</label>
+            <select id="inpState">
+              <option value="">-- Select State/UT --</option>
+              <optgroup label="States">
+                <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
+              </optgroup>
+              <optgroup label="Union Territories">
+                <option>Andaman and Nicobar Islands</option><option>Chandigarh</option><option>Dadra and Nagar Haveli and Daman and Diu</option><option>Delhi</option><option>Jammu and Kashmir</option><option>Ladakh</option><option>Lakshadweep</option><option>Puducherry</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="form-field full"><label>Full Address</label><textarea id="inpAddress" placeholder="e.g. Mathura Road, Sector 30..."></textarea></div>
+          <div class="form-field">
+            <label>Status</label>
+            <select id="inpStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-actions">
+        <a href="ManageSchools.html" class="btn btn-lg">Cancel</a>
+        <button class="btn btn-primary btn-lg" onclick="saveData()"><i class="ti ti-check"></i> Save Branch Details</button>
+      </div>
+      <div style="height:40px"></div>
+    </div>
+  </div>
+</div>
+<script>
+const indianCities = ["Agra","Ahmedabad","Ajmer","Akola","Aligarh","Allahabad","Ambattur","Amravati","Amritsar","Asansol","Aurangabad","Bareilly","Belgaum","Bengaluru","Bhavnagar","Bhilai","Bhiwandi","Bhopal","Bhubaneswar","Bikaner","Chandigarh","Chennai","Coimbatore","Cuttack","Dehradun","Delhi","Dhanbad","Durgapur","Erode","Faridabad","Firozabad","Gaya","Ghaziabad","Gorakhpur","Gulbarga","Guntur","Gurgaon","Guwahati","Gwalior","Howrah","Hubli-Dharwad","Hyderabad","Indore","Jabalpur","Jaipur","Jalandhar","Jammu","Jamnagar","Jamshedpur","Jhansi","Jodhpur","Kalyan-Dombivli","Kanpur","Kochi","Kolhapur","Kolkata","Kota","Kurnool","Ladakh","Loni","Lucknow","Ludhiana","Madurai","Malegaon","Mangalore","Meerut","Mira-Bhayandar","Moradabad","Mumbai","Mysore","Nagpur","Nanded","Nashik","Navi Mumbai","Nellore","New Delhi","Noida","Patna","Pimpri-Chinchwad","Pune","Raipur","Rajahmundry","Rajkot","Ranchi","Rourkela","Saharanpur","Salem","Sangli-Miraj & Kupwad","Siliguri","Solapur","Srinagar","Surat","Thane","Thiruvananthapuram","Tiruchirappalli","Tirunelveli","Tiruppur","Udaipur","Ujjain","Ulhasnagar","Vadodara","Varanasi","Vasai-Virar","Vijayawada","Visakhapatnam"];
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("citySuggestions").innerHTML = indianCities.map(c => `<option value="${c}">`).join("");
+  
+  // Simulated Edit Mode if URL has ?id=
+  const urlParams = new URLSearchParams(window.location.search);
+  if(urlParams.has('id')) {
+    document.getElementById('pageTitle').textContent = 'Edit Branch';
+    document.getElementById('breadcrumbTitle').textContent = 'Edit Branch';
+    // Simulate loading data
+    document.getElementById('inpName').value = 'Delhi Public School - Main Campus';
+    document.getElementById('inpCode').value = 'DPS001';
+    document.getElementById('inpAffil').value = '2730001';
+    document.getElementById('inpUdise').value = '07090310201';
+    document.getElementById('inpYear').value = '1972';
+    document.getElementById('inpPrincipal').value = 'Dr. Asha Gupta';
+    document.getElementById('inpContact').value = '011-26537890';
+    document.getElementById('inpEmail').value = 'main@dps.edu.in';
+    document.getElementById('inpWebsite').value = 'https://www.dps.edu.in';
+    document.getElementById('inpCity').value = 'New Delhi';
+    document.getElementById('inpState').value = 'Delhi';
+    document.getElementById('inpAddress').value = 'Mathura Road, New Delhi 110003';
+  }
+});
+
+function previewLogo(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('logoImg').src = e.target.result;
+      document.getElementById('logoImg').style.display = 'block';
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function saveData() {
+  const name = document.getElementById('inpName').value.trim();
+  if(!name) { alert('Please enter School Name.'); return; }
+  alert('✅ Branch details saved successfully!');
+  window.location.href = 'ManageSchools.html';
+}
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
