@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light" />
+<title>BodhyaMarg ERP – Receipt Designer</title>
+<script src="permissions.js"></script>
+<script>BodhyaAuth.guardPage(['admin', 'superadmin']);</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Courier+Prime&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a;
+  --green-light: #e6f4ee;
+  --green-dark: #145e38;
+  --bg: #f4f6f8;
+  --white: #ffffff;
+  --border: #e2e6ea;
+  --text: #1a1d23;
+  --text-muted: #6b7280;
+  --text-hint: #9ca3af;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 12px;
+  width: 280px;
+}
+
+.topbar-search i {
+  font-size: 14px;
+  color: var(--text-hint);
+}
+
+.topbar-search input {
+  border: none;
+  background: transparent;
+  font-size: 12.5px;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--white);
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  flex: 1;
+  overflow: hidden;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.page-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.breadcrumb {
+  font-size: 11.5px;
+  color: var(--text-hint);
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.breadcrumb span {
+  color: var(--green);
+}
+
+.designer-workspace {
+  flex: 1;
+  display: flex;
+  gap: 24px;
+  overflow: hidden;
+}
+
+/* Left panel style controls */
+.controls-panel {
+  width: 420px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.controls-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: #fafbfc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.controls-header h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.controls-header h2 i {
+  color: var(--green);
+}
+
+.controls-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.controls-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.controls-body::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.control-section {
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+}
+
+.control-section:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.section-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.control-group {
+  margin-bottom: 14px;
+}
+
+.control-group:last-child {
+  margin-bottom: 0;
+}
+
+.control-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.input-control {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+}
+
+.input-control:focus {
+  border-color: var(--green);
+}
+
+.select-control {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--white);
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+
+.select-control:focus {
+  border-color: var(--green);
+}
+
+.checkbox-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input {
+  accent-color: var(--green);
+}
+
+.color-picker-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.color-presets {
+  display: flex;
+  gap: 8px;
+}
+
+.preset-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+}
+
+.preset-btn.active {
+  border-color: #000;
+  transform: scale(1.1);
+}
+
+/* Right panel live preview */
+.preview-panel {
+  flex: 1;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.preview-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: #fafbfc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preview-header h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-header h2 i {
+  color: var(--green);
+}
+
+.preview-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius);
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text);
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: var(--bg);
+}
+
+.btn-primary {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+
+.btn-primary:hover {
+  background: var(--green-dark);
+}
+
+.preview-body {
+  flex: 1;
+  background: #eef1f5;
+  overflow: auto;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+/* Receipt styles mapping layout templates */
+.receipt-paper {
+  background: var(--white);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+  padding: 30px;
+  transition: all 0.3s;
+  box-sizing: border-box;
+  color: #1a1d23;
+  position: relative;
+  border: 1px solid #d1d5db;
+}
+
+/* A4 layout shape */
+.receipt-paper.size-a4 {
+  width: 650px;
+  min-height: 800px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* A5 layout shape */
+.receipt-paper.size-a5 {
+  width: 600px;
+  min-height: 420px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Thermal receipt size (80mm) */
+.receipt-paper.size-thermal {
+  width: 320px;
+  min-height: 500px;
+  padding: 15px;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+/* Custom properties driven styles */
+.receipt-paper.font-dm-sans { font-family: 'DM Sans', sans-serif; }
+.receipt-paper.font-inter { font-family: 'Inter', sans-serif; }
+.receipt-paper.font-mono { font-family: 'JetBrains Mono', 'Courier Prime', monospace; }
+
+/* Custom receipt border styles */
+.receipt-paper.border-solid { border: 2px solid var(--receipt-color, #1a7a4a); }
+.receipt-paper.border-dashed { border: 2px dashed var(--receipt-color, #1a7a4a); }
+.receipt-paper.border-double { border: 4px double var(--receipt-color, #1a7a4a); }
+.receipt-paper.border-none { border: none; }
+
+/* Receipt Internal Sections */
+.receipt-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.receipt-header.align-left {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.receipt-header.align-right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.receipt-logo {
+  max-width: 65px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.receipt-school-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--receipt-color, #1a7a4a);
+}
+
+.size-thermal .receipt-school-name {
+  font-size: 14px;
+}
+
+.receipt-school-meta {
+  font-size: 11px;
+  color: #4b5563;
+  margin-top: 2px;
+}
+
+.size-thermal .receipt-school-meta {
+  font-size: 9.5px;
+}
+
+.receipt-divider {
+  border-top: 1px solid #e5e7eb;
+  margin: 15px 0;
+  width: 100%;
+}
+
+.receipt-paper.border-dashed .receipt-divider,
+.receipt-paper.size-thermal .receipt-divider {
+  border-top-style: dashed;
+}
+
+.receipt-title-bar {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.receipt-title {
+  display: inline-block;
+  padding: 4px 16px;
+  background: var(--receipt-color-light, #e6f4ee);
+  color: var(--receipt-color, #1a7a4a);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+}
+
+.size-thermal .receipt-title {
+  font-size: 10px;
+  padding: 3px 10px;
+}
+
+/* Info grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+
+.size-thermal .info-grid {
+  grid-template-columns: 1fr;
+  gap: 4px;
+  font-size: 10px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.info-value {
+  font-weight: 600;
+  color: #111827;
+  text-align: right;
+}
+
+/* Fees breakdown table */
+.receipt-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+
+.size-thermal .receipt-table {
+  font-size: 10px;
+  margin-bottom: 12px;
+}
+
+.receipt-table th {
+  background: var(--receipt-color-light, #e6f4ee);
+  color: var(--receipt-color, #1a7a4a);
+  font-weight: 600;
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.receipt-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.receipt-table th.num, .receipt-table td.num {
+  text-align: right;
+}
+
+/* Totals panel */
+.totals-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+
+.size-thermal .totals-section {
+  font-size: 10px;
+}
+
+.totals-table {
+  width: 250px;
+}
+
+.size-thermal .totals-table {
+  width: 100%;
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.totals-row.grand-total {
+  font-weight: 700;
+  font-size: 13.5px;
+  border-top: 1px solid #d1d5db;
+  border-bottom: 1px solid #d1d5db;
+  padding: 6px 0;
+  color: var(--receipt-color, #1a7a4a);
+  margin-top: 4px;
+}
+
+.size-thermal .totals-row.grand-total {
+  font-size: 11px;
+}
+
+.amount-in-words {
+  font-style: italic;
+  font-size: 11px;
+  color: #4b5563;
+  margin-top: -12px;
+  margin-bottom: 20px;
+}
+
+.size-thermal .amount-in-words {
+  font-size: 9.5px;
+  margin-bottom: 12px;
+}
+
+/* Signatures */
+.signatures-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  font-size: 11.5px;
+}
+
+.size-thermal .signatures-wrapper {
+  margin-top: 25px;
+  font-size: 9.5px;
+}
+
+.sig-block {
+  text-align: center;
+  width: 120px;
+}
+
+.size-thermal .sig-block {
+  width: 100px;
+}
+
+.sig-line {
+  border-top: 1px solid #9ca3af;
+  margin-bottom: 4px;
+}
+
+/* Terms and footer notes */
+.receipt-terms {
+  margin-top: 30px;
+  font-size: 10.5px;
+  color: #6b7280;
+  line-height: 1.4;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 10px;
+}
+
+.size-thermal .receipt-terms {
+  font-size: 9px;
+  margin-top: 18px;
+}
+
+/* PRINT MEDIA STYLES - Hides control elements when printing */
+@media print {
+  body {
+    background: white;
+    color: black;
+    height: auto;
+    overflow: visible;
+  }
+  .sidebar,
+  .main > .topbar,
+  .content > .page-header,
+  .designer-workspace > .controls-panel,
+  .preview-panel > .preview-header,
+  .preview-body {
+    display: none !important;
+  }
+  .main, .content, .designer-workspace, .preview-panel {
+    display: block !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: none !important;
+  }
+  .receipt-paper {
+    box-shadow: none !important;
+    border-color: #000 !important;
+    transform: none !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+  .receipt-paper.size-a4 {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .receipt-paper.size-a5 {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .receipt-paper.size-thermal {
+    width: 80mm !important;
+    min-height: 0 !important;
+  }
+}
+</style>
+</head>
+<body>
+<div id="sidebar-container"></div>
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search"><i class="ti ti-search"></i><input placeholder="Search anything…" /></div>
+    <div class="topbar-right">
+      <div class="icon-btn"><i class="ti ti-bell"></i></div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+  
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Receipt Designer</h1>
+        <div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Fees <i class="ti ti-chevron-right"></i> <span>Receipt Designer</span></div>
+      </div>
+    </div>
+    
+    <div class="designer-workspace">
+      <!-- Left Controls Panel -->
+      <div class="controls-panel">
+        <div class="controls-header">
+          <h2><i class="ti ti-adjustments-horizontal"></i> Customize Receipt</h2>
+          <button class="btn" onclick="resetToDefaults()" title="Reset to original configurations"><i class="ti ti-rotate"></i> Reset</button>
+        </div>
+        <div class="controls-body">
+          
+          <!-- Layout Settings -->
+          <div class="control-section">
+            <div class="section-title"><i class="ti ti-layout"></i> Page Layout</div>
+            <div class="control-group">
+              <label>Paper Size & Format</label>
+              <select id="selFormat" class="select-control" onchange="updatePreview()">
+                <option value="a4">A4 Portrait (Standard Office)</option>
+                <option value="a5">A5 Landscape (Compact Slip)</option>
+                <option value="thermal">Thermal 3-inch / 80mm (Cash Register)</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>Font Family</label>
+              <select id="selFont" class="select-control" onchange="updatePreview()">
+                <option value="dm-sans">DM Sans (Modern Clean)</option>
+                <option value="inter">Inter (UI Professional)</option>
+                <option value="mono">Courier / Monospace (Classic Dot-Matrix)</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>Primary Theme Color</label>
+              <div class="color-picker-wrapper">
+                <input type="color" id="pickerColor" value="#1a7a4a" oninput="updateColorFromPicker(this.value)" style="width:40px;height:30px;border-radius:4px;border:1px solid var(--border);cursor:pointer;" />
+                <div class="color-presets" id="presetsContainer">
+                  <!-- Generated dynamically in JS -->
+                </div>
+              </div>
+            </div>
+            <div class="control-group">
+              <label>Receipt Border</label>
+              <select id="selBorder" class="select-control" onchange="updatePreview()">
+                <option value="solid">Solid Primary Color</option>
+                <option value="dashed">Dashed Color</option>
+                <option value="double">Double Border Color</option>
+                <option value="none">No Outer Border</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Header Configuration -->
+          <div class="control-section">
+            <div class="section-title"><i class="ti ti-heading"></i> School Header Info</div>
+            <div class="control-group">
+              <label class="checkbox-label" style="margin-bottom:10px;">
+                <input type="checkbox" id="chkShowLogo" onchange="updatePreview()" checked /> Show School Logo
+              </label>
+            </div>
+            <div class="control-group">
+              <label>Logo Alignment</label>
+              <select id="selLogoAlign" class="select-control" onchange="updatePreview()">
+                <option value="center">Centered</option>
+                <option value="left">Left Aligned</option>
+                <option value="right">Right Aligned</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>School Name</label>
+              <input type="text" id="txtSchoolName" class="input-control" value="BodhyaMarg International School" oninput="updatePreview()" />
+            </div>
+            <div class="control-group">
+              <label>Header Metadata (Address/Contact/Email)</label>
+              <textarea id="txtSchoolMeta" class="input-control" rows="3" oninput="updatePreview()" style="resize:vertical;">Sector 12, Dwarka, New Delhi - 110075&#10;Phone: +91 98765 43210, +91 11 2345 6789&#10;Email: contact@bodhyamarg.edu.in | Web: www.bodhyamarg.edu.in&#10;Affiliation No: 2730192 | School Code: 85293 | UDISE: 07190203301</textarea>
+            </div>
+            <div class="control-group">
+              <label>Receipt Document Title</label>
+              <input type="text" id="txtReceiptTitle" class="input-control" value="Fees Payment Receipt" oninput="updatePreview()" />
+            </div>
+            <div class="control-group">
+              <label>Receipt No. Prefix</label>
+              <input type="text" id="txtReceiptPrefix" class="input-control" value="BM/REC/2026/" oninput="updatePreview()" />
+            </div>
+          </div>
+
+          <!-- Fields Visibility Toggles -->
+          <div class="control-section">
+            <div class="section-title"><i class="ti ti-checkbox"></i> Details to Show</div>
+            <div class="checkbox-group">
+              <label class="checkbox-label"><input type="checkbox" id="chkAdmissionNo" onchange="updatePreview()" checked /> Admission No</label>
+              <label class="checkbox-label"><input type="checkbox" id="chkRollNo" onchange="updatePreview()" checked /> Roll No</label>
+              <label class="checkbox-label"><input type="checkbox" id="chkClassSection" onchange="updatePreview()" checked /> Class & Section</label>
+              <label class="checkbox-label"><input type="checkbox" id="chkFatherName" onchange="updatePreview()" checked /> Father's Name</label>
+              <label class="checkbox-label"><input type="checkbox" id="chkPaymentMode" onchange="updatePreview()" checked /> Payment Mode</label>
+              <label class="checkbox-label"><input type="checkbox" id="chkTransactionId" onchange="updatePreview()" checked /> Transaction ID</label>
+            </div>
+          </div>
+
+          <!-- Fee Table Configuration -->
+          <div class="control-section">
+            <div class="section-title"><i class="ti ti-table"></i> Fee Table Customization</div>
+            <div class="checkbox-group">
+              <label class="checkbox-label"><input type="checkbox" id="chkShowDiscount" onchange="updatePreview()" checked /> Show Discount Col</label>
+              <label class="checkbox-label"><input type="checkbox" id="chkShowFine" onchange="updatePreview()" checked /> Show Fine Col</label>
+            </div>
+            <div class="control-group" style="margin-top:12px;">
+              <label class="checkbox-label"><input type="checkbox" id="chkAmountInWords" onchange="updatePreview()" checked /> Show Amount in Words</label>
+            </div>
+          </div>
+
+          <!-- Signatures & Footer Configuration -->
+          <div class="control-section">
+            <div class="section-title"><i class="ti ti-signature"></i> Signatures & Terms</div>
+            <div class="checkbox-group" style="margin-bottom:12px;">
+              <label class="checkbox-label"><input type="checkbox" id="chkSigLeft" onchange="updatePreview()" checked /> Cashier Signature</label>
+              <label class="checkbox-label"><input type="checkbox" id="chkSigRight" onchange="updatePreview()" checked /> Principal Signature</label>
+            </div>
+            <div class="control-group">
+              <label>Left Signature Label</label>
+              <input type="text" id="txtSigLeftLabel" class="input-control" value="Authorized Cashier" oninput="updatePreview()" />
+            </div>
+            <div class="control-group">
+              <label>Right Signature Label</label>
+              <input type="text" id="txtSigRightLabel" class="input-control" value="Principal / Director" oninput="updatePreview()" />
+            </div>
+            <div class="control-group">
+              <label>Terms & Conditions Note</label>
+              <textarea id="txtTerms" class="input-control" rows="3" oninput="updatePreview()" style="resize:vertical;">1. All fees payments are subject to clearing.&#10;2. Fees once paid are non-refundable & non-transferable under any circumstances.&#10;3. Please preserve this receipt for your records and verification purposes.</textarea>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+      <!-- Right Live Preview Panel -->
+      <div class="preview-panel">
+        <div class="preview-header">
+          <h2><i class="ti ti-eye"></i> Real-time Print Preview</h2>
+          <div class="preview-actions">
+            <button class="btn btn-primary" onclick="window.print()"><i class="ti ti-printer"></i> Print Receipt</button>
+            <button class="btn" style="background:#1a7a4a;color:#fff;border-color:#1a7a4a;" onclick="saveConfig()"><i class="ti ti-device-floppy"></i> Save Design</button>
+          </div>
+        </div>
+        <div class="preview-body" id="previewContainer">
+          
+          <!-- Dynamic Receipt Template -->
+          <div class="receipt-paper size-a4 font-dm-sans border-solid" id="receiptPaper" style="--receipt-color: #1a7a4a; --receipt-color-light: #e6f4ee;">
+            
+            <!-- School Header -->
+            <div class="receipt-header" id="receiptHeader">
+              <img src="school_logo.png" class="receipt-logo" id="previewLogo" alt="School Logo" />
+              <div class="receipt-school-name" id="previewSchoolName">BodhyaMarg International School</div>
+              <div class="receipt-school-meta" id="previewSchoolMeta" style="white-space: pre-line;"></div>
+            </div>
+            
+            <div class="receipt-divider"></div>
+            
+            <!-- Receipt Title -->
+            <div class="receipt-title-bar">
+              <div class="receipt-title" id="previewReceiptTitle">Fees Payment Receipt</div>
+            </div>
+            
+            <!-- Information Grid -->
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Receipt No:</span>
+                <span class="info-value" id="previewReceiptNo">BM/REC/2026/1942</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Date:</span>
+                <span class="info-value">03 Jun 2026</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Student Name:</span>
+                <span class="info-value">Aarav Sharma</span>
+              </div>
+              <div class="info-item" id="rowAdmissionNo">
+                <span class="info-label">Admission No:</span>
+                <span class="info-value">ADM-2026-9812</span>
+              </div>
+              <div class="info-item" id="rowRollNo">
+                <span class="info-label">Roll Number:</span>
+                <span class="info-value">12</span>
+              </div>
+              <div class="info-item" id="rowClassSection">
+                <span class="info-label">Class & Section:</span>
+                <span class="info-value">Class X - Section A</span>
+              </div>
+              <div class="info-item" id="rowFatherName">
+                <span class="info-label">Father's Name:</span>
+                <span class="info-value">Mr. Rajesh Sharma</span>
+              </div>
+              <div class="info-item" id="rowPaymentMode">
+                <span class="info-label">Payment Mode:</span>
+                <span class="info-value">Online (UPI / NetBanking)</span>
+              </div>
+              <div class="info-item" id="rowTransactionId">
+                <span class="info-label">Transaction ID:</span>
+                <span class="info-value">TXN902814892A</span>
+              </div>
+            </div>
+            
+            <!-- Fee Details Table -->
+            <table class="receipt-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">S.No</th>
+                  <th>Fee Particulars / Category</th>
+                  <th class="num">Amount (₹)</th>
+                  <th class="num" id="colHeaderDiscount">Discount (₹)</th>
+                  <th class="num" id="colHeaderFine">Fine (₹)</th>
+                  <th class="num">Net Amount (₹)</th>
+                </tr>
+              </thead>
+              <tbody id="previewTableBody">
+                <!-- Rows loaded via updatePreview or mock data static representation -->
+              </tbody>
+            </table>
+            
+            <!-- Totals and Summary -->
+            <div class="totals-section">
+              <div class="totals-table">
+                <div class="totals-row">
+                  <span>Sub Total:</span>
+                  <span id="previewSubtotal">₹21,000.00</span>
+                </div>
+                <div class="totals-row" id="rowTotalDiscount">
+                  <span>Total Discount:</span>
+                  <span id="previewTotalDiscount">₹500.00</span>
+                </div>
+                <div class="totals-row" id="rowTotalFine">
+                  <span>Total Fine:</span>
+                  <span id="previewTotalFine">₹100.00</span>
+                </div>
+                <div class="totals-row grand-total">
+                  <span>Grand Total Paid:</span>
+                  <span id="previewGrandTotal">₹20,600.00</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Amount in words -->
+            <div class="amount-in-words" id="previewAmountWords">
+              Amount in words: Rupees Twenty Thousand Six Hundred Only
+            </div>
+            
+            <!-- Signatures -->
+            <div class="signatures-wrapper">
+              <div class="sig-block" id="sigBlockLeft">
+                <div style="height: 40px;"></div>
+                <div class="sig-line"></div>
+                <span id="lblSigLeft">Authorized Cashier</span>
+              </div>
+              <div class="sig-block" id="sigBlockRight">
+                <div style="height: 40px;"></div>
+                <div class="sig-line"></div>
+                <span id="lblSigRight">Principal / Director</span>
+              </div>
+            </div>
+            
+            <!-- Terms & Conditions -->
+            <div class="receipt-terms" id="previewTerms" style="white-space: pre-line;"></div>
+            
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<script>
+// Color presets
+const PRESET_COLORS = [
+  { hex: '#1a7a4a', light: '#e6f4ee' }, // Original green
+  { hex: '#1e40af', light: '#eff6ff' }, // Royal Blue
+  { hex: '#4f46e5', light: '#eef2ff' }, // Indigo
+  { hex: '#dc2626', light: '#fef2f2' }, // Crimson Red
+  { hex: '#111827', light: '#f3f4f6' }, // Dark Slate / Charcoal
+  { hex: '#ca8a04', light: '#fef9c3' }  // Golden Mustard
+];
+
+let selectedColor = '#1a7a4a';
+let selectedColorLight = '#e6f4ee';
+
+// Default configuration object
+const DEFAULT_CONFIG = {
+  format: 'a4',
+  font: 'dm-sans',
+  color: '#1a7a4a',
+  colorLight: '#e6f4ee',
+  border: 'solid',
+  showLogo: true,
+  logoAlign: 'center',
+  schoolName: 'BodhyaMarg International School',
+  schoolMeta: 'Sector 12, Dwarka, New Delhi - 110075\nPhone: +91 98765 43210, +91 11 2345 6789\nEmail: contact@bodhyamarg.edu.in | Web: www.bodhyamarg.edu.in\nAffiliation No: 2730192 | School Code: 85293 | UDISE: 07190203301',
+  receiptTitle: 'Fees Payment Receipt',
+  receiptPrefix: 'BM/REC/2026/',
+  showAdmissionNo: true,
+  showRollNo: true,
+  showClassSection: true,
+  showFatherName: true,
+  showPaymentMode: true,
+  showTransactionId: true,
+  showDiscount: true,
+  showFine: true,
+  showAmountWords: true,
+  showSigLeft: true,
+  showSigRight: true,
+  sigLeftLabel: 'Authorized Cashier',
+  sigRightLabel: 'Principal / Director',
+  terms: '1. All fees payments are subject to clearing.\n2. Fees once paid are non-refundable & non-transferable under any circumstances.\n3. Please preserve this receipt for your records and verification purposes.'
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderPresets();
+  loadConfig();
+});
+
+// Render Preset color circles
+function renderPresets() {
+  const container = document.getElementById('presetsContainer');
+  container.innerHTML = PRESET_COLORS.map(p => {
+    return `<button class="preset-btn" style="background:${p.hex};" onclick="setPresetColor('${p.hex}', '${p.light}')" title="${p.hex}"></button>`;
+  }).join('');
+}
+
+// Select a preset color
+function setPresetColor(hex, light) {
+  selectedColor = hex;
+  selectedColorLight = light;
+  document.getElementById('pickerColor').value = hex;
+  
+  // Highlight active preset
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('title') === hex);
+  });
+  
+  updatePreview();
+}
+
+// Input color picker listener
+function updateColorFromPicker(val) {
+  selectedColor = val;
+  // Calculate a light tone shade for styling titles/table headers dynamically
+  selectedColorLight = getLightenedColor(val, 0.92);
+  
+  // Remove active highlight from preset buttons since custom picker used
+  document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+  
+  updatePreview();
+}
+
+// Utility to create a soft pastel tint from hex color
+function getLightenedColor(hex, percent) {
+  let num = parseInt(hex.replace("#",""), 16),
+      amt = Math.round(2.55 * (percent * 100)),
+      R = (num >> 16) + amt,
+      G = (num >> 8 & 0x00FF) + amt,
+      B = (num & 0x0000FF) + amt;
+  return "#" + (0x1000000 + (R<255?R<0?0:R:255)*0x10000 + (G<255?G<0?0:G:255)*0x100 + (B<255?B<0?0:B:255)).toString(16).slice(1);
+}
+
+// Load customized configuration from LocalStorage
+function loadConfig() {
+  const saved = localStorage.getItem('bodhya_receipt_design_config');
+  let config = saved ? JSON.parse(saved) : DEFAULT_CONFIG;
+  
+  // Populate UI inputs with configuration values
+  document.getElementById('selFormat').value = config.format || 'a4';
+  document.getElementById('selFont').value = config.font || 'dm-sans';
+  document.getElementById('pickerColor').value = config.color || '#1a7a4a';
+  document.getElementById('selBorder').value = config.border || 'solid';
+  document.getElementById('chkShowLogo').checked = config.showLogo !== false;
+  document.getElementById('selLogoAlign').value = config.logoAlign || 'center';
+  document.getElementById('txtSchoolName').value = config.schoolName || '';
+  document.getElementById('txtSchoolMeta').value = config.schoolMeta || '';
+  document.getElementById('txtReceiptTitle').value = config.receiptTitle || '';
+  document.getElementById('txtReceiptPrefix').value = config.receiptPrefix || '';
+  document.getElementById('chkAdmissionNo').checked = config.showAdmissionNo !== false;
+  document.getElementById('chkRollNo').checked = config.showRollNo !== false;
+  document.getElementById('chkClassSection').checked = config.showClassSection !== false;
+  document.getElementById('chkFatherName').checked = config.showFatherName !== false;
+  document.getElementById('chkPaymentMode').checked = config.showPaymentMode !== false;
+  document.getElementById('chkTransactionId').checked = config.showTransactionId !== false;
+  document.getElementById('chkShowDiscount').checked = config.showDiscount !== false;
+  document.getElementById('chkShowFine').checked = config.showFine !== false;
+  document.getElementById('chkAmountInWords').checked = config.showAmountWords !== false;
+  document.getElementById('chkSigLeft').checked = config.showSigLeft !== false;
+  document.getElementById('chkSigRight').checked = config.showSigRight !== false;
+  document.getElementById('txtSigLeftLabel').value = config.sigLeftLabel || '';
+  document.getElementById('txtSigRightLabel').value = config.sigRightLabel || '';
+  document.getElementById('txtTerms').value = config.terms || '';
+  
+  selectedColor = config.color || '#1a7a4a';
+  selectedColorLight = config.colorLight || '#e6f4ee';
+  
+  // Mark preset active if matching
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('title') === selectedColor);
+  });
+  
+  updatePreview();
+}
+
+// Reset fields to application defaults
+function resetToDefaults() {
+  if (confirm('Are you sure you want to reset the receipt design layout to defaults?')) {
+    localStorage.removeItem('bodhya_receipt_design_config');
+    loadConfig();
+  }
+}
+
+// Save customization in LocalStorage
+function saveConfig() {
+  const config = {
+    format: document.getElementById('selFormat').value,
+    font: document.getElementById('selFont').value,
+    color: selectedColor,
+    colorLight: selectedColorLight,
+    border: document.getElementById('selBorder').value,
+    showLogo: document.getElementById('chkShowLogo').checked,
+    logoAlign: document.getElementById('selLogoAlign').value,
+    schoolName: document.getElementById('txtSchoolName').value,
+    schoolMeta: document.getElementById('txtSchoolMeta').value,
+    receiptTitle: document.getElementById('txtReceiptTitle').value,
+    receiptPrefix: document.getElementById('txtReceiptPrefix').value,
+    showAdmissionNo: document.getElementById('chkAdmissionNo').checked,
+    showRollNo: document.getElementById('chkRollNo').checked,
+    showClassSection: document.getElementById('chkClassSection').checked,
+    showFatherName: document.getElementById('chkFatherName').checked,
+    showPaymentMode: document.getElementById('chkPaymentMode').checked,
+    showTransactionId: document.getElementById('chkTransactionId').checked,
+    showDiscount: document.getElementById('chkShowDiscount').checked,
+    showFine: document.getElementById('chkShowFine').checked,
+    showAmountWords: document.getElementById('chkAmountInWords').checked,
+    showSigLeft: document.getElementById('chkSigLeft').checked,
+    showSigRight: document.getElementById('chkSigRight').checked,
+    sigLeftLabel: document.getElementById('txtSigLeftLabel').value,
+    sigRightLabel: document.getElementById('txtSigRightLabel').value,
+    terms: document.getElementById('txtTerms').value
+  };
+  
+  localStorage.setItem('bodhya_receipt_design_config', JSON.stringify(config));
+  alert('Receipt template design configurations saved successfully!');
+}
+
+// Master update dynamic preview renderer
+function updatePreview() {
+  const paper = document.getElementById('receiptPaper');
+  
+  // 1. Get current values
+  const format = document.getElementById('selFormat').value;
+  const font = document.getElementById('selFont').value;
+  const border = document.getElementById('selBorder').value;
+  const showLogo = document.getElementById('chkShowLogo').checked;
+  const logoAlign = document.getElementById('selLogoAlign').value;
+  const schoolName = document.getElementById('txtSchoolName').value;
+  const schoolMeta = document.getElementById('txtSchoolMeta').value;
+  const receiptTitle = document.getElementById('txtReceiptTitle').value;
+  const receiptPrefix = document.getElementById('txtReceiptPrefix').value;
+  
+  const showAdmissionNo = document.getElementById('chkAdmissionNo').checked;
+  const showRollNo = document.getElementById('chkRollNo').checked;
+  const showClassSection = document.getElementById('chkClassSection').checked;
+  const showFatherName = document.getElementById('chkFatherName').checked;
+  const showPaymentMode = document.getElementById('chkPaymentMode').checked;
+  const showTransactionId = document.getElementById('chkTransactionId').checked;
+  
+  const showDiscount = document.getElementById('chkShowDiscount').checked;
+  const showFine = document.getElementById('chkShowFine').checked;
+  const showAmountWords = document.getElementById('chkAmountInWords').checked;
+  
+  const showSigLeft = document.getElementById('chkSigLeft').checked;
+  const showSigRight = document.getElementById('chkSigRight').checked;
+  const sigLeftLabel = document.getElementById('txtSigLeftLabel').value;
+  const sigRightLabel = document.getElementById('txtSigRightLabel').value;
+  
+  const terms = document.getElementById('txtTerms').value;
+  
+  // 2. Set dimensions and structural configuration classes
+  paper.className = `receipt-paper size-${format} font-${font} border-${border}`;
+  
+  // 3. Bind CSS Variables for custom color-scheme
+  paper.style.setProperty('--receipt-color', selectedColor);
+  paper.style.setProperty('--receipt-color-light', selectedColorLight);
+  
+  // 4. Logo visibility & position
+  const logoImg = document.getElementById('previewLogo');
+  const headerDiv = document.getElementById('receiptHeader');
+  
+  logoImg.style.display = showLogo ? 'block' : 'none';
+  headerDiv.className = `receipt-header align-${logoAlign}`;
+  
+  // 5. Populate text fields
+  document.getElementById('previewSchoolName').textContent = schoolName;
+  document.getElementById('previewSchoolMeta').textContent = schoolMeta;
+  document.getElementById('previewReceiptTitle').textContent = receiptTitle;
+  document.getElementById('previewReceiptNo').textContent = receiptPrefix + '1942';
+  
+  // 6. Check grids toggles
+  document.getElementById('rowAdmissionNo').style.display = showAdmissionNo ? 'flex' : 'none';
+  document.getElementById('rowRollNo').style.display = showRollNo ? 'flex' : 'none';
+  document.getElementById('rowClassSection').style.display = showClassSection ? 'flex' : 'none';
+  document.getElementById('rowFatherName').style.display = showFatherName ? 'flex' : 'none';
+  document.getElementById('rowPaymentMode').style.display = showPaymentMode ? 'flex' : 'none';
+  document.getElementById('rowTransactionId').style.display = showTransactionId ? 'flex' : 'none';
+  
+  // 7. Render dynamic mock table columns & contents
+  const colDiscountHeader = document.getElementById('colHeaderDiscount');
+  const colFineHeader = document.getElementById('colHeaderFine');
+  
+  colDiscountHeader.style.display = showDiscount ? 'table-cell' : 'none';
+  colFineHeader.style.display = showFine ? 'table-cell' : 'none';
+  
+  const tableData = [
+    { sNo: 1, name: 'Tuition Fee (Q1 April-June)', amount: 15000, discount: 500, fine: 0 },
+    { sNo: 2, name: 'Annual Examination Fee', amount: 1500, discount: 0, fine: 0 },
+    { sNo: 3, name: 'School Bus Fee (April)', amount: 4500, discount: 0, fine: 100 }
+  ];
+  
+  let subtotal = 0;
+  let totalDiscount = 0;
+  let totalFine = 0;
+  let grandTotal = 0;
+  
+  let rowsHtml = '';
+  tableData.forEach(item => {
+    const net = item.amount - item.discount + item.fine;
+    subtotal += item.amount;
+    totalDiscount += item.discount;
+    totalFine += item.fine;
+    grandTotal += net;
+    
+    rowsHtml += `
+      <tr>
+        <td>${item.sNo}</td>
+        <td style="font-weight: 500;">${item.name}</td>
+        <td class="num">₹${item.amount.toLocaleString('en-IN')}.00</td>
+        ${showDiscount ? `<td class="num">₹${item.discount.toLocaleString('en-IN')}.00</td>` : ''}
+        ${showFine ? `<td class="num" style="${item.fine > 0 ? 'color: #b91c1c;' : ''}">₹${item.fine.toLocaleString('en-IN')}.00</td>` : ''}
+        <td class="num" style="font-weight: 600;">₹${net.toLocaleString('en-IN')}.00</td>
+      </tr>
+    `;
+  });
+  
+  document.getElementById('previewTableBody').innerHTML = rowsHtml;
+  
+  // Render Totals
+  document.getElementById('previewSubtotal').textContent = `₹${subtotal.toLocaleString('en-IN')}.00`;
+  
+  const rowTotalDiscount = document.getElementById('rowTotalDiscount');
+  rowTotalDiscount.style.display = showDiscount ? 'flex' : 'none';
+  if (showDiscount) {
+    document.getElementById('previewTotalDiscount').textContent = `₹${totalDiscount.toLocaleString('en-IN')}.00`;
+  }
+  
+  const rowTotalFine = document.getElementById('rowTotalFine');
+  rowTotalFine.style.display = showFine ? 'flex' : 'none';
+  if (showFine) {
+    document.getElementById('previewTotalFine').textContent = `₹${totalFine.toLocaleString('en-IN')}.00`;
+  }
+  
+  document.getElementById('previewGrandTotal').textContent = `₹${grandTotal.toLocaleString('en-IN')}.00`;
+  
+  // Amount in words
+  const wordsEl = document.getElementById('previewAmountWords');
+  wordsEl.style.display = showAmountWords ? 'block' : 'none';
+  
+  // Signatures
+  const sigLeft = document.getElementById('sigBlockLeft');
+  const sigRight = document.getElementById('sigBlockRight');
+  
+  sigLeft.style.display = showSigLeft ? 'block' : 'none';
+  sigRight.style.display = showSigRight ? 'block' : 'none';
+  document.getElementById('lblSigLeft').textContent = sigLeftLabel;
+  document.getElementById('lblSigRight').textContent = sigRightLabel;
+  
+  // Terms & Conditions
+  const termsEl = document.getElementById('previewTerms');
+  if (terms && terms.trim() !== '') {
+    termsEl.style.display = 'block';
+    termsEl.textContent = terms;
+  } else {
+    termsEl.style.display = 'none';
+  }
+}
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>

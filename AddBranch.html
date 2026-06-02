@@ -102,8 +102,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <div class="form-section">
         <div class="section-header"><i class="ti ti-address-book"></i> Contact Details</div>
         <div class="form-grid">
-          <div class="form-field"><label>Principal Name</label><input type="text" id="inpPrincipal" placeholder="e.g. Dr. Asha Gupta" /></div>
-          <div class="form-field"><label>Contact Number</label><input type="text" id="inpContact" placeholder="e.g. +91 9876543210" /></div>
+          <div class="form-field full"><label>Principal Name</label><input type="text" id="inpPrincipal" placeholder="e.g. Dr. Asha Gupta" /></div>
+          <div class="form-field"><label>Contact Number 1 (Primary)</label><input type="text" id="inpContact1" placeholder="e.g. +91 9876543210" /></div>
+          <div class="form-field"><label>Contact Number 2</label><input type="text" id="inpContact2" placeholder="e.g. Alternate Number" /></div>
+          <div class="form-field"><label>Contact Number 3</label><input type="text" id="inpContact3" placeholder="e.g. Alternate Number" /></div>
+          <div class="form-field"><label>Contact Number 4</label><input type="text" id="inpContact4" placeholder="e.g. Alternate Number" /></div>
           <div class="form-field"><label>Email Address</label><input type="email" id="inpEmail" placeholder="e.g. info@dps.edu.in" /></div>
           <div class="form-field"><label>Website URL</label><input type="url" id="inpWebsite" placeholder="e.g. https://www.dps.edu.in" /></div>
         </div>
@@ -162,7 +165,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('inpUdise').value = '07090310201';
     document.getElementById('inpYear').value = '1972';
     document.getElementById('inpPrincipal').value = 'Dr. Asha Gupta';
-    document.getElementById('inpContact').value = '011-26537890';
+    document.getElementById('inpContact1').value = '011-26537890';
+    document.getElementById('inpContact2').value = '011-26537891';
+    document.getElementById('inpContact3').value = '';
+    document.getElementById('inpContact4').value = '';
     document.getElementById('inpEmail').value = 'main@dps.edu.in';
     document.getElementById('inpWebsite').value = 'https://www.dps.edu.in';
     document.getElementById('inpCity').value = 'New Delhi';
