@@ -327,11 +327,12 @@
             <div style="margin-top: 24px; border-top: 1px solid var(--border); padding-top: 16px;">
               <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; text-align: center;">Quick Demo Login</p>
               <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
-                <button type="button" onclick="quickLogin('admin')" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Admin</button>
-                <button type="button" onclick="quickLogin('teacher')" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Teacher</button>
-                <button type="button" onclick="quickLogin('student')" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Student</button>
-                <button type="button" onclick="quickLogin('parent')" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Parent</button>
-                <button type="button" onclick="quickLogin('staff')" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Staff</button>
+                <button type="button" onclick="quickLogin('superadmin')" onmouseenter="BodhyaAuth.applyCMS('superadmin')" onmouseleave="BodhyaAuth.applyCMS()" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Super Admin</button>
+                <button type="button" onclick="quickLogin('admin')" onmouseenter="BodhyaAuth.applyCMS('admin')" onmouseleave="BodhyaAuth.applyCMS()" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Admin</button>
+                <button type="button" onclick="quickLogin('teacher')" onmouseenter="BodhyaAuth.applyCMS('teacher')" onmouseleave="BodhyaAuth.applyCMS()" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Teacher</button>
+                <button type="button" onclick="quickLogin('student')" onmouseenter="BodhyaAuth.applyCMS('student')" onmouseleave="BodhyaAuth.applyCMS()" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Student</button>
+                <button type="button" onclick="quickLogin('parent')" onmouseenter="BodhyaAuth.applyCMS('parent')" onmouseleave="BodhyaAuth.applyCMS()" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Parent</button>
+                <button type="button" onclick="quickLogin('staff')" onmouseenter="BodhyaAuth.applyCMS('staff')" onmouseleave="BodhyaAuth.applyCMS()" style="padding: 6px 12px; border: 1px solid var(--border); background: var(--white); border-radius: 4px; font-size: 12px; cursor: pointer;">Staff</button>
               </div>
             </div>
           </form>

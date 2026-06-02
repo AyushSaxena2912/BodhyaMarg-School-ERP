@@ -133,7 +133,6 @@ const BodhyaAuth = {
     return colors[role] || '#64748b';
   },
 
-  // ── ELEMENT-LEVEL RESTRICTION ───────────────────────────────
   // Hides elements that have data-allowed-roles attribute
   applyRoleRestrictions: function() {
     const currentRole = this.getRole().toLowerCase();
@@ -150,9 +149,56 @@ const BodhyaAuth = {
       }
     });
   },
+
+  // ── CMS CONFIGURATION APPLICATION ───────────────────────────
+  applyCMS: function(overrideRole) {
+    const saved = localStorage.getItem('bodhya_cms_config');
+    if (!saved) return;
+    try {
+      const config = JSON.parse(saved);
+      
+      // 1. Logo
+      const logoEl = document.querySelector('.header .school-logo');
+      if (logoEl && config.logoUrl) {
+        logoEl.src = config.logoUrl;
+      }
+      
+      // 2. Titles
+      const nameEl = document.querySelector('.header .school-name');
+      if (nameEl && config.schoolName) nameEl.textContent = config.schoolName;
+      
+      const subEl = document.querySelector('.header .school-sub');
+      if (subEl && config.schoolSub) subEl.textContent = config.schoolSub;
+      
+      const sub2El = document.querySelector('.header .school-sub2');
+      if (sub2El && config.schoolSub2) sub2El.textContent = config.schoolSub2;
+      
+      // 3. Navigation links
+      const navEl = document.querySelector('.header-nav');
+      if (navEl && config.navLinks && config.navLinks.length > 0) {
+        navEl.innerHTML = config.navLinks.map(link => `<a href="${link.url}">${link.title}</a>`).join('');
+      }
+      
+      // 4. Banner image
+      const bannerImg = document.querySelector('.banner-section img');
+      if (bannerImg) {
+        const role = (overrideRole || localStorage.getItem('bodhya_user_role') || 'guest').toLowerCase();
+        if (role === 'admin' && config.adminBannerUrl) {
+          bannerImg.src = config.adminBannerUrl;
+        } else if (role === 'superadmin' && config.superadminBannerUrl) {
+          bannerImg.src = config.superadminBannerUrl;
+        } else if (config.defaultBannerUrl) {
+          bannerImg.src = config.defaultBannerUrl;
+        }
+      }
+    } catch (e) {
+      console.error('Error applying CMS configs:', e);
+    }
+  }
 };
 
-// Auto-apply element restrictions on DOMContentLoaded
+// Auto-apply element restrictions and CMS config on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
   BodhyaAuth.applyRoleRestrictions();
+  BodhyaAuth.applyCMS();
 });

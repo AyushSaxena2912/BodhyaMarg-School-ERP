@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light" />
+<title>BodhyaMarg ERP – CMS & UI Settings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<script src="permissions.js"></script>
+<script>BodhyaAuth.guardPage(['admin', 'superadmin']);</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a;
+  --green-light: #e6f4ee;
+  --green-dark: #145e38;
+  --bg: #f4f6f8;
+  --white: #ffffff;
+  --border: #e2e6ea;
+  --text: #1a1d23;
+  --text-muted: #6b7280;
+  --text-hint: #9ca3af;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 12px;
+  width: 280px;
+}
+
+.topbar-search i {
+  font-size: 14px;
+  color: var(--text-hint);
+}
+
+.topbar-search input {
+  border: none;
+  background: transparent;
+  font-size: 12.5px;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--white);
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  flex: 1;
+  overflow: hidden;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.page-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.breadcrumb {
+  font-size: 11.5px;
+  color: var(--text-hint);
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.breadcrumb span {
+  color: var(--green);
+}
+
+.designer-workspace {
+  flex: 1;
+  display: flex;
+  gap: 24px;
+  overflow: hidden;
+}
+
+/* Left controls panel styling */
+.controls-panel {
+  width: 440px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.controls-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: #fafbfc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.controls-header h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.controls-header h2 i {
+  color: var(--green);
+}
+
+.controls-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.controls-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.controls-body::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.control-section {
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+}
+
+.control-section:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.section-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.control-group {
+  margin-bottom: 14px;
+}
+
+.control-group:last-child {
+  margin-bottom: 0;
+}
+
+.control-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.input-control {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+}
+
+.input-control:focus {
+  border-color: var(--green);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius);
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text);
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: var(--bg);
+}
+
+.btn-primary {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+
+.btn-primary:hover {
+  background: var(--green-dark);
+}
+
+/* Links manager table */
+.links-manager {
+  margin-top: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.links-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.links-table th {
+  background: #fafbfc;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.links-table td {
+  padding: 8px 10px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.links-table tr:last-child td {
+  border-bottom: none;
+}
+
+.delete-link-btn {
+  background: transparent;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.delete-link-btn:hover {
+  color: #991b1b;
+}
+
+/* Preset banners list */
+.banner-presets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.preset-banner-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+
+.preset-banner-card img {
+  width: 100%;
+  height: 50px;
+  object-fit: cover;
+  display: block;
+}
+
+.preset-banner-card .card-label {
+  padding: 4px 6px;
+  font-size: 10px;
+  text-align: center;
+  font-weight: 500;
+  background: #fafbfc;
+}
+
+.preset-banner-card.active {
+  border-color: var(--green);
+  outline: 2px solid var(--green);
+}
+
+/* Right preview panel styling */
+.preview-panel {
+  flex: 1;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.preview-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: #fafbfc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preview-header h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-header h2 i {
+  color: var(--green);
+}
+
+.preview-body {
+  flex: 1;
+  background: #eef1f5;
+  overflow: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.preview-role-selector {
+  display: flex;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 16px;
+  gap: 4px;
+}
+
+.preview-role-tab {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: var(--radius);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.preview-role-tab.active {
+  background: var(--green-light);
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* Mock browser frame */
+.mock-browser {
+  width: 100%;
+  max-width: 820px;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+  border: 1px solid #d1d5db;
+}
+
+.browser-bar {
+  background: #e5e7eb;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.browser-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f87171;
+}
+
+.browser-dot:nth-child(2) { background: #fbbf24; }
+.browser-dot:nth-child(3) { background: #34d399; }
+
+.browser-address {
+  flex: 1;
+  background: var(--white);
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: monospace;
+  margin-left: 12px;
+}
+
+/* Mock header inside browser */
+.mock-header {
+  background: #0b7b3f;
+  color: var(--white);
+  padding: 10px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mock-logo {
+  width: 44px;
+  height: auto;
+}
+
+.mock-header-titles {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.mock-school-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.mock-school-sub {
+  font-size: 9px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.mock-school-sub2 {
+  font-size: 8px;
+  opacity: 0.8;
+}
+
+.mock-header-nav {
+  display: flex;
+  gap: 16px;
+}
+
+.mock-header-nav a {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Mock body content layout */
+.mock-body {
+  flex: 1;
+  display: flex;
+  padding: 24px;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+}
+
+.mock-login-wrapper {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.mock-banner-section {
+  flex: 1.1;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  height: 240px;
+}
+
+.mock-banner-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mock-login-section {
+  flex: 0.9;
+  max-width: 260px;
+}
+
+.mock-login-card {
+  background: var(--white);
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.mock-login-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #1e3a5f;
+}
+
+.mock-login-card p {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.mock-form-group {
+  margin-bottom: 8px;
+}
+
+.mock-form-group label {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.mock-input {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 11px;
+  outline: none;
+}
+
+.mock-btn {
+  width: 100%;
+  padding: 6px;
+  background: #0b7b3f;
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+</style>
+</head>
+<body>
+<div id="sidebar-container"></div>
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search"><i class="ti ti-search"></i><input placeholder="Search anything…" /></div>
+    <div class="topbar-right">
+      <div class="icon-btn"><i class="ti ti-bell"></i></div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+  
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>CMS & UI Settings</h1>
+        <div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Settings <i class="ti ti-chevron-right"></i> <span>CMS & UI Settings</span></div>
+      </div>
+    </div>
+    
+    <div class="designer-workspace">
+      <!-- Left controls panel -->
+      <div class="controls-panel">
+        <div class="controls-header">
+          <h2><i class="ti ti-settings"></i> Edit Brand & CMS</h2>
+          <button class="btn" onclick="resetToDefaults()" title="Reset to original configurations"><i class="ti ti-rotate"></i> Reset</button>
+        </div>
+        <div class="controls-body">
+          
+          <!-- Header Customizer -->
+          <div class="control-section">
+            <div class="section-title"><i class="ti ti-heading"></i> Auth Header Branding</div>
+            <div class="control-group">
+              <label>Logo Image URL</label>
+              <div style="display:flex;gap:6px;">
+                <input type="text" id="txtLogoUrl" class="input-control" value="school_logo.png" oninput="updateMockPreview()" placeholder="Logo image source path/URL" />
+                <button class="btn" onclick="restoreDefaultLogo()" title="Restore Original Logo" style="padding: 0 10px;"><i class="ti ti-arrow-back-up"></i></button>
+              </div>
+            </div>
+            <div class="control-group">
+              <label>School Name Title</label>
+              <input type="text" id="txtSchoolName" class="input-control" value="DELHI PUBLIC SCHOOL" oninput="updateMockPreview()" />
+            </div>
+            <div class="control-group">
+              <label>Header Subtitle 1</label>
+              <input type="text" id="txtSchoolSub" class="input-control" value="Greater Faridabad" oninput="updateMockPreview()" />
+            </div>
+            <div class="control-group">
+              <label>Header Subtitle 2</label>
+              <input type="text" id="txtSchoolSub2" class="input-control" value="(Under the agencies of The DPS Society)" oninput="updateMockPreview()" />
+            </div>
+          </div>
+          
+          <!-- Navigation Links Customizer -->
+          <div class="control-section">
+            <div class="section-title"><i class="ti ti-link"></i> Header Redirect Options</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+              <input type="text" id="txtLinkTitle" class="input-control" placeholder="Link Title (e.g. About)" />
+              <input type="text" id="txtLinkUrl" class="input-control" placeholder="URL (e.g. https://...)" />
+            </div>
+            <button class="btn btn-primary" onclick="addNavLink()" style="width:100%;justify-content:center;"><i class="ti ti-circle-plus"></i> Add Nav Link Option</button>
+            
+            <div class="links-manager">
+              <table class="links-table">
+                <thead>
+                  <tr>
+                    <th>Option Text</th>
+                    <th>Redirect URL</th>
+                    <th style="width:40px;text-align:center;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="linksTableBody">
+                  <!-- Generated dynamically in JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Banners Configurator -->
+          <div class="control-section">
+            <div class="section-title"><i class="ti ti-photo"></i> Auth Page Banners</div>
+            
+            <div class="control-group">
+              <label>Default/Student Banner Image URL</label>
+              <input type="text" id="txtBannerDefault" class="input-control" value="login_banner.png" oninput="updateMockPreview()" />
+            </div>
+            
+            <div class="control-group">
+              <label>Admin Banner Image URL</label>
+              <input type="text" id="txtBannerAdmin" class="input-control" value="login_banner.png" oninput="updateMockPreview()" />
+            </div>
+            
+            <div class="control-group">
+              <label>Superadmin Banner Image URL</label>
+              <input type="text" id="txtBannerSuperadmin" class="input-control" value="login_banner.png" oninput="updateMockPreview()" />
+            </div>
+            
+            <div class="control-group">
+              <label>Banner Presets (Unsplash Library)</label>
+              <div class="banner-presets">
+                <div class="preset-banner-card" onclick="selectPresetBanner('login_banner.png')" id="preset_original">
+                  <img src="login_banner.png" alt="Original" />
+                  <div class="card-label">Original Banner</div>
+                </div>
+                <div class="preset-banner-card" onclick="selectPresetBanner('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop')" id="preset_grad">
+                  <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=120" alt="Graduation" />
+                  <div class="card-label">Academic Theme</div>
+                </div>
+                <div class="preset-banner-card" onclick="selectPresetBanner('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=600&auto=format&fit=crop')" id="preset_campus">
+                  <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=120" alt="Campus" />
+                  <div class="card-label">Campus/Building</div>
+                </div>
+                <div class="preset-banner-card" onclick="selectPresetBanner('https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=600&auto=format&fit=crop')" id="preset_class">
+                  <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=120" alt="Classroom" />
+                  <div class="card-label">Classroom Theme</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+      <!-- Right Live Preview Panel -->
+      <div class="preview-panel">
+        <div class="preview-header">
+          <h2><i class="ti ti-eye"></i> Live Login Preview Screen</h2>
+          <button class="btn btn-primary" onclick="saveCmsConfig()"><i class="ti ti-device-floppy"></i> Save CMS Customizations</button>
+        </div>
+        <div class="preview-body">
+          
+          <!-- Role selector simulation tabs -->
+          <div class="preview-role-selector">
+            <button class="preview-role-tab active" onclick="setPreviewRole('student', this)">Preview: Student/Default</button>
+            <button class="preview-role-tab" onclick="setPreviewRole('admin', this)">Preview: Admin Role</button>
+            <button class="preview-role-tab" onclick="setPreviewRole('superadmin', this)">Preview: Super Admin</button>
+          </div>
+          
+          <!-- Simulated browser framework -->
+          <div class="mock-browser">
+            <div class="browser-bar">
+              <div class="browser-dot"></div>
+              <div class="browser-dot"></div>
+              <div class="browser-dot"></div>
+              <div class="browser-address">https://bodhyamarg-erp.com/Login.html</div>
+            </div>
+            
+            <!-- Dynamic Mock Header -->
+            <header class="mock-header" id="mockHeaderElement">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <img src="school_logo.png" class="mock-logo" id="mockLogo" alt="School Logo" />
+                <div class="mock-header-titles">
+                  <div class="mock-school-name" id="mockSchoolName">DELHI PUBLIC SCHOOL</div>
+                  <div class="mock-school-sub" id="mockSchoolSub">Greater Faridabad</div>
+                  <div class="mock-school-sub2" id="mockSchoolSub2">(Under the agencies of The DPS Society)</div>
+                </div>
+              </div>
+              <nav class="mock-header-nav" id="mockHeaderNav">
+                <a href="#">About</a>
+                <a href="#">Academics</a>
+                <a href="#">Admissions</a>
+              </nav>
+            </header>
+            
+            <!-- Dynamic Mock Body -->
+            <div class="mock-body">
+              <div class="mock-login-wrapper">
+                <div class="mock-banner-section">
+                  <img src="login_banner.png" id="mockBannerImage" alt="Login Banner" />
+                </div>
+                <div class="mock-login-section">
+                  <div class="mock-login-card">
+                    <h3>Welcome Back</h3>
+                    <p>Enter details to log into ERP portal</p>
+                    <div class="mock-form-group">
+                      <label>Email</label>
+                      <input type="text" class="mock-input" value="admin@school.com" readonly />
+                    </div>
+                    <div class="mock-form-group">
+                      <label>Password</label>
+                      <input type="password" class="mock-input" value="••••••••" readonly />
+                    </div>
+                    <button class="mock-btn" type="button">Login</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<script>
+// Mock initial configuration
+const DEFAULT_CMS = {
+  logoUrl: 'school_logo.png',
+  schoolName: 'DELHI PUBLIC SCHOOL',
+  schoolSub: 'Greater Faridabad',
+  schoolSub2: '(Under the agencies of The DPS Society)',
+  defaultBannerUrl: 'login_banner.png',
+  adminBannerUrl: 'login_banner.png',
+  superadminBannerUrl: 'login_banner.png',
+  navLinks: [
+    { title: 'About', url: '#' },
+    { title: 'Academics', url: '#' },
+    { title: 'Admissions', url: '#' }
+  ]
+};
+
+let currentCms = {};
+let previewRole = 'student';
+
+document.addEventListener('DOMContentLoaded', function() {
+  loadCmsConfig();
+});
+
+// Load configuration
+function loadCmsConfig() {
+  const saved = localStorage.getItem('bodhya_cms_config');
+  currentCms = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_CMS));
+  
+  // Populate UI inputs
+  document.getElementById('txtLogoUrl').value = currentCms.logoUrl;
+  document.getElementById('txtSchoolName').value = currentCms.schoolName;
+  document.getElementById('txtSchoolSub').value = currentCms.schoolSub;
+  document.getElementById('txtSchoolSub2').value = currentCms.schoolSub2;
+  
+  document.getElementById('txtBannerDefault').value = currentCms.defaultBannerUrl || 'login_banner.png';
+  document.getElementById('txtBannerAdmin').value = currentCms.adminBannerUrl || 'login_banner.png';
+  document.getElementById('txtBannerSuperadmin').value = currentCms.superadminBannerUrl || 'login_banner.png';
+  
+  renderNavLinksTable();
+  updateMockPreview();
+}
+
+// Reset configuration
+function resetToDefaults() {
+  if (confirm('Are you sure you want to reset all branding, headers, and banners to the default DPS settings?')) {
+    localStorage.removeItem('bodhya_cms_config');
+    loadCmsConfig();
+  }
+}
+
+// Render dynamic nav links table
+function renderNavLinksTable() {
+  const tbody = document.getElementById('linksTableBody');
+  if (currentCms.navLinks.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--text-hint);font-style:italic;">No link options configured.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = currentCms.navLinks.map((link, idx) => {
+    return `
+      <tr>
+        <td style="font-weight:600;">${escapeHtml(link.title)}</td>
+        <td style="color:var(--text-muted);word-break:break-all;font-size:11px;">${escapeHtml(link.url)}</td>
+        <td style="text-align:center;">
+          <button class="delete-link-btn" onclick="deleteNavLink(${idx})" title="Remove link"><i class="ti ti-trash"></i></button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// Escape HTML safety helper
+function escapeHtml(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+// Add navigation link
+function addNavLink() {
+  const titleInput = document.getElementById('txtLinkTitle');
+  const urlInput = document.getElementById('txtLinkUrl');
+  const title = titleInput.value.trim();
+  const url = urlInput.value.trim();
+  
+  if (!title || !url) {
+    alert('Please provide both a Title and a Redirect URL.');
+    return;
+  }
+  
+  currentCms.navLinks.push({ title: title, url: url });
+  titleInput.value = '';
+  urlInput.value = '';
+  
+  renderNavLinksTable();
+  updateMockPreview();
+}
+
+// Delete navigation link
+function deleteNavLink(index) {
+  currentCms.navLinks.splice(index, 1);
+  renderNavLinksTable();
+  updateMockPreview();
+}
+
+// Select a preset banner unsplash image
+function selectPresetBanner(url) {
+  // Determine which banner field to update depending on the currently active preview tab
+  if (previewRole === 'admin') {
+    document.getElementById('txtBannerAdmin').value = url;
+    currentCms.adminBannerUrl = url;
+  } else if (previewRole === 'superadmin') {
+    document.getElementById('txtBannerSuperadmin').value = url;
+    currentCms.superadminBannerUrl = url;
+  } else {
+    document.getElementById('txtBannerDefault').value = url;
+    currentCms.defaultBannerUrl = url;
+  }
+  
+  // Highlight active preset banner card
+  updatePresetCardHighlights(url);
+  updateMockPreview();
+}
+
+function updatePresetCardHighlights(url) {
+  document.querySelectorAll('.preset-banner-card').forEach(card => card.classList.remove('active'));
+  if (url === 'login_banner.png') {
+    document.getElementById('preset_original').classList.add('active');
+  } else if (url.includes('photo-1523050854058')) {
+    document.getElementById('preset_grad').classList.add('active');
+  } else if (url.includes('photo-1541339907198')) {
+    document.getElementById('preset_campus').classList.add('active');
+  } else if (url.includes('photo-1427504494785')) {
+    document.getElementById('preset_class').classList.add('active');
+  }
+}
+
+// Update the active preview role view
+function setPreviewRole(role, btnElement) {
+  previewRole = role;
+  
+  document.querySelectorAll('.preview-role-tab').forEach(btn => btn.classList.remove('active'));
+  btnElement.classList.add('active');
+  
+  // Get corresponding banner URL to highlight preset card
+  let activeUrl = 'login_banner.png';
+  if (role === 'admin') {
+    activeUrl = document.getElementById('txtBannerAdmin').value;
+  } else if (role === 'superadmin') {
+    activeUrl = document.getElementById('txtBannerSuperadmin').value;
+  } else {
+    activeUrl = document.getElementById('txtBannerDefault').value;
+  }
+  updatePresetCardHighlights(activeUrl);
+  updateMockPreview();
+}
+
+// Restore default logo
+function restoreDefaultLogo() {
+  document.getElementById('txtLogoUrl').value = 'school_logo.png';
+  updateMockPreview();
+}
+
+// Real-time mockup builder
+function updateMockPreview() {
+  const logoUrl = document.getElementById('txtLogoUrl').value;
+  const schoolName = document.getElementById('txtSchoolName').value;
+  const schoolSub = document.getElementById('txtSchoolSub').value;
+  const schoolSub2 = document.getElementById('txtSchoolSub2').value;
+  
+  const defaultBanner = document.getElementById('txtBannerDefault').value;
+  const adminBanner = document.getElementById('txtBannerAdmin').value;
+  const superadminBanner = document.getElementById('txtBannerSuperadmin').value;
+  
+  // Apply values to preview
+  document.getElementById('mockLogo').src = logoUrl || 'school_logo.png';
+  document.getElementById('mockSchoolName').textContent = schoolName;
+  document.getElementById('mockSchoolSub').textContent = schoolSub;
+  document.getElementById('mockSchoolSub2').textContent = schoolSub2;
+  
+  // Apply navigation links
+  const navContainer = document.getElementById('mockHeaderNav');
+  if (currentCms.navLinks.length === 0) {
+    navContainer.innerHTML = '';
+  } else {
+    navContainer.innerHTML = currentCms.navLinks.map(link => `<a href="#">${escapeHtml(link.title)}</a>`).join('');
+  }
+  
+  // Apply banner image based on selected role preview tab
+  const bannerImg = document.getElementById('mockBannerImage');
+  if (previewRole === 'admin') {
+    bannerImg.src = adminBanner || 'login_banner.png';
+  } else if (previewRole === 'superadmin') {
+    bannerImg.src = superadminBanner || 'login_banner.png';
+  } else {
+    bannerImg.src = defaultBanner || 'login_banner.png';
+  }
+}
+
+// Save configuration globally in localStorage
+function saveCmsConfig() {
+  const logoUrl = document.getElementById('txtLogoUrl').value.trim();
+  const schoolName = document.getElementById('txtSchoolName').value.trim();
+  const schoolSub = document.getElementById('txtSchoolSub').value.trim();
+  const schoolSub2 = document.getElementById('txtSchoolSub2').value.trim();
+  
+  const defaultBanner = document.getElementById('txtBannerDefault').value.trim();
+  const adminBanner = document.getElementById('txtBannerAdmin').value.trim();
+  const superadminBanner = document.getElementById('txtBannerSuperadmin').value.trim();
+  
+  const config = {
+    logoUrl: logoUrl,
+    schoolName: schoolName,
+    schoolSub: schoolSub,
+    schoolSub2: schoolSub2,
+    defaultBannerUrl: defaultBanner,
+    adminBannerUrl: adminBanner,
+    superadminBannerUrl: superadminBanner,
+    navLinks: currentCms.navLinks
+  };
+  
+  localStorage.setItem('bodhya_cms_config', JSON.stringify(config));
+  
+  // Force apply CMS settings on this dashboard immediately to test
+  if (typeof BodhyaAuth !== 'undefined' && typeof BodhyaAuth.applyCMS === 'function') {
+    BodhyaAuth.applyCMS();
+  }
+  
+  alert('CMS & UI configurations saved successfully! Changes will reflect across all login, signup, and portal authentication screens.');
+}
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
