@@ -181,7 +181,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         </div>
         <div class="form-field">
           <label>Subject</label>
-          <select><option value="">Select</option><option>English</option><option selected>Mathematics</option><option>Science</option><option>Hindi</option><option>Social Studies</option></select>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:5px 0;">
+            <span class="tag-chip">Mathematics <button>×</button></span>
+            <span class="tag-chip">Chemistry <button>×</button></span>
+            <input type="text" placeholder="Add…" style="border:1px dashed var(--border);border-radius:6px;padding:4px 8px;font-size:12px;font-family:inherit;outline:none;width:90px;" />
+          </div>
         </div>
       </div>
 
