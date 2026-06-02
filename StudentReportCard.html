@@ -53,32 +53,62 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
   max-width: 1060px; margin: 0 auto 32px; overflow: hidden;
 }
 
-/* School Header */
-.school-header {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: white; padding: 24px 32px; text-align: center; position: relative;
+/* School Header - Professional Print Style */
+.school-header-wrap {
+  text-align: center; padding: 40px 20px 20px; background: white; position: relative;
 }
-.school-header::after {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
-  background: repeating-linear-gradient(90deg, #fbbf24 0, #fbbf24 12px, transparent 12px, transparent 24px);
+.school-logo {
+  width: 90px; height: auto; margin-bottom: 12px;
 }
-.school-name { font-size: 22px; font-weight: 800; letter-spacing: 1px; margin-bottom: 4px; }
-.school-sub { font-size: 12px; opacity: 0.85; margin-bottom: 2px; }
+.school-name {
+  font-size: 32px; font-weight: 800; color: #0b7b3f; /* Deep Green */
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;
+}
+.school-motto {
+  font-size: 14px; color: #d97706; /* Golden Yellow */
+  font-weight: 600; font-style: italic; letter-spacing: 1px;
+}
+
+/* Green curve block */
+.curved-bg {
+  background: #0b7b3f;
+  padding: 30px 20px 60px;
+  position: relative;
+  text-align: center;
+  color: white;
+  border-top: 10px solid #fbbf24;
+  border-top-left-radius: 100% 30px;
+  border-top-right-radius: 100% 30px;
+  margin-top: -15px;
+}
+
+.report-badge {
+  display: inline-block; padding: 8px 32px;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 30px; font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+}
 .report-badge {
   display: inline-block; margin-top: 12px; padding: 4px 20px;
   background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
   border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
 }
 
-/* Student Info Row */
+/* Student Info Row (Overlaid on green) */
 .student-info-row {
   display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;
-  border-bottom: 1px solid var(--border); background: #fafbfc;
+  background: #ffffff;
+  border: 1px solid #0b7b3f;
+  border-radius: 16px;
+  margin: -40px 32px 24px; /* Pull up over the green background */
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 }
-.info-cell { padding: 12px 20px; font-size: 12.5px; border-right: 1px solid var(--border); }
-.info-cell:last-child { border-right: none; }
-.info-label { font-weight: 600; color: var(--text-muted); margin-bottom: 2px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-.info-val { font-weight: 700; color: var(--text); font-size: 13px; }
+.info-cell { padding: 16px 24px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.info-cell:nth-child(3n) { border-right: none; }
+.info-cell:nth-child(n+4) { border-bottom: none; }
+.info-label { font-weight: 600; color: var(--text-muted); margin-bottom: 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.info-val { font-weight: 700; color: #0b7b3f; font-size: 14px; }
 
 /* Main Report Table */
 .rc-body { padding: 20px 24px; }
@@ -150,14 +180,16 @@ table.rc-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
 
 /* Print */
 @media print {
+  @page { margin: 15mm; size: A4; }
   body { background: white; height: auto; overflow: visible; }
   .main { overflow: visible; }
   .topbar, .page-header, .page-actions { display: none !important; }
   .content { padding: 0 !important; overflow: visible !important; }
-  .rc-wrapper { border: none !important; box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; }
-  .school-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .term-header, .term2-header, .final-header, .personality-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .result-banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .rc-wrapper { border: none !important; box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; margin: 0 !important; }
+  .school-header-wrap, .curved-bg, .report-badge, .student-info-row { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .term-header, .term2-header, .final-header, .personality-header { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .result-banner { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .student-info-row { box-shadow: none !important; }
 }
 .sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
 </style>
@@ -440,11 +472,14 @@ function renderReportCard() {
   <div class="rc-wrapper">
 
     <!-- School Header -->
-    <div class="school-header">
-      <div class="school-name"><i class="ti ti-school"></i> ${SCHOOL.name}</div>
-      <div class="school-sub">${SCHOOL.affiliation}</div>
-      <div class="school-sub">${SCHOOL.address}</div>
-      <div class="report-badge">Comprehensive Evaluation Record &nbsp;|&nbsp; Session ${SCHOOL.session}</div>
+    <div class="school-header-wrap">
+      <img src="school_logo.png" class="school-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/90x100?text=Logo'">
+      <div class="school-name">${SCHOOL.name}</div>
+      <div class="school-motto">passion to excel</div>
+    </div>
+    
+    <div class="curved-bg">
+      <div class="report-badge">Achievement Record &nbsp;|&nbsp; Session ${SCHOOL.session}</div>
     </div>
 
     <!-- Student Info Strip -->
@@ -469,7 +504,7 @@ function renderReportCard() {
         <div class="info-label">Date of Birth</div>
         <div class="info-val">${student.dob}</div>
       </div>
-      <div class="info-cell" style="border-right:none;">
+      <div class="info-cell" style="border-bottom:none;">
         <div class="info-label">Father's Name</div>
         <div class="info-val">${student.fatherName}</div>
       </div>
