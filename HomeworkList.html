@@ -188,23 +188,19 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
     <!-- Filters -->
     <div class="filter-card">
       <div class="filter-group">
-        <label>Class</label>
-        <select><option>All Classes</option><option>Class X</option><option>Class IX</option></select>
-      </div>
-      <div class="filter-group">
-        <label>Section</label>
-        <select><option>All Sections</option><option>Section A</option><option>Section B</option></select>
+        <label>Class & Section</label>
+        <select id="filterClass"><option value="">All My Classes</option></select>
       </div>
       <div class="filter-group">
         <label>Subject</label>
-        <select><option>All Subjects</option><option>Mathematics</option><option>Science</option></select>
+        <select id="filterSubject"><option value="">All My Subjects</option></select>
       </div>
       <div class="filter-group">
         <label>Date</label>
-        <input type="date" />
+        <input type="date" id="filterDate" />
       </div>
       <div class="filter-actions">
-        <button class="btn btn-primary"><i class="ti ti-search"></i> Search</button>
+        <button class="btn btn-primary" onclick="renderHomeworks()"><i class="ti ti-search"></i> Search</button>
       </div>
     </div>
 
@@ -242,29 +238,16 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
     </div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="form-field">
-          <label>Class *</label>
-          <select id="newHwClass">
-            <option value="">Select Class</option>
-            <option value="Class X">Class X</option>
-            <option value="Class IX">Class IX</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label>Section *</label>
-          <select id="newHwSection">
-            <option value="">Select Section</option>
-            <option value="Section A">Section A</option>
-            <option value="Section B">Section B</option>
+        <div class="form-field full">
+          <label>Class & Section *</label>
+          <select id="newHwClass" onchange="updateModalSubjects()">
+            <option value="">Select Class & Section</option>
           </select>
         </div>
         <div class="form-field full">
           <label>Subject *</label>
           <select id="newHwSubject">
             <option value="">Select Subject</option>
-            <option value="Mathematics">Mathematics</option>
-            <option value="Science">Science</option>
-            <option value="English">English</option>
           </select>
         </div>
         <div class="form-field full">
@@ -320,19 +303,36 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
 </div>
 
 <script>
+// Mock Teachers Data
+const TEACHERS = {
+  mohan: {
+    id: 'T120',
+    name: 'Mohan Sharma',
+    avatar: 'MS',
+    isClassTeacher: true,
+    classTeacherOf: '8A',
+    classes: [
+      { cls: '8A', name: 'Mathematics', room: 'Room 201', active: false, time: '08:00 AM' },
+      { cls: '8B', name: 'Mathematics', room: 'Room 202', active: true, time: '09:00 AM' },
+      { cls: '9A', name: 'Chemistry', room: 'Lab 1', active: false, time: '11:00 AM' }
+    ]
+  }
+};
+const currentUser = TEACHERS.mohan;
+
 // Default Mock Homework Data
 var defaultHwData = [
-  { id: 1, title: 'Algebra Equations Ex 1.2', subject: 'Mathematics', class: 'Class X - Section A', teacher: 'Ramesh Patel', assignDate: '24 May 2026', deadline: '27 May 2026', completed: 25, total: 30, status: 'Active', hasAttachment: true },
-  { id: 2, title: 'Photosynthesis Diagram', subject: 'Science', class: 'Class X - Section B', teacher: 'Meera Sharma', assignDate: '20 May 2026', deadline: '22 May 2026', completed: 28, total: 28, status: 'Expired', hasAttachment: false },
-  { id: 3, title: 'Essay on Environment', subject: 'English', class: 'Class IX - Section A', teacher: 'Suresh Yadav', assignDate: '26 May 2026', deadline: '30 May 2026', completed: 0, total: 32, status: 'Active', hasAttachment: true },
-  { id: 4, title: 'History Chapter 4 Q&A', subject: 'History', class: 'Class VIII - Section C', teacher: 'Priya Gupta', assignDate: '25 May 2026', deadline: '28 May 2026', completed: 12, total: 25, status: 'Active', hasAttachment: false }
+  { id: 1, title: 'Algebra Equations Ex 1.2', subject: 'Mathematics', class: '8A', teacher: 'Mohan Sharma', assignDate: '24 May 2026', deadline: '27 May 2026', completed: 25, total: 30, status: 'Active', hasAttachment: true },
+  { id: 2, title: 'Periodic Table Basics', subject: 'Chemistry', class: '9A', teacher: 'Mohan Sharma', assignDate: '20 May 2026', deadline: '22 May 2026', completed: 28, total: 28, status: 'Expired', hasAttachment: false },
+  { id: 3, title: 'Linear Equations Test Prep', subject: 'Mathematics', class: '8B', teacher: 'Mohan Sharma', assignDate: '26 May 2026', deadline: '30 May 2026', completed: 0, total: 32, status: 'Active', hasAttachment: true },
+  { id: 4, title: 'History Chapter 4 Q&A', subject: 'History', class: '8A', teacher: 'Priya Gupta', assignDate: '25 May 2026', deadline: '28 May 2026', completed: 12, total: 25, status: 'Active', hasAttachment: false }
 ];
 
 var hwData = [];
 
 // Load homework list from localStorage or default
 function initHomeworkList() {
-  const localKey = 'bodhyamarg_homework_list';
+  const localKey = 'bodhyamarg_homework_list_v2';
   const cached = localStorage.getItem(localKey);
   if (cached) {
     hwData = JSON.parse(cached);
@@ -340,6 +340,31 @@ function initHomeworkList() {
     hwData = defaultHwData;
     localStorage.setItem(localKey, JSON.stringify(hwData));
   }
+  populateDropdowns();
+}
+
+function populateDropdowns() {
+  const classFilter = document.getElementById('filterClass');
+  const subjectFilter = document.getElementById('filterSubject');
+  const modalClass = document.getElementById('newHwClass');
+  
+  const uniqueClasses = [...new Set(currentUser.classes.map(c => c.cls))];
+  const uniqueSubjects = [...new Set(currentUser.classes.map(c => c.name))];
+  
+  if (classFilter) classFilter.innerHTML = '<option value="">All My Classes</option>' + uniqueClasses.map(c => `<option value="${c}">${c}</option>`).join('');
+  if (subjectFilter) subjectFilter.innerHTML = '<option value="">All My Subjects</option>' + uniqueSubjects.map(s => `<option value="${s}">${s}</option>`).join('');
+  if (modalClass) modalClass.innerHTML = '<option value="">Select Class & Section</option>' + uniqueClasses.map(c => `<option value="${c}">${c}</option>`).join('');
+}
+
+function updateModalSubjects() {
+  const selectedClass = document.getElementById('newHwClass').value;
+  const modalSubject = document.getElementById('newHwSubject');
+  if (!selectedClass) {
+    modalSubject.innerHTML = '<option value="">Select Subject</option>';
+    return;
+  }
+  const subjectsForClass = currentUser.classes.filter(c => c.cls === selectedClass).map(c => c.name);
+  modalSubject.innerHTML = '<option value="">Select Subject</option>' + subjectsForClass.map(s => `<option value="${s}">${s}</option>`).join('');
 }
 initHomeworkList();
 
@@ -354,7 +379,23 @@ var students = [
 
 function renderHomeworks() {
   var html = '';
-  hwData.forEach(function(hw) {
+  
+  // Filter for teacher logic: only show assignments created by currentUser
+  let myHwData = hwData.filter(hw => hw.teacher === currentUser.name);
+  
+  // Apply UI filters
+  const filterClassVal = document.getElementById('filterClass') ? document.getElementById('filterClass').value : '';
+  const filterSubjectVal = document.getElementById('filterSubject') ? document.getElementById('filterSubject').value : '';
+  
+  if (filterClassVal) myHwData = myHwData.filter(h => h.class === filterClassVal);
+  if (filterSubjectVal) myHwData = myHwData.filter(h => h.subject === filterSubjectVal);
+  
+  if (myHwData.length === 0) {
+    document.getElementById('hwBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding: 30px;">No homework found for the selected filters.</td></tr>';
+    return;
+  }
+
+  myHwData.forEach(function(hw) {
     var perc = Math.round((hw.completed / hw.total) * 100);
     var badge = hw.status === 'Active' ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-expired">Passed</span>';
     var attach = hw.hasAttachment ? '<i class="ti ti-paperclip attachment-icon" title="View Attachment"></i>' : '';
@@ -381,7 +422,6 @@ function renderHomeworks() {
 
 function openCreateModal() { 
   document.getElementById('newHwClass').value = '';
-  document.getElementById('newHwSection').value = '';
   document.getElementById('newHwSubject').value = '';
   document.getElementById('newHwTitle').value = '';
   document.getElementById('newHwDesc').value = '';
@@ -418,7 +458,6 @@ function formatDateString(dateStr) {
 
 function saveHomework() {
   var classVal = document.getElementById('newHwClass').value;
-  var sectionVal = document.getElementById('newHwSection').value;
   var subjectVal = document.getElementById('newHwSubject').value;
   var titleVal = document.getElementById('newHwTitle').value;
   var descVal = document.getElementById('newHwDesc').value;
@@ -427,7 +466,7 @@ function saveHomework() {
   var gradingVal = document.getElementById('newHwGrading').checked;
   var maxMarksVal = gradingVal ? parseInt(document.getElementById('newHwMaxMarks').value) || 50 : 0;
 
-  if (!classVal || !sectionVal || !subjectVal || !titleVal || !deadlineVal) {
+  if (!classVal || !subjectVal || !titleVal || !deadlineVal) {
     alert('Please fill out all mandatory fields marked with an asterisk (*).');
     return;
   }
@@ -443,8 +482,8 @@ function saveHomework() {
     id: nextId,
     title: titleVal,
     subject: subjectVal,
-    class: classVal + ' - ' + sectionVal,
-    teacher: 'Ramesh Patel',
+    class: classVal,
+    teacher: currentUser.name,
     assignDate: formatDateString(assignDateVal),
     deadline: formatDateString(deadlineVal),
     completed: 4,
@@ -467,8 +506,8 @@ function saveHomework() {
   hwDatabase[nextId] = {
     topic: titleVal,
     subject: subjectVal,
-    classSec: classVal + ' - ' + sectionVal,
-    teacher: 'Ramesh Patel',
+    classSec: classVal,
+    teacher: currentUser.name,
     assigned: formatDateString(assignDateVal),
     deadline: formatDateString(deadlineVal),
     desc: descVal || 'No instructions provided.',
