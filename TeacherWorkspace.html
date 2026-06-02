@@ -550,9 +550,20 @@ select.form-control {
         <!-- Right Column -->
         <div class="col-side">
           
+          <!-- Notice Board Widget -->
+          <div class="card">
+            <div class="card-header" style="margin-bottom: 16px;">
+              <div class="card-title"><i class="ti ti-speakerphone"></i> Class Notice Board</div>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Send announcements or subject updates directly to your students.</p>
+            <button class="leave-btn" style="background: var(--info-light); color: var(--info); border-color: var(--info);" onclick="openNoticeModal()">
+              <i class="ti ti-plus"></i> Create Notice
+            </button>
+          </div>
+
           <!-- Detailed Leave Tracker (Reference Dashboard Level) -->
           <div class="card">
-            <div class="card-header">
+            <div class="card-header" style="margin-bottom: 24px;">
               <div class="card-title"><i class="ti ti-plane-departure"></i> My Leave Tracker</div>
             </div>
             
@@ -566,7 +577,6 @@ select.form-control {
               </div>
             </div>
           </div>
-
 
           <!-- Academic Calendar -->
           <div class="card">
@@ -741,6 +751,41 @@ select.form-control {
   </div>
 </div>
 
+<!-- Notice Modal -->
+<div class="modal-backdrop" id="noticeModal">
+  <div class="modal" style="max-width: 500px;">
+    <div class="modal-header">
+      <div class="modal-title"><i class="ti ti-speakerphone"></i> Send Notice</div>
+      <button class="close-btn" onclick="closeNoticeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <form id="noticeForm" onsubmit="submitNotice(event)">
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Target Audience *</label>
+          <select class="form-control" id="noticeAudience" required>
+            <!-- Populated by JS -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Notice Title *</label>
+          <input type="text" class="form-control" id="noticeTitle" required placeholder="e.g. Extra Class Scheduled">
+        </div>
+        <div class="form-group">
+          <label>Message Content *</label>
+          <textarea class="form-control" id="noticeMessage" rows="4" required placeholder="Write your announcement here..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeNoticeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" style="background: var(--info); border-color: var(--info);"><i class="ti ti-send"></i> Send Notice</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Global Toast -->
+<div id="toast" style="position:fixed; bottom:24px; right:24px; background:var(--surface); padding:16px 24px; border-radius:var(--radius); box-shadow:var(--shadow-lg); font-weight:600; font-size:14px; color:var(--text-main); transform:translateY(100px); opacity:0; transition:all 0.3s; z-index:1000; display:flex; align-items:center; gap:8px;"></div>
+
 <script>
 // Mock Database for the high-fidelity UI
 const TEACHERS = {
@@ -760,7 +805,7 @@ const TEACHERS = {
       { id: "L02", type: "Casual Leave", dates: "10 Jun 2026 - 11 Jun 2026", status: "approved", reason: "Attending a family wedding in hometown.", actionBy: "Principal (Dr. Sharma)" },
       { id: "L01", type: "Emergency Leave", dates: "02 May 2026", status: "declined", reason: "Personal emergency work.", actionBy: "Vice Principal", actionReason: "Exams approaching" }
     ],
-    isClassTeacher: true
+    isClassTeacher: true, classTeacherOf: "Class 8A"
   },
   shalini: {
     id: 'shalini', name: 'Shalini Gupta', avatar: 'SG',
@@ -772,7 +817,7 @@ const TEACHERS = {
     leaves: [
       { id: "L04", type: "Casual Leave", dates: "20 Jun 2026", status: "approved", reason: "Bank work.", actionBy: "Principal (Dr. Sharma)" }
     ],
-    isClassTeacher: false
+    isClassTeacher: false, classTeacherOf: null
   }
 };
 
@@ -939,6 +984,42 @@ function submitLeave(e) {
   currentUser.leaves.unshift(newLeave);
   renderLeaves();
   closeLeaveModal();
+}
+
+function openNoticeModal() {
+  const select = document.getElementById('noticeAudience');
+  let optionsHtml = '';
+  
+  if (currentUser.isClassTeacher && currentUser.classTeacherOf) {
+    optionsHtml += `<option value="class_${currentUser.classTeacherOf}">${currentUser.classTeacherOf} (All Students - Class Teacher)</option>`;
+  }
+  
+  const uniqueClasses = [...new Set(currentUser.classes.map(c => `${c.cls} - ${c.name}`))];
+  uniqueClasses.forEach(c => {
+    optionsHtml += `<option value="subject_${c}">${c} (Subject Notice)</option>`;
+  });
+  
+  select.innerHTML = optionsHtml;
+  document.getElementById('noticeModal').classList.add('show');
+}
+
+function closeNoticeModal() {
+  document.getElementById('noticeModal').classList.remove('show');
+  document.getElementById('noticeForm').reset();
+}
+
+function submitNotice(e) {
+  e.preventDefault();
+  closeNoticeModal();
+  
+  const toast = document.getElementById('toast');
+  toast.innerHTML = `<i class="ti ti-check" style="color:var(--success); font-size:18px;"></i> Notice sent successfully!`;
+  toast.style.transform = 'translateY(0)';
+  toast.style.opacity = '1';
+  setTimeout(() => {
+    toast.style.transform = 'translateY(100px)';
+    toast.style.opacity = '0';
+  }, 3000);
 }
 </script>
 <script src="sidebar.js"></script>
