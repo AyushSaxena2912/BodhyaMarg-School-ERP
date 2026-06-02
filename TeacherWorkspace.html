@@ -252,6 +252,10 @@ body {
 .segment-chip.active { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 2px 6px rgba(26,122,74,0.3); }
 .segment-chip.active i { color: white; }
 
+/* Monthly Attendance Bar */
+.att-pct-bar { width: 60px; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; margin-top: 4px; }
+.att-pct-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+
 /* Attendance Radios */
 .att-options { display: flex; gap: 6px; }
 .att-radio { display: none; }
@@ -1100,11 +1104,11 @@ function submitNotice(e) {
 
 // Mock Students Data
 const MOCK_STUDENTS = [
-  { id: 'S01', name: 'Aarav Patel', rollNo: '12', admissionNo: 'ADM2021001', cls: 'Class 8A' },
-  { id: 'S02', name: 'Diya Sharma', rollNo: '15', admissionNo: 'ADM2021045', cls: 'Class 8A' },
-  { id: 'S03', name: 'Rohan Gupta', rollNo: '24', admissionNo: 'ADM2021089', cls: 'Class 8B' },
-  { id: 'S04', name: 'Ananya Singh', rollNo: '05', admissionNo: 'ADM2021102', cls: 'Class 9A' },
-  { id: 'S05', name: 'Kabir Verma', rollNo: '18', admissionNo: 'ADM2022033', cls: 'Class 8A' }
+  { id: 'S01', name: 'Aarav Patel', rollNo: '12', admissionNo: 'ADM2021001', cls: 'Class 8A', monthlyAtt: { apr: 92, may: 88, jun: 96 } },
+  { id: 'S02', name: 'Diya Sharma', rollNo: '15', admissionNo: 'ADM2021045', cls: 'Class 8A', monthlyAtt: { apr: 100, may: 96, jun: 100 } },
+  { id: 'S03', name: 'Rohan Gupta', rollNo: '24', admissionNo: 'ADM2021089', cls: 'Class 8B', monthlyAtt: { apr: 76, may: 80, jun: 84 } },
+  { id: 'S04', name: 'Ananya Singh', rollNo: '05', admissionNo: 'ADM2021102', cls: 'Class 9A', monthlyAtt: { apr: 68, may: 72, jun: 60 } },
+  { id: 'S05', name: 'Kabir Verma', rollNo: '18', admissionNo: 'ADM2022033', cls: 'Class 8A', monthlyAtt: { apr: 96, may: 92, jun: 88 } }
 ];
 
 let selectedNoticeStudents = [];
@@ -1249,8 +1253,22 @@ function renderWorkspaceAtt() {
 
   let html = '';
 
+  const attPctCell = (item) => {
+    const months = item.monthlyAtt || {};
+    const keys = Object.keys(months);
+    const latest = keys.length > 0 ? months[keys[keys.length - 1]] : 0;
+    const color = latest >= 90 ? 'var(--success)' : latest >= 75 ? 'var(--warning)' : 'var(--danger)';
+    const monthLabels = { apr: 'Apr', may: 'May', jun: 'Jun' };
+    const bars = keys.map(k => {
+      const v = months[k];
+      const c = v >= 90 ? 'var(--success)' : v >= 75 ? 'var(--warning)' : 'var(--danger)';
+      return `<div style="text-align:center;"><div style="font-size:10px; color:var(--text-hint); margin-bottom:2px;">${monthLabels[k] || k}</div><div class="att-pct-bar"><div class="att-pct-fill" style="width:${v}%; background:${c};"></div></div><div style="font-size:10px; font-weight:700; color:${c}; margin-top:2px;">${v}%</div></div>`;
+    }).join('');
+    return `<td><div style="display:flex; gap:10px; align-items:flex-end;">${bars}</div></td>`;
+  };
+
   if (subjectVal === 'all') {
-    thead.innerHTML = `<tr><th>Student</th><th>Roll No</th><th style="text-align:center;">Math</th><th style="text-align:center;">Science</th><th style="text-align:center;">English</th></tr>`;
+    thead.innerHTML = `<tr><th>Student</th><th>Roll No</th><th style="text-align:center;">Math</th><th style="text-align:center;">Science</th><th style="text-align:center;">English</th><th>Monthly %</th></tr>`;
     
     MOCK_STUDENTS.forEach((item, index) => {
       if(!item.attStatus) item.attStatus = index % 3 === 0 ? 'absent' : 'present';
@@ -1269,11 +1287,12 @@ function renderWorkspaceAtt() {
           <td style="text-align:center;">${badge(item.attStatus)}</td>
           <td style="text-align:center;">${badge(index % 2 === 0 ? 'present' : 'absent')}</td>
           <td style="text-align:center;">${badge('present')}</td>
+          ${attPctCell(item)}
         </tr>
       `;
     });
   } else {
-    thead.innerHTML = `<tr><th>Student</th><th>Roll No</th><th>Status</th><th>Remarks</th></tr>`;
+    thead.innerHTML = `<tr><th>Student</th><th>Roll No</th><th>Status</th><th>Monthly %</th><th>Remarks</th></tr>`;
     
     MOCK_STUDENTS.forEach((item, index) => {
       if(!item.attStatus) item.attStatus = index % 3 === 0 ? 'absent' : 'present';
@@ -1298,6 +1317,7 @@ function renderWorkspaceAtt() {
               </label>
             </div>
           </td>
+          ${attPctCell(item)}
           <td><input type="text" class="form-control" placeholder="Add remark..." style="width:100%; padding:6px; font-size:12px;" ${!isEditable ? 'disabled' : ''}></td>
         </tr>
       `;
