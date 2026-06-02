@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Apply for Bus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38; --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea; --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af; --radius: 8px; --radius-lg: 12px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); } .topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; } .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; } .breadcrumb span { color: var(--green); }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); white-space: nowrap; }
+.btn:hover { background: var(--bg); } .btn-primary { background: var(--green); color: #fff; border-color: var(--green); } .btn-primary:hover { background: var(--green-dark); }
+.btn-lg { padding: 12px 24px; font-size: 14px; }
+
+/* Status Banner */
+.status-banner { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px; display: none; }
+.status-banner.show { display: flex; align-items: center; gap: 16px; }
+.status-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.status-icon.pending { background: #fef3c7; color: #d97706; }
+.status-icon.approved { background: var(--green-light); color: var(--green); }
+.status-title { font-size: 14px; font-weight: 600; }
+.status-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+/* Form Card */
+.form-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+.form-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+.form-card h3 i { color: var(--green); font-size: 18px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-field { display: flex; flex-direction: column; gap: 5px; }
+.form-field.full { grid-column: 1 / -1; }
+.form-field label { font-size: 11.5px; font-weight: 500; color: var(--text-muted); }
+.form-field select, .form-field input, .form-field textarea { font-family: inherit; font-size: 12.5px; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; outline: none; }
+.form-field select:focus, .form-field input:focus, .form-field textarea:focus { border-color: var(--green); }
+.form-field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; cursor: pointer; }
+.form-field textarea { resize: vertical; min-height: 80px; }
+
+/* Route Cards */
+.routes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.route-card { border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 16px; cursor: pointer; transition: all .2s; }
+.route-card:hover { border-color: var(--green); }
+.route-card.selected { border-color: var(--green); background: var(--green-light); }
+.route-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.route-num { width: 36px; height: 36px; border-radius: 8px; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+.route-name { font-size: 13px; font-weight: 600; }
+.route-area { font-size: 11px; color: var(--text-muted); }
+.route-details { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px; }
+.route-details .rd-label { color: var(--text-hint); }
+.route-details .rd-val { font-weight: 600; }
+.form-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+</style>
+</head>
+<body>
+<div id="sidebar-container"></div>
+<div class="main">
+  <div class="topbar"><div class="topbar-search"><i class="ti ti-search"></i><input placeholder="Search anything…" /></div><div class="topbar-right"><div class="icon-btn"><i class="ti ti-bell"></i></div><div class="avatar">S</div></div></div>
+  <div class="content">
+    <div class="page-header">
+      <div><h1>Apply for School Bus</h1><div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Transport <i class="ti ti-chevron-right"></i> <span>Apply for Bus</span></div></div>
+    </div>
+
+    <!-- Status Banner -->
+    <div class="status-banner" id="statusBanner">
+      <div class="status-icon pending" id="statusIcon"><i class="ti ti-clock"></i></div>
+      <div><div class="status-title" id="statusTitle">Application Under Review</div><div class="status-desc" id="statusDesc">Your transport application is being reviewed by the admin.</div></div>
+    </div>
+
+    <!-- Select Route -->
+    <div class="form-card">
+      <h3><i class="ti ti-route"></i> Select Bus Route</h3>
+      <div class="routes-grid" id="routesGrid"></div>
+    </div>
+
+    <!-- Pickup Point & Details -->
+    <div class="form-card">
+      <h3><i class="ti ti-map-pin"></i> Application Details</h3>
+      <div class="form-grid">
+        <div class="form-field"><label>Selected Route</label><input id="selRoute" readonly placeholder="Select a route above" /></div>
+        <div class="form-field"><label>Pickup Point *</label>
+          <select id="pickupPoint"><option value="">-- Select Pickup Point --</option></select>
+        </div>
+        <div class="form-field"><label>Student Name</label><input value="Aarav Sharma" readonly /></div>
+        <div class="form-field"><label>Class / Section</label><input value="VIII - A" readonly /></div>
+        <div class="form-field"><label>Parent Contact</label><input value="9876543210" readonly /></div>
+        <div class="form-field"><label>Home Address</label><input placeholder="Enter your home address" /></div>
+        <div class="form-field full"><label>Additional Notes</label><textarea placeholder="Any medical conditions, siblings on same route, etc."></textarea></div>
+      </div>
+      <div class="form-footer">
+        <button class="btn">Cancel</button>
+        <button class="btn btn-primary btn-lg" onclick="submitApplication()"><i class="ti ti-send"></i> Submit Application</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const routes=[
+  {id:1,num:'R1',name:'Connaught Place Route',area:'CP, Janpath, Barakhamba',driver:'Mr. Ramesh',vehicle:'DL-01-AB-1234',seats:45,available:12,fee:4500,pickups:['Connaught Place','Janpath','Mandi House','Barakhamba Road']},
+  {id:2,num:'R2',name:'South Delhi Route',area:'GK-I, Lajpat Nagar, Defence Colony',driver:'Mr. Sunil',vehicle:'DL-01-CD-5678',seats:40,available:8,fee:5000,pickups:['Greater Kailash I','Lajpat Nagar','Defence Colony','Jangpura']},
+  {id:3,num:'R3',name:'Noida Route',area:'Sector 18, 62, 137',driver:'Mr. Vikram',vehicle:'UP-16-EF-9012',seats:50,available:22,fee:5500,pickups:['Sector 18 Noida','Sector 62','Sector 137','Botanical Garden']},
+  {id:4,num:'R4',name:'Dwarka Route',area:'Dwarka Sec 10, 12, Janakpuri',driver:'Mr. Anil',vehicle:'DL-01-GH-3456',seats:45,available:5,fee:4000,pickups:['Dwarka Sector 10','Dwarka Sector 12','Janakpuri East','Uttam Nagar']},
+  {id:5,num:'R5',name:'Gurgaon Route',area:'DLF Phase 1, Sohna Road, Sector 45',driver:'Mr. Deepak',vehicle:'HR-26-IJ-7890',seats:50,available:18,fee:6000,pickups:['DLF Phase 1','Sohna Road','Sector 45','IFFCO Chowk']},
+];
+let selectedRoute=null;
+
+function render(){
+  document.getElementById('routesGrid').innerHTML=routes.map(r=>`
+    <div class="route-card ${selectedRoute===r.id?'selected':''}" onclick="selectRoute(${r.id})">
+      <div class="route-card-head">
+        <div class="route-num">${r.num}</div>
+        <div><div class="route-name">${r.name}</div><div class="route-area">${r.area}</div></div>
+      </div>
+      <div class="route-details">
+        <div><div class="rd-label">Driver</div><div class="rd-val">${r.driver}</div></div>
+        <div><div class="rd-label">Vehicle</div><div class="rd-val">${r.vehicle}</div></div>
+        <div><div class="rd-label">Seats Available</div><div class="rd-val">${r.available} / ${r.seats}</div></div>
+        <div><div class="rd-label">Monthly Fee</div><div class="rd-val" style="color:var(--green)">₹${r.fee.toLocaleString('en-IN')}</div></div>
+      </div>
+    </div>`).join('');
+}
+function selectRoute(id){
+  selectedRoute=id;
+  const r=routes.find(x=>x.id===id);
+  document.getElementById('selRoute').value=r.num+' – '+r.name;
+  const pp=document.getElementById('pickupPoint');
+  pp.innerHTML='<option value="">-- Select Pickup Point --</option>'+r.pickups.map(p=>`<option>${p}</option>`).join('');
+  render();
+}
+function submitApplication(){
+  if(!selectedRoute)return alert('Please select a route first');
+  if(!document.getElementById('pickupPoint').value)return alert('Please select a pickup point');
+  const banner=document.getElementById('statusBanner');
+  banner.classList.add('show');
+  alert('✅ Transport application submitted! You will be notified once approved.');
+}
+render();
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>

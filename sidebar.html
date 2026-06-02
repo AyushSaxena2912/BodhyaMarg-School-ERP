@@ -6,6 +6,9 @@ body[data-current-role="teacher"] [data-allowed-roles]:not([data-allowed-roles*=
 body[data-current-role="staff"] [data-allowed-roles]:not([data-allowed-roles*="staff"]) {
   display: none !important;
 }
+/* For superadmin, show everything that admin sees, plus superadmin specific things. */
+body[data-current-role="superadmin"] [data-allowed-roles="superadmin"] { display: block !important; }
+body[data-current-role="admin"] [data-allowed-roles="superadmin"] { display: none !important; }
 
 /* Definitive Sidebar CSS */
 .sidebar { width: 224px; min-width: 224px; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; height: 100vh; }
@@ -15,12 +18,11 @@ body[data-current-role="staff"] [data-allowed-roles]:not([data-allowed-roles*="s
 
 .brand-bar { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
 .brand-name { font-size: 14px; font-weight: 600; color: var(--green); display: flex; align-items: center; gap: 8px; }
-.school-picker { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border); cursor: pointer; flex-shrink: 0; }
-.school-picker:hover { background: var(--bg); }
-.school-icon { width: 32px; height: 32px; background: var(--green-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.school-icon i { font-size: 16px; color: var(--green); }
-.school-info .name { font-size: 12px; font-weight: 600; color: var(--text); }
-.school-info .sub  { font-size: 10px; color: var(--text-muted); }
+
+/* School Picker */
+.school-picker { padding: 10px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.school-picker-label { font-size: 10px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; margin-bottom: 6px; }
+.school-picker select { width: 100%; padding: 6px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 12px; outline: none; cursor: pointer; font-weight: 600; }
 
 .nav-group { padding: 6px 0; }
 .nav-label { font-size: 10px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; letter-spacing: .07em; padding: 6px 16px 2px; }
@@ -48,42 +50,24 @@ body[data-current-role="staff"] [data-allowed-roles]:not([data-allowed-roles*="s
 /* Collapsed Sidebar State */
 .sidebar { transition: width 0.3s ease, min-width 0.3s ease; overflow-x: hidden; }
 .sidebar.collapsed { width: 72px; min-width: 72px; }
-.sidebar.collapsed .brand-name { display: none; }
+.sidebar.collapsed .brand-name { font-size: 0; gap: 0; }
+.sidebar.collapsed .brand-name i { font-size: 24px; margin: 0 auto; }
 .sidebar.collapsed .brand-bar { justify-content: center; padding: 16px 0; }
-.sidebar.collapsed .school-info, .sidebar.collapsed .school-picker > .ti-chevron-down { display: none; }
-.sidebar.collapsed .school-picker { padding: 12px 10px; justify-content: center; }
-.sidebar.collapsed .school-icon { margin: 0; }
+.sidebar.collapsed .school-picker-label { display: none; }
+.sidebar.collapsed .school-picker select { font-size: 0; padding: 6px 0; background: transparent; border: none; }
 .sidebar.collapsed .nav-label { display: none; }
 .sidebar.collapsed .nav-item { font-size: 0; gap: 0; justify-content: center; width: 44px; height: 44px; margin: 4px auto; padding: 0; border-radius: 10px; }
 .sidebar.collapsed .nav-item i { font-size: 20px; margin: 0; }
 .sidebar.collapsed .nav-item .ti-chevron-down { display: none; }
 .sidebar.collapsed .nav-sub { display: none !important; }
 .sidebar.collapsed .nav-sub-container.open > a.nav-item { background: transparent !important; color: var(--text-muted) !important; font-weight: normal !important; }
-.sidebar.collapsed .nav-sub-container > a.nav-item.active { background: var(--green-light) !important; color: var(--green) !important; font-weight: 600 !important; }.nav-sub-container > a.nav-item { user-select: none; }
+.sidebar.collapsed .nav-sub-container > a.nav-item.active { background: var(--green-light) !important; color: var(--green) !important; font-weight: 600 !important; }
 
 /* Highlight Nav Label if it has an active or open item */
 .nav-group:has(.nav-item.active) .nav-label,
 .nav-group:has(.nav-sub-container.open) .nav-label {
   color: var(--green) !important;
 }
-
-
-/* Collapsed Sidebar State */
-.sidebar { transition: width 0.3s ease, min-width 0.3s ease; }
-.sidebar.collapsed { width: 72px; min-width: 72px; }
-.sidebar.collapsed .brand-name { font-size: 0; gap: 0; }
-.sidebar.collapsed .brand-name i { font-size: 24px; margin: 0 auto; }
-.sidebar.collapsed .school-info, .sidebar.collapsed .school-picker > .ti-chevron-down { display: none; }
-.sidebar.collapsed .school-picker { padding: 10px; justify-content: center; }
-.sidebar.collapsed .school-icon { margin: 0; }
-.sidebar.collapsed .nav-label { display: none; }
-.sidebar.collapsed .nav-item { font-size: 0; gap: 0; justify-content: center; padding: 12px 0; }
-.sidebar.collapsed .nav-item i { font-size: 20px; margin: 0; }
-.sidebar.collapsed .nav-item .ti-chevron-down { display: none; }
-.sidebar.collapsed .nav-sub { display: none !important; }
-.sidebar.collapsed .nav-sub-container.open > a.nav-item { background: transparent !important; color: var(--text-muted) !important; font-weight: normal !important; }
-.sidebar.collapsed .nav-sub-container > a.nav-item.active { background: var(--green-light) !important; color: var(--green) !important; font-weight: 600 !important; }
-
 </style>
 
 <aside class="sidebar">
@@ -91,10 +75,14 @@ body[data-current-role="staff"] [data-allowed-roles]:not([data-allowed-roles*="s
     <div class="brand-name"><i class="ti ti-school"></i> BodhyaMarg</div>
     <i class="ti ti-menu-2" style="font-size:18px;color:var(--text-muted);cursor:pointer;"></i>
   </div>
+  
   <div class="school-picker">
-    <div class="school-icon"><i class="ti ti-shield-half"></i></div>
-    <div class="school-info"><div class="name">Delhi Public School</div><div class="sub">Main Campus</div></div>
-    <i class="ti ti-chevron-down" style="margin-left:auto;font-size:14px;color:var(--text-hint);"></i>
+    <div class="school-picker-label">Current Branch</div>
+    <select id="sidebarSchoolSwitcher">
+      <option value="dps_main">Delhi Public School - Main Campus</option>
+      <option value="dps_south">Delhi Public School - South Branch</option>
+      <option value="dps_north">Delhi Public School - North Branch</option>
+    </select>
   </div>
   
   <div class="role-switcher" style="padding: 10px 16px; border-bottom: 1px solid var(--border);">
@@ -117,16 +105,16 @@ body[data-current-role="staff"] [data-allowed-roles]:not([data-allowed-roles*="s
   <div class="nav-group">
     <div class="nav-label">Main</div>
     <div class="nav-sub-container">
-      <a href="VehicleOccupancy.html" class="nav-item" data-allowed-roles="admin,teacher,student"><i class="ti ti-layout-dashboard"></i> Dashboard <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <a href="VehicleOccupancy.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher,student"><i class="ti ti-layout-dashboard"></i> Dashboard <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
-        <a href="VehicleOccupancy.html" class="nav-item" data-allowed-roles="admin">Admin Dashboard</a>
+        <a href="VehicleOccupancy.html" class="nav-item" data-allowed-roles="admin,superadmin">Admin Dashboard</a>
         <a href="TeacherWorkspace.html" class="nav-item" data-allowed-roles="teacher">Teacher Dashboard</a>
         <a href="StudentReportCard.html" class="nav-item" data-allowed-roles="student">Student Dashboard</a>
       </div>
     </div>
   </div>
   
-  <div class="nav-group" data-allowed-roles="admin">
+  <div class="nav-group" data-allowed-roles="admin,superadmin">
     <div class="nav-label">Peoples</div>
     <div class="nav-sub-container">
       <a href="AllStudents.html" class="nav-item"><i class="ti ti-school"></i> Students <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
@@ -151,155 +139,128 @@ body[data-current-role="staff"] [data-allowed-roles]:not([data-allowed-roles*="s
   
   <div class="nav-group">
     <div class="nav-label">Academic</div>
-    <div class="nav-sub-container" data-allowed-roles="admin">
+    <div class="nav-sub-container" data-allowed-roles="admin,superadmin">
       <a href="AddClasses.html" class="nav-item"><i class="ti ti-books"></i> Classes <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
         <a href="AddClasses.html" class="nav-item">Class List</a>
       </div>
     </div>
-    <a href="ClassRoom.html" class="nav-item" data-allowed-roles="admin,teacher"><i class="ti ti-building-community"></i> Class Room</a>
-    <a href="ClassRoutine.html" class="nav-item" data-allowed-roles="admin,teacher"><i class="ti ti-calendar-event"></i> Class Routine</a>
-    <a href="AddSections.html" class="nav-item" data-allowed-roles="admin"><i class="ti ti-box"></i> Section</a>
-    <a href="Subjects.html" class="nav-item" data-allowed-roles="admin"><i class="ti ti-book-2"></i> Subject</a>
-    <a href="AddClassSyllabus.html" class="nav-item" data-allowed-roles="admin,teacher"><i class="ti ti-file-text"></i> Syllabus</a>
-    <a href="AcademicCalendar.html" class="nav-item" data-allowed-roles="admin,teacher,student"><i class="ti ti-table"></i> Time Table</a>
-    <a href="HomeworkList.html" class="nav-item" data-allowed-roles="admin,teacher,student"><i class="ti ti-file-certificate"></i> Home Work</a>
-    <div class="nav-sub-container" data-allowed-roles="admin,teacher,student">
-      <a href="#" class="nav-item"><i class="ti ti-test-pipe"></i> Examinations <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+    <a href="ClassRoom.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher"><i class="ti ti-building-community"></i> Class Room</a>
+    <a href="ClassRoutine.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher"><i class="ti ti-calendar-event"></i> Class Routine</a>
+    <a href="AddSections.html" class="nav-item" data-allowed-roles="admin,superadmin"><i class="ti ti-box"></i> Section</a>
+    <a href="Subjects.html" class="nav-item" data-allowed-roles="admin,superadmin"><i class="ti ti-book-2"></i> Subject</a>
+    <a href="AddClassSyllabus.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher"><i class="ti ti-file-text"></i> Syllabus</a>
+    <a href="AcademicCalendar.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher,student"><i class="ti ti-table"></i> Time Table</a>
+    
+    <div class="nav-sub-container" data-allowed-roles="admin,superadmin,teacher,student">
+      <a href="#" class="nav-item"><i class="ti ti-file-certificate"></i> Home Work <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
-        <a href="ExamList.html" class="nav-item" data-allowed-roles="admin">Exam List</a>
-        <a href="ExamSchedule.html" class="nav-item" data-allowed-roles="admin,teacher">Exam Schedule</a>
-        <a href="GradeList.html" class="nav-item" data-allowed-roles="admin">Grade</a>
-        <a href="ExamAttendance.html" class="nav-item" data-allowed-roles="admin,teacher">Exam Attendance</a>
-        <a href="ExamResults.html" class="nav-item" data-allowed-roles="admin,teacher">Exam Results</a>
-        <a href="SearchExamResults.html" class="nav-item" data-allowed-roles="admin,teacher,student">Search Results</a>
-        <a href="ExamSettings.html" class="nav-item" data-allowed-roles="admin">Exam Settings</a>
+        <a href="HomeworkList.html" class="nav-item">Homework List</a>
+        <a href="UploadHomework.html" class="nav-item" data-allowed-roles="student">Upload Assignment</a>
+        <a href="EvaluateHomework.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher">Evaluate Homework</a>
       </div>
     </div>
-    <a href="#" class="nav-item" data-allowed-roles="admin"><i class="ti ti-target"></i> Reasons</a>
+
+    <div class="nav-sub-container" data-allowed-roles="admin,superadmin,teacher,student">
+      <a href="#" class="nav-item"><i class="ti ti-test-pipe"></i> Examinations <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="ExamList.html" class="nav-item" data-allowed-roles="admin,superadmin">Exam List</a>
+        <a href="ExamSchedule.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher">Exam Schedule</a>
+        <a href="GradeList.html" class="nav-item" data-allowed-roles="admin,superadmin">Grade</a>
+        <a href="ExamAttendance.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher">Exam Attendance</a>
+        <a href="ExamResults.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher">Exam Results</a>
+        <a href="SearchExamResults.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher,student">Search Results</a>
+        <a href="ExamSettings.html" class="nav-item" data-allowed-roles="admin,superadmin">Exam Settings</a>
+      </div>
+    </div>
   </div>
   
   <div class="nav-group">
     <div class="nav-label">Management</div>
-    <div class="nav-sub-container" data-allowed-roles="admin">
+    <div class="nav-sub-container" data-allowed-roles="admin,superadmin">
       <a href="#" class="nav-item"><i class="ti ti-receipt"></i> Fees Collection <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
-        <a href="#" class="nav-item">Fees Group</a>
-        <a href="#" class="nav-item">Fees Type</a>
-        <a href="#" class="nav-item">Fees Master</a>
-        <a href="#" class="nav-item">Fees Assign</a>
-        <a href="#" class="nav-item">Collect Fees</a>
+        <a href="FeesGroup.html" class="nav-item">Fees Group</a>
+        <a href="FeesType.html" class="nav-item">Fees Type</a>
+        <a href="FeesMaster.html" class="nav-item">Fees Master</a>
+        <a href="FeesAssign.html" class="nav-item">Fees Assign</a>
+        <a href="CollectFees.html" class="nav-item">Collect Fees</a>
       </div>
     </div>
-    <a href="#" class="nav-item" data-allowed-roles="admin,teacher,student"><i class="ti ti-ball-football"></i> Sports</a>
-    <div class="nav-sub-container" data-allowed-roles="admin,student">
+    <div class="nav-sub-container" data-allowed-roles="admin,superadmin,student">
       <a href="HostelList.html" class="nav-item"><i class="ti ti-building-store"></i> Hostel <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
-        <a href="HostelList.html" class="nav-item">Hostel List</a>
-        <a href="HostelRooms.html" class="nav-item">Hostel Rooms</a>
+        <a href="HostelList.html" class="nav-item" data-allowed-roles="admin,superadmin">Hostel List</a>
+        <a href="HostelRooms.html" class="nav-item" data-allowed-roles="admin,superadmin">Hostel Rooms</a>
+        <a href="ApplyHostel.html" class="nav-item" data-allowed-roles="student">Apply for Hostel</a>
       </div>
     </div>
-    <div class="nav-sub-container" data-allowed-roles="admin,student">
+    <div class="nav-sub-container" data-allowed-roles="admin,superadmin,student">
       <a href="AddVehicle.html" class="nav-item"><i class="ti ti-bus"></i> Transport <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
-        <a href="RoutesList.html" class="nav-item">Routes</a>
-        <a href="PickupPoints.html" class="nav-item">Pickup Points</a>
-        <a href="AddDrivers.html" class="nav-item">Vehicle Drivers</a>
-        <a href="AddVehicle.html" class="nav-item">Vehicles</a>
-        <a href="AssignVehicle.html" class="nav-item">Assign Vehicle</a>
-        <a href="VehicleOccupancy.html" class="nav-item">Vehicle Occupancy</a>
+        <a href="RoutesList.html" class="nav-item" data-allowed-roles="admin,superadmin">Routes</a>
+        <a href="PickupPoints.html" class="nav-item" data-allowed-roles="admin,superadmin">Pickup Points</a>
+        <a href="AddDrivers.html" class="nav-item" data-allowed-roles="admin,superadmin">Vehicle Drivers</a>
+        <a href="AddVehicle.html" class="nav-item" data-allowed-roles="admin,superadmin">Vehicles</a>
+        <a href="AssignVehicle.html" class="nav-item" data-allowed-roles="admin,superadmin">Assign Vehicle</a>
+        <a href="VehicleOccupancy.html" class="nav-item" data-allowed-roles="admin,superadmin">Vehicle Occupancy</a>
+        <a href="ApplyTransport.html" class="nav-item" data-allowed-roles="student">Apply for Bus</a>
       </div>
     </div>
   </div>
   
-  <div class="nav-group" data-allowed-roles="admin,teacher">
+  <div class="nav-group" data-allowed-roles="admin,superadmin,teacher">
     <div class="nav-label">HRM</div>
-    <a href="AddStafff.html" class="nav-item" data-allowed-roles="admin"><i class="ti ti-users-group"></i> Staffs</a>
-    <a href="Designation.html" class="nav-item" data-allowed-roles="admin"><i class="ti ti-id-badge"></i> Designation</a>
-    <a href="Department.html" class="nav-item" data-allowed-roles="admin"><i class="ti ti-sitemap"></i> Department</a>
-    <div class="nav-sub-container" data-allowed-roles="admin,teacher">
+    <a href="AddStafff.html" class="nav-item" data-allowed-roles="admin,superadmin"><i class="ti ti-users-group"></i> Staffs</a>
+    <a href="Designation.html" class="nav-item" data-allowed-roles="admin,superadmin"><i class="ti ti-id-badge"></i> Designation</a>
+    <a href="Department.html" class="nav-item" data-allowed-roles="admin,superadmin"><i class="ti ti-sitemap"></i> Department</a>
+    <div class="nav-sub-container" data-allowed-roles="admin,superadmin,teacher">
       <a href="#" class="nav-item"><i class="ti ti-calendar-check"></i> Attendance <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
-        <a href="StudentAttendance.html" class="nav-item" data-allowed-roles="admin,teacher">Student Attendance</a>
-        <a href="TeacherAttendance.html" class="nav-item" data-allowed-roles="admin,teacher">Teacher Attendance</a>
-        <a href="StaffAttendance.html" class="nav-item" data-allowed-roles="admin">Staff Attendance</a>
+        <a href="StudentAttendance.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher">Student Attendance</a>
+        <a href="TeacherAttendance.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher">Teacher Attendance</a>
+        <a href="StaffAttendance.html" class="nav-item" data-allowed-roles="admin,superadmin">Staff Attendance</a>
       </div>
     </div>
-    <div class="nav-sub-container" data-allowed-roles="admin,teacher">
+    <div class="nav-sub-container" data-allowed-roles="admin,superadmin,teacher">
       <a href="Leave.html" class="nav-item"><i class="ti ti-calendar-minus"></i> Leaves <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
-        <a href="Leave.html" class="nav-item" data-allowed-roles="admin,teacher">List of leaves</a>
-        <a href="LeaveApproveRequest.html" class="nav-item" data-allowed-roles="admin">Approve Request</a>
+        <a href="Leave.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher">List of leaves</a>
+        <a href="LeaveApproveRequest.html" class="nav-item" data-allowed-roles="admin,superadmin">Approve Request</a>
       </div>
     </div>
   </div>
   
-  <div class="nav-group" data-allowed-roles="admin">
+  <div class="nav-group" data-allowed-roles="admin,superadmin">
     <div class="nav-label">Finance & Accounts</div>
     <div class="nav-sub-container">
       <a href="#" class="nav-item"><i class="ti ti-wallet"></i> Accounts <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
-        <a href="#" class="nav-item">Expenses</a>
-        <a href="#" class="nav-item">Expense Category</a>
-        <a href="#" class="nav-item">Income</a>
-        <a href="#" class="nav-item">Transactions</a>
+        <a href="Income.html" class="nav-item">Income</a>
+        <a href="Expenses.html" class="nav-item">Expenses</a>
+        <a href="ExpenseCategory.html" class="nav-item">Expense Category</a>
+        <a href="Transactions.html" class="nav-item">Transactions Ledger</a>
       </div>
     </div>
   </div>
 
-  <div class="nav-group" data-allowed-roles="admin,teacher,student">
+  <div class="nav-group" data-allowed-roles="admin,superadmin,teacher,student">
     <div class="nav-label">Announcements</div>
     <a href="NoticeBoard.html" class="nav-item"><i class="ti ti-clipboard-text"></i> Notice Board</a>
   </div>
 
-  <div class="nav-group" data-allowed-roles="admin">
-    <div class="nav-label">Reports</div>
-    <a href="#" class="nav-item"><i class="ti ti-report"></i> Attendance Report</a>
-    <a href="#" class="nav-item"><i class="ti ti-report-analytics"></i> Class Report</a>
-    <a href="#" class="nav-item"><i class="ti ti-chart-bar"></i> Student Report</a>
-    <a href="#" class="nav-item"><i class="ti ti-file-analytics"></i> Grade Report</a>
-    <a href="#" class="nav-item"><i class="ti ti-receipt-2"></i> Fees Report</a>
-  </div>
-
-  <div class="nav-group" data-allowed-roles="admin">
-    <div class="nav-label">User Management</div>
-    <a href="#" class="nav-item"><i class="ti ti-users"></i> Users</a>
-    <a href="RolesPermissions.html" class="nav-item"><i class="ti ti-shield-lock"></i> Roles & Permissions</a>
-    <a href="#" class="nav-item"><i class="ti ti-user-x"></i> Delete Account Request</a>
-  </div>
-
-  <div class="nav-group" data-allowed-roles="admin">
-    <div class="nav-label">Membership</div>
-    <a href="#" class="nav-item"><i class="ti ti-star"></i> Membership Plans</a>
-  </div>
-
-  <div class="nav-group" data-allowed-roles="admin,teacher,student">
-    <div class="nav-label">Support</div>
-    <a href="#" class="nav-item"><i class="ti ti-user"></i> Profile</a>
-  </div>
-
-  <div class="nav-group" data-allowed-roles="admin">
+  <div class="nav-group" data-allowed-roles="admin,superadmin">
     <div class="nav-label">Settings</div>
-    <div class="nav-sub-container">
-      <a href="#" class="nav-item"><i class="ti ti-settings"></i> General Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+    <div class="nav-sub-container" data-allowed-roles="superadmin">
+      <a href="#" class="nav-item"><i class="ti ti-building-community"></i> School Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
-        <a href="#" class="nav-item">Profile Settings</a>
+        <a href="ManageSchools.html" class="nav-item">Manage Schools / Branches</a>
       </div>
     </div>
-    <div class="nav-sub-container">
-      <a href="#" class="nav-item"><i class="ti ti-book"></i> Academic Settings <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
-      <div class="nav-sub">
-        <a href="#" class="nav-item">School Settings</a>
-      </div>
-    </div>
+    <a href="RolesPermissions.html" class="nav-item"><i class="ti ti-shield-lock"></i> Roles & Permissions</a>
   </div>
 
-  <div class="nav-group" data-allowed-roles="admin">
-    <div class="nav-label">UI Interface</div>
-    <a href="#" class="nav-item"><i class="ti ti-components"></i> Base UI</a>
-  </div>
-
-  <div class="nav-group" data-allowed-roles="admin">
+  <div class="nav-group" data-allowed-roles="admin,superadmin">
     <div class="nav-label">System Pages</div>
     <a href="ErrorPage.html" class="nav-item"><i class="ti ti-alert-circle"></i> Error Page</a>
   </div>

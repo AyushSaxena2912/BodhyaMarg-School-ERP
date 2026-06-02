@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Transactions Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38; --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea; --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af; --radius: 8px; --radius-lg: 12px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); } .topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; } .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; } .breadcrumb span { color: var(--green); }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); white-space: nowrap; }
+.btn:hover { background: var(--bg); }
+
+/* Summary Cards */
+.summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.summary-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
+.sc-label { font-size: 11.5px; color: var(--text-muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.sc-label i { font-size: 16px; }
+.sc-val { font-size: 24px; font-weight: 700; }
+.sc-val.income { color: var(--green); }
+.sc-val.expense { color: #dc2626; }
+.sc-val.balance { color: #2563eb; }
+.sc-val.count { color: #7c3aed; }
+.sc-change { font-size: 11px; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+.sc-change.up { color: var(--green); }
+.sc-change.down { color: #dc2626; }
+
+/* Filters */
+.filter-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+.filter-bar select, .filter-bar input { font-family: inherit; font-size: 12.5px; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; outline: none; background: var(--white); }
+.filter-bar select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; cursor: pointer; }
+
+/* Table */
+.table-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--bg); border-bottom: 1px solid var(--border); }
+thead th { padding: 11px 18px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-align: left; }
+tbody tr { border-bottom: 1px solid var(--border); } tbody tr:last-child { border-bottom: none; } tbody tr:hover { background: #fafbfc; }
+tbody td { padding: 13px 18px; font-size: 12.5px; vertical-align: middle; }
+.type-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.type-income { background: var(--green-light); color: var(--green); }
+.type-expense { background: #fef2f2; color: #dc2626; }
+.amount-in { font-weight: 600; color: var(--green); }
+.amount-out { font-weight: 600; color: #dc2626; }
+.cat-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; background: var(--bg); color: var(--text-muted); }
+.balance-col { font-weight: 700; color: #2563eb; }
+.pagination { display: flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 14px 18px; border-top: 1px solid var(--border); }
+.page-btn { min-width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); font-size: 12px; font-weight: 500; color: var(--text-muted); cursor: pointer; }
+.page-btn.active { background: var(--green); color: #fff; border-color: var(--green); } .page-btn.disabled { opacity: .4; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="sidebar-container"></div>
+<div class="main">
+  <div class="topbar"><div class="topbar-search"><i class="ti ti-search"></i><input placeholder="Search anything…" /></div><div class="topbar-right"><div class="icon-btn"><i class="ti ti-bell"></i></div><div class="avatar">A</div></div></div>
+  <div class="content">
+    <div class="page-header">
+      <div><h1>Transactions Ledger</h1><div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Finance <i class="ti ti-chevron-right"></i> <span>Transactions</span></div></div>
+      <button class="btn" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button>
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-card"><div class="sc-label"><i class="ti ti-arrow-down-left" style="color:var(--green)"></i> Total Income</div><div class="sc-val income" id="totalIncome">₹0</div><div class="sc-change up"><i class="ti ti-trending-up" style="font-size:14px"></i> +12% from last month</div></div>
+      <div class="summary-card"><div class="sc-label"><i class="ti ti-arrow-up-right" style="color:#dc2626"></i> Total Expenses</div><div class="sc-val expense" id="totalExpense">₹0</div><div class="sc-change down"><i class="ti ti-trending-down" style="font-size:14px"></i> +8% from last month</div></div>
+      <div class="summary-card"><div class="sc-label"><i class="ti ti-scale" style="color:#2563eb"></i> Net Balance</div><div class="sc-val balance" id="netBalance">₹0</div><div class="sc-change up"><i class="ti ti-trending-up" style="font-size:14px"></i> Healthy surplus</div></div>
+      <div class="summary-card"><div class="sc-label"><i class="ti ti-list" style="color:#7c3aed"></i> Total Entries</div><div class="sc-val count" id="totalEntries">0</div></div>
+    </div>
+
+    <div class="filter-bar">
+      <select id="fType" onchange="render()"><option value="">All Types</option><option value="Income">Income</option><option value="Expense">Expense</option></select>
+      <select id="fCat" onchange="render()"><option value="">All Categories</option><option>Fees</option><option>Donation</option><option>Rent</option><option>Salary & Wages</option><option>Utilities</option><option>Maintenance</option><option>Transport</option><option>Events</option><option>IT & Software</option><option>Other</option></select>
+      <input type="date" id="fFrom" onchange="render()" />
+      <span style="font-size:12px;color:var(--text-hint)">to</span>
+      <input type="date" id="fTo" onchange="render()" />
+      <input type="text" placeholder="Search title…" oninput="ft=this.value;cp=1;render()" style="width:200px" />
+    </div>
+
+    <div class="table-card">
+      <table><thead><tr><th>Date</th><th>Type</th><th>Title</th><th>Category</th><th>Credit (₹)</th><th>Debit (₹)</th><th>Running Balance</th></tr></thead><tbody id="tb"></tbody></table>
+      <div class="pagination" id="pg"></div>
+    </div>
+  </div>
+</div>
+<script>
+const txns=[
+  {id:1,date:'2026-06-01',type:'Income',title:'June Fee Collection – Class VIII',cat:'Fees',amount:450000},
+  {id:2,date:'2026-06-01',type:'Expense',title:'Teacher Salaries – June',cat:'Salary & Wages',amount:850000},
+  {id:3,date:'2026-05-30',type:'Expense',title:'Electricity Bill – May',cat:'Utilities',amount:65000},
+  {id:4,date:'2026-05-28',type:'Income',title:'Annual Day Sponsorship',cat:'Donation',amount:100000},
+  {id:5,date:'2026-05-28',type:'Expense',title:'Computer Lab Repair',cat:'Maintenance',amount:35000},
+  {id:6,date:'2026-05-25',type:'Income',title:'Canteen Rent – May',cat:'Rent',amount:35000},
+  {id:7,date:'2026-05-25',type:'Expense',title:'Exam Papers Printing',cat:'Other',amount:18000},
+  {id:8,date:'2026-05-22',type:'Expense',title:'Bus Diesel – May',cat:'Transport',amount:42000},
+  {id:9,date:'2026-05-20',type:'Income',title:'May Fee Collection – Class VII',cat:'Fees',amount:380000},
+  {id:10,date:'2026-05-20',type:'Expense',title:'Sports Day Expenses',cat:'Events',amount:55000},
+  {id:11,date:'2026-05-18',type:'Expense',title:'ERP Software License',cat:'IT & Software',amount:25000},
+  {id:12,date:'2026-05-15',type:'Income',title:'Sports Day Entry Fees',cat:'Other',amount:25000},
+  {id:13,date:'2026-05-15',type:'Expense',title:'Water Bill – May',cat:'Utilities',amount:12000},
+  {id:14,date:'2026-05-10',type:'Income',title:'May Fee Collection – Class VI',cat:'Fees',amount:320000},
+  {id:15,date:'2026-05-10',type:'Expense',title:'Staff Salaries – May',cat:'Salary & Wages',amount:320000},
+  {id:16,date:'2026-05-05',type:'Income',title:'Auditorium Rent',cat:'Rent',amount:50000},
+  {id:17,date:'2026-05-01',type:'Income',title:'Alumni Donation',cat:'Donation',amount:75000},
+];
+let cp=1,perPage=15,ft='';
+
+function render(){
+  const fType=document.getElementById('fType').value;
+  const fCat=document.getElementById('fCat').value;
+  const fFrom=document.getElementById('fFrom').value;
+  const fTo=document.getElementById('fTo').value;
+
+  let filtered=txns.filter(t=>{
+    if(fType && t.type!==fType) return false;
+    if(fCat && t.cat!==fCat) return false;
+    if(fFrom && t.date<fFrom) return false;
+    if(fTo && t.date>fTo) return false;
+    if(ft && !t.title.toLowerCase().includes(ft.toLowerCase())) return false;
+    return true;
+  });
+
+  // Sort by date desc
+  filtered.sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+
+  const totalIncome=filtered.filter(t=>t.type==='Income').reduce((a,t)=>a+t.amount,0);
+  const totalExpense=filtered.filter(t=>t.type==='Expense').reduce((a,t)=>a+t.amount,0);
+  document.getElementById('totalIncome').textContent='₹'+totalIncome.toLocaleString('en-IN');
+  document.getElementById('totalExpense').textContent='₹'+totalExpense.toLocaleString('en-IN');
+  document.getElementById('netBalance').textContent='₹'+(totalIncome-totalExpense).toLocaleString('en-IN');
+  document.getElementById('totalEntries').textContent=filtered.length;
+
+  // Running balance (from oldest to newest for calculation)
+  const sortedAsc=[...filtered].reverse();
+  let bal=0;
+  const balMap={};
+  sortedAsc.forEach(t=>{
+    if(t.type==='Income') bal+=t.amount; else bal-=t.amount;
+    balMap[t.id]=bal;
+  });
+
+  const tp=Math.max(1,Math.ceil(filtered.length/perPage));if(cp>tp)cp=tp;
+  const sl=filtered.slice((cp-1)*perPage,cp*perPage);
+
+  document.getElementById('tb').innerHTML=sl.map(t=>`<tr>
+    <td style="font-size:12px;color:var(--text-muted)">${t.date}</td>
+    <td><span class="type-badge type-${t.type.toLowerCase()}">${t.type==='Income'?'↓':'↑'} ${t.type}</span></td>
+    <td style="font-weight:500">${t.title}</td>
+    <td><span class="cat-tag">${t.cat}</span></td>
+    <td class="${t.type==='Income'?'amount-in':''}">${t.type==='Income'?'₹'+t.amount.toLocaleString('en-IN'):'—'}</td>
+    <td class="${t.type==='Expense'?'amount-out':''}">${t.type==='Expense'?'₹'+t.amount.toLocaleString('en-IN'):'—'}</td>
+    <td class="balance-col">₹${balMap[t.id].toLocaleString('en-IN')}</td>
+  </tr>`).join('');
+
+  let h=`<button class="page-btn ${cp===1?'disabled':''}" onclick="cp--;render()"><i class="ti ti-chevron-left" style="font-size:13px"></i></button>`;
+  for(let i=1;i<=tp;i++)h+=`<button class="page-btn ${i===cp?'active':''}" onclick="cp=${i};render()">${i}</button>`;
+  h+=`<button class="page-btn ${cp===tp?'disabled':''}" onclick="cp++;render()"><i class="ti ti-chevron-right" style="font-size:13px"></i></button>`;
+  document.getElementById('pg').innerHTML=h;
+}
+function exportCSV(){alert('📥 Exporting CSV… (simulated)');}
+render();
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>

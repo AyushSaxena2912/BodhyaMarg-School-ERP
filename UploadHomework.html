@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Upload Assignment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38; --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea; --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af; --radius: 8px; --radius-lg: 12px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); } .topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; } .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; } .breadcrumb span { color: var(--green); }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); white-space: nowrap; }
+.btn:hover { background: var(--bg); } .btn-primary { background: var(--green); color: #fff; border-color: var(--green); } .btn-primary:hover { background: var(--green-dark); }
+
+/* Homework Cards */
+.hw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 18px; }
+.hw-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: box-shadow .2s; }
+.hw-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.06); }
+.hw-card-top { padding: 18px 20px 12px; }
+.hw-subject { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.hw-subject-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.hw-subject-icon.math { background: #dbeafe; color: #2563eb; }
+.hw-subject-icon.eng { background: #fce7f3; color: #db2777; }
+.hw-subject-icon.sci { background: #d1fae5; color: #059669; }
+.hw-subject-icon.sst { background: #fef3c7; color: #d97706; }
+.hw-subject-icon.hin { background: #ede9fe; color: #7c3aed; }
+.hw-subject-name { font-size: 14px; font-weight: 600; }
+.hw-subject-teacher { font-size: 11px; color: var(--text-muted); }
+.hw-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+.hw-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+.hw-meta { display: flex; gap: 16px; font-size: 11px; color: var(--text-hint); }
+.hw-meta i { font-size: 13px; }
+.hw-card-bottom { padding: 14px 20px; border-top: 1px solid var(--border); background: #fafbfc; display: flex; align-items: center; justify-content: space-between; }
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+.badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+.badge-pending { background: #fef3c7; color: #d97706; } .badge-pending::before { background: #d97706; }
+.badge-submitted { background: var(--green-light); color: var(--green); } .badge-submitted::before { background: var(--green); }
+.badge-overdue { background: #fef2f2; color: #dc2626; } .badge-overdue::before { background: #dc2626; }
+
+/* Upload Area */
+.upload-area { border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 30px; text-align: center; cursor: pointer; transition: border-color .2s, background .2s; margin-top: 8px; }
+.upload-area:hover { border-color: var(--green); background: var(--green-light); }
+.upload-area i { font-size: 36px; color: var(--text-hint); margin-bottom: 8px; }
+.upload-area p { font-size: 12.5px; color: var(--text-muted); }
+.upload-area .hint { font-size: 11px; color: var(--text-hint); margin-top: 4px; }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity .15s; } .modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--white); border-radius: var(--radius-lg); width: 480px; padding: 28px; box-shadow: 0 8px 32px rgba(0,0,0,.14); }
+.modal-title { font-size: 15px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; } .modal-title i { color: var(--green); }
+.modal-field { margin-bottom: 14px; }
+.modal-field label { font-size: 11.5px; font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 5px; }
+.modal-field textarea { width: 100%; font-family: inherit; font-size: 12.5px; border: 1px solid var(--border); border-radius: var(--radius); padding: 9px 10px; outline: none; resize: vertical; min-height: 60px; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+</style>
+</head>
+<body>
+<div id="sidebar-container"></div>
+<div class="main">
+  <div class="topbar"><div class="topbar-search"><i class="ti ti-search"></i><input placeholder="Search anything…" /></div><div class="topbar-right"><div class="icon-btn"><i class="ti ti-bell"></i></div><div class="avatar">S</div></div></div>
+  <div class="content">
+    <div class="page-header">
+      <div><h1>Upload Assignment</h1><div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Homework <i class="ti ti-chevron-right"></i> <span>Upload Assignment</span></div></div>
+    </div>
+    <div class="hw-grid" id="hwGrid"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="mo" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title"><i class="ti ti-upload"></i> Upload Assignment</div>
+    <div style="font-size:13px;font-weight:500;margin-bottom:4px;" id="uploadHwTitle"></div>
+    <div style="font-size:11.5px;color:var(--text-muted);margin-bottom:14px;" id="uploadHwSub"></div>
+    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+      <i class="ti ti-cloud-upload"></i>
+      <p>Click to upload or drag & drop</p>
+      <div class="hint">PDF, DOC, DOCX, JPG, PNG (Max 10MB)</div>
+      <input type="file" id="fileInput" style="display:none" accept=".pdf,.doc,.docx,.jpg,.png" onchange="fileSelected(this)" />
+    </div>
+    <div id="fileName" style="font-size:12px;color:var(--green);margin-top:8px;font-weight:500;"></div>
+    <div class="modal-field" style="margin-top:12px;">
+      <label>Notes (optional)</label>
+      <textarea id="uploadNotes" placeholder="Add any notes for your teacher…"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitAssignment()"><i class="ti ti-check"></i> Submit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const homeworks=[
+  {id:1,subject:'Mathematics',icon:'math',teacher:'Mrs. Priya Gupta',title:'Chapter 12 – Linear Equations (Ex 12.3)',desc:'Solve all problems from Exercise 12.3 including word problems. Show complete working.',assigned:'28 May 2026',due:'02 Jun 2026',status:'pending'},
+  {id:2,subject:'English',icon:'eng',teacher:'Mr. Rajeev Sharma',title:'Essay Writing – "My Dream India"',desc:'Write a 500-word essay on the given topic. Focus on structure, grammar and vocabulary.',assigned:'27 May 2026',due:'01 Jun 2026',status:'submitted'},
+  {id:3,subject:'Science',icon:'sci',teacher:'Dr. Anita Verma',title:'Chapter 8 – Cell Structure – Lab Report',desc:'Submit the lab report for the microscope practical conducted on 25th May.',assigned:'25 May 2026',due:'30 May 2026',status:'overdue'},
+  {id:4,subject:'Social Science',icon:'sst',teacher:'Mrs. Kavita Singh',title:'Map Work – Indian Rivers',desc:'Mark all major river systems of India on the outline map provided in class.',assigned:'29 May 2026',due:'04 Jun 2026',status:'pending'},
+  {id:5,subject:'Hindi',icon:'hin',teacher:'Mr. Suresh Yadav',title:'पत्र लेखन – प्रधानाचार्य को पत्र',desc:'Write a formal letter to the principal requesting permission for a school trip.',assigned:'28 May 2026',due:'03 Jun 2026',status:'pending'},
+  {id:6,subject:'Mathematics',icon:'math',teacher:'Mrs. Priya Gupta',title:'Chapter 11 – Algebraic Expressions (Worksheet)',desc:'Complete the printed worksheet distributed in class.',assigned:'26 May 2026',due:'29 May 2026',status:'submitted'},
+];
+let uploadingId=null;
+
+function render(){
+  document.getElementById('hwGrid').innerHTML=homeworks.map(h=>`
+    <div class="hw-card">
+      <div class="hw-card-top">
+        <div class="hw-subject">
+          <div class="hw-subject-icon ${h.icon}"><i class="ti ti-${h.icon==='math'?'math-symbols':h.icon==='eng'?'language':h.icon==='sci'?'flask':h.icon==='sst'?'map':'alphabet-hindi'}"></i></div>
+          <div><div class="hw-subject-name">${h.subject}</div><div class="hw-subject-teacher">${h.teacher}</div></div>
+        </div>
+        <div class="hw-title">${h.title}</div>
+        <div class="hw-desc">${h.desc}</div>
+        <div class="hw-meta">
+          <span><i class="ti ti-calendar"></i> Assigned: ${h.assigned}</span>
+          <span><i class="ti ti-clock"></i> Due: ${h.due}</span>
+        </div>
+      </div>
+      <div class="hw-card-bottom">
+        <span class="badge badge-${h.status}">${h.status==='pending'?'Pending':h.status==='submitted'?'Submitted':'Overdue'}</span>
+        ${h.status!=='submitted'?`<button class="btn btn-primary" onclick="openUpload(${h.id})" style="padding:6px 12px;font-size:11.5px"><i class="ti ti-upload"></i> Upload</button>`:`<span style="font-size:11px;color:var(--green);font-weight:500"><i class="ti ti-check"></i> Done</span>`}
+      </div>
+    </div>`).join('');
+}
+function openUpload(id){
+  const h=homeworks.find(x=>x.id===id);if(!h)return;
+  uploadingId=id;
+  document.getElementById('uploadHwTitle').textContent=h.title;
+  document.getElementById('uploadHwSub').textContent=h.subject+' • Due: '+h.due;
+  document.getElementById('fileName').textContent='';
+  document.getElementById('uploadNotes').value='';
+  document.getElementById('fileInput').value='';
+  document.getElementById('mo').classList.add('open');
+}
+function closeModal(){document.getElementById('mo').classList.remove('open');}
+function fileSelected(inp){document.getElementById('fileName').textContent='📎 '+inp.files[0].name;}
+function submitAssignment(){
+  if(!document.getElementById('fileInput').files.length)return alert('Please select a file first');
+  const h=homeworks.find(x=>x.id===uploadingId);if(h)h.status='submitted';
+  closeModal();render();alert('✅ Assignment submitted successfully!');
+}
+render();
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>

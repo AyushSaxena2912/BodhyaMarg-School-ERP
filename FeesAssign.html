@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Fees Assign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38; --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea; --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af; --radius: 8px; --radius-lg: 12px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); } .topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; } .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; } .breadcrumb span { color: var(--green); }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); white-space: nowrap; }
+.btn:hover { background: var(--bg); } .btn-primary { background: var(--green); color: #fff; border-color: var(--green); } .btn-primary:hover { background: var(--green-dark); }
+
+/* Filter Bar */
+.filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: flex-end; background: var(--white); padding: 18px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+.filter-group { display: flex; flex-direction: column; gap: 5px; }
+.filter-group label { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+.filter-group select, .filter-group input { font-family: inherit; font-size: 12.5px; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 10px; outline: none; min-width: 160px; }
+
+/* Assign Table */
+.table-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--bg); border-bottom: 1px solid var(--border); }
+thead th { padding: 11px 18px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-align: left; }
+tbody tr { border-bottom: 1px solid var(--border); } tbody tr:last-child { border-bottom: none; } tbody tr:hover { background: #fafbfc; }
+tbody td { padding: 12px 18px; font-size: 12.5px; vertical-align: middle; }
+input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--green); cursor: pointer; }
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+.badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+.badge-assigned { background: var(--green-light); color: var(--green); } .badge-assigned::before { background: var(--green); }
+.badge-pending { background: #fef3c7; color: #d97706; } .badge-pending::before { background: #d97706; }
+.amount { font-weight: 600; color: var(--green); }
+.assign-footer { padding: 16px 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.assign-footer .info { font-size: 12px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div id="sidebar-container"></div>
+<div class="main">
+  <div class="topbar"><div class="topbar-search"><i class="ti ti-search"></i><input placeholder="Search anything…" /></div><div class="topbar-right"><div class="icon-btn"><i class="ti ti-bell"></i></div><div class="avatar">A</div></div></div>
+  <div class="content">
+    <div class="page-header">
+      <div><h1>Fees Assign</h1><div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Fees <i class="ti ti-chevron-right"></i> <span>Fees Assign</span></div></div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-group"><label>Class</label><select id="fClass" onchange="render()"><option value="">All Classes</option><option>Class I</option><option>Class II</option><option>Class III</option><option>Class IV</option><option>Class V</option><option>Class VI</option><option>Class VII</option><option>Class VIII</option></select></div>
+      <div class="filter-group"><label>Section</label><select id="fSec" onchange="render()"><option value="">All</option><option>A</option><option>B</option><option>C</option></select></div>
+      <div class="filter-group"><label>Fee Group</label><select id="fGroup" onchange="render()"><option value="">All Groups</option><option>Academic Fees</option><option>Transport Fees</option><option>Hostel Fees</option></select></div>
+      <button class="btn btn-primary" onclick="assignSelected()"><i class="ti ti-check"></i> Assign to Selected</button>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead><tr><th style="width:40px"><input type="checkbox" id="ca" onchange="document.querySelectorAll('#tb input[type=checkbox]').forEach(c=>c.checked=this.checked)" /></th><th>Student Name</th><th>Roll No</th><th>Class</th><th>Section</th><th>Fee Group</th><th>Total Amount</th><th>Status</th></tr></thead>
+        <tbody id="tb"></tbody>
+      </table>
+      <div class="assign-footer">
+        <div class="info" id="info"></div>
+        <button class="btn btn-primary" onclick="assignSelected()"><i class="ti ti-checks"></i> Assign Fees</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const students=[
+  {id:1,name:'Aarav Sharma',roll:'VIII-A-01',cls:'Class VIII',sec:'A',group:'Academic Fees',amount:23000,status:'Assigned'},
+  {id:2,name:'Diya Patel',roll:'VIII-A-02',cls:'Class VIII',sec:'A',group:'Academic Fees',amount:23000,status:'Pending'},
+  {id:3,name:'Ishaan Verma',roll:'VIII-A-03',cls:'Class VIII',sec:'A',group:'Academic Fees',amount:23000,status:'Assigned'},
+  {id:4,name:'Ananya Gupta',roll:'VIII-B-01',cls:'Class VIII',sec:'B',group:'Academic Fees',amount:23000,status:'Pending'},
+  {id:5,name:'Riya Singh',roll:'VII-A-01',cls:'Class VII',sec:'A',group:'Academic Fees',amount:20000,status:'Assigned'},
+  {id:6,name:'Arjun Mehta',roll:'VII-A-02',cls:'Class VII',sec:'A',group:'Transport Fees',amount:4500,status:'Pending'},
+  {id:7,name:'Priya Jain',roll:'VI-A-01',cls:'Class VI',sec:'A',group:'Hostel Fees',amount:12000,status:'Assigned'},
+  {id:8,name:'Sahil Kumar',roll:'VI-B-01',cls:'Class VI',sec:'B',group:'Academic Fees',amount:20000,status:'Pending'},
+  {id:9,name:'Neha Yadav',roll:'V-A-01',cls:'Class V',sec:'A',group:'Transport Fees',amount:4500,status:'Assigned'},
+  {id:10,name:'Karan Chopra',roll:'V-A-02',cls:'Class V',sec:'A',group:'Academic Fees',amount:18000,status:'Pending'},
+];
+function render(){
+  const fc=document.getElementById('fClass').value,fs=document.getElementById('fSec').value,fg=document.getElementById('fGroup').value;
+  const f=students.filter(s=>(fc?s.cls===fc:true)&&(fs?s.sec===fs:true)&&(fg?s.group===fg:true));
+  document.getElementById('tb').innerHTML=f.map(s=>`<tr><td><input type="checkbox" data-id="${s.id}" /></td><td style="font-weight:500">${s.name}</td><td>${s.roll}</td><td>${s.cls}</td><td>${s.sec}</td><td style="font-size:12px;color:var(--text-muted)">${s.group}</td><td class="amount">₹${s.amount.toLocaleString('en-IN')}</td><td><span class="badge badge-${s.status.toLowerCase()}">${s.status}</span></td></tr>`).join('');
+  document.getElementById('info').textContent=`Showing ${f.length} of ${students.length} students`;
+}
+function assignSelected(){
+  const checked=document.querySelectorAll('#tb input[type=checkbox]:checked');
+  if(!checked.length)return alert('Select students first');
+  checked.forEach(c=>{const s=students.find(x=>x.id==c.dataset.id);if(s)s.status='Assigned';});
+  render();alert(checked.length+' student(s) assigned successfully!');
+}
+render();
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
