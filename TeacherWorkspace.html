@@ -245,6 +245,22 @@ body {
 .chart-center { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .chart-center .pct { font-size: 28px; font-weight: 800; color: var(--text-main); line-height: 1; }
 .chart-center .lbl { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
+
+/* Donut Interactivity */
+.donut-segment { transition: stroke-width 0.2s, filter 0.2s; cursor: pointer; }
+.donut-segment:hover { stroke-width: 6; filter: brightness(1.1); }
+.donut-tooltip {
+  position: fixed; background: var(--text-main); color: white;
+  padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+  pointer-events: none; opacity: 0; transition: opacity 0.2s;
+  z-index: 100; transform: translate(-50%, -100%); margin-top: -10px;
+  box-shadow: var(--shadow-md);
+}
+.donut-tooltip::after {
+  content: ''; position: absolute; top: 100%; left: 50%;
+  transform: translateX(-50%); border-width: 5px; border-style: solid;
+  border-color: var(--text-main) transparent transparent transparent;
+}
 .att-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .att-stat-item { padding: 12px; background: var(--bg-app); border-radius: var(--radius); border: 1px solid var(--border); }
 .att-stat-item .lbl { font-size: 12px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
@@ -491,10 +507,11 @@ body {
               <div class="chart-container">
                 <svg viewBox="0 0 36 36" width="140" height="140">
                   <path stroke="var(--border)" stroke-width="4" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path stroke="var(--success)" stroke-dasharray="85, 100" stroke-width="4" fill="none" stroke-linecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path stroke="var(--warning)" stroke-dasharray="10, 100" stroke-dashoffset="-85" stroke-width="4" fill="none" stroke-linecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path stroke="var(--danger)" stroke-dasharray="5, 100" stroke-dashoffset="-95" stroke-width="4" fill="none" stroke-linecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path class="donut-segment" data-label="Present: 34" stroke="var(--success)" stroke-dasharray="85, 100" stroke-width="4" fill="none" stroke-linecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path class="donut-segment" data-label="Late: 4" stroke="var(--warning)" stroke-dasharray="10, 100" stroke-dashoffset="-85" stroke-width="4" fill="none" stroke-linecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path class="donut-segment" data-label="Absent: 2" stroke="var(--danger)" stroke-dasharray="5, 100" stroke-dashoffset="-95" stroke-width="4" fill="none" stroke-linecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                 </svg>
+                <div class="donut-tooltip" id="donutTooltip"></div>
                 <div class="chart-center">
                   <div class="pct">85%</div>
                   <div class="lbl">Present</div>
@@ -738,7 +755,28 @@ let currentUser = TEACHERS.mohan;
 document.addEventListener('DOMContentLoaded', () => {
   renderUI();
   initDragToScroll();
+  initDonutInteractivity();
 });
+
+function initDonutInteractivity() {
+  const segments = document.querySelectorAll('.donut-segment');
+  const tooltip = document.getElementById('donutTooltip');
+  if(!tooltip) return;
+
+  segments.forEach(seg => {
+    seg.addEventListener('mouseenter', (e) => {
+      tooltip.innerText = seg.getAttribute('data-label');
+      tooltip.style.opacity = '1';
+    });
+    seg.addEventListener('mousemove', (e) => {
+      tooltip.style.left = e.clientX + 'px';
+      tooltip.style.top = e.clientY + 'px';
+    });
+    seg.addEventListener('mouseleave', () => {
+      tooltip.style.opacity = '0';
+    });
+  });
+}
 
 function initDragToScroll() {
   const slider = document.getElementById('scheduleCards');
