@@ -752,10 +752,10 @@ select.form-control {
 </div>
 
 <!-- Notice Modal -->
-<div class="modal-backdrop" id="noticeModal">
-  <div class="modal" style="max-width: 500px;">
+<div class="modal-overlay" id="noticeModal">
+  <div class="modal-content" style="max-width: 500px;">
     <div class="modal-header">
-      <div class="modal-title"><i class="ti ti-speakerphone"></i> Send Notice</div>
+      <h3><i class="ti ti-speakerphone"></i> Send Notice</h3>
       <button class="close-btn" onclick="closeNoticeModal()"><i class="ti ti-x"></i></button>
     </div>
     <form id="noticeForm" onsubmit="submitNotice(event)">
