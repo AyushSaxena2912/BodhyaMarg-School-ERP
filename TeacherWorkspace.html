@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Teacher & Class Teacher Workspace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+  --shadow: 0 4px 12px rgba(26, 29, 35, 0.04);
+  --shadow-lg: 0 10px 25px rgba(26, 29, 35, 0.08);
+  --red: #ef4444; --red-light: #fef2f2;
+  --blue: #3b82f6; --blue-light: #eff6ff;
+  --yellow: #f59e0b; --yellow-light: #fffbeb;
+}
+
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+/* Sidebar overrides */
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+
+/* Main Layout */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* Workspace Custom Persona Switcher Banner */
+.persona-banner { display: flex; align-items: center; justify-content: space-between; background: var(--green-light); border: 1px solid rgba(26, 122, 74, 0.15); padding: 12px 20px; border-radius: var(--radius-lg); margin-bottom: 8px; }
+.persona-info { display: flex; align-items: center; gap: 12px; }
+.persona-av { width: 40px; height: 40px; border-radius: 50%; background: var(--green); color: #fff; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.persona-details .name { font-size: 14.5px; font-weight: 700; color: var(--green-dark); }
+.persona-details .role { font-size: 11.5px; color: var(--green); font-weight: 500; display: flex; align-items: center; gap: 6px; margin-top: 1px; }
+.persona-details .role span { background: var(--green); color: #fff; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.switcher-group { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: var(--text); }
+.switcher-select { padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--green); background: var(--white); font-size: 12.5px; font-family: inherit; color: var(--green-dark); font-weight: 600; outline: none; cursor: pointer; }
+
+/* Content Scroll Container */
+.content { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+.content::-webkit-scrollbar { width: 6px; }
+.content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+/* Navigation Tab Headers */
+.tabs-container { display: flex; border-bottom: 1px solid var(--border); background: var(--white); border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 12px 16px 0; margin-bottom: -16px; }
+.tab-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: none; background: none; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
+
+.view-panel { display: none; flex-direction: column; gap: 16px; }
+.view-panel.active { display: flex; }
+
+/* Cards & Layout grids */
+.card-wrapper { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow); }
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.class-teacher-banner-card { grid-column: 1 / -1; background: linear-gradient(135deg, #1a7a4a 0%, #115c36 100%); color: #fff; border: none; }
+
+/* Dashboard Cards details */
+.stat-item { display: flex; align-items: center; gap: 12px; }
+.stat-icon { width: 44px; height: 44px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.stat-details .value { font-size: 18px; font-weight: 700; color: var(--text); }
+.stat-details .label { font-size: 11.5px; color: var(--text-muted); }
+
+/* Unified Filters controls */
+.filters-card { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; background: var(--white); padding: 12px 18px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+.filters-title { font-size: 14.5px; font-weight: 700; color: var(--text); }
+.filters-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.select-input-box { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 6px 12px; border-radius: var(--radius); font-size: 12.5px; color: var(--text-muted); background: var(--white); }
+.select-input-box select { border: none; outline: none; background: transparent; font-family: inherit; font-size: 12.5px; color: var(--text); cursor: pointer; appearance: none; -webkit-appearance: none; font-weight: 500; }
+.select-input-box i { font-size: 14px; }
+
+/* Read Only Banner styling */
+.read-only-banner { display: flex; align-items: center; gap: 8px; background: var(--yellow-light); border: 1px solid rgba(245, 158, 11, 0.25); padding: 8px 14px; border-radius: var(--radius); color: #d97706; font-size: 12.5px; font-weight: 600; margin-bottom: 8px; }
+
+/* Standard buttons */
+.btn-primary { background: var(--green); color: var(--white); border: 1px solid var(--green); border-radius: var(--radius); padding: 8px 16px; font-size: 12.5px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-secondary { background: var(--white); color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 16px; font-size: 12.5px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-secondary:hover { background: var(--bg); color: var(--text); }
+
+/* Tables styling */
+.workspace-table { width: 100%; border-collapse: collapse; text-align: left; }
+.workspace-table th, .workspace-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 12.5px; }
+.workspace-table th { background: #f8fafc; font-weight: 600; color: var(--text-muted); }
+.workspace-table tbody tr:hover { background: #f8fafc; }
+
+/* Custom Checkbox Radios for attendance */
+.att-radio-group { display: flex; gap: 4px; }
+.att-radio-input { display: none; }
+.att-radio-label { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); color: var(--text-muted); background: var(--white); transition: all 0.2s; user-select: none; }
+.att-radio-label:hover { background: var(--bg); }
+.att-radio-input[value="present"]:checked + .att-radio-label { background: #ecfdf5; color: #10b981; border-color: #10b981; }
+.att-radio-input[value="absent"]:checked + .att-radio-label { background: #fef2f2; color: var(--red); border-color: var(--red); }
+.att-radio-input[value="late"]:checked + .att-radio-label { background: #fffbeb; color: var(--yellow); border-color: var(--yellow); }
+
+/* Dynamic marks grid input */
+.marks-input { width: 60px; padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius); text-align: center; font-size: 13px; font-weight: 600; font-family: inherit; outline: none; }
+.marks-input:focus { border-color: var(--green); }
+.marks-input:disabled { background: #f1f5f9; color: var(--text-muted); cursor: not-allowed; border-color: var(--border); }
+
+/* Locking details */
+.lock-banner { display: flex; align-items: center; justify-content: space-between; background: #faf5ff; border: 1px solid rgba(126, 34, 206, 0.15); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 8px; color: #7e22ce; font-size: 12.5px; font-weight: 600; }
+
+/* GPA Bar Progress indicators */
+.progress-bar-container { background: #e2e8f0; border-radius: 10px; height: 8px; width: 100%; overflow: hidden; margin-top: 6px; }
+.progress-bar-fill { background: var(--green); height: 100%; border-radius: 10px; transition: width 0.3s ease; }
+
+/* Student Directory Card layouts */
+.stud-dir-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; }
+.student-list-box { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--white); height: 420px; overflow-y: auto; }
+.student-list-item { padding: 12px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+.student-list-item:hover { background: var(--bg); }
+.student-list-item.active { background: var(--green-light); border-left: 3px solid var(--green); }
+
+/* Sparkline CSS */
+.sparkline-box { display: flex; align-items: flex-end; gap: 3px; height: 28px; width: 80px; padding-bottom: 2px; }
+.spark-bar { width: 8px; background: var(--green); border-radius: 1px; min-height: 2px; }
+
+/* Modals overlays */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.modal-overlay.show { display: flex; }
+.modal-content { background: var(--white); border-radius: var(--radius-lg); width: 440px; max-width: 100%; box-shadow: var(--shadow-lg); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; }
+.modal-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.modal-header h3 { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.modal-close-btn { background: none; border: none; font-size: 18px; color: var(--text-hint); cursor: pointer; }
+.modal-close-btn:hover { color: var(--text); }
+.modal-body { padding: 20px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+.modal-footer { padding: 14px 20px; background: #f8fafc; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+/* Toggle View mode labels */
+.view-mode-toggle { display: inline-flex; background: var(--bg); border: 1px solid var(--border); padding: 3px; border-radius: var(--radius); gap: 4px; }
+.mode-toggle-btn { background: transparent; border: none; font-size: 11.5px; font-weight: 600; color: var(--text-muted); cursor: pointer; padding: 4px 10px; border-radius: 6px; font-family: inherit; transition: all 0.1s; }
+.mode-toggle-btn.active { background: var(--white); color: var(--green); box-shadow: var(--shadow); }
+
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div id="sidebar-container"></div>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<div class="main">
+  <!-- Topbar Header -->
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search classes, schedules, exam sheets…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill"><i class="ti ti-calendar"></i> Academic Year : 2026 / 2027 <i class="ti ti-chevron-down"></i></div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">T</div>
+    </div>
+  </div>
+
+  <div class="content">
+    
+    <!-- DYNAMIC PERSONA PROFILE PICKER SWITCHER -->
+    <div class="persona-banner">
+      <div class="persona-info">
+        <div class="persona-av" id="headerPersonaAv">MS</div>
+        <div class="persona-details">
+          <div class="name" id="headerPersonaName">Mohan Sharma</div>
+          <div class="role" id="headerPersonaRoles">
+            <span>Subject Teacher</span>
+            <span style="background:var(--blue);" id="headerClassTeacherBadge">Class Teacher of 8A</span>
+          </div>
+        </div>
+      </div>
+      <div class="switcher-group">
+        <span>Active Profile Toggle:</span>
+        <select class="switcher-select" id="personaSelectSwitcher" onchange="switchActiveTeacherProfile(this.value)">
+          <option value="mohan">Mohan Sharma (Math 8A/8B, Chemistry 9A | Class Teacher of 8A)</option>
+          <option value="shalini">Shalini Gupta (English 8A, Social Studies 9B | Pure Subject Teacher)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Page Breadcrumb Header -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">
+          <h1 id="pageTitleText">Teacher Dashboard</h1>
+        </div>
+        <div class="breadcrumb" id="breadcrumbText">Dashboard <i class="ti ti-chevron-right"></i> Academics <i class="ti ti-chevron-right"></i> <span>Home Overview</span></div>
+      </div>
+      <div class="header-actions" id="headerActionsBlock">
+        <!-- Actions dynamically configured -->
+      </div>
+    </div>
+
+    <!-- TABS SELECTION BAR -->
+    <div class="tabs-container" id="tabsBar">
+      <button class="tab-btn active" onclick="switchTab('dashboard-view', this)">
+        <i class="ti ti-smart-home"></i> Dashboard Home
+      </button>
+      <button class="tab-btn" onclick="switchTab('attendance-view', this)">
+        <i class="ti ti-calendar-event"></i> Attendance Registry
+      </button>
+      <button class="tab-btn" onclick="switchTab('marks-view', this)">
+        <i class="ti ti-award"></i> Marks & Grading
+      </button>
+      <button class="tab-btn" onclick="switchTab('assignments-view', this)">
+        <i class="ti ti-file-text"></i> Homework Assignments
+      </button>
+      <button class="tab-btn" id="studentDirectoryTabBtn" onclick="switchTab('directory-view', this)">
+        <i class="ti ti-address-book"></i> Student Info Directory
+      </button>
+    </div>
+
+    <!-- VIEW PANEL 1: DASHBOARD HOME OVERVIEW -->
+    <div id="dashboard-view" class="view-panel active">
+      <div class="dashboard-grid" id="dashboardGridContainer">
+        <!-- Dynamic Cards populated via JS -->
+      </div>
+    </div>
+
+    <!-- VIEW PANEL 2: ATTENDANCE REGISTRY -->
+    <div id="attendance-view" class="view-panel">
+      <!-- Filter controls -->
+      <div class="filters-card">
+        <div class="filters-title">Daily Attendance Sheet</div>
+        <div class="filters-group">
+          <!-- View mode toggle for Class Teachers -->
+          <div class="view-mode-toggle" id="attendanceViewModeToggleBlock">
+            <button class="mode-toggle-btn active" id="btnAttendanceModeSubject" onclick="toggleAttendanceViewMode('subject')">Subject Class Register</button>
+            <button class="mode-toggle-btn" id="btnAttendanceModeClass" onclick="toggleAttendanceViewMode('class')">Class Teacher View (8A)</button>
+          </div>
+          
+          <div class="select-input-box" id="attBoxClass"><i class="ti ti-books"></i>
+            <select id="attSelectClass" onchange="loadAttendanceList()">
+              <!-- Dynamic class options -->
+            </select><i class="ti ti-chevron-down"></i>
+          </div>
+          
+          <div class="select-input-box" id="attBoxSubject"><i class="ti ti-book-2"></i>
+            <select id="attSelectSubject" onchange="loadAttendanceList()">
+              <!-- Dynamic subject options -->
+            </select><i class="ti ti-chevron-down"></i>
+          </div>
+          
+          <div class="select-input-box" id="attBoxDate"><i class="ti ti-calendar"></i>
+            <input type="date" id="attSelectDate" value="2026-06-02" onchange="loadAttendanceList()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Warning view info banners -->
+      <div id="attendanceReadOnlyBanner" class="read-only-banner" style="display:none;">
+        <i class="ti ti-eye"></i> <span>👁️ Class Teacher View - Read Only. Attendance register is locked for edits.</span>
+      </div>
+
+      <!-- Data Card table wrapper -->
+      <div class="card-wrapper" style="overflow-x: auto; padding:0;">
+        <div style="padding: 12px 18px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+          <div class="filters-title" id="attTableTitle">Class 8A - Mathematics Register</div>
+          <button class="btn-primary" id="attSaveButton" onclick="saveAttendance()"><i class="ti ti-device-floppy"></i> Save Attendance</button>
+        </div>
+        <table class="workspace-table" id="attendanceWorkspaceTable">
+          <thead>
+            <tr>
+              <th width="80">Roll No</th>
+              <th>Student Name</th>
+              <th>Admission No</th>
+              <th width="300">Attendance Status</th>
+              <th>Remarks</th>
+            </tr>
+          </thead>
+          <tbody id="attendanceTableBody">
+            <!-- Dynamically populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VIEW PANEL 3: MARKS ENTRY GRID -->
+    <div id="marks-view" class="view-panel">
+      <!-- Filter controls -->
+      <div class="filters-card">
+        <div class="filters-title">Grade Registry Sheet</div>
+        <div class="filters-group">
+          <!-- View mode toggle for Class Teachers -->
+          <div class="view-mode-toggle" id="marksViewModeToggleBlock">
+            <button class="mode-toggle-btn active" id="btnMarksModeSubject" onclick="toggleMarksViewMode('subject')">Subject Grading</button>
+            <button class="mode-toggle-btn" id="btnMarksModeClass" onclick="toggleMarksViewMode('class')">Class Report Cards (8A)</button>
+          </div>
+          
+          <div class="select-input-box" id="marksBoxClass"><i class="ti ti-books"></i>
+            <select id="marksSelectClass" onchange="loadMarksGrid()">
+              <!-- Options -->
+            </select><i class="ti ti-chevron-down"></i>
+          </div>
+          
+          <div class="select-input-box" id="marksBoxSubject"><i class="ti ti-book-2"></i>
+            <select id="marksSelectSubject" onchange="loadMarksGrid()">
+              <!-- Options -->
+            </select><i class="ti ti-chevron-down"></i>
+          </div>
+          
+          <div class="select-input-box" id="marksBoxExam"><i class="ti ti-file-certificate"></i>
+            <select id="marksSelectExam" onchange="loadMarksGrid()">
+              <option value="midterm">Midterm Examination</option>
+              <option value="finals">Final Examination</option>
+            </select><i class="ti ti-chevron-down"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secure Padlock Banner -->
+      <div id="marksLockBanner" class="lock-banner" style="display:none;">
+        <div>
+          <i class="ti ti-lock" style="font-size: 16px; margin-right: 4px;"></i> 
+          <span>Submitted & Locked. Changes require Admin unlock permissions.</span>
+        </div>
+        <button class="btn-secondary" style="color:#7e22ce; border-color: rgba(126, 34, 206, 0.2); padding: 4px 10px; font-size:11px;" onclick="requestUnlock()"><i class="ti ti-key"></i> Request Unlock</button>
+      </div>
+
+      <!-- Class Teacher View Banner -->
+      <div id="marksReadOnlyBanner" class="read-only-banner" style="display:none;">
+        <i class="ti ti-eye"></i> <span>👁️ Class Teacher View - Read Only. Subject-specific report card listings are non-editable.</span>
+      </div>
+
+      <!-- Data Table wrapper -->
+      <div class="card-wrapper" style="overflow-x: auto; padding:0;">
+        <div style="padding: 12px 18px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+          <div class="filters-title" id="marksTableTitle">Grade Sheet Register</div>
+          <button class="btn-primary" id="marksSaveButton" onclick="submitMarks()"><i class="ti ti-device-floppy"></i> Submit Grades</button>
+        </div>
+        <table class="workspace-table" id="marksWorkspaceTable">
+          <!-- Layout dynamic changed between Subject Grade input and Class Teacher Overall GPA -->
+          <thead id="marksTableHeader">
+            <!-- Filled via JS -->
+          </thead>
+          <tbody id="marksTableBody">
+            <!-- Filled via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VIEW PANEL 4: HOMEWORK ASSIGNMENTS -->
+    <div id="assignments-view" class="view-panel">
+      <div class="control-bar" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="filters-title">Homework Assignments Log</div>
+        <button class="btn-primary" onclick="openCreateAssignmentModal()"><i class="ti ti-plus"></i> Create Assignment</button>
+      </div>
+      
+      <div class="dashboard-grid" id="assignmentsListContainer">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+
+    <!-- VIEW PANEL 5: CLASS STUDENT DIRECTORY (Class Teacher Exclusive) -->
+    <div id="directory-view" class="view-panel">
+      <div class="stud-dir-grid">
+        <!-- Left Side Students List -->
+        <div class="student-list-box">
+          <div style="padding: 12px 14px; background:#f8fafc; border-bottom:1px solid var(--border); font-weight:700; font-size:13px; color:var(--text-muted);"><i class="ti ti-users"></i> Class 8A Students Registry</div>
+          <div id="directoryStudentsList">
+            <!-- Loaded via JS -->
+          </div>
+        </div>
+
+        <!-- Right Side Selected Student Profile Sheet -->
+        <div class="card-wrapper" id="directoryStudentProfileCard">
+          <!-- Loaded via JS -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ MODAL DIALOGS ═══ -->
+
+<!-- CREATE/EDIT ASSIGNMENT DIALOG -->
+<div class="modal-overlay" id="assignmentModal">
+  <div class="modal-content" style="width: 480px;">
+    <div class="modal-header">
+      <h3 id="assignmentModalTitle"><i class="ti ti-file-plus" style="color: var(--green);"></i> Create Assignment</h3>
+      <button class="modal-close-btn" onclick="closeModal('assignmentModal')">&times;</button>
+    </div>
+    <form id="assignmentForm" onsubmit="saveAssignmentForm(event)">
+      <input type="hidden" id="assignEditId" />
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:12px; font-weight:600;">Assignment Title *</label>
+          <input type="text" id="assignTitleInput" required style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius); font-size:13px;" placeholder="e.g. Quadrilateral Theorems Worksheet" />
+        </div>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="font-size:12px; font-weight:600;">Class & Section *</label>
+            <select id="assignClassSelect" style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius); font-size:13px;">
+              <!-- Restricted dynamically based on active teacher -->
+            </select>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="font-size:12px; font-weight:600;">Subject *</label>
+            <select id="assignSubjectSelect" style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius); font-size:13px;">
+              <!-- Restricted dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="font-size:12px; font-weight:600;">Due Date *</label>
+            <input type="date" id="assignDueDateInput" required style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius); font-size:13px;" />
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="font-size:12px; font-weight:600;">Total Marks *</label>
+            <input type="number" id="assignMaxMarksInput" required value="20" min="5" max="100" style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius); font-size:13px;" />
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:12px; font-weight:600;">Instructions</label>
+          <textarea id="assignDescInput" style="width:100%; height:80px; padding:8px 12px; border:1px solid var(--border); border-radius:var(--radius); font-size:13px; font-family:inherit; resize:none;" placeholder="Detail work instructions for students..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="closeModal('assignmentModal')">Cancel</button>
+        <button type="submit" class="btn-primary">Save Assignment</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- DYNAMIC CONFIRMATION MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="confirmModalTitle">Action Required</h3>
+      <button class="modal-close-btn" onclick="closeModal('confirmModal')">&times;</button>
+    </div>
+    <div class="modal-body" id="confirmModalBody">
+      Are you sure?
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="btn-primary" id="confirmModalYesBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript Workspace Database Engine -->
+<script>
+// Mock School Databases
+const TEACHERS_PRESETS = {
+  mohan: {
+    id: "mohan",
+    name: "Mohan Sharma",
+    avatar: "MS",
+    subjects: [
+      { classSec: "Class 8 - A", subject: "Mathematics", subjectId: "Math" },
+      { classSec: "Class 8 - B", subject: "Mathematics", subjectId: "Math" },
+      { classSec: "Class 9 - A", subject: "Chemistry", subjectId: "Chemistry" }
+    ],
+    classTeacher: "Class 8 - A" // Class Teacher of 8A
+  },
+  shalini: {
+    id: "shalini",
+    name: "Shalini Gupta",
+    avatar: "SG",
+    subjects: [
+      { classSec: "Class 8 - A", subject: "English", subjectId: "English" },
+      { classSec: "Class 9 - B", subject: "Social Studies", subjectId: "SocialStudies" }
+    ],
+    classTeacher: null // Not a class teacher
+  }
+};
+
+const STUDENTS_8A = [
+  { roll: "01", name: "Aarav Sharma", adm: "2023001", parent: "Rajesh Sharma", phone: "+91 98765 43210", remarks: "Consistent performer in Mathematics, needs slight improvement in English spelling layouts." },
+  { roll: "02", name: "Ananya Patel", adm: "2023002", parent: "Rakesh Patel", phone: "+91 91234 56789", remarks: "Very active in Chemistry lab projects. Extremely focused student." },
+  { roll: "03", name: "Aryan Patel", adm: "2023003", parent: "Rakesh Patel", phone: "+91 91234 56789", remarks: "Regular participant. Needs extra arithmetic homework grids." },
+  { roll: "04", name: "Diya Singh", adm: "2023004", parent: "Vikram Singh", phone: "+91 93333 44444", remarks: "Quiet student. Excellent homework submissions." },
+  { roll: "05", name: "Vivaan Gupta", adm: "2023005", parent: "Anil Gupta", phone: "+91 91111 22222", remarks: "Creative writer. Tends to lose concentration during Mathematics drills." }
+];
+
+const STUDENTS_OTHER = [
+  { roll: "01", name: "Kabir Das", adm: "2023006", parent: "Suresh Das", phone: "+91 94444 55555" },
+  { roll: "02", name: "Myra Reddy", adm: "2023007", parent: "Amit Reddy", phone: "+91 99001 12233" },
+  { roll: "03", name: "Aarav Patel", adm: "2023008", parent: "Nitin Patel", phone: "+91 97777 88888" }
+];
+
+// Global State
+let activeTeacher = TEACHERS_PRESETS.mohan;
+let activeTab = "dashboard-view";
+let attViewMode = "subject"; // 'subject' or 'class'
+let marksViewMode = "subject"; // 'subject' or 'class'
+let selectedDirectoryStudentIndex = 0;
+
+// Dynamic In-memory Assignments store
+let assignmentsList = [
+  { id: "A01", title: "Algebra Quadratic Equations Worksheet", classSec: "Class 8 - A", subject: "Mathematics", dueDate: "2026-06-08", maxMarks: 20, desc: "Solve all 10 equations in section A of chapter 4." },
+  { id: "A02", title: "Organic Carbon Compound Diagrams", classSec: "Class 9 - A", subject: "Chemistry", dueDate: "2026-06-10", maxMarks: 15, desc: "Draw chemical structural equations for methane, ethane, and butane." },
+  { id: "A03", title: "Nouns & Active Passive Clauses", classSec: "Class 8 - A", subject: "English", dueDate: "2026-06-07", maxMarks: 10, desc: "Translate paragraph 3 to passives." }
+];
+
+// In-Memory Database for Attendance and Grading to show save/locking state
+let attendanceCache = {}; 
+let marksCache = {};
+
+// Lifecycle Entrypoint
+document.addEventListener('DOMContentLoaded', () => {
+  // Sync active teacher selectors
+  switchActiveTeacherProfile("mohan");
+});
+
+// Swap teacher persona dynamically
+function switchActiveTeacherProfile(val) {
+  activeTeacher = TEACHERS_PRESETS[val];
+  
+  // Refresh header profile visuals
+  document.getElementById('headerPersonaAv').textContent = activeTeacher.avatar;
+  document.getElementById('headerPersonaName').textContent = activeTeacher.name;
+  
+  const rolesContainer = document.getElementById('headerPersonaRoles');
+  rolesContainer.innerHTML = "<span>Subject Teacher</span>";
+  if (activeTeacher.classTeacher) {
+    rolesContainer.innerHTML += `<span style="background:var(--blue); font-weight:600;">Class Teacher of ${activeTeacher.classTeacher.replace("Class ", "")}</span>`;
+    document.getElementById('studentDirectoryTabBtn').style.display = "inline-flex";
+  } else {
+    document.getElementById('studentDirectoryTabBtn').style.display = "none";
+    // If on directory view and switched to Shalini, fallback to dashboard
+    if (activeTab === "directory-view") {
+      switchTab('dashboard-view', document.querySelector('.tab-btn:first-child'));
+    }
+  }
+  
+  // Reset toggles
+  attViewMode = "subject";
+  marksViewMode = "subject";
+  document.getElementById('btnAttendanceModeSubject').className = "mode-toggle-btn active";
+  document.getElementById('btnAttendanceModeClass').className = "mode-toggle-btn";
+  document.getElementById('btnMarksModeSubject').className = "mode-toggle-btn active";
+  document.getElementById('btnMarksModeClass').className = "mode-toggle-btn";
+  
+  // Hide toggles if not Class Teacher
+  if (activeTeacher.classTeacher) {
+    document.getElementById('attendanceViewModeToggleBlock').style.display = "inline-flex";
+    document.getElementById('marksViewModeToggleBlock').style.display = "inline-flex";
+  } else {
+    document.getElementById('attendanceViewModeToggleBlock').style.display = "none";
+    document.getElementById('marksViewModeToggleBlock').style.display = "none";
+  }
+
+  // Populate dynamic dropdown selections
+  populateTabDropdownFilters();
+
+  // Redraw active views
+  renderDashboardHome();
+  loadAttendanceList();
+  loadMarksGrid();
+  renderAssignmentsList();
+  renderDirectoryView();
+}
+
+// Set drop-downs limited to assigned parameters
+function populateTabDropdownFilters() {
+  const attClass = document.getElementById('attSelectClass');
+  const attSub = document.getElementById('attSelectSubject');
+  const marksClass = document.getElementById('marksSelectClass');
+  const marksSub = document.getElementById('marksSelectSubject');
+  const assignClass = document.getElementById('assignClassSelect');
+  const assignSub = document.getElementById('assignSubjectSelect');
+  
+  // Reset contents
+  attClass.innerHTML = "";
+  attSub.innerHTML = "";
+  marksClass.innerHTML = "";
+  marksSub.innerHTML = "";
+  assignClass.innerHTML = "";
+  assignSub.innerHTML = "";
+  
+  // Filter unique classes and subjects assigned to activeTeacher
+  const classesList = [...new Set(activeTeacher.subjects.map(s => s.classSec))];
+  const subjectsList = [...new Set(activeTeacher.subjects.map(s => s.subject))];
+  
+  classesList.forEach(cls => {
+    attClass.innerHTML += `<option value="${cls}">${cls}</option>`;
+    marksClass.innerHTML += `<option value="${cls}">${cls}</option>`;
+    assignClass.innerHTML += `<option value="${cls}">${cls}</option>`;
+  });
+  
+  subjectsList.forEach(sub => {
+    attSub.innerHTML += `<option value="${sub}">${sub}</option>`;
+    marksSub.innerHTML += `<option value="${sub}">${sub}</option>`;
+    assignSub.innerHTML += `<option value="${sub}">${sub}</option>`;
+  });
+}
+
+// ═══════════════════════════════════════
+// TABS ROUTING SYSTEM
+// ═══════════════════════════════════════
+function switchTab(targetPanelId, activeBtn) {
+  document.querySelectorAll('.view-panel').forEach(panel => {
+    panel.classList.remove('active');
+  });
+  const target = document.getElementById(targetPanelId);
+  if (target) target.classList.add('active');
+  
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  activeBtn.classList.add('active');
+  
+  activeTab = targetPanelId;
+  
+  // Headers customization
+  const title = document.getElementById('pageTitleText');
+  const breadcrumb = document.getElementById('breadcrumbText');
+  
+  if (targetPanelId === 'dashboard-view') {
+    title.textContent = "Teacher Dashboard Overview";
+    breadcrumb.innerHTML = `Dashboard <i class="ti ti-chevron-right"></i> Academics <i class="ti ti-chevron-right"></i> <span>Home Overview</span>`;
+  } else if (targetPanelId === 'attendance-view') {
+    title.textContent = "Student Attendance Register";
+    breadcrumb.innerHTML = `Dashboard <i class="ti ti-chevron-right"></i> Attendance <i class="ti ti-chevron-right"></i> <span>Attendance Registry</span>`;
+    loadAttendanceList();
+  } else if (targetPanelId === 'marks-view') {
+    title.textContent = "Academics Marks Grid";
+    breadcrumb.innerHTML = `Dashboard <i class="ti ti-chevron-right"></i> Grading <i class="ti ti-chevron-right"></i> <span>Marks Sheet</span>`;
+    loadMarksGrid();
+  } else if (targetPanelId === 'assignments-view') {
+    title.textContent = "Syllabus Assignments Hub";
+    breadcrumb.innerHTML = `Dashboard <i class="ti ti-chevron-right"></i> Assignments <i class="ti ti-chevron-right"></i> <span>Homework Logs</span>`;
+  } else if (targetPanelId === 'directory-view') {
+    title.textContent = "Class Student & Parent Directory";
+    breadcrumb.innerHTML = `Dashboard <i class="ti ti-chevron-right"></i> Class Directory <i class="ti ti-chevron-right"></i> <span>Information Folder</span>`;
+  }
+}
+
+// ═══════════════════════════════════════
+// TAB 1: DASHBOARD HOME
+// ═══════════════════════════════════════
+function renderDashboardHome() {
+  const container = document.getElementById('dashboardGridContainer');
+  container.innerHTML = "";
+  
+  // 1. Extra Class Teacher card if Mohan Sharma
+  if (activeTeacher.classTeacher) {
+    const ctCard = document.createElement('div');
+    ctCard.className = "card-wrapper class-teacher-banner-card";
+    ctCard.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <span style="background:rgba(255,255,255,0.2); padding:3px 8px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Class Teacher Overview</span>
+          <h2 style="font-size:22px; font-weight:600; margin-top:8px;">Class 8 - Section A Overview</h2>
+          <p style="font-size:12.5px; opacity:0.9; margin-top:4px;">You have high-visibility control filters for Class 8A student files, global grades, and attendance metrics.</p>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px; opacity:0.8;">Average Class Attendance</div>
+          <div style="font-size:28px; font-weight:700; margin-top:2px;">92.4%</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:16px; margin-top:20px; border-top:1px solid rgba(255,255,255,0.15); padding-top:16px;">
+        <div>
+          <div style="font-size:11px; opacity:0.8;">Total Students</div>
+          <div style="font-size:18px; font-weight:600; margin-top:4px;"><i class="ti ti-users" style="font-size:16px;"></i> 24 Students</div>
+        </div>
+        <div>
+          <div style="font-size:11px; opacity:0.8;">Class GPA Performance</div>
+          <div style="font-size:18px; font-weight:600; margin-top:4px;"><i class="ti ti-chart-bar" style="font-size:16px;"></i> 3.48 / 4.00</div>
+        </div>
+        <div>
+          <div style="font-size:11px; opacity:0.8;">Remarks Registered</div>
+          <div style="font-size:18px; font-weight:600; margin-top:4px;"><i class="ti ti-message-dots" style="font-size:16px;"></i> 5 Logged</div>
+        </div>
+      </div>
+    `;
+    container.appendChild(ctCard);
+  }
+  
+  // 2. Active Subject cards based on teacher assignment
+  activeTeacher.subjects.forEach(sub => {
+    const card = document.createElement('div');
+    card.className = "card-wrapper";
+    card.style.display = "flex";
+    card.style.flexDirection = "column";
+    card.style.gap = "14px";
+    
+    // Icon color choice
+    let iconBg = "var(--green-light)";
+    let iconCol = "var(--green)";
+    if (sub.subjectId === "Chemistry") {
+      iconBg = "var(--blue-light)";
+      iconCol = "var(--blue)";
+    } else if (sub.subjectId === "English") {
+      iconBg = "var(--yellow-light)";
+      iconCol = "var(--yellow)";
+    } else if (sub.subjectId === "SocialStudies") {
+      iconBg = "rgba(126, 34, 206, 0.08)";
+      iconCol = "#7e22ce";
+    }
+    
+    card.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div class="stat-item">
+          <div class="stat-icon" style="background:${iconBg}; color:${iconCol};"><i class="ti ti-book-2"></i></div>
+          <div class="stat-details">
+            <div class="value" style="font-size:14px; font-weight:700;">${sub.subject}</div>
+            <div class="label" style="font-size:11px;">Class & Section: ${sub.classSec}</div>
+          </div>
+        </div>
+        <span class="status-pill active" style="font-size:10px; background:var(--green-light); color:var(--green);">Assigned</span>
+      </div>
+      
+      <div style="font-size:11.5px; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center;">
+        <span>Lecture Timing: Mon/Wed 09:30 AM</span>
+        <span>24 Students</span>
+      </div>
+      
+      <div style="display:flex; gap:8px; border-top:1px solid var(--border); padding-top:12px; margin-top:auto;">
+        <button class="btn-primary" onclick="quickNavToTab('attendance', '${sub.classSec}', '${sub.subject}')" style="flex:1; font-size:11px; padding:6px 10px; justify-content:center;"><i class="ti ti-calendar"></i> Attendance</button>
+        <button class="btn-secondary" onclick="quickNavToTab('marks', '${sub.classSec}', '${sub.subject}')" style="flex:1; font-size:11px; padding:6px 10px; justify-content:center;"><i class="ti ti-award"></i> Grade Entry</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function quickNavToTab(tabName, targetClass, targetSub) {
+  if (tabName === 'attendance') {
+    document.getElementById('attSelectClass').value = targetClass;
+    document.getElementById('attSelectSubject').value = targetSub;
+    switchTab('attendance-view', document.querySelector('.tab-btn:nth-child(2)'));
+  } else if (tabName === 'marks') {
+    document.getElementById('marksSelectClass').value = targetClass;
+    document.getElementById('marksSelectSubject').value = targetSub;
+    switchTab('marks-view', document.querySelector('.tab-btn:nth-child(3)'));
+  }
+}
+
+// ═══════════════════════════════════════
+// TAB 2: ATTENDANCE REGISTRY
+// ═══════════════════════════════════════
+function toggleAttendanceViewMode(mode) {
+  attViewMode = mode;
+  document.getElementById('btnAttendanceModeSubject').className = `mode-toggle-btn ${mode === 'subject' ? 'active' : ''}`;
+  document.getElementById('btnAttendanceModeClass').className = `mode-toggle-btn ${mode === 'class' ? 'active' : ''}`;
+  
+  const attBoxCls = document.getElementById('attBoxClass');
+  const attBoxSub = document.getElementById('attBoxSubject');
+  const readOnlyBanner = document.getElementById('attendanceReadOnlyBanner');
+  const saveBtn = document.getElementById('attSaveButton');
+  
+  if (mode === 'class') {
+    // Hide subject-specific dropdowns
+    attBoxCls.style.display = "none";
+    attBoxSub.style.display = "none";
+    readOnlyBanner.style.display = "flex";
+    saveBtn.style.display = "none";
+  } else {
+    attBoxCls.style.display = "flex";
+    attBoxSub.style.display = "flex";
+    readOnlyBanner.style.display = "none";
+    saveBtn.style.display = "inline-flex";
+  }
+  
+  loadAttendanceList();
+}
+
+function loadAttendanceList() {
+  const tbody = document.getElementById('attendanceTableBody');
+  tbody.innerHTML = "";
+  
+  const activeClass = document.getElementById('attSelectClass').value;
+  const activeSub = document.getElementById('attSelectSubject').value;
+  const activeDate = document.getElementById('attSelectDate').value;
+  
+  const title = document.getElementById('attTableTitle');
+  const students = (activeClass === "Class 8 - A") ? STUDENTS_8A : STUDENTS_OTHER;
+  
+  if (attViewMode === 'class') {
+    // ════ CLASS TEACHER READ-ONLY VIEW (8A Overall Summary) ════
+    title.innerHTML = `<i class="ti ti-shield-alert" style="color:var(--yellow)"></i> Class 8A - Overall Class Attendance Registry`;
+    
+    STUDENTS_8A.forEach(student => {
+      // Mock some attendance percentage
+      const randomPct = 90 + (parseInt(student.roll) % 10);
+      const randomStatus = (parseInt(student.roll) % 5 === 0) ? 'Absent' : 'Present';
+      const statusPillCol = randomStatus === 'Present' ? '#ecfdf5' : '#fef2f2';
+      const statusTextCol = randomStatus === 'Present' ? '#10b981' : 'var(--red)';
+      
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="font-weight:600;">${student.roll}</td>
+        <td>
+          <div style="font-weight:600;">${student.name}</div>
+          <div style="font-size:11px; color:var(--text-hint);">Adm: ${student.adm}</div>
+        </td>
+        <td>Class 8 - A</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="status-pill" style="background:${statusPillCol}; color:${statusTextCol}; font-size:11px; padding:2px 8px;">${randomStatus} Today</span>
+            <div style="width:100px;">
+              <div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${randomPct}%; background:${randomPct > 92 ? 'var(--green)' : 'var(--yellow)'}"></div></div>
+            </div>
+            <span style="font-size:11px; font-weight:600; color:var(--text-muted);">${randomPct}% Avg</span>
+          </div>
+        </td>
+        <td style="font-size:11.5px; color:var(--text-muted); max-width:200px;">Monthly view average summary register.</td>
+      `;
+      tbody.appendChild(row);
+    });
+  } else {
+    // ════ SUBJECT TEACHER EDITABLE REGISTER ════
+    title.textContent = `${activeClass} - ${activeSub} Register`;
+    
+    // Check cache
+    const cacheKey = `${activeClass}_${activeSub}_${activeDate}`;
+    const loadedData = attendanceCache[cacheKey] || students.map(s => ({ roll: s.roll, name: s.name, adm: s.adm, status: "present", remarks: "" }));
+    
+    loadedData.forEach((student, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="font-weight:600;">${student.roll}</td>
+        <td>
+          <div style="font-weight:600;">${student.name}</div>
+          <div style="font-size:11px; color:var(--text-hint);">Adm: ${student.adm}</div>
+        </td>
+        <td>${activeClass}</td>
+        <td>
+          <div class="att-radio-group">
+            <label>
+              <input type="radio" class="att-radio-input" name="att_${index}" value="present" ${student.status === 'present' ? 'checked' : ''} onchange="updateAttendanceState('${cacheKey}', ${index}, 'status', 'present')">
+              <span class="att-radio-label">Present</span>
+            </label>
+            <label>
+              <input type="radio" class="att-radio-input" name="att_${index}" value="absent" ${student.status === 'absent' ? 'checked' : ''} onchange="updateAttendanceState('${cacheKey}', ${index}, 'status', 'absent')">
+              <span class="att-radio-label">Absent</span>
+            </label>
+            <label>
+              <input type="radio" class="att-radio-input" name="att_${index}" value="late" ${student.status === 'late' ? 'checked' : ''} onchange="updateAttendanceState('${cacheKey}', ${index}, 'status', 'late')">
+              <span class="att-radio-label">Late</span>
+            </label>
+          </div>
+        </td>
+        <td>
+          <input type="text" class="marks-input" style="width:100%; text-align:left;" placeholder="Add remarks..." value="${student.remarks || ''}" oninput="updateAttendanceState('${cacheKey}', ${index}, 'remarks', this.value)" />
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+    
+    // Store in cache
+    attendanceCache[cacheKey] = loadedData;
+  }
+}
+
+function updateAttendanceState(cacheKey, index, field, value) {
+  if (attendanceCache[cacheKey]) {
+    attendanceCache[cacheKey][index][field] = value;
+  }
+}
+
+function saveAttendance() {
+  const activeClass = document.getElementById('attSelectClass').value;
+  const activeSub = document.getElementById('attSelectSubject').value;
+  const activeDate = document.getElementById('attSelectDate').value;
+  
+  alert(`Attendance successfully marked & saved for ${activeClass} - ${activeSub} on ${activeDate}.`);
+}
+
+// ═══════════════════════════════════════
+// TAB 3: MARKS & GRADING SHEET
+// ═══════════════════════════════════════
+function toggleMarksViewMode(mode) {
+  marksViewMode = mode;
+  document.getElementById('btnMarksModeSubject').className = `mode-toggle-btn ${mode === 'subject' ? 'active' : ''}`;
+  document.getElementById('btnMarksModeClass').className = `mode-toggle-btn ${mode === 'class' ? 'active' : ''}`;
+  
+  const marksBoxCls = document.getElementById('marksBoxClass');
+  const marksBoxSub = document.getElementById('marksBoxSubject');
+  const marksBoxExm = document.getElementById('marksBoxExam');
+  const marksReadOnlyBanner = document.getElementById('marksReadOnlyBanner');
+  const marksLockBanner = document.getElementById('marksLockBanner');
+  const marksSaveBtn = document.getElementById('marksSaveButton');
+  
+  if (mode === 'class') {
+    marksBoxCls.style.display = "none";
+    marksBoxSub.style.display = "none";
+    marksBoxExm.style.display = "flex"; // Keep exam select
+    marksReadOnlyBanner.style.display = "flex";
+    marksLockBanner.style.display = "none";
+    marksSaveBtn.style.display = "none";
+  } else {
+    marksBoxCls.style.display = "flex";
+    marksBoxSub.style.display = "flex";
+    marksBoxExm.style.display = "flex";
+    marksReadOnlyBanner.style.display = "none";
+    marksSaveBtn.style.display = "inline-flex";
+  }
+  
+  loadMarksGrid();
+}
+
+function loadMarksGrid() {
+  const thead = document.getElementById('marksTableHeader');
+  const tbody = document.getElementById('marksTableBody');
+  const title = document.getElementById('marksTableTitle');
+  const lockBanner = document.getElementById('marksLockBanner');
+  const saveBtn = document.getElementById('marksSaveButton');
+  
+  thead.innerHTML = "";
+  tbody.innerHTML = "";
+  
+  const activeClass = document.getElementById('marksSelectClass').value;
+  const activeSub = document.getElementById('marksSelectSubject').value;
+  const activeExam = document.getElementById('marksSelectExam').value;
+  
+  const students = (activeClass === "Class 8 - A") ? STUDENTS_8A : STUDENTS_OTHER;
+  
+  if (marksViewMode === 'class') {
+    // ════ CLASS TEACHER READ-ONLY VISIBILITY (Overall Report Card GPA Grid) ════
+    title.innerHTML = `<i class="ti ti-presentation-analytics" style="color:var(--green);"></i> Class 8A Student GPA & Overall Academic Progress Sheet`;
+    lockBanner.style.display = "none";
+    
+    // Header
+    thead.innerHTML = `
+      <tr>
+        <th width="80">Roll No</th>
+        <th>Student Name</th>
+        <th style="text-align:center;">Mathematics</th>
+        <th style="text-align:center;">Chemistry</th>
+        <th style="text-align:center;">English</th>
+        <th style="text-align:center;">Social Studies</th>
+        <th style="text-align:center;">Overall GPA</th>
+        <th style="text-align:center;">Academic Status</th>
+      </tr>
+    `;
+    
+    // Render
+    STUDENTS_8A.forEach(student => {
+      // Generate some mock grade results across subjects
+      const mathG = (parseInt(student.roll) % 2 === 0) ? 'A' : 'B+';
+      const chemG = (parseInt(student.roll) % 3 === 0) ? 'A+' : 'A';
+      const engG = (parseInt(student.roll) % 4 === 0) ? 'B' : 'A';
+      const ssG = 'A';
+      
+      const overallGPA = 3.2 + (parseInt(student.roll) % 8) * 0.1;
+      const statusPill = overallGPA > 3.4 ? '<span class="status-pill active" style="font-size:10px; background:var(--green-light); color:var(--green);">Excellent</span>' : '<span class="status-pill active" style="font-size:10px; background:var(--yellow-light); color:var(--yellow);">Good</span>';
+      
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="font-weight:600;">${student.roll}</td>
+        <td style="font-weight:600;">${student.name}</td>
+        <td style="text-align:center; font-weight:500; color:var(--text-muted);">${mathG}</td>
+        <td style="text-align:center; font-weight:500; color:var(--text-muted);">${chemG}</td>
+        <td style="text-align:center; font-weight:500; color:var(--text-muted);">${engG}</td>
+        <td style="text-align:center; font-weight:500; color:var(--text-muted);">${ssG}</td>
+        <td style="text-align:center; font-weight:700; color:var(--green);">${overallGPA.toFixed(2)}</td>
+        <td style="text-align:center;">${statusPill}</td>
+      `;
+      tbody.appendChild(row);
+    });
+    
+  } else {
+    // ════ SUBJECT TEACHER EDITABLE MARKS GRID ════
+    title.textContent = `${activeClass} - ${activeSub} Mark Sheet`;
+    
+    thead.innerHTML = `
+      <tr>
+        <th width="80">Roll No</th>
+        <th>Student Name</th>
+        <th>Admission No</th>
+        <th width="150" style="text-align: center;">Marks (Max: 100)</th>
+        <th width="150" style="text-align: center;">Grade Mapped</th>
+        <th>Performance Remarks</th>
+      </tr>
+    `;
+    
+    // Check if marks are locked
+    const cacheKey = `${activeClass}_${activeSub}_${activeExam}`;
+    const gridState = marksCache[cacheKey] || { submitted: false, data: students.map(s => ({ roll: s.roll, name: s.name, adm: s.adm, marks: "", grade: "", remarks: "" })) };
+    
+    if (gridState.submitted) {
+      lockBanner.style.display = "flex";
+      saveBtn.style.display = "none";
+    } else {
+      lockBanner.style.display = "none";
+      saveBtn.style.display = "inline-flex";
+    }
+    
+    gridState.data.forEach((student, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="font-weight:600;">${student.roll}</td>
+        <td style="font-weight:600;">${student.name}</td>
+        <td>${student.adm}</td>
+        <td style="text-align: center;">
+          <input type="number" class="marks-input" min="0" max="100" value="${student.marks || ''}" 
+            ${gridState.submitted ? 'disabled' : ''} 
+            oninput="calculateGradeAndStore('${cacheKey}', ${index}, this.value)" />
+        </td>
+        <td style="text-align: center;" id="grade-cell-${index}">
+          <span style="font-weight:700; color:var(--green);">${student.grade || '-'}</span>
+        </td>
+        <td>
+          <input type="text" class="marks-input" style="width:100%; text-align:left;" placeholder="e.g. Excellent progress" 
+            value="${student.remarks || ''}" 
+            ${gridState.submitted ? 'disabled' : ''} 
+            oninput="updateMarksRemarks('${cacheKey}', ${index}, this.value)" />
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+    
+    marksCache[cacheKey] = gridState;
+  }
+}
+
+function calculateGradeAndStore(cacheKey, index, val) {
+  const marks = parseFloat(val);
+  let grade = "-";
+  if (!isNaN(marks)) {
+    if (marks >= 90) grade = "A+";
+    else if (marks >= 80) grade = "A";
+    else if (marks >= 70) grade = "B+";
+    else if (marks >= 60) grade = "B";
+    else if (marks >= 50) grade = "C";
+    else grade = "F";
+  }
+  
+  if (marksCache[cacheKey]) {
+    marksCache[cacheKey].data[index].marks = val;
+    marksCache[cacheKey].data[index].grade = grade;
+  }
+  
+  // Update Grade cell instantly in UI
+  const gradeCell = document.getElementById(`grade-cell-${index}`);
+  if (gradeCell) {
+    gradeCell.innerHTML = `<span style="font-weight:700; color:${grade === 'F' ? 'var(--red)' : 'var(--green)'};">${grade}</span>`;
+  }
+}
+
+function updateMarksRemarks(cacheKey, index, val) {
+  if (marksCache[cacheKey]) {
+    marksCache[cacheKey].data[index].remarks = val;
+  }
+}
+
+function submitMarks() {
+  const activeClass = document.getElementById('marksSelectClass').value;
+  const activeSub = document.getElementById('marksSelectSubject').value;
+  const activeExam = document.getElementById('marksSelectExam').value;
+  const cacheKey = `${activeClass}_${activeSub}_${activeExam}`;
+  
+  if (confirm("Are you sure you want to SUBMIT these marks? Once submitted, they will be LOCKED and you will not be able to edit them without Admin permissions.")) {
+    if (marksCache[cacheKey]) {
+      marksCache[cacheKey].submitted = true;
+    }
+    
+    // Rerender to apply lock layout
+    loadMarksGrid();
+    alert("Marks successfully submitted and locked. An audit entry has been recorded.");
+  }
+}
+
+function requestUnlock() {
+  alert("Your unlocking request has been sent to the Admin. You will be notified via email/notifications once approved.");
+}
+
+// ═══════════════════════════════════════
+// TAB 4: HOMEWORK ASSIGNMENTS HUB
+// ═══════════════════════════════════════
+function renderAssignmentsList() {
+  const container = document.getElementById('assignmentsListContainer');
+  container.innerHTML = "";
+  
+  // Show all or filter based on teacher limits
+  const visibleAssignments = assignmentsList.filter(as => {
+    // Only display homework related to teacher's assigned subjects & classes
+    return activeTeacher.subjects.some(s => s.classSec === as.classSec && s.subject === as.subject);
+  });
+  
+  if (visibleAssignments.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-hint); background:var(--white); border:1px solid var(--border); border-radius:var(--radius-lg);">
+        <i class="ti ti-clipboard-off" style="font-size:36px; display:inline-block; margin-bottom:8px;"></i>
+        <p style="font-size:13.5px; font-weight:500;">No assignments listed for your subjects.</p>
+      </div>
+    `;
+    return;
+  }
+  
+  visibleAssignments.forEach(as => {
+    const card = document.createElement('div');
+    card.className = "card-wrapper";
+    card.style.display = "flex";
+    card.style.flexDirection = "column";
+    card.style.gap = "12px";
+    
+    card.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <span style="font-size:10px; font-weight:700; background:var(--green-light); color:var(--green); padding:2px 6px; border-radius:4px; text-transform:uppercase;">${as.subject}</span>
+          <h4 style="font-size:14.5px; font-weight:700; color:var(--text); margin-top:6px;">${as.title}</h4>
+        </div>
+        <button class="icon-btn" onclick="deleteAssignment('${as.id}')" style="width:28px; height:28px; border-color:var(--red-light); color:var(--red);"><i class="ti ti-trash"></i></button>
+      </div>
+      <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">${as.desc || 'No instruction notes provided.'}</p>
+      
+      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:10px; font-size:11.5px; color:var(--text-muted); margin-top:auto;">
+        <span><i class="ti ti-books"></i> ${as.classSec}</span>
+        <span>Due: <strong style="color:var(--text);">${as.dueDate}</strong></span>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function openCreateAssignmentModal() {
+  document.getElementById('assignmentModalTitle').innerHTML = `<i class="ti ti-file-plus" style="color: var(--green);"></i> Create Assignment`;
+  document.getElementById('assignEditId').value = "";
+  document.getElementById('assignTitleInput').value = "";
+  document.getElementById('assignDescInput').value = "";
+  document.getElementById('assignDueDateInput').value = "2026-06-10";
+  document.getElementById('assignMaxMarksInput').value = "20";
+  
+  // Populate dropdowns restricted strictly to this teacher
+  const classSel = document.getElementById('assignClassSelect');
+  const subSel = document.getElementById('assignSubjectSelect');
+  
+  classSel.innerHTML = "";
+  subSel.innerHTML = "";
+  
+  const uniqueCls = [...new Set(activeTeacher.subjects.map(s => s.classSec))];
+  const uniqueSub = [...new Set(activeTeacher.subjects.map(s => s.subject))];
+  
+  uniqueCls.forEach(c => {
+    classSel.innerHTML += `<option value="${c}">${c}</option>`;
+  });
+  uniqueSub.forEach(s => {
+    subSel.innerHTML += `<option value="${s}">${s}</option>`;
+  });
+  
+  openModal('assignmentModal');
+}
+
+function saveAssignmentForm(event) {
+  event.preventDefault();
+  
+  const title = document.getElementById('assignTitleInput').value.trim();
+  const cls = document.getElementById('assignClassSelect').value;
+  const sub = document.getElementById('assignSubjectSelect').value;
+  const due = document.getElementById('assignDueDateInput').value;
+  const max = document.getElementById('assignMaxMarksInput').value;
+  const desc = document.getElementById('assignDescInput').value.trim();
+  
+  // Ensure that Shalini can't select Chemistry (Validation limits)
+  const isAssigned = activeTeacher.subjects.some(s => s.classSec === cls && s.subject === sub);
+  if (!isAssigned) {
+    alert("Validation Error: You are not assigned to teach this subject to this class.");
+    return;
+  }
+  
+  const newAssignment = {
+    id: "A" + String(assignmentsList.length + 1).padStart(2, '0'),
+    title: title,
+    classSec: cls,
+    subject: sub,
+    dueDate: due,
+    maxMarks: parseInt(max),
+    desc: desc
+  };
+  
+  assignmentsList.push(newAssignment);
+  renderAssignmentsList();
+  renderDashboardHome();
+  closeModal('assignmentModal');
+  alert("Assignment created successfully.");
+}
+
+function deleteAssignment(id) {
+  const as = assignmentsList.find(a => a.id === id);
+  if (!as) return;
+  
+  // Check validation rules: only Mohan Sharma can delete Mathematics assignments for 8A
+  const isAssigned = activeTeacher.subjects.some(s => s.classSec === as.classSec && s.subject === as.subject);
+  if (!isAssigned) {
+    alert("Authorization Error: You do not have permissions to delete assignments for unassigned classes.");
+    return;
+  }
+  
+  if (confirm(`Are you sure you want to delete assignment: "${as.title}"?`)) {
+    assignmentsList = assignmentsList.filter(a => a.id !== id);
+    renderAssignmentsList();
+    alert("Assignment deleted successfully.");
+  }
+}
+
+// ═══════════════════════════════════════
+// TAB 5: CLASS STUDENT DIRECTORY (Class Teacher Exclusive)
+// ═══════════════════════════════════════
+function renderDirectoryView() {
+  if (!activeTeacher.classTeacher) {
+    return; // Tab button hidden in switchActiveTeacherProfile anyway
+  }
+  
+  const listContainer = document.getElementById('directoryStudentsList');
+  listContainer.innerHTML = "";
+  
+  STUDENTS_8A.forEach((student, index) => {
+    const item = document.createElement('div');
+    item.className = `student-list-item ${index === selectedDirectoryStudentIndex ? 'active' : ''}`;
+    item.onclick = () => {
+      selectedDirectoryStudentIndex = index;
+      renderDirectoryView();
+    };
+    
+    item.innerHTML = `
+      <div class="user-avatar-placeholder" style="width:28px; height:28px; font-size:10px;">${student.name.charAt(0)}</div>
+      <div style="display:flex; flex-direction:column; overflow:hidden;">
+        <span style="font-size:12.5px; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${student.name}</span>
+        <span style="font-size:10.5px; color:var(--text-hint);">Roll: 8A-${student.roll}</span>
+      </div>
+      <i class="ti ti-chevron-right" style="margin-left:auto; font-size:12px; color:var(--text-hint);"></i>
+    `;
+    listContainer.appendChild(item);
+  });
+  
+  // Render Student Profile Detail Pane
+  const profileContainer = document.getElementById('directoryStudentProfileCard');
+  const activeStudent = STUDENTS_8A[selectedDirectoryStudentIndex];
+  
+  if (!activeStudent) {
+    profileContainer.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-hint);">Select a student to view directory records.</div>`;
+    return;
+  }
+  
+  // Generate some academic performance bars (sparkline)
+  const mathS = 75 + (parseInt(activeStudent.roll) % 4) * 5;
+  const chemS = 80 + (parseInt(activeStudent.roll) % 3) * 5;
+  const engS = 70 + (parseInt(activeStudent.roll) % 5) * 5;
+  const ssS = 85;
+  
+  profileContainer.innerHTML = `
+    <div style="display:flex; align-items:center; gap:14px; border-bottom:1px solid var(--border); padding-bottom:16px; margin-bottom:16px;">
+      <div class="user-avatar-placeholder" style="width:48px; height:48px; font-size:18px;">${activeStudent.name.charAt(0)}</div>
+      <div>
+        <h3 style="font-size:16px; font-weight:700; color:var(--text);">${activeStudent.name}</h3>
+        <p style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">Roll Number: 8A-${activeStudent.roll} &nbsp;|&nbsp; Adm: ${activeStudent.adm}</p>
+      </div>
+      <span class="status-pill active" style="margin-left:auto; font-size:11px; background:var(--green-light); color:var(--green);">Class 8A</span>
+    </div>
+    
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:20px;">
+      <div>
+        <h4 style="font-size:12px; font-weight:600; color:var(--text-hint); text-transform:uppercase;">Guardian Information</h4>
+        <p style="font-size:13px; font-weight:600; color:var(--text); margin-top:6px;"><i class="ti ti-user" style="font-size:14px;"></i> ${activeStudent.parent}</p>
+        <p style="font-size:12px; color:var(--text-muted); margin-top:4px;"><i class="ti ti-phone" style="font-size:13px;"></i> ${activeStudent.phone}</p>
+      </div>
+      <div>
+        <h4 style="font-size:12px; font-weight:600; color:var(--text-hint); text-transform:uppercase;">Academic Performance Tracker</h4>
+        <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:11px; color:var(--text-muted);">
+          <span>Math: ${mathS}%</span>
+          <span>Chem: ${chemS}%</span>
+          <span>Eng: ${engS}%</span>
+          <span>SS: ${ssS}%</span>
+        </div>
+        <div class="sparkline-box" style="margin-top:6px; justify-content:space-between; width:100%;">
+          <div class="spark-bar" style="height:${mathS * 0.25}px; flex:1;"></div>
+          <div class="spark-bar" style="height:${chemS * 0.25}px; flex:1; background:var(--blue);"></div>
+          <div class="spark-bar" style="height:${engS * 0.25}px; flex:1; background:var(--yellow);"></div>
+          <div class="spark-bar" style="height:${ssS * 0.25}px; flex:1; background:#7e22ce;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Class Teacher Logged Performance Remarks -->
+    <div style="border-top:1px solid var(--border); padding-top:16px; display:flex; flex-direction:column; gap:8px;">
+      <h4 style="font-size:12px; font-weight:600; color:var(--text-hint); text-transform:uppercase;">Class Teacher Remarks Folder</h4>
+      <textarea id="directoryRemarksInput" style="width:100%; height:75px; padding:10px; border:1px solid var(--border); border-radius:var(--radius); font-size:12.5px; font-family:inherit; resize:none;" placeholder="Log a student performance review or warning notes...">${activeStudent.remarks || ''}</textarea>
+      <button class="btn-primary" style="align-self:flex-end; padding:6px 14px; font-size:11.5px;" onclick="saveStudentDirectoryRemarks(${selectedDirectoryStudentIndex})"><i class="ti ti-device-floppy"></i> Save Remarks</button>
+    </div>
+  `;
+}
+
+function saveStudentDirectoryRemarks(index) {
+  const textVal = document.getElementById('directoryRemarksInput').value.trim();
+  STUDENTS_8A[index].remarks = textVal;
+  alert(`Remarks folder successfully updated for ${STUDENTS_8A[index].name}.`);
+  renderDirectoryView();
+}
+
+// Simple dynamic Modal controllers
+function openModal(modalId) {
+  document.getElementById(modalId).classList.add('show');
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).classList.remove('show');
+}
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
