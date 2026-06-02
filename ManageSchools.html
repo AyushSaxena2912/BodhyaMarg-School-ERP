@@ -133,8 +133,23 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <div class="modal-title"><i class="ti ti-building"></i> <span id="modalHeading">Add New Branch</span></div>
     <div class="modal-field"><label>School / Branch Name *</label><input type="text" id="inpName" placeholder="e.g. Delhi Public School - South Campus" /></div>
     <div class="modal-row">
-      <div class="modal-field"><label>City *</label><input type="text" id="inpCity" placeholder="e.g. New Delhi" /></div>
-      <div class="modal-field"><label>State</label><input type="text" id="inpState" placeholder="e.g. Delhi" /></div>
+      <div class="modal-field">
+        <label>City *</label>
+        <input type="text" id="inpCity" placeholder="e.g. New Delhi" list="citySuggestions" autocomplete="off" />
+        <datalist id="citySuggestions"></datalist>
+      </div>
+      <div class="modal-field">
+        <label>State</label>
+        <select id="inpState">
+          <option value="">-- Select State/UT --</option>
+          <optgroup label="States">
+            <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
+          </optgroup>
+          <optgroup label="Union Territories">
+            <option>Andaman and Nicobar Islands</option><option>Chandigarh</option><option>Dadra and Nagar Haveli and Daman and Diu</option><option>Delhi</option><option>Jammu and Kashmir</option><option>Ladakh</option><option>Lakshadweep</option><option>Puducherry</option>
+          </optgroup>
+        </select>
+      </div>
     </div>
     <div class="modal-field"><label>Full Address</label><textarea id="inpAddress" placeholder="Branch full address…"></textarea></div>
     <div class="modal-row">
@@ -160,6 +175,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 </div>
 
 <script>
+const indianCities = ["Agra","Ahmedabad","Ajmer","Akola","Aligarh","Allahabad","Ambattur","Amravati","Amritsar","Asansol","Aurangabad","Bareilly","Belgaum","Bengaluru","Bhavnagar","Bhilai","Bhiwandi","Bhopal","Bhubaneswar","Bikaner","Chandigarh","Chennai","Coimbatore","Cuttack","Dehradun","Delhi","Dhanbad","Durgapur","Erode","Faridabad","Firozabad","Gaya","Ghaziabad","Gorakhpur","Gulbarga","Guntur","Gurgaon","Guwahati","Gwalior","Howrah","Hubli-Dharwad","Hyderabad","Indore","Jabalpur","Jaipur","Jalandhar","Jammu","Jamnagar","Jamshedpur","Jhansi","Jodhpur","Kalyan-Dombivli","Kanpur","Kochi","Kolhapur","Kolkata","Kota","Kurnool","Ladakh","Loni","Lucknow","Ludhiana","Madurai","Malegaon","Mangalore","Meerut","Mira-Bhayandar","Moradabad","Mumbai","Mysore","Nagpur","Nanded","Nashik","Navi Mumbai","Nellore","New Delhi","Noida","Patna","Pimpri-Chinchwad","Pune","Raipur","Rajahmundry","Rajkot","Ranchi","Rourkela","Saharanpur","Salem","Sangli-Miraj & Kupwad","Siliguri","Solapur","Srinagar","Surat","Thane","Thiruvananthapuram","Tiruchirappalli","Tirunelveli","Tiruppur","Udaipur","Ujjain","Ulhasnagar","Vadodara","Varanasi","Vasai-Virar","Vijayawada","Visakhapatnam"];
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("citySuggestions").innerHTML = indianCities.map(c => `<option value="${c}">`).join("");
+});
 let schools = [
   { id:1, name:'Delhi Public School - Main Campus', city:'New Delhi', state:'Delhi', address:'Mathura Road, New Delhi 110003', principal:'Dr. Asha Gupta', contact:'011-26537890', email:'main@dps.edu.in', affil:'2730001', year:'1972', status:'Active', students: 3200 },
   { id:2, name:'Delhi Public School - South Campus', city:'Noida', state:'Uttar Pradesh', address:'Sector 30, Noida 201303', principal:'Mr. Rajeev Mehta', contact:'0120-4567890', email:'south@dps.edu.in', affil:'2730045', year:'2005', status:'Active', students: 1850 },
