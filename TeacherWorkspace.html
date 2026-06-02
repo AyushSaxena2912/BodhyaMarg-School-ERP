@@ -217,12 +217,14 @@ body {
 .trend.up { color: var(--success); }
 
 /* Today's Schedule Timeline */
-.schedule-scroll { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
+.schedule-scroll { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; cursor: grab; }
+.schedule-scroll:active { cursor: grabbing; }
 .schedule-scroll::-webkit-scrollbar { display: none; }
 .class-card { 
-  min-width: 220px; border: 1px solid var(--border); border-radius: var(--radius);
+  min-width: 260px; flex-shrink: 0; border: 1px solid var(--border); border-radius: var(--radius);
   padding: 16px; background: var(--surface); border-left: 4px solid var(--primary);
   display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow-sm);
+  user-select: none;
 }
 .class-card.active { border-left-color: var(--warning); background: #fffcf2; }
 .class-time { font-size: 12px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
@@ -699,7 +701,9 @@ const TEACHERS = {
     classes: [
       { time: "09:00 AM - 09:45 AM", name: "Mathematics", room: "Room 102", cls: "Class 8A", active: true },
       { time: "11:30 AM - 12:15 PM", name: "Mathematics", room: "Room 104", cls: "Class 8B", active: false },
-      { time: "01:30 PM - 02:15 PM", name: "Chemistry", room: "Lab 2", cls: "Class 9A", active: false }
+      { time: "01:30 PM - 02:15 PM", name: "Chemistry", room: "Lab 2", cls: "Class 9A", active: false },
+      { time: "02:30 PM - 03:15 PM", name: "Doubt Clearing", room: "Staff Room", cls: "Class 8A & 8B", active: false },
+      { time: "03:30 PM - 04:15 PM", name: "Extra Curricular", room: "Ground", cls: "Sports Club", active: false }
     ],
     leaves: [
       { id: "L03", type: "Medical Leave", dates: "16 Jun 2026", status: "pending", reason: "Severe migraine and fever. Need a day off for medical consultation." },
@@ -727,7 +731,31 @@ let currentUser = TEACHERS.mohan;
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   renderUI();
+  initDragToScroll();
 });
+
+function initDragToScroll() {
+  const slider = document.getElementById('scheduleCards');
+  if(!slider) return;
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+  });
+  slider.addEventListener('mouseleave', () => { isDown = false; });
+  slider.addEventListener('mouseup', () => { isDown = false; });
+  slider.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - slider.offsetLeft;
+    const walk = (x - startX) * 2; // scroll-fast multiplier
+    slider.scrollLeft = scrollLeft - walk;
+  });
+}
 
 function switchPersona(id) {
   currentUser = TEACHERS[id];
