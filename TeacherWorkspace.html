@@ -411,7 +411,6 @@ select.form-control {
         <div class="persona-details">
           <div class="name" id="headerName">Mohan Sharma</div>
           <div class="roles" id="headerRoles">
-            <span class="role-badge"><i class="ti ti-book"></i> Subject Teacher</span>
             <span class="role-badge" style="background: rgba(255,255,255,0.9); color: var(--primary-dark);"><i class="ti ti-star"></i> Class Teacher: 8A</span>
           </div>
         </div>
@@ -788,8 +787,7 @@ select.form-control {
 const TEACHERS = {
   mohan: {
     id: 'mohan', name: 'Mohan Sharma', avatar: 'MS',
-    rolesHtml: `<span class="role-badge"><i class="ti ti-book"></i> Subject Teacher</span>
-                <span class="role-badge" style="background: rgba(255,255,255,0.9); color: var(--primary-dark);"><i class="ti ti-star"></i> Class Teacher: 8A</span>`,
+    rolesHtml: `<span class="role-badge" style="background: rgba(255,255,255,0.9); color: var(--primary-dark);"><i class="ti ti-star"></i> Class Teacher: 8A</span>`,
     classes: [
       { time: "09:00 AM - 09:45 AM", name: "Mathematics", room: "Room 102", cls: "Class 8A", active: true },
       { time: "11:30 AM - 12:15 PM", name: "Mathematics", room: "Room 104", cls: "Class 8B", active: false },
@@ -804,7 +802,7 @@ const TEACHERS = {
   },
   shalini: {
     id: 'shalini', name: 'Shalini Gupta', avatar: 'SG',
-    rolesHtml: `<span class="role-badge"><i class="ti ti-book"></i> Subject Teacher</span>`,
+    rolesHtml: ``,
     classes: [
       { time: "09:00 AM - 09:45 AM", name: "English", room: "Room 201", cls: "Class 8A", active: true },
       { time: "10:30 AM - 11:15 AM", name: "Social Studies", room: "Room 205", cls: "Class 9B", active: false }
