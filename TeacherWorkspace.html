@@ -236,6 +236,11 @@ body {
 .class-details p { font-size: 13px; color: var(--text-muted); font-weight: 500; }
 .class-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 12px; border-top: 1px dashed var(--border); }
 .room-badge { background: var(--bg-app); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; color: var(--text-main); }
+
+.drag-scroll { overflow-x: auto; scrollbar-width: none; cursor: grab; }
+.drag-scroll:active { cursor: grabbing; }
+.drag-scroll::-webkit-scrollbar { display: none; }
+
 /* Segment Chips */
 .segment-chip {
   padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;
@@ -662,7 +667,7 @@ select.form-control {
             </div>
             <div style="flex: 3;">
               <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Subject</label>
-              <div id="subjectSegmentContainer" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px;">
+              <div id="subjectSegmentContainer" class="drag-scroll" style="display: flex; gap: 8px; padding-bottom: 2px;">
                  <!-- Populated by JS -->
               </div>
               <input type="hidden" id="attSubject" value="my_subject">
@@ -898,8 +903,7 @@ function initDonutInteractivity() {
   });
 }
 
-function initDragToScroll() {
-  const slider = document.getElementById('scheduleCards');
+function makeScrollable(slider) {
   if(!slider) return;
   let isDown = false;
   let startX;
@@ -919,6 +923,11 @@ function initDragToScroll() {
     const walk = (x - startX) * 2; // scroll-fast multiplier
     slider.scrollLeft = scrollLeft - walk;
   });
+}
+
+function initDragToScroll() {
+  makeScrollable(document.getElementById('scheduleCards'));
+  makeScrollable(document.getElementById('subjectSegmentContainer'));
 }
 
 function switchPersona(id) {
