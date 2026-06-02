@@ -887,13 +887,16 @@ function switchPersona(id) {
 
 function renderUI() {
   // Update Header
-  document.getElementById('headerAv').innerText = currentUser.avatar;
-  document.getElementById('headerName').innerText = currentUser.name;
-  document.getElementById('headerRoles').innerHTML = currentUser.rolesHtml;
-  document.getElementById('greetingMsg').innerText = `Good Morning, ${currentUser.name.split(' ')[0]}!`;
+  const greetingEl = document.getElementById('greetingMsg');
+  if (greetingEl) {
+    greetingEl.innerText = `Good Morning, ${currentUser.name.split(' ')[0]}!`;
+  }
 
   // Toggle Directory Tab
-  document.getElementById('directoryTab').style.display = currentUser.isClassTeacher ? 'flex' : 'none';
+  const dirTab = document.getElementById('directoryTab');
+  if (dirTab) {
+    dirTab.style.display = currentUser.isClassTeacher ? 'flex' : 'none';
+  }
 
   // Render Classes
   const scheduleHtml = currentUser.classes.map(c => `
