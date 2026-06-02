@@ -567,7 +567,7 @@ function renderReportCard() {
                     <td class="${r.gFin.css}" style="font-weight:700;">${r.finalMark}</td>
                     <td class="${r.gFin.css}">${r.gFin.g}</td>
                     <td class="pers-trait">${persLabel}</td>
-                    <td style="font-weight:800; color:#b91c1c;">${persGrade}</td>
+                    <td style="font-weight:800; color:#0f172a;">${persGrade}</td>
                   </tr>`;
               });
               // Extra personality rows that exceed subject count
@@ -578,7 +578,7 @@ function renderReportCard() {
                     <td class="sub-name"></td>
                     <td colspan="12"></td>
                     <td class="pers-trait">${PERSONALITY[i]}</td>
-                    <td style="font-weight:800; color:#b91c1c;">${persGrade}</td>
+                    <td style="font-weight:800; color:#0f172a;">${persGrade}</td>
                   </tr>`;
               }
               return html;
