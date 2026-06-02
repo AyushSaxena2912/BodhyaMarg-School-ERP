@@ -128,7 +128,15 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
     <!-- Filters -->
     <div class="controls-card">
       <div class="controls-title">Mark Attendance</div>
-      <div class="controls-filters">
+      <div class="controls-filters" style="width: 100%;">
+        <!-- Role Simulator (For Demo Purposes) -->
+        <div class="input-box" style="margin-right:auto; background:var(--green-light); border-color:var(--green);"><i class="ti ti-user" style="color:var(--green);"></i>
+          <select id="roleSimulation" onchange="updateRoleSimulation()" style="color:var(--green); font-weight:600;">
+            <option value="class_teacher">Class Teacher View</option>
+            <option value="subject_teacher">Subject Teacher View</option>
+          </select><i class="ti ti-chevron-down" style="color:var(--green);"></i>
+        </div>
+        
         <div class="input-box"><i class="ti ti-calendar"></i>
           <input type="date" value="2026-05-27" />
         </div>
@@ -141,6 +149,14 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
         <div class="input-box"><i class="ti ti-layout-distribute-vertical"></i>
           <select id="filterSection">
             <option selected>Section A</option><option>Section B</option><option>Section C</option><option>Section D</option><option>Section E</option>
+          </select><i class="ti ti-chevron-down"></i>
+        </div>
+        <div class="input-box"><i class="ti ti-book"></i>
+          <select id="filterSubject" onchange="render()">
+            <option value="my_subject">Mathematics (My Subject)</option>
+            <option value="all">All Subjects (Overview)</option>
+            <option value="english">English (View Only)</option>
+            <option value="science">Science (View Only)</option>
           </select><i class="ti ti-chevron-down"></i>
         </div>
       </div>
@@ -203,81 +219,174 @@ function getAvColor(status) {
   return { bg: '#f0fdfa', text: '#0d9488' }; // halfday
 }
 
+function updateRoleSimulation() {
+  const role = document.getElementById('roleSimulation').value;
+  const filterSubject = document.getElementById('filterSubject');
+  
+  if (role === 'class_teacher') {
+    document.getElementById('filterClass').value = 'Class X';
+    document.getElementById('filterSection').value = 'Section A';
+    filterSubject.innerHTML = `
+      <option value="my_subject">Mathematics (My Subject)</option>
+      <option value="all">All Subjects (Overview)</option>
+      <option value="english">English (View Only)</option>
+      <option value="science">Science (View Only)</option>
+    `;
+  } else {
+    document.getElementById('filterClass').value = 'Class IX';
+    document.getElementById('filterSection').value = 'Section B';
+    filterSubject.innerHTML = `
+      <option value="my_subject">Mathematics (My Subject)</option>
+    `;
+  }
+  render();
+}
+
 function render() {
   const tbody = document.getElementById('attendanceBody');
+  const thead = document.querySelector('thead tr');
+  const subjectVal = document.getElementById('filterSubject') ? document.getElementById('filterSubject').value : 'my_subject';
+  const isEditable = subjectVal === 'my_subject';
+  
+  const classVal = document.getElementById('filterClass').value;
+  const sectionVal = document.getElementById('filterSection').value;
+  const currentClassSec = `${classVal} - ${sectionVal.replace('Section ', '')}`;
+  
+  const saveBtn = document.querySelector('.page-actions .btn-primary');
+  if(saveBtn) saveBtn.style.display = isEditable ? 'inline-flex' : 'none';
+  
+  const markAllBtn = document.querySelector('.table-toolbar .btn');
+  if(markAllBtn) markAllBtn.style.display = isEditable ? 'inline-flex' : 'none';
+
   let html = '';
 
-  studentData.forEach((item, index) => {
-    let av = getAvColor(item.status);
-    
-    html += `
-      <tr>
-        <td class="checkbox-cell"><div class="checkbox-custom"></div></td>
-        <td>
-          <div class="student-info">
-            <div class="student-av" style="background:${av.bg};color:${av.text};">${getInitials(item.name)}</div>
-            <div>
-              <div class="student-name">${item.name}</div>
-              <div class="student-roll">Adm No: ${item.admNo} &nbsp;|&nbsp; Roll: ${item.roll}</div>
-            </div>
-          </div>
-        </td>
-        <td style="color:var(--text-muted);font-weight:500;">${item.classSec}</td>
-        <td>
-          <div class="att-options">
-            <label>
-              <input type="radio" class="att-radio" name="att_${index}" value="present" ${item.status === 'present' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
-              <span class="att-label">Present</span>
-            </label>
-            <label>
-              <input type="radio" class="att-radio" name="att_${index}" value="absent" ${item.status === 'absent' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
-              <span class="att-label">Absent</span>
-            </label>
-            <label>
-              <input type="radio" class="att-radio" name="att_${index}" value="late" ${item.status === 'late' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
-              <span class="att-label">Late</span>
-            </label>
-            <label>
-              <input type="radio" class="att-radio" name="att_${index}" value="halfday" ${item.status === 'halfday' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
-              <span class="att-label">Half Day</span>
-            </label>
-            <label>
-              <input type="radio" class="att-radio" name="att_${index}" value="holiday" ${item.status === 'holiday' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
-              <span class="att-label">Holiday</span>
-            </label>
-          </div>
-        </td>
-        <td><input type="text" class="remark-input" placeholder="Add remark..." value="${item.remarks}"></td>
-      </tr>
+  if (subjectVal === 'all') {
+    thead.innerHTML = `
+      <th>Student Details</th>
+      <th>Class & Section</th>
+      <th style="text-align:center;">Math</th>
+      <th style="text-align:center;">Science</th>
+      <th style="text-align:center;">English</th>
+      <th style="text-align:center;">Hindi</th>
+      <th style="text-align:center;">Social</th>
     `;
-  });
+    
+    studentData.forEach((item, index) => {
+      let av = getAvColor(item.status);
+      const badge = (status) => {
+        let col = getAvColor(status);
+        let char = status === 'present' ? 'P' : status === 'absent' ? 'A' : status === 'late' ? 'L' : status === 'halfday' ? 'H' : '-';
+        return `<span style="display:inline-block; width:24px; height:24px; line-height:24px; text-align:center; border-radius:4px; font-size:11px; font-weight:700; background:${col.bg}; color:${col.text};">${char}</span>`;
+      };
+      
+      const s1 = index % 3 === 0 ? 'absent' : 'present';
+      const s2 = index % 4 === 0 ? 'late' : 'present';
+      const s3 = 'present';
+      const s4 = index === 5 ? 'halfday' : 'present';
+
+      html += `
+        <tr>
+          <td>
+            <div class="student-info">
+              <div class="student-av" style="background:${av.bg};color:${av.text};">${getInitials(item.name)}</div>
+              <div>
+                <div class="student-name">${item.name}</div>
+                <div class="student-roll">Adm No: ${item.admNo} &nbsp;|&nbsp; Roll: ${item.roll}</div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--text-muted);font-weight:500;">${currentClassSec}</td>
+          <td style="text-align:center;">${badge(item.status)}</td>
+          <td style="text-align:center;">${badge(s1)}</td>
+          <td style="text-align:center;">${badge(s2)}</td>
+          <td style="text-align:center;">${badge(s3)}</td>
+          <td style="text-align:center;">${badge(s4)}</td>
+        </tr>
+      `;
+    });
+  } else {
+    thead.innerHTML = `
+      <th class="checkbox-cell"><div class="checkbox-custom" id="selectAllCheckbox" style="${!isEditable ? 'display:none;' : ''}"></div></th>
+      <th>Student Details</th>
+      <th>Class & Section</th>
+      <th>Attendance Status</th>
+      <th style="width:250px;">Remarks</th>
+    `;
+
+    studentData.forEach((item, index) => {
+      let av = getAvColor(item.status);
+      
+      html += `
+        <tr>
+          <td class="checkbox-cell"><div class="checkbox-custom" style="${!isEditable ? 'opacity:0.5; pointer-events:none;' : ''}"></div></td>
+          <td>
+            <div class="student-info">
+              <div class="student-av" style="background:${av.bg};color:${av.text};">${getInitials(item.name)}</div>
+              <div>
+                <div class="student-name">${item.name}</div>
+                <div class="student-roll">Adm No: ${item.admNo} &nbsp;|&nbsp; Roll: ${item.roll}</div>
+              </div>
+            </div>
+          </td>
+          <td style="color:var(--text-muted);font-weight:500;">${currentClassSec}</td>
+          <td>
+            <div class="att-options" style="${!isEditable ? 'opacity:0.6; pointer-events:none;' : ''}">
+              <label>
+                <input type="radio" class="att-radio" name="att_${index}" value="present" ${item.status === 'present' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
+                <span class="att-label">Present</span>
+              </label>
+              <label>
+                <input type="radio" class="att-radio" name="att_${index}" value="absent" ${item.status === 'absent' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
+                <span class="att-label">Absent</span>
+              </label>
+              <label>
+                <input type="radio" class="att-radio" name="att_${index}" value="late" ${item.status === 'late' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
+                <span class="att-label">Late</span>
+              </label>
+              <label>
+                <input type="radio" class="att-radio" name="att_${index}" value="halfday" ${item.status === 'halfday' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
+                <span class="att-label">Half Day</span>
+              </label>
+              <label>
+                <input type="radio" class="att-radio" name="att_${index}" value="holiday" ${item.status === 'holiday' ? 'checked' : ''} onchange="updateRowColor(this, ${index})">
+                <span class="att-label">Holiday</span>
+              </label>
+            </div>
+          </td>
+          <td><input type="text" class="remark-input" placeholder="Add remark..." value="${item.remarks}" ${!isEditable ? 'disabled' : ''}></td>
+        </tr>
+      `;
+    });
+  }
 
   tbody.innerHTML = html;
 
-  const selectAllCb = document.getElementById('selectAllCheckbox');
-  const bodyCbs = tbody.querySelectorAll('.checkbox-custom');
+  if (subjectVal !== 'all' && isEditable) {
+    const selectAllCb = document.getElementById('selectAllCheckbox');
+    const bodyCbs = tbody.querySelectorAll('.checkbox-custom');
 
-  bodyCbs.forEach(cb => {
-    cb.addEventListener('click', function () { 
-      this.classList.toggle('checked'); 
-      const allChecked = Array.from(bodyCbs).every(c => c.classList.contains('checked'));
-      if (allChecked) selectAllCb.classList.add('checked');
-      else selectAllCb.classList.remove('checked');
-    });
-  });
-
-  if (selectAllCb) {
-    const newSelectAll = selectAllCb.cloneNode(true);
-    selectAllCb.parentNode.replaceChild(newSelectAll, selectAllCb);
-    
-    newSelectAll.addEventListener('click', function () {
-      this.classList.toggle('checked');
-      const isChecked = this.classList.contains('checked');
-      bodyCbs.forEach(cb => {
-        if (isChecked) cb.classList.add('checked');
-        else cb.classList.remove('checked');
+    bodyCbs.forEach(cb => {
+      cb.addEventListener('click', function () { 
+        this.classList.toggle('checked'); 
+        const allChecked = Array.from(bodyCbs).every(c => c.classList.contains('checked'));
+        if (allChecked) selectAllCb.classList.add('checked');
+        else selectAllCb.classList.remove('checked');
       });
     });
+
+    if (selectAllCb) {
+      const newSelectAll = selectAllCb.cloneNode(true);
+      selectAllCb.parentNode.replaceChild(newSelectAll, selectAllCb);
+      
+      newSelectAll.addEventListener('click', function () {
+        this.classList.toggle('checked');
+        const isChecked = this.classList.contains('checked');
+        bodyCbs.forEach(cb => {
+          if (isChecked) cb.classList.add('checked');
+          else cb.classList.remove('checked');
+        });
+      });
+    }
   }
 }
 
