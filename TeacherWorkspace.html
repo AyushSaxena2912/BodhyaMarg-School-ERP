@@ -634,49 +634,43 @@ select.form-control {
       <div class="card">
         <div class="card-header" style="flex-direction: column; align-items: stretch; border-bottom: none; padding-bottom: 0;">
           
-          <!-- DEMO CONTROL -->
-          <div style="background: #fffbeb; border: 1px dashed #fcd34d; border-radius: 8px; padding: 10px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
-            <div style="font-size: 13px; color: #b45309; font-weight: 600;"><i class="ti ti-info-circle"></i> Demo Control: Switch Teacher Profile</div>
-            <select class="form-control" id="workspaceRoleSim" onchange="updateWorkspaceRole()" style="background: white; border-color: #fcd34d; color: #b45309; font-weight: 600; font-size: 13px; padding: 6px 12px; height: auto;">
-              <option value="class_teacher">Class Teacher (Multiple Subjects)</option>
-              <option value="subject_teacher">Subject Teacher (Only Math)</option>
-            </select>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div class="card-title"><i class="ti ti-calendar-user"></i> Daily Attendance Register</div>
+            <!-- Demo Role Selector moved to top right corner as a subtle toggle -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+               <span style="font-size: 11px; color: var(--text-hint); text-transform: uppercase; font-weight: 700;">View As:</span>
+               <select class="form-control" id="workspaceRoleSim" onchange="updateWorkspaceRole()" style="font-size: 12px; padding: 4px 8px; height: 30px; width: 140px; background: transparent; border-color: var(--border);">
+                 <option value="class_teacher">Class Teacher</option>
+                 <option value="subject_teacher">Subject Teacher</option>
+               </select>
+            </div>
           </div>
 
-          <!-- SIMPLE UI PANEL -->
-          <div style="background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;">
-            <div style="display: flex; align-items: center; gap: 24px;">
-              <div>
-                <label style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Class Context</label>
-                <div id="attClassDisplay" style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-top: 4px;">Class 8A</div>
-                <input type="hidden" id="attClass" value="Class 8A" />
-              </div>
-              <div style="width: 2px; height: 36px; background: var(--border);"></div>
-              <div>
-                <label style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Subject View</label>
-                <select id="attSubject" onchange="renderWorkspaceAtt()" style="border: none; background: transparent; padding: 0; font-size: 18px; font-weight: 800; color: var(--primary); cursor: pointer; outline: none; margin-top: 4px;">
-                  <option value="my_subject">Mathematics</option>
-                  <option value="all">Overview (All Subjects)</option>
-                  <option value="english">English (Read Only)</option>
-                  <option value="science">Science (Read Only)</option>
-                </select>
-              </div>
+          <div style="display: flex; align-items: flex-end; gap: 16px; margin-bottom: 24px; padding: 16px; background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+            <div style="flex: 1;">
+              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Class & Section</label>
+              <select class="form-control" id="attClass" disabled style="background: white; width: 100%;"><option value="Class 8A">Class 8A</option></select>
             </div>
-
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="display: flex; flex-direction: column;">
-                <label style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">Date</label>
-                <input type="date" class="form-control" value="2026-06-02" style="background: white; border: 1px solid var(--border); font-size: 14px; font-weight: 600; color: var(--text-main); padding: 6px 12px; height: auto; margin-top: 4px;" />
-              </div>
-              <button class="btn btn-primary" id="saveAttBtn" style="padding: 10px 24px; font-size: 15px; margin-top: 18px; box-shadow: 0 4px 12px rgba(26,122,74,0.2);"><i class="ti ti-check"></i> Submit</button>
+            <div style="flex: 2;">
+              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Subject</label>
+              <select class="form-control" id="attSubject" onchange="renderWorkspaceAtt()" style="background: white; width: 100%;">
+                <option value="my_subject">Mathematics</option>
+                <option value="all">View All Subjects (Overview)</option>
+              </select>
+            </div>
+            <div style="flex: 1;">
+              <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Date</label>
+              <input type="date" class="form-control" value="2026-06-02" style="background: white; width: 100%;" />
+            </div>
+            <div>
+              <button class="btn btn-primary" id="saveAttBtn" style="height: 38px; padding: 0 20px;"><i class="ti ti-device-floppy"></i> Save Attendance</button>
             </div>
           </div>
           
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;" id="markAllContainer">
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main);">Student List</h3>
-            <button class="btn" onclick="wsMarkAllPresent()" style="background: var(--success-light); color: var(--success); border-color: var(--success-light); font-weight: 600; font-size: 13px; padding: 6px 16px;"><i class="ti ti-check-double"></i> Mark All Present</button>
+            <h3 style="font-size: 15px; font-weight: 600; color: var(--text-main);">Student List</h3>
+            <button class="btn" onclick="wsMarkAllPresent()" style="background: var(--success-light); color: var(--success); border-color: transparent; font-weight: 600; font-size: 12px; padding: 6px 12px;"><i class="ti ti-check"></i> Mark All Present</button>
           </div>
-
         </div>
         <table class="data-table">
           <thead id="attThead"><tr><th>Student</th><th>Roll No</th><th>Status</th><th>Remarks</th></tr></thead>
@@ -1167,8 +1161,7 @@ function updateWorkspaceRole() {
   const filterSubject = document.getElementById('attSubject');
   
   if (role === 'class_teacher') {
-    document.getElementById('attClassDisplay').innerText = 'Class 8A';
-    document.getElementById('attClass').value = 'Class 8A';
+    document.getElementById('attClass').innerHTML = '<option value="Class 8A">Class 8A</option>';
     filterSubject.innerHTML = `
       <option value="my_subject">Mathematics</option>
       <option value="all">Overview (All Subjects)</option>
@@ -1176,8 +1169,7 @@ function updateWorkspaceRole() {
       <option value="science">Science (Read Only)</option>
     `;
   } else {
-    document.getElementById('attClassDisplay').innerText = 'Class 9B';
-    document.getElementById('attClass').value = 'Class 9B';
+    document.getElementById('attClass').innerHTML = '<option value="Class 9B">Class 9B</option>';
     filterSubject.innerHTML = `
       <option value="my_subject">Mathematics</option>
     `;
