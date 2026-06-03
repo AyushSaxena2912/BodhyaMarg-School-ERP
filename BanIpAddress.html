@@ -142,6 +142,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
             <span style="font-size: 11px; color: var(--text-hint); margin-top: 4px;">Enter a valid IPv4 or IPv6 address.</span>
           </div>
           <div class="form-group">
+            <label for="campusSelect">Apply To <span style="color:var(--red);">*</span></label>
+            <select id="campusSelect" required>
+              <option value="Global (All)">Global (All Campuses)</option>
+              <option value="Main Campus - Delhi">Main Campus - Delhi (DPS)</option>
+              <option value="South Branch - Indore">South Branch - Indore</option>
+              <option value="North Branch - Mumbai">North Branch - Mumbai</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label for="ipReason">Reason for Ban</label>
             <textarea id="ipReason" placeholder="Why is this IP being blocked?"></textarea>
           </div>
@@ -169,6 +178,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
               <tr>
                 <th width="40">#</th>
                 <th>IP Address</th>
+                <th>Campus / Branch</th>
                 <th>Reason</th>
                 <th>Blocked On</th>
                 <th width="100" style="text-align: center;">Action</th>
@@ -193,9 +203,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <script>
 // Mock Database
 let blockedIps = [
-  { id: 1, ip: "182.45.12.98", reason: "Multiple failed login attempts from unrecognized device.", date: "02 Jun 2026, 14:30" },
-  { id: 2, ip: "45.22.19.105", reason: "Suspicious scraping bot activity detected.", date: "01 Jun 2026, 09:15" },
-  { id: 3, ip: "103.76.54.21", reason: "Spam requests to contact form.", date: "28 May 2026, 18:45" }
+  { id: 1, ip: "182.45.12.98", campus: "Global (All)", reason: "Multiple failed login attempts from unrecognized device.", date: "02 Jun 2026, 14:30" },
+  { id: 2, ip: "45.22.19.105", campus: "Main Campus - Delhi", reason: "Suspicious scraping bot activity detected.", date: "01 Jun 2026, 09:15" },
+  { id: 3, ip: "103.76.54.21", campus: "South Branch - Indore", reason: "Spam requests to contact form.", date: "28 May 2026, 18:45" }
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -211,7 +221,8 @@ function renderTable() {
   
   const filteredIps = blockedIps.filter(item => 
     item.ip.toLowerCase().includes(searchQuery) || 
-    item.reason.toLowerCase().includes(searchQuery)
+    item.reason.toLowerCase().includes(searchQuery) ||
+    item.campus.toLowerCase().includes(searchQuery)
   );
 
   if (filteredIps.length === 0) {
@@ -223,6 +234,7 @@ function renderTable() {
       tr.innerHTML = `
         <td>${index + 1}</td>
         <td><strong style="font-family: monospace; color: var(--text);">${item.ip}</strong></td>
+        <td><span style="color: var(--text-muted); font-size: 12.5px; font-weight: 500;">${item.campus}</span></td>
         <td><span style="color: var(--text-muted); font-size: 12.5px;">${item.reason || '-'}</span></td>
         <td style="color: var(--text-muted); font-size: 12.5px;">${item.date}</td>
         <td style="text-align: center;">
@@ -239,11 +251,13 @@ function renderTable() {
 function addIpAddress(e) {
   e.preventDefault();
   const ipInput = document.getElementById('ipAddress');
+  const campusInput = document.getElementById('campusSelect');
   const reasonInput = document.getElementById('ipReason');
   
   const newIp = {
     id: Date.now(),
     ip: ipInput.value.trim(),
+    campus: campusInput.value,
     reason: reasonInput.value.trim(),
     date: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
   };
@@ -252,6 +266,7 @@ function addIpAddress(e) {
   
   // Reset form
   ipInput.value = '';
+  campusInput.value = 'Global (All)';
   reasonInput.value = '';
   
   renderTable();
