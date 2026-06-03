@@ -190,8 +190,8 @@ const gateways = [
   { id: 'cashfree', name: 'Cashfree', img: 'Cashfree.png', connected: false },
   { id: 'paypal', name: 'PayPal', img: 'PayPal.png', connected: false },
   { id: 'stripe', name: 'Stripe', img: 'Stripe.png', connected: false },
-  { id: 'phonepe', name: 'PhonePe', img: 'PhonePe.png', connected: false },
-  { id: 'paytm', name: 'Paytm', img: 'Paytm.png', connected: false }
+  { id: 'phonepe', name: 'PhonePe', img: 'PhonePe.png', imgHeight: '40px', connected: false },
+  { id: 'paytm', name: 'Paytm', img: 'Paytm.png', imgHeight: '36px', connected: false }
 ];
 
 function renderGrid() {
@@ -200,8 +200,9 @@ function renderGrid() {
   
   gateways.forEach(gw => {
     const isConn = gw.connected;
+    const height = gw.imgHeight || '28px';
     const logoHtml = gw.img 
-      ? `<img src="${gw.img}" alt="${gw.name}" style="height: 28px; object-fit: contain;">`
+      ? `<img src="${gw.img}" alt="${gw.name}" style="height: ${height}; object-fit: contain; margin-left: -4px;">`
       : `<div class="gc-logo" style="color: ${gw.color}; font-size: 22px;">${gw.name}</div>`;
       
     grid.innerHTML += `
