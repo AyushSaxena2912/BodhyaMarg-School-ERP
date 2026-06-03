@@ -75,8 +75,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 /* Roles Grid */
 .roles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.role-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 14px; position: relative; transition: all 0.2s; box-shadow: var(--shadow); }
-.role-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.role-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 14px; position: relative; transition: all 0.2s; box-shadow: var(--shadow); z-index: 1; }
+.role-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); z-index: 2; }
+.role-card.dropdown-active { z-index: 50; }
 .role-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
 .role-card-title { font-size: 15.5px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
 .system-badge { font-size: 10px; padding: 2px 6px; background: #f1f5f9; color: #475569; border-radius: 4px; font-weight: 600; text-transform: uppercase; }
@@ -1102,16 +1103,26 @@ function toggleCardActionDropdown(event, roleId) {
   
   // Close any other open dropdowns first
   document.querySelectorAll('.action-dropdown.show').forEach(el => {
-    if (el !== dropdown) el.classList.remove('show');
+    if (el !== dropdown) {
+      el.classList.remove('show');
+      const card = el.closest('.role-card');
+      if (card) card.classList.remove('dropdown-active');
+    }
   });
   
-  if (dropdown) dropdown.classList.toggle('show');
+  if (dropdown) {
+    dropdown.classList.toggle('show');
+    const card = dropdown.closest('.role-card');
+    if (card) card.classList.toggle('dropdown-active', dropdown.classList.contains('show'));
+  }
 }
 
 // Hide dropdowns when clicking anywhere on screen
 document.addEventListener('click', () => {
   document.querySelectorAll('.action-dropdown.show').forEach(el => {
     el.classList.remove('show');
+    const card = el.closest('.role-card');
+    if (card) card.classList.remove('dropdown-active');
   });
 });
 
