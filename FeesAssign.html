@@ -59,15 +59,29 @@ input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--green); cu
     </div>
 
     <div class="filter-bar">
-      <div class="filter-group"><label>Class</label><select id="fClass" onchange="render()"><option value="">All Classes</option><option>Class I</option><option>Class II</option><option>Class III</option><option>Class IV</option><option>Class V</option><option>Class VI</option><option>Class VII</option><option>Class VIII</option></select></div>
-      <div class="filter-group"><label>Section</label><select id="fSec" onchange="render()"><option value="">All</option><option>A</option><option>B</option><option>C</option></select></div>
+      <div class="filter-group"><label>Assign To Role</label><select id="fRole" onchange="toggleFilters();render()"><option value="Student">Student</option><option value="Teacher">Teacher</option><option value="Staff">Staff</option></select></div>
+      <div class="filter-group student-filter"><label>Class</label><select id="fClass" onchange="render()"><option value="">All Classes</option><option>Class I</option><option>Class II</option><option>Class V</option><option>Class VI</option><option>Class VII</option><option>Class VIII</option></select></div>
+      <div class="filter-group student-filter"><label>Section</label><select id="fSec" onchange="render()"><option value="">All</option><option>A</option><option>B</option><option>C</option></select></div>
+      <div class="filter-group staff-filter" style="display:none;"><label>Department</label><select id="fDept" onchange="render()"><option value="">All Departments</option><option>Science</option><option>Mathematics</option><option>Administration</option><option>Transport</option></select></div>
       <div class="filter-group"><label>Fee Group</label><select id="fGroup" onchange="render()"><option value="">All Groups</option><option>Academic Fees</option><option>Transport Fees</option><option>Hostel Fees</option></select></div>
       <button class="btn btn-primary" onclick="assignSelected()"><i class="ti ti-check"></i> Assign to Selected</button>
     </div>
 
     <div class="table-card">
       <table>
-        <thead><tr><th style="width:40px"><input type="checkbox" id="ca" onchange="document.querySelectorAll('#tb input[type=checkbox]').forEach(c=>c.checked=this.checked)" /></th><th>Student Name</th><th>Roll No</th><th>Class</th><th>Section</th><th>Fee Group</th><th>Total Amount</th><th>Status</th></tr></thead>
+        <thead>
+          <tr id="tableHeader">
+            <th style="width:40px"><input type="checkbox" id="ca" onchange="document.querySelectorAll('#tb input[type=checkbox]').forEach(c=>c.checked=this.checked)" /></th>
+            <th>Name</th>
+            <th>ID / Roll No</th>
+            <th class="student-col">Class</th>
+            <th class="student-col">Section</th>
+            <th class="staff-col" style="display:none;">Department</th>
+            <th>Fee Group</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
         <tbody id="tb"></tbody>
       </table>
       <div class="assign-footer">
@@ -78,30 +92,63 @@ input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--green); cu
   </div>
 </div>
 <script>
-const students=[
-  {id:1,name:'Aarav Sharma',roll:'VIII-A-01',cls:'Class VIII',sec:'A',group:'Academic Fees',amount:23000,status:'Assigned'},
-  {id:2,name:'Diya Patel',roll:'VIII-A-02',cls:'Class VIII',sec:'A',group:'Academic Fees',amount:23000,status:'Pending'},
-  {id:3,name:'Ishaan Verma',roll:'VIII-A-03',cls:'Class VIII',sec:'A',group:'Academic Fees',amount:23000,status:'Assigned'},
-  {id:4,name:'Ananya Gupta',roll:'VIII-B-01',cls:'Class VIII',sec:'B',group:'Academic Fees',amount:23000,status:'Pending'},
-  {id:5,name:'Riya Singh',roll:'VII-A-01',cls:'Class VII',sec:'A',group:'Academic Fees',amount:20000,status:'Assigned'},
-  {id:6,name:'Arjun Mehta',roll:'VII-A-02',cls:'Class VII',sec:'A',group:'Transport Fees',amount:4500,status:'Pending'},
-  {id:7,name:'Priya Jain',roll:'VI-A-01',cls:'Class VI',sec:'A',group:'Hostel Fees',amount:12000,status:'Assigned'},
-  {id:8,name:'Sahil Kumar',roll:'VI-B-01',cls:'Class VI',sec:'B',group:'Academic Fees',amount:20000,status:'Pending'},
-  {id:9,name:'Neha Yadav',roll:'V-A-01',cls:'Class V',sec:'A',group:'Transport Fees',amount:4500,status:'Assigned'},
-  {id:10,name:'Karan Chopra',roll:'V-A-02',cls:'Class V',sec:'A',group:'Academic Fees',amount:18000,status:'Pending'},
+const users=[
+  {id:1,role:'Student',name:'Aarav Sharma',roll:'VIII-A-01',cls:'Class VIII',sec:'A',group:'Academic Fees',amount:23000,status:'Assigned'},
+  {id:2,role:'Student',name:'Diya Patel',roll:'VIII-A-02',cls:'Class VIII',sec:'A',group:'Academic Fees',amount:23000,status:'Pending'},
+  {id:3,role:'Student',name:'Ishaan Verma',roll:'VIII-A-03',cls:'Class VIII',sec:'A',group:'Academic Fees',amount:23000,status:'Assigned'},
+  {id:5,role:'Student',name:'Riya Singh',roll:'VII-A-01',cls:'Class VII',sec:'A',group:'Academic Fees',amount:20000,status:'Assigned'},
+  {id:6,role:'Student',name:'Arjun Mehta',roll:'VII-A-02',cls:'Class VII',sec:'A',group:'Transport Fees',amount:4500,status:'Pending'},
+  {id:11,role:'Teacher',name:'Mohan Sharma',roll:'EMP-T101',dept:'Science',group:'Transport Fees',amount:2500,status:'Pending'},
+  {id:12,role:'Teacher',name:'Sarah Khan',roll:'EMP-T102',dept:'Mathematics',group:'Transport Fees',amount:2500,status:'Assigned'},
+  {id:13,role:'Staff',name:'Ramesh Kumar',roll:'EMP-S201',dept:'Administration',group:'Transport Fees',amount:1500,status:'Pending'},
 ];
-function render(){
-  const fc=document.getElementById('fClass').value,fs=document.getElementById('fSec').value,fg=document.getElementById('fGroup').value;
-  const f=students.filter(s=>(fc?s.cls===fc:true)&&(fs?s.sec===fs:true)&&(fg?s.group===fg:true));
-  document.getElementById('tb').innerHTML=f.map(s=>`<tr><td><input type="checkbox" data-id="${s.id}" /></td><td style="font-weight:500">${s.name}</td><td>${s.roll}</td><td>${s.cls}</td><td>${s.sec}</td><td style="font-size:12px;color:var(--text-muted)">${s.group}</td><td class="amount">₹${s.amount.toLocaleString('en-IN')}</td><td><span class="badge badge-${s.status.toLowerCase()}">${s.status}</span></td></tr>`).join('');
-  document.getElementById('info').textContent=`Showing ${f.length} of ${students.length} students`;
+
+function toggleFilters() {
+  const role = document.getElementById('fRole').value;
+  const isStudent = role === 'Student';
+  document.querySelectorAll('.student-filter').forEach(el => el.style.display = isStudent ? 'flex' : 'none');
+  document.querySelectorAll('.staff-filter').forEach(el => el.style.display = !isStudent ? 'flex' : 'none');
+  document.querySelectorAll('.student-col').forEach(el => el.style.display = isStudent ? 'table-cell' : 'none');
+  document.querySelectorAll('.staff-col').forEach(el => el.style.display = !isStudent ? 'table-cell' : 'none');
 }
+
+function render(){
+  const role = document.getElementById('fRole').value;
+  const fc=document.getElementById('fClass').value, fs=document.getElementById('fSec').value;
+  const fd=document.getElementById('fDept').value, fg=document.getElementById('fGroup').value;
+  
+  const f=users.filter(u => {
+    if(u.role !== role) return false;
+    if(fg && u.group !== fg) return false;
+    if(role === 'Student') {
+      if(fc && u.cls !== fc) return false;
+      if(fs && u.sec !== fs) return false;
+    } else {
+      if(fd && u.dept !== fd) return false;
+    }
+    return true;
+  });
+  
+  document.getElementById('tb').innerHTML=f.map(u=>`<tr>
+    <td><input type="checkbox" data-id="${u.id}" /></td>
+    <td style="font-weight:500">${u.name}</td>
+    <td>${u.roll}</td>
+    ${role === 'Student' ? `<td>${u.cls}</td><td>${u.sec}</td>` : `<td>${u.dept}</td>`}
+    <td style="font-size:12px;color:var(--text-muted)">${u.group}</td>
+    <td class="amount">₹${u.amount.toLocaleString('en-IN')}</td>
+    <td><span class="badge badge-${u.status.toLowerCase()}">${u.status}</span></td>
+  </tr>`).join('');
+  document.getElementById('info').textContent=`Showing ${f.length} ${role.toLowerCase()}s`;
+}
+
 function assignSelected(){
   const checked=document.querySelectorAll('#tb input[type=checkbox]:checked');
-  if(!checked.length)return alert('Select students first');
-  checked.forEach(c=>{const s=students.find(x=>x.id==c.dataset.id);if(s)s.status='Assigned';});
-  render();alert(checked.length+' student(s) assigned successfully!');
+  if(!checked.length) return alert('Select users first');
+  checked.forEach(c=>{const u=users.find(x=>x.id==c.dataset.id);if(u)u.status='Assigned';});
+  render();alert(checked.length+' user(s) assigned successfully!');
 }
+
+toggleFilters();
 render();
 </script>
 <script src="sidebar.js"></script>
