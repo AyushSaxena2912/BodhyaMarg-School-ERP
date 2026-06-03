@@ -3,186 +3,264 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BodhyaMarg ERP – System Error</title>
+<title>System Under Maintenance - BodhyaMarg ERP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
-  --bg: #f8fafc; --white: #ffffff; --border: #e2e8f0;
-  --text: #1e293b; --text-muted: #64748b; --text-hint: #94a3b8;
-  --radius: 8px; --radius-lg: 12px;
-  --red: #ef4444; --red-light: #fee2e2; --red-dark: #b91c1c;
-  --amber: #f59e0b; --amber-light: #fef3c7;
-}
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+  :root {
+    --green: #0b7b3f; 
+    --green-dark: #096332;
+    --text-main: #1e3a5f;
+    --text-muted: #64748b;
+    --bg-color: #f8fafc;
+    --white: #ffffff;
+    --border: #e2e8f0;
+    --red: #ef4444; 
+    --red-light: #fee2e2; 
+    --red-dark: #b91c1c;
+    --amber: #f59e0b; 
+    --amber-light: #fef3c7;
+    --blue: #2563eb;
+    --blue-light: #eff6ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* Header Section (Same as Login) */
+  .header {
+    background-color: var(--green);
+    color: var(--white);
+    padding: 16px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .school-logo { width: 65px; height: auto; }
+  .school-titles { display: flex; flex-direction: column; justify-content: center; }
+  .school-name { font-size: 24px; font-weight: 600; letter-spacing: 0.5px; line-height: 1.2; }
+  .school-sub { font-size: 12px; font-weight: 600; margin-top: 2px; }
+  .school-sub2 { font-size: 10px; font-weight: 400; margin-top: 1px; opacity: 0.9; }
+  .header-nav { display: flex; gap: 32px; }
+  .header-nav a { color: var(--white); text-decoration: none; font-size: 15px; font-weight: 600; transition: opacity 0.2s; }
+  .header-nav a:hover { opacity: 0.8; }
+  
+  /* Main Content Layout */
+  .main-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+  .error-wrapper {
+    display: flex;
+    max-width: 1050px;
+    width: 100%;
+    gap: 48px;
+    align-items: stretch;
+  }
+  
+  /* Left Art Banner Section */
+  .banner-section {
+    flex: 1.1;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .banner-section svg {
+    width: 60%;
+    height: auto;
+    filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
+  }
+  
+  /* Right Error Details Section */
+  .error-section {
+    flex: 0.9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 480px;
+  }
+  .error-card {
+    background: var(--white);
+    padding: 48px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.02);
+  }
+  .error-code {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 6px 14px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 24px;
+    background: var(--blue-light);
+    color: var(--blue);
+  }
+  .error-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+  .error-desc {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  
+  /* Buttons Layout */
+  .actions-layout {
+    display: flex;
+    gap: 12px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text-main);
+    transition: all 0.2s;
+    outline: none;
+    text-decoration: none;
+  }
+  .btn:hover { background: var(--bg-color); border-color: #cbd5e1; }
+  .btn-primary { background: var(--green); color: var(--white); border-color: var(--green); }
+  .btn-primary:hover { background: var(--green-dark); border-color: var(--green-dark); color: var(--white); }
 
-.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
-.topbar-search i { font-size: 14px; color: var(--text-hint); }
-.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
-.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
-.av { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .powered-by {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+  .powered-by span { color: var(--green); }
 
-.content { flex: 1; overflow-y: auto; padding: 32px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.content::-webkit-scrollbar { width: 4px; }
-.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  /* Tech Stack Trace for 500 */
+  .tech-details-container { margin-top: 24px; }
+  .tech-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #94a3b8; cursor: pointer; user-select: none; transition: color 0.2s; }
+  .tech-toggle:hover { color: var(--text-muted); }
+  .tech-toggle i { transition: transform 0.2s; }
+  .tech-toggle.open i { transform: rotate(90deg); }
+  .tech-content { display: none; margin-top: 12px; background: #0f172a; color: #94a3b8; border-radius: 8px; padding: 16px; position: relative; }
+  .tech-content pre { font-family: 'Fira Code', monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
 
-/* Dev Controls Toggle Bar */
-.dev-controls { background: var(--white); border: 1px dashed var(--green); border-radius: var(--radius); padding: 8px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 24px; width: 100%; max-width: 680px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-.dev-label { font-size: 12px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; }
-.dev-btn-group { display: flex; gap: 6px; margin-left: auto; }
-.dev-btn { padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
-.dev-btn.active { background: var(--green-light); border-color: var(--green); color: var(--green); }
+  /* SVG Animations */
+  .float-doc { animation: floatDoc 3s ease-in-out infinite; transform-origin: center; }
+  .pulse-light { animation: pulseLight 2s ease-in-out infinite; }
+  .glitch-server { animation: serverShake 4s infinite; }
+  .status-led { animation: ledBlink 1s infinite alternate; }
+  
+  @keyframes floatDoc { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-12px) rotate(3deg); } }
+  @keyframes pulseLight { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.85; } }
+  @keyframes ledBlink { 0% { fill: var(--red); filter: drop-shadow(0 0 4px var(--red)); } 100% { fill: #334155; filter: none; } }
+  @keyframes serverShake { 0%, 95%, 100% { transform: translate(0, 0); } 96% { transform: translate(-3px, 1px); } 97% { transform: translate(3px, -1px); } 98% { transform: translate(-2px, -2px); } 99% { transform: translate(2px, 3px); } }
 
-/* Main Card */
-.error-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); width: 100%; max-width: 680px; padding: 40px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.025); position: relative; transition: opacity 0.25s, transform 0.25s; }
-.error-card.fade-out { opacity: 0; transform: scale(0.98); }
-
-/* Error Art & Animations */
-.art-container { height: 160px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; position: relative; }
-
-/* 404 Animation: Floating Search Light & Doc */
-.art-404 { display: none; width: 120px; height: 120px; position: relative; }
-.art-404 svg { width: 100%; height: 100%; }
-.float-doc { animation: floatDoc 3s ease-in-out infinite; transform-origin: center; }
-.pulse-light { animation: pulseLight 2s ease-in-out infinite; }
-
-/* 500 Animation: Pulsing Server with glowing lights */
-.art-500 { display: none; width: 120px; height: 120px; position: relative; }
-.art-500 svg { width: 100%; height: 100%; }
-.glitch-server { animation: serverShake 4s infinite; }
-.status-led { animation: ledBlink 1s infinite alternate; }
-
-@keyframes floatDoc {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(2deg); }
-}
-@keyframes pulseLight {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.85; }
-}
-@keyframes ledBlink {
-  0% { fill: var(--red); filter: drop-shadow(0 0 2px var(--red)); }
-  100% { fill: #334155; filter: none; }
-}
-@keyframes serverShake {
-  0%, 95%, 100% { transform: translate(0, 0); }
-  96% { transform: translate(-2px, 1px); }
-  97% { transform: translate(2px, -1px); }
-  98% { transform: translate(-1px, -1px); }
-  99% { transform: translate(1px, 2px); }
-}
-
-/* Error Headings & Texts */
-.error-code { font-size: 14px; font-weight: 700; color: var(--red-dark); text-transform: uppercase; letter-spacing: 0.1em; background: var(--red-light); padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 16px; }
-.error-code.c-404 { color: var(--green-dark); background: var(--green-light); }
-.error-title { font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
-.error-desc { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto; }
-
-/* Status Bar Widget */
-.status-bar { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 16px 0; margin-bottom: 30px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.status-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.status-label { font-size: 11px; font-weight: 600; color: var(--text-hint); text-transform: uppercase; }
-.status-indicator { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-.status-dot.ok { background: #10b981; box-shadow: 0 0 6px #10b981; }
-.status-dot.warning { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
-.status-dot.error { background: var(--red); box-shadow: 0 0 6px var(--red); }
-
-/* Buttons Layout */
-.actions-layout { display: flex; align-items: center; justify-content: center; gap: 12px; }
-.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius); font-size: 13.5px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); transition: all 0.2s; outline: none; }
-.btn:hover { background: var(--bg); }
-.btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
-.btn-primary:hover { background: var(--green-dark); }
-.btn-danger { background: var(--red); color: #fff; border-color: var(--red); }
-.btn-danger:hover { background: var(--red-dark); }
-
-/* Stack Trace Container */
-.tech-details-container { margin-top: 24px; text-align: left; }
-.tech-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--text-hint); cursor: pointer; user-select: none; transition: color 0.2s; }
-.tech-toggle:hover { color: var(--text-muted); }
-.tech-toggle i { transition: transform 0.2s; }
-.tech-toggle.open i { transform: rotate(90deg); }
-.tech-content { display: none; margin-top: 12px; background: #0f172a; color: #94a3b8; border-radius: var(--radius); padding: 16px; position: relative; }
-.tech-content pre { font-family: 'Fira Code', monospace; font-size: 11.5px; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
-.copy-btn { position: absolute; right: 12px; top: 12px; background: rgba(255,255,255,0.06); border: none; border-radius: 4px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; font-size: 13px; transition: background 0.2s; }
-.copy-btn:hover { background: rgba(255,255,255,0.15); }
-
-/* Sidebar Active states override */
-.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+  /* Responsive Adjustments */
+  @media (max-width: 900px) {
+    .error-wrapper { flex-direction: column; max-width: 500px; }
+    .header { flex-direction: column; gap: 20px; padding: 16px 20px; text-align: center; }
+    .header-nav { gap: 16px; }
+    .school-titles { align-items: center; }
+    .banner-section { padding: 60px 20px; }
+    .banner-section svg { width: 140px; }
+  }
 </style>
 </head>
 <body>
 
+  <!-- Header Section -->
+  <header class="header">
+    <div class="header-left">
+      <img src="school_logo.png" alt="DPS Logo" class="school-logo" onerror="this.src='https://via.placeholder.com/65x80?text=Logo'" />
+      <div class="school-titles">
+        <div class="school-name">DELHI PUBLIC SCHOOL</div>
+        <div class="school-sub">Greater Faridabad</div>
+        <div class="school-sub2">(Under the agencies of The DPS Society)</div>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <a href="Login.html">Login</a>
+      <a href="#">About</a>
+      <a href="#">Academics</a>
+    </nav>
+  </header>
 
-
-<!-- MAIN WORKSPACE -->
-<div class="main">
-  
-
-  <div class="content">
-    
-    <!-- Dev Switcher Mode -->
-    
-
-    <!-- Error Presenter Card -->
-    <div class="error-card" id="errorCard">
+  <!-- Main Content Layout -->
+  <main class="main-container">
+    <div class="error-wrapper">
       
-      <!-- Art & Animations -->
-      <div class="art-container">
+      <!-- Left Art Banner Section -->
+      <div class="banner-section">
         
-        <!-- Case 404 Art -->
-        
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="60" r="32" fill="#ffffff" stroke="#3b82f6" stroke-width="5" stroke-dasharray="14 7" class="glitch-server"/>
+            <circle cx="60" cy="60" r="14" fill="#3b82f6"/>
+            <path d="M35 85L20 100M85 85L100 100M40 35L25 20M80 35L95 20" stroke="#93c5fd" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+    
+      </div>
 
-        <!-- Case 500 Art -->
-        
+      <!-- Right Error Details Section -->
+      <div class="error-section">
+        <div class="error-card">
+          <span class="error-code">Error Code: 503 MAINTENANCE</span>
+          <h1 class="error-title">System Under Maintenance</h1>
+          <p class="error-desc">We are currently upgrading the BodhyaMarg ERP system with new features. The portal will be back online shortly. Thank you for your patience!</p>
+          
+          <div class="actions-layout">
+            <button class="btn btn-primary" onclick="window.location.href='AllStudents.html'"><i class="ti ti-arrow-left"></i> Dashboard</button>
+            <button class="btn" onclick="window.location.reload()"><i class="ti ti-reload"></i> Check Status</button>
+          </div>
 
-        <!-- Case 401/403 Art (Lock/Shield) -->
-        
-
-        <!-- Case 503 Art (Settings/Maintenance) -->
-        <div class="art-503" id="art503" style="display:none; width:120px; height:120px; position:relative;">
-          <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="60" cy="60" r="25" fill="#eff6ff" stroke="#3b82f6" stroke-width="4" stroke-dasharray="10 5" class="glitch-server"/>
-            <circle cx="60" cy="60" r="10" fill="#3b82f6"/>
-            <path d="M40 85L30 95M80 85L90 95M35 40L25 30M85 40L95 30" stroke="#93c5fd" stroke-width="4" stroke-linecap="round"/>
-          </svg>
+          
         </div>
-
+        
+        <div class="powered-by">
+          Powered By <span>BodhyaMarg</span>
+        </div>
       </div>
-
-      <!-- Error Content Details -->
-      <span class="error-code" style="background: #eff6ff; color: #2563eb;">Error Code: 503</span>
-      <h2 class="error-title">System Under Maintenance</h2>
-      <p class="error-desc">We are currently upgrading the School ERP system with new features and performance improvements. The system will be back online shortly. Thank you for your patience!</p>
-
-
-
-      <!-- Action Buttons -->
-      <div class="actions-layout">
-        <button class="btn btn-primary" onclick="goHome()"><i class="ti ti-arrow-left"></i> Back to Dashboard</button>
-        <button class="btn" onclick="window.location.reload()"><i class="ti ti-reload"></i> Check Status</button>
-      </div>
-
-      
 
     </div>
+  </main>
 
-  </div>
-</div>
-
-<script>
-function goHome() {
-  window.location.href = "AllStudents.html";
-}
-</script>
-
+  <script>
+    function toggleTechTrace() {
+      const toggle = document.querySelector('.tech-toggle');
+      const content = document.querySelector('.tech-content');
+      toggle.classList.toggle('open');
+      content.style.display = toggle.classList.contains('open') ? 'block' : 'none';
+    }
+  </script>
 </body>
 </html>
