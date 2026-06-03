@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Apply for Leave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38; --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea; --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af; --radius: 8px; --radius-lg: 12px; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); } .topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; } .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; } .breadcrumb span { color: var(--green); }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); white-space: nowrap; }
+.btn:hover { background: var(--bg); } .btn-primary { background: var(--green); color: #fff; border-color: var(--green); } .btn-primary:hover { background: var(--green-dark); }
+.btn-lg { padding: 12px 24px; font-size: 14px; }
+
+/* Form */
+.form-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; max-width: 800px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+.form-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+.form-card h3 i { color: var(--green); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-field { display: flex; flex-direction: column; gap: 8px; }
+.form-field.full { grid-column: 1 / -1; }
+.form-field label { font-size: 12.5px; font-weight: 600; color: var(--text-main); }
+.form-field input, .form-field select, .form-field textarea { font-family: inherit; font-size: 13.5px; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; outline: none; background: var(--white); }
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-light); }
+.form-field textarea { resize: vertical; min-height: 100px; }
+.form-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
+
+/* Status Cards for Recent Leaves */
+.recent-leaves { margin-top: 40px; max-width: 800px; margin-left: auto; margin-right: auto; }
+.recent-leaves h4 { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.leave-item { display: flex; align-items: flex-start; justify-content: space-between; padding: 16px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; }
+.leave-info h5 { font-size: 14.5px; font-weight: 600; margin-bottom: 6px; }
+.leave-info p { font-size: 13px; color: var(--text-muted); }
+.status-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
+.status-badge.pending { background: #fffbeb; color: #f59e0b; }
+.status-badge.approved { background: #ecfdf5; color: #10b981; }
+.status-badge.rejected { background: #fef2f2; color: #ef4444; }
+
+</style>
+<script src="permissions.js"></script>
+<script>BodhyaAuth.guardPage(['student', 'parent']);</script>
+</head>
+<body>
+<div id="sidebar-container"></div>
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search"><i class="ti ti-search"></i><input placeholder="Search..." /></div>
+    <div class="topbar-right">
+      <div class="icon-btn"><i class="ti ti-bell"></i></div>
+      <div class="avatar">S</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Apply for Leave</h1>
+        <div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Leaves <i class="ti ti-chevron-right"></i> <span>Apply Leave</span></div>
+      </div>
+    </div>
+
+    <div class="form-card" id="formCard">
+      <h3><i class="ti ti-calendar-minus"></i> New Leave Application</h3>
+      <div class="form-grid">
+        <div class="form-field full">
+          <label>Student Name</label>
+          <input value="Aarav Sharma (Class VIII - A)" readonly style="background: var(--bg); cursor: not-allowed; color: var(--text-muted);" />
+        </div>
+        <div class="form-field">
+          <label>Leave Type</label>
+          <select id="leaveType">
+            <option>Sick Leave</option>
+            <option>Family Event / Casual</option>
+            <option>Medical Emergency</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Attachment (Optional)</label>
+          <input type="file" style="padding: 7px 12px;" />
+        </div>
+        <div class="form-field">
+          <label>From Date</label>
+          <input type="date" id="fromDate" />
+        </div>
+        <div class="form-field">
+          <label>To Date</label>
+          <input type="date" id="toDate" />
+        </div>
+        <div class="form-field full">
+          <label>Reason for Leave</label>
+          <textarea id="reason" placeholder="Please explain the reason for the leave in detail..."></textarea>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button class="btn" onclick="window.history.back()">Cancel</button>
+        <button class="btn btn-primary btn-lg" onclick="submitApp()"><i class="ti ti-send"></i> Submit Application</button>
+      </div>
+    </div>
+
+    <div class="recent-leaves">
+      <h4>Recent Leave Applications</h4>
+      
+      <div class="leave-item">
+        <div class="leave-info">
+          <h5>Sick Leave (Viral Fever)</h5>
+          <p><i class="ti ti-calendar"></i> 10 May 2026 - 12 May 2026 (3 Days)</p>
+        </div>
+        <div><span class="status-badge approved">Approved</span></div>
+      </div>
+      
+      <div class="leave-item">
+        <div class="leave-info">
+          <h5>Family Event (Brother's Wedding)</h5>
+          <p><i class="ti ti-calendar"></i> 02 Apr 2026 - 05 Apr 2026 (4 Days)</p>
+        </div>
+        <div><span class="status-badge approved">Approved</span></div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<script>
+function submitApp(){
+  const f = document.getElementById('fromDate').value;
+  const t = document.getElementById('toDate').value;
+  const r = document.getElementById('reason').value;
+
+  if(!f || !t || !r){
+    alert('Please fill all the mandatory fields (Dates and Reason).');
+    return;
+  }
+  alert('✅ Leave application submitted successfully to the Class Teacher!');
+  window.location.reload();
+}
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>

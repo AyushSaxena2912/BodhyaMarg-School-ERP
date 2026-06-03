@@ -213,7 +213,7 @@ body[data-current-role="admin"] [data-allowed-roles="superadmin"] { display: non
     </div>
   </div>
   
-  <div class="nav-group" data-allowed-roles="admin,superadmin,teacher">
+  <div class="nav-group" data-allowed-roles="admin,superadmin,teacher,student,parent">
     <div class="nav-label">HRM</div>
     <a href="AddStafff.html" class="nav-item" data-allowed-roles="admin,superadmin"><i class="ti ti-users-group"></i> Staffs</a>
     <a href="Designation.html" class="nav-item" data-allowed-roles="admin,superadmin"><i class="ti ti-id-badge"></i> Designation</a>
@@ -226,11 +226,12 @@ body[data-current-role="admin"] [data-allowed-roles="superadmin"] { display: non
         <a href="StaffAttendance.html" class="nav-item" data-allowed-roles="admin,superadmin">Staff Attendance</a>
       </div>
     </div>
-    <div class="nav-sub-container" data-allowed-roles="admin,superadmin,teacher">
+    <div class="nav-sub-container" data-allowed-roles="admin,superadmin,teacher,student,parent">
       <a href="Leave.html" class="nav-item"><i class="ti ti-calendar-minus"></i> Leaves <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
       <div class="nav-sub">
         <a href="Leave.html" class="nav-item" data-allowed-roles="admin,superadmin,teacher">List of leaves</a>
         <a href="LeaveApproveRequest.html" class="nav-item" data-allowed-roles="admin,superadmin">Approve Request</a>
+        <a href="StudentLeaveApply.html" class="nav-item" data-allowed-roles="student,parent">Apply for Leave</a>
       </div>
     </div>
   </div>
