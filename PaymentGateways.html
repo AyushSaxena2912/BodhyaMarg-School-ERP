@@ -186,7 +186,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 <script>
 const gateways = [
-  { id: 'razorpay', name: 'Razorpay', color: '#0b58cb', connected: true },
+  { id: 'razorpay', name: 'Razorpay', img: 'Razorpay.png', connected: true },
   { id: 'cashfree', name: 'Cashfree', color: '#5b2f91', connected: false },
   { id: 'paypal', name: 'PayPal', color: '#003087', connected: false },
   { id: 'stripe', name: 'stripe', color: '#635bff', connected: false }
@@ -198,10 +198,14 @@ function renderGrid() {
   
   gateways.forEach(gw => {
     const isConn = gw.connected;
+    const logoHtml = gw.img 
+      ? `<img src="${gw.img}" alt="${gw.name}" style="height: 28px; object-fit: contain;">`
+      : `<div class="gc-logo" style="color: ${gw.color}; font-size: 22px;">${gw.name}</div>`;
+      
     grid.innerHTML += `
       <div class="gateway-card" style="gap: 20px;">
         <div class="gc-header">
-          <div class="gc-logo" style="color: ${gw.color}; font-size: 22px;">${gw.name}</div>
+          ${logoHtml}
           <div class="gc-status-area">
             <label class="toggle-switch">
               <input type="checkbox" ${isConn ? 'checked' : ''} onchange="toggleStatus('${gw.id}', this.checked)">
