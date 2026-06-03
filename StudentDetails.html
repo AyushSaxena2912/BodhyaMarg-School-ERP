@@ -529,11 +529,109 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         </div>
 
         <!-- Fees Tab -->
-        <div id="tabContent-fees" style="display: none;">
-          <div class="card">
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; color: var(--text-hint); text-align: center;">
-              <i class="ti ti-receipt" style="font-size: 40px; margin-bottom: 12px; color: var(--green);"></i>
-              <p style="font-size: 14px; font-weight: 500;">Fees information and invoices will appear here.</p>
+        <div id="tabContent-fees" style="display: none; gap: 24px;">
+          <!-- Fees Summary Cards -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+            <div class="card" style="display: flex; align-items: center; gap: 16px; padding: 20px;">
+              <div style="width: 48px; height: 48px; border-radius: 12px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                <i class="ti ti-receipt"></i>
+              </div>
+              <div>
+                <div style="font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 4px;">Total Fees</div>
+                <div style="font-size: 20px; font-weight: 700; color: var(--text);">₹ 45,000</div>
+              </div>
+            </div>
+            <div class="card" style="display: flex; align-items: center; gap: 16px; padding: 20px;">
+              <div style="width: 48px; height: 48px; border-radius: 12px; background: #ecfdf5; color: #10b981; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                <i class="ti ti-wallet"></i>
+              </div>
+              <div>
+                <div style="font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 4px;">Total Paid</div>
+                <div style="font-size: 20px; font-weight: 700; color: var(--text);">₹ 25,000</div>
+              </div>
+            </div>
+            <div class="card" style="display: flex; align-items: center; gap: 16px; padding: 20px;">
+              <div style="width: 48px; height: 48px; border-radius: 12px; background: #fef2f2; color: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                <i class="ti ti-cash-off"></i>
+              </div>
+              <div>
+                <div style="font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 4px;">Total Due</div>
+                <div style="font-size: 20px; font-weight: 700; color: var(--text);">₹ 20,000</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fees Invoice List -->
+          <div class="card" style="padding: 0; overflow: hidden;">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="font-size: 15px; font-weight: 600;">Fee Invoices</h3>
+              <button class="btn-primary" style="padding: 6px 12px; font-size: 12px;"><i class="ti ti-credit-card"></i> Pay Due Fees</button>
+            </div>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                  <tr style="background: #f8fafc; border-bottom: 1px solid var(--border);">
+                    <th style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted);">Invoice ID</th>
+                    <th style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted);">Fee Group / Type</th>
+                    <th style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted);">Due Date</th>
+                    <th style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted);">Amount</th>
+                    <th style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted);">Paid</th>
+                    <th style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted);">Balance</th>
+                    <th style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted);">Status</th>
+                    <th style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted); text-align: center;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Row 1: Unpaid -->
+                  <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--green);">INV-2026-0045</td>
+                    <td style="padding: 12px 16px;">
+                      <div style="font-size: 13.5px; font-weight: 500; color: var(--text);">Term 2 Tuition Fee</div>
+                      <div style="font-size: 12px; color: var(--text-muted);">Class IX General</div>
+                    </td>
+                    <td style="padding: 12px 16px; font-size: 13px; color: var(--red); font-weight: 500;">15 Jun 2026</td>
+                    <td style="padding: 12px 16px; font-size: 13px; color: var(--text-muted);">₹ 20,000</td>
+                    <td style="padding: 12px 16px; font-size: 13px; color: var(--text-muted);">₹ 0</td>
+                    <td style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--red);">₹ 20,000</td>
+                    <td style="padding: 12px 16px;"><span class="status-badge inactive" style="font-size: 11px; background: #fef2f2; color: var(--red); padding: 4px 10px; border-radius: 20px;">Unpaid</span></td>
+                    <td style="padding: 12px 16px; text-align: center;">
+                      <button class="circle-btn" style="width: 28px; height: 28px; font-size: 14px; margin: 0 auto;" title="View Details"><i class="ti ti-eye"></i></button>
+                    </td>
+                  </tr>
+                  <!-- Row 2: Paid -->
+                  <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--green);">INV-2026-0012</td>
+                    <td style="padding: 12px 16px;">
+                      <div style="font-size: 13.5px; font-weight: 500; color: var(--text);">Term 1 Tuition Fee</div>
+                      <div style="font-size: 12px; color: var(--text-muted);">Class IX General</div>
+                    </td>
+                    <td style="padding: 12px 16px; font-size: 13px; color: var(--text-muted);">15 Jan 2026</td>
+                    <td style="padding: 12px 16px; font-size: 13px; color: var(--text-muted);">₹ 20,000</td>
+                    <td style="padding: 12px 16px; font-size: 13px; color: var(--text-muted);">₹ 20,000</td>
+                    <td style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text);">₹ 0</td>
+                    <td style="padding: 12px 16px;"><span class="status-badge active" style="font-size: 11px;">Paid</span></td>
+                    <td style="padding: 12px 16px; text-align: center;">
+                      <button class="circle-btn" style="width: 28px; height: 28px; font-size: 14px; margin: 0 auto;" title="Download Receipt"><i class="ti ti-download"></i></button>
+                    </td>
+                  </tr>
+                  <!-- Row 3: Paid -->
+                  <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--green);">INV-2026-0005</td>
+                    <td style="padding: 12px 16px;">
+                      <div style="font-size: 13.5px; font-weight: 500; color: var(--text);">Annual Charges</div>
+                      <div style="font-size: 12px; color: var(--text-muted);">One-time yearly</div>
+                    </td>
+                    <td style="padding: 12px 16px; font-size: 13px; color: var(--text-muted);">10 Apr 2025</td>
+                    <td style="padding: 12px 16px; font-size: 13px; color: var(--text-muted);">₹ 5,000</td>
+                    <td style="padding: 12px 16px; font-size: 13px; color: var(--text-muted);">₹ 5,000</td>
+                    <td style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--text);">₹ 0</td>
+                    <td style="padding: 12px 16px;"><span class="status-badge active" style="font-size: 11px;">Paid</span></td>
+                    <td style="padding: 12px 16px; text-align: center;">
+                      <button class="circle-btn" style="width: 28px; height: 28px; font-size: 14px; margin: 0 auto;" title="Download Receipt"><i class="ti ti-download"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
