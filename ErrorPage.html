@@ -140,9 +140,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <!-- Dev Switcher Mode -->
     <div class="dev-controls">
       <span class="dev-label"><i class="ti ti-tool"></i> Developer Simulator:</span>
-      <div class="dev-btn-group">
-        <button class="dev-btn active" onclick="switchState(404)">Case 1: Page Not Found (404)</button>
-        <button class="dev-btn" onclick="switchState(500)">Case 2: Connection Problem (500)</button>
+      <div class="dev-btn-group" style="flex-wrap: wrap;">
+        <button class="dev-btn active" onclick="switchState(404)">404 Not Found</button>
+        <button class="dev-btn" onclick="switchState(500)">500 Server Error</button>
+        <button class="dev-btn" onclick="switchState(401)">401/403 Access Denied</button>
+        <button class="dev-btn" onclick="switchState(503)">503 Maintenance</button>
       </div>
     </div>
 
@@ -187,6 +189,25 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
             <circle cx="37" cy="89" r="3" fill="#10b981"/>
             <circle cx="47" cy="89" r="3" fill="#10b981"/>
             <line x1="60" y1="89" x2="83" y2="89" stroke="#334155" stroke-width="2"/>
+          </svg>
+        </div>
+
+        <!-- Case 401/403 Art (Lock/Shield) -->
+        <div class="art-401" id="art401" style="display:none; width:120px; height:120px; position:relative;">
+          <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M60 20C45 20 40 35 40 45V55H80V45C80 35 75 20 60 20Z" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+            <rect x="30" y="55" width="60" height="45" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="4"/>
+            <circle cx="60" cy="77" r="6" fill="#d97706"/>
+            <path d="M60 83V88" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <!-- Case 503 Art (Settings/Maintenance) -->
+        <div class="art-503" id="art503" style="display:none; width:120px; height:120px; position:relative;">
+          <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="60" r="25" fill="#eff6ff" stroke="#3b82f6" stroke-width="4" stroke-dasharray="10 5" class="glitch-server"/>
+            <circle cx="60" cy="60" r="10" fill="#3b82f6"/>
+            <path d="M40 85L30 95M80 85L90 95M35 40L25 30M85 40L95 30" stroke="#93c5fd" stroke-width="4" stroke-linecap="round"/>
           </svg>
         </div>
 
@@ -271,35 +292,52 @@ function switchState(state) {
   card.classList.add('fade-out');
 
   setTimeout(() => {
+    document.getElementById('art404').style.display = 'none';
+    document.getElementById('art500').style.display = 'none';
+    document.getElementById('art401').style.display = 'none';
+    document.getElementById('art503').style.display = 'none';
+    document.getElementById('techDetailsContainer').style.display = 'none';
+    
+    const errCode = document.getElementById('errorCode');
+    errCode.style = ""; // Reset custom styles
+
     if (state === 404) {
       document.getElementById('art404').style.display = 'block';
-      document.getElementById('art500').style.display = 'none';
-      
-      const errCode = document.getElementById('errorCode');
       errCode.textContent = "Error Code: 404";
       errCode.className = "error-code c-404";
-      
       document.getElementById('errorTitle').textContent = "Oops! Page Not Found";
       document.getElementById('errorDesc').textContent = "We couldn't find the page you are looking for. It might have been moved, deleted, or perhaps there is a typo in the web address. Let's get you back to the dashboard.";
-      
-      // Action layout buttons
-      document.getElementById('retryBtn').style.display = 'inline-flex';
-      
-      // Tech Details Hide
-      document.getElementById('techDetailsContainer').style.display = 'none';
-    } else {
-      document.getElementById('art404').style.display = 'none';
+      document.getElementById('retryBtn').innerHTML = '<i class="ti ti-reload"></i> Reload System';
+      document.getElementById('retryBtn').setAttribute('onclick', 'simulateRetry()');
+    } else if (state === 500) {
       document.getElementById('art500').style.display = 'block';
-      
-      const errCode = document.getElementById('errorCode');
       errCode.textContent = "Error Code: 500";
       errCode.className = "error-code";
-      
       document.getElementById('errorTitle').textContent = "Temporary Connection Issue";
       document.getElementById('errorDesc').textContent = "Our portal is experiencing a temporary glitch. Don't worry, all your school records and data are completely safe. We are already looking into this to get everything back to normal. Please try reloading the system.";
-      
-      // Tech Details Show
+      document.getElementById('retryBtn').innerHTML = '<i class="ti ti-reload"></i> Reload System';
+      document.getElementById('retryBtn').setAttribute('onclick', 'simulateRetry()');
       document.getElementById('techDetailsContainer').style.display = 'block';
+    } else if (state === 401) {
+      document.getElementById('art401').style.display = 'block';
+      errCode.textContent = "Error Code: 403 / 401";
+      errCode.className = "error-code";
+      errCode.style.background = "var(--amber-light)";
+      errCode.style.color = "var(--amber)";
+      document.getElementById('errorTitle').textContent = "Access Denied";
+      document.getElementById('errorDesc').textContent = "You don't have permission to view this page or your session has expired. If you believe this is a mistake, please contact your administrator or try logging in again.";
+      document.getElementById('retryBtn').innerHTML = '<i class="ti ti-login"></i> Login Again';
+      document.getElementById('retryBtn').setAttribute('onclick', 'window.location.href="Login.html"');
+    } else if (state === 503) {
+      document.getElementById('art503').style.display = 'block';
+      errCode.textContent = "Error Code: 503";
+      errCode.className = "error-code";
+      errCode.style.background = "#eff6ff";
+      errCode.style.color = "#2563eb";
+      document.getElementById('errorTitle').textContent = "System Under Maintenance";
+      document.getElementById('errorDesc').textContent = "We are currently upgrading the School ERP system with new features and performance improvements. The system will be back online shortly. Thank you for your patience!";
+      document.getElementById('retryBtn').innerHTML = '<i class="ti ti-reload"></i> Check Status';
+      document.getElementById('retryBtn').setAttribute('onclick', 'simulateRetry()');
     }
     
     card.classList.remove('fade-out');
