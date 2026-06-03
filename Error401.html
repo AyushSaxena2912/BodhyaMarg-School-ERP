@@ -28,23 +28,28 @@
   .icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
   .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
   
-  .content { flex: 1; overflow-y: auto; padding: 24px; display: flex; align-items: center; justify-content: center; }
+  .content { flex: 1; overflow-y: auto; padding: 24px; }
   .content::-webkit-scrollbar { width: 4px; } 
   .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
   
-  /* Error Card */
-  .form-section { 
+  /* Page Title */
+  .page-title h1 { font-size: 20px; font-weight: 600; }
+  .breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+  .breadcrumb span { color: var(--green); }
+
+  /* Section Card */
+  .section-card { 
     background: var(--white); 
     border: 1px solid var(--border); 
     border-radius: var(--radius-lg); 
-    padding: 48px; 
-    max-width: 600px;
-    width: 100%;
+    padding: 60px 24px; 
+    margin-top: 20px; 
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    min-height: 60vh;
+    justify-content: center;
   }
 
   /* Error Specific */
@@ -72,7 +77,7 @@
   }
 
   .error-title { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
-  .error-desc { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 32px; }
+  .error-desc { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 32px; max-width: 500px; }
 
   /* Buttons */
   .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
@@ -92,11 +97,6 @@
   @keyframes floatAnim { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
   @keyframes pulseAnim { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1); } }
 
-  /* Tech Trace */
-  .tech-container { margin-top: 32px; width: 100%; text-align: left; }
-  .tech-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--text-hint); cursor: pointer; user-select: none; transition: color 0.2s; }
-  .tech-toggle:hover { color: var(--text-muted); }
-  .tech-content { display: none; margin-top: 12px; background: #1a1d23; color: #a1a1aa; border-radius: 6px; padding: 16px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 11px; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -113,7 +113,12 @@
   </div>
   
   <div class="content">
-    <div class="form-section">
+    <div class="page-title">
+      <h1>System Alert</h1>
+      <div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> System Pages <i class="ti ti-chevron-right"></i> <span>Error 401</span></div>
+    </div>
+
+    <div class="section-card">
       <div class="art-wrapper">
         
         <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="float">
@@ -125,7 +130,7 @@
     
       </div>
 
-      <div class="badge">Error Code: 401 UNAUTHORIZED</div>
+      <div class="badge">Error Code: 401</div>
       <h1 class="error-title">Session Expired</h1>
       <p class="error-desc">Your session has expired or you need to login again to view this page. Please re-authenticate.</p>
       
@@ -133,18 +138,10 @@
         <a href="AllStudents.html" class="btn btn-primary"><i class="ti ti-home"></i> Back to Dashboard</a>
         <a href="Login.html" class="btn"><i class="ti ti-login"></i> Login</a>
       </div>
-
-      
     </div>
   </div>
 </div>
 
 <script src="sidebar.js"></script>
-<script>
-  function toggleTechTrace() {
-    const content = document.querySelector('.tech-content');
-    content.style.display = content.style.display === 'block' ? 'none' : 'block';
-  }
-</script>
 </body>
 </html>
