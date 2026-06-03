@@ -40,12 +40,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .content::-webkit-scrollbar { width: 6px; }
 .content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
-/* Inner Sidebar */
-.settings-sidebar { width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; }
-.settings-nav-item { padding: 10px 16px; border-radius: var(--radius); font-size: 13.5px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
-.settings-nav-item:hover { background: #e2e8f0; color: var(--text); }
-.settings-nav-item.active { background: var(--blue-light); color: var(--blue); }
-
 /* Settings Content */
 .settings-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
@@ -126,14 +120,8 @@ input:checked + .slider:before { transform: translateX(16px); }
 
   <div class="content">
     
-    <!-- Settings Inner Sidebar -->
-    <div class="settings-sidebar">
-      <div class="settings-nav-item active">Payment Gateway</div>
-      <div class="settings-nav-item">Tax Rates</div>
-    </div>
-
     <!-- Main Settings Area -->
-    <div class="settings-content">
+    <div class="settings-content" style="width: 100%;">
       
       <div class="page-header">
         <div class="page-title">
