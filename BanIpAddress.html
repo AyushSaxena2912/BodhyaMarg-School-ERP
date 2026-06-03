@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Ban IP Address</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+  --shadow: 0 4px 12px rgba(26, 29, 35, 0.04);
+  --shadow-lg: 0 10px 25px rgba(26, 29, 35, 0.08);
+  --red: #ef4444; --red-light: #fef2f2;
+}
+
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+
+/* Sidebar overrides */
+.sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
+
+/* Main Layout */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.ay-pill { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* Content Area */
+.content { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+.content::-webkit-scrollbar { width: 6px; }
+.content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+/* Header block */
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.page-title h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); display: flex; align-items: center; gap: 4px; }
+.breadcrumb span { color: var(--text); }
+.header-actions { display: flex; gap: 10px; }
+
+/* Card Wrapper Styles */
+.card-wrapper { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); }
+
+/* Buttons */
+.btn-primary { background: var(--green); color: var(--white); border: 1px solid var(--green); border-radius: var(--radius); padding: 8px 16px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-secondary { background: var(--white); color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 16px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-secondary:hover { background: var(--bg); color: var(--text); }
+.btn-danger-outline { background: var(--white); color: var(--red); border: 1px solid var(--red); border-radius: var(--radius); padding: 8px 16px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+.btn-danger-outline:hover { background: var(--red-light); }
+.btn-icon { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid transparent; background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+.btn-icon:hover { background: var(--bg); color: var(--text); border-color: var(--border); }
+.btn-icon.danger:hover { background: var(--red-light); color: var(--red); border-color: var(--red-light); }
+
+/* Form Elements */
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.form-group label { font-size: 12.5px; font-weight: 600; color: var(--text); }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; font-family: inherit; outline: none; background: var(--white); color: var(--text); transition: border 0.15s; }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--green); }
+.form-group textarea { height: 90px; resize: none; }
+
+/* Two Column Layout */
+.layout-grid { display: grid; grid-template-columns: 350px 1fr; gap: 20px; align-items: start; }
+@media (max-width: 992px) {
+  .layout-grid { grid-template-columns: 1fr; }
+}
+
+/* DataTable */
+.data-table { width: 100%; border-collapse: collapse; text-align: left; }
+.data-table th, .data-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.data-table th { background: #f8fafc; font-weight: 600; color: var(--text-muted); }
+.data-table tbody tr:hover { background: #f8fafc; }
+
+/* Status Pill */
+.status-pill { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; }
+.status-pill.active { background: #ecfdf5; color: #10b981; }
+.status-pill.inactive { background: #fef2f2; color: var(--red); }
+
+</style>
+<script src="permissions.js"></script>
+<script>BodhyaAuth.guardPage(['admin', 'superadmin']);</script>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div id="sidebar-container"></div>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<div class="main">
+  <!-- Topbar Header -->
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search operations, features, settings…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill"><i class="ti ti-calendar"></i> Academic Year : 2026 / 2027 <i class="ti ti-chevron-down"></i></div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+    
+    <!-- Page Breadcrumb Header -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">
+          <h1 id="pageTitleText">Ban IP Address</h1>
+        </div>
+        <div class="breadcrumb" id="breadcrumbText">Dashboard <i class="ti ti-chevron-right"></i> Settings <i class="ti ti-chevron-right"></i> <span>Ban IP</span></div>
+      </div>
+    </div>
+
+    <!-- Layout Container -->
+    <div class="layout-grid">
+      
+      <!-- ADD FORM -->
+      <div class="card-wrapper">
+        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+          <i class="ti ti-shield-x" style="color: var(--red); font-size: 18px;"></i> Block New IP
+        </h3>
+        <form id="addIpForm" onsubmit="addIpAddress(event)">
+          <div class="form-group">
+            <label for="ipAddress">IP Address <span style="color:var(--red);">*</span></label>
+            <input type="text" id="ipAddress" required placeholder="e.g. 192.168.1.100" />
+            <span style="font-size: 11px; color: var(--text-hint); margin-top: 4px;">Enter a valid IPv4 or IPv6 address.</span>
+          </div>
+          <div class="form-group">
+            <label for="ipReason">Reason for Ban</label>
+            <textarea id="ipReason" placeholder="Why is this IP being blocked?"></textarea>
+          </div>
+          
+          <div style="margin-top: 24px;">
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+              <i class="ti ti-plus"></i> Block IP Address
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- DATA TABLE -->
+      <div class="card-wrapper" style="padding: 0; overflow: hidden;">
+        <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="font-size: 15px; font-weight: 600;">Blocked IP Addresses List</h3>
+          <div class="search-box" style="display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 10px; width: 240px; background: var(--bg);">
+            <i class="ti ti-search" style="color: var(--text-hint); font-size: 14px;"></i>
+            <input type="text" id="searchInput" oninput="renderTable()" placeholder="Search IPs or reasons..." style="border: none; background: transparent; font-size: 12.5px; outline: none; width: 100%;" />
+          </div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th width="40">#</th>
+                <th>IP Address</th>
+                <th>Reason</th>
+                <th>Blocked On</th>
+                <th width="100" style="text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="ipTableBody">
+              <!-- Dynamic Rows -->
+            </tbody>
+          </table>
+        </div>
+        <div id="emptyState" style="display: none; padding: 40px 20px; text-align: center; color: var(--text-hint);">
+          <i class="ti ti-shield-check" style="font-size: 32px; margin-bottom: 12px; display: block; color: var(--green);"></i>
+          <p style="font-size: 14px; font-weight: 500;">No IP addresses are currently blocked.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Mock Database
+let blockedIps = [
+  { id: 1, ip: "182.45.12.98", reason: "Multiple failed login attempts from unrecognized device.", date: "02 Jun 2026, 14:30" },
+  { id: 2, ip: "45.22.19.105", reason: "Suspicious scraping bot activity detected.", date: "01 Jun 2026, 09:15" },
+  { id: 3, ip: "103.76.54.21", reason: "Spam requests to contact form.", date: "28 May 2026, 18:45" }
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderTable();
+});
+
+function renderTable() {
+  const tbody = document.getElementById('ipTableBody');
+  const emptyState = document.getElementById('emptyState');
+  const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+  
+  tbody.innerHTML = '';
+  
+  const filteredIps = blockedIps.filter(item => 
+    item.ip.toLowerCase().includes(searchQuery) || 
+    item.reason.toLowerCase().includes(searchQuery)
+  );
+
+  if (filteredIps.length === 0) {
+    emptyState.style.display = 'block';
+  } else {
+    emptyState.style.display = 'none';
+    filteredIps.forEach((item, index) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${index + 1}</td>
+        <td><strong style="font-family: monospace; color: var(--text);">${item.ip}</strong></td>
+        <td><span style="color: var(--text-muted); font-size: 12.5px;">${item.reason || '-'}</span></td>
+        <td style="color: var(--text-muted); font-size: 12.5px;">${item.date}</td>
+        <td style="text-align: center;">
+          <button class="btn-icon danger" onclick="removeIp(${item.id})" title="Unban IP">
+            <i class="ti ti-trash"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+}
+
+function addIpAddress(e) {
+  e.preventDefault();
+  const ipInput = document.getElementById('ipAddress');
+  const reasonInput = document.getElementById('ipReason');
+  
+  const newIp = {
+    id: Date.now(),
+    ip: ipInput.value.trim(),
+    reason: reasonInput.value.trim(),
+    date: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+  };
+  
+  blockedIps.unshift(newIp);
+  
+  // Reset form
+  ipInput.value = '';
+  reasonInput.value = '';
+  
+  renderTable();
+}
+
+function removeIp(id) {
+  if (confirm("Are you sure you want to unban this IP address?")) {
+    blockedIps = blockedIps.filter(item => item.id !== id);
+    renderTable();
+  }
+}
+</script>
+
+</body>
+</html>
