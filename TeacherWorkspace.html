@@ -454,7 +454,7 @@ select.form-control {
 .card-break .subject { margin-bottom: 0; }
 
 .timetable-modal-content { max-width: 900px !important; width: 90%; max-height: 90vh; display: flex; flex-direction: column; }
-.timetable-modal-content .modal-body { flex: 1; overflow-y: auto; }
+.timetable-modal-content .modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
 </style>
 
 <script src="permissions.js"></script>
@@ -1383,7 +1383,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <h2 class="modal-title">My Full Timetable</h2>
       <button class="modal-close" onclick="closeTimetableModal()"><i class="ti ti-x"></i></button>
     </div>
-    <div class="modal-body" style="padding: 0; overflow-y: auto;">
+    <div class="modal-body" style="padding: 0; overflow-y: auto; max-height: calc(90vh - 80px);">
       <div class="routine-container" style="border-radius: 0;">
         <div class="routine-header">
           <div class="routine-title"><i class="ti ti-calendar-time"></i> Weekly Routine: Mohan Sharma</div>
