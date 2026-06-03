@@ -208,7 +208,6 @@ function renderGrid() {
         <div class="gc-header">
           <div class="gc-logo" style="color: ${gw.color}; font-size: 22px;">${gw.name}</div>
           <div class="gc-status-area">
-            <span class="status-label ${isConn ? 'connected' : 'disconnected'}">${isConn ? 'Connected' : 'Not Connected'}</span>
             <label class="toggle-switch">
               <input type="checkbox" ${isConn ? 'checked' : ''} onchange="toggleStatus('${gw.id}', this.checked)">
               <span class="slider"></span>
