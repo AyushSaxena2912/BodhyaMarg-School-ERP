@@ -6,261 +6,188 @@
 <title>Internal Connection Issue - BodhyaMarg ERP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 <style>
   :root {
-    --green: #0b7b3f; 
-    --green-dark: #096332;
-    --text-main: #1e3a5f;
+    --green: #1a7a4a;
+    --green-dark: #125734;
+    --text-main: #0f172a;
     --text-muted: #64748b;
     --bg-color: #f8fafc;
     --white: #ffffff;
     --border: #e2e8f0;
-    --red: #ef4444; 
-    --red-light: #fee2e2; 
-    --red-dark: #b91c1c;
-    --amber: #f59e0b; 
-    --amber-light: #fef3c7;
-    --blue: #2563eb;
-    --blue-light: #eff6ff;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-color);
+    background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+    background-size: 32px 32px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     min-height: 100vh;
+    padding: 20px;
   }
   
-  /* Header Section (Same as Login) */
-  .header {
-    background-color: var(--green);
-    color: var(--white);
-    padding: 16px 48px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .school-logo { width: 65px; height: auto; }
-  .school-titles { display: flex; flex-direction: column; justify-content: center; }
-  .school-name { font-size: 24px; font-weight: 600; letter-spacing: 0.5px; line-height: 1.2; }
-  .school-sub { font-size: 12px; font-weight: 600; margin-top: 2px; }
-  .school-sub2 { font-size: 10px; font-weight: 400; margin-top: 1px; opacity: 0.9; }
-  .header-nav { display: flex; gap: 32px; }
-  .header-nav a { color: var(--white); text-decoration: none; font-size: 15px; font-weight: 600; transition: opacity 0.2s; }
-  .header-nav a:hover { opacity: 0.8; }
-  
-  /* Main Content Layout */
-  .main-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-  }
-  .error-wrapper {
-    display: flex;
-    max-width: 1050px;
-    width: 100%;
-    gap: 48px;
-    align-items: stretch;
-  }
-  
-  /* Left Art Banner Section */
-  .banner-section {
-    flex: 1.1;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    background: linear-gradient(135deg, #475569 0%, #1e293b 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-  .banner-section svg {
-    width: 60%;
-    height: auto;
-    filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
-  }
-  
-  /* Right Error Details Section */
-  .error-section {
-    flex: 0.9;
+  .error-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+
+  .art-wrapper {
+    width: 220px;
+    height: 220px;
+    margin-bottom: 24px;
+    position: relative;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    max-width: 480px;
   }
-  .error-card {
-    background: var(--white);
-    padding: 48px;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.04);
-    border: 1px solid rgba(0,0,0,0.02);
+  .art-wrapper svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
   }
-  .error-code {
-    font-size: 14px;
+
+  .badge {
+    font-size: 13px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    padding: 6px 14px;
+    padding: 6px 16px;
     border-radius: 20px;
     display: inline-block;
-    margin-bottom: 24px;
-    background: var(--red-light);
-    color: var(--red-dark);
+    margin-bottom: 20px;
+    background: #fee2e2;
+    color: #991b1b;
+    box-shadow: 0 4px 12px rgba(153, 27, 27, 0.15);
   }
+
   .error-title {
-    font-size: 32px;
+    font-size: 40px;
     font-weight: 800;
     color: var(--text-main);
     margin-bottom: 16px;
     line-height: 1.1;
+    letter-spacing: -0.02em;
   }
+
   .error-desc {
-    font-size: 15px;
+    font-size: 16px;
     color: var(--text-muted);
     line-height: 1.6;
-    margin-bottom: 32px;
+    margin-bottom: 36px;
+    max-width: 500px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
   }
   
-  /* Buttons Layout */
-  .actions-layout {
-    display: flex;
-    gap: 12px;
-  }
   .btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 24px;
-    border-radius: 6px;
-    font-size: 14.5px;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    border: 1px solid var(--border);
+    transition: all 0.2s;
+    text-decoration: none;
+    border: none;
+    outline: none;
+  }
+  
+  .btn-primary {
+    background: var(--green);
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(26, 122, 74, 0.25);
+  }
+  .btn-primary:hover {
+    background: var(--green-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(26, 122, 74, 0.35);
+  }
+  
+  .btn-secondary {
     background: var(--white);
     color: var(--text-main);
-    transition: all 0.2s;
-    outline: none;
-    text-decoration: none;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
   }
-  .btn:hover { background: var(--bg-color); border-color: #cbd5e1; }
-  .btn-primary { background: var(--green); color: var(--white); border-color: var(--green); }
-  .btn-primary:hover { background: var(--green-dark); border-color: var(--green-dark); color: var(--white); }
+  .btn-secondary:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+  }
 
-  .powered-by {
-    text-align: center;
-    margin-top: 32px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-main);
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  .powered-by span { color: var(--green); }
+  
+  /* SVG specific animations */
+  .float { animation: floatAnim 4s ease-in-out infinite; }
+  .pulse { animation: pulseAnim 2.5s ease-in-out infinite; }
+  
+  @keyframes floatAnim { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+  @keyframes pulseAnim { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1); } }
 
   /* Tech Stack Trace for 500 */
-  .tech-details-container { margin-top: 24px; }
-  .tech-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #94a3b8; cursor: pointer; user-select: none; transition: color 0.2s; }
+  .tech-container { margin-top: 40px; width: 100%; text-align: left; }
+  .tech-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #94a3b8; cursor: pointer; user-select: none; transition: color 0.2s; margin-bottom: 8px; }
   .tech-toggle:hover { color: var(--text-muted); }
-  .tech-toggle i { transition: transform 0.2s; }
-  .tech-toggle.open i { transform: rotate(90deg); }
-  .tech-content { display: none; margin-top: 12px; background: #0f172a; color: #94a3b8; border-radius: 8px; padding: 16px; position: relative; }
-  .tech-content pre { font-family: 'Fira Code', monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
-
-  /* SVG Animations */
-  .float-doc { animation: floatDoc 3s ease-in-out infinite; transform-origin: center; }
-  .pulse-light { animation: pulseLight 2s ease-in-out infinite; }
-  .glitch-server { animation: serverShake 4s infinite; }
-  .status-led { animation: ledBlink 1s infinite alternate; }
-  
-  @keyframes floatDoc { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-12px) rotate(3deg); } }
-  @keyframes pulseLight { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.85; } }
-  @keyframes ledBlink { 0% { fill: var(--red); filter: drop-shadow(0 0 4px var(--red)); } 100% { fill: #334155; filter: none; } }
-  @keyframes serverShake { 0%, 95%, 100% { transform: translate(0, 0); } 96% { transform: translate(-3px, 1px); } 97% { transform: translate(3px, -1px); } 98% { transform: translate(-2px, -2px); } 99% { transform: translate(2px, 3px); } }
-
-  /* Responsive Adjustments */
-  @media (max-width: 900px) {
-    .error-wrapper { flex-direction: column; max-width: 500px; }
-    .header { flex-direction: column; gap: 20px; padding: 16px 20px; text-align: center; }
-    .header-nav { gap: 16px; }
-    .school-titles { align-items: center; }
-    .banner-section { padding: 60px 20px; }
-    .banner-section svg { width: 140px; }
-  }
+  .tech-content { display: none; background: #0f172a; color: #94a3b8; border-radius: 8px; padding: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.2); }
+  .tech-content pre { font-family: 'Fira Code', monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; }
 </style>
 </head>
 <body>
 
-  <!-- Header Section -->
-  <header class="header">
-    <div class="header-left">
-      <img src="school_logo.png" alt="DPS Logo" class="school-logo" onerror="this.src='https://via.placeholder.com/65x80?text=Logo'" />
-      <div class="school-titles">
-        <div class="school-name">DELHI PUBLIC SCHOOL</div>
-        <div class="school-sub">Greater Faridabad</div>
-        <div class="school-sub2">(Under the agencies of The DPS Society)</div>
-      </div>
-    </div>
-    <nav class="header-nav">
-      <a href="Login.html">Login</a>
-      <a href="#">About</a>
-      <a href="#">Academics</a>
-    </nav>
-  </header>
-
-  <!-- Main Content Layout -->
-  <main class="main-container">
-    <div class="error-wrapper">
+  <div class="error-container">
+    <div class="art-wrapper">
       
-      <!-- Left Art Banner Section -->
-      <div class="banner-section">
-        
-        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Server Box 1 -->
-            <rect x="20" y="20" width="80" height="24" rx="4" fill="#0f172a" stroke="#475569" stroke-width="3" class="glitch-server"/>
-            <circle cx="34" cy="32" r="3.5" fill="#10b981"/>
-            <circle cx="46" cy="32" r="3.5" fill="#10b981"/>
-            <line x1="62" y1="32" x2="88" y2="32" stroke="#334155" stroke-width="3"/>
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="float">
+            <rect x="15" y="20" width="90" height="25" rx="6" fill="#0f172a" stroke="#475569" stroke-width="4"/>
+            <circle cx="35" cy="32.5" r="4" fill="#10b981"/>
+            <circle cx="50" cy="32.5" r="4" fill="#10b981"/>
             
-            <!-- Server Box 2 (Crashing) -->
-            <rect x="20" y="52" width="80" height="24" rx="4" fill="#0f172a" stroke="#ef4444" stroke-width="3" class="glitch-server"/>
-            <circle cx="34" cy="64" r="3.5" class="status-led"/>
-            <circle cx="46" cy="64" r="3.5" fill="#ef4444" opacity="0.6"/>
-            <line x1="62" y1="64" x2="88" y2="64" stroke="#991b1b" stroke-width="3"/>
+            <rect x="15" y="55" width="90" height="25" rx="6" fill="#0f172a" stroke="#ef4444" stroke-width="4"/>
+            <circle cx="35" cy="67.5" r="4" fill="#ef4444" class="pulse"/>
+            <circle cx="50" cy="67.5" r="4" fill="#ef4444"/>
+            <path d="M75 62 L85 72 M85 62 L75 72" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
 
-            <!-- Server Box 3 -->
-            <rect x="20" y="84" width="80" height="24" rx="4" fill="#0f172a" stroke="#475569" stroke-width="3" class="glitch-server"/>
-            <circle cx="34" cy="96" r="3.5" fill="#10b981"/>
-            <circle cx="46" cy="96" r="3.5" fill="#10b981"/>
-            <line x1="62" y1="96" x2="88" y2="96" stroke="#334155" stroke-width="3"/>
+            <rect x="15" y="90" width="90" height="25" rx="6" fill="#0f172a" stroke="#475569" stroke-width="4"/>
+            <circle cx="35" cy="102.5" r="4" fill="#10b981"/>
+            <circle cx="50" cy="102.5" r="4" fill="#10b981"/>
         </svg>
     
-      </div>
+    </div>
 
-      <!-- Right Error Details Section -->
-      <div class="error-section">
-        <div class="error-card">
-          <span class="error-code">Error Code: 500 SERVER ERROR</span>
-          <h1 class="error-title">Internal Connection Issue</h1>
-          <p class="error-desc">Our portal is experiencing a temporary glitch. Don't worry, all your school records and data are safe. Please try reloading the system.</p>
-          
-          <div class="actions-layout">
-            <button class="btn btn-primary" onclick="window.location.href='AllStudents.html'"><i class="ti ti-arrow-left"></i> Dashboard</button>
-            <button class="btn" onclick="window.location.reload()"><i class="ti ti-reload"></i> Reload System</button>
-          </div>
+    <div class="badge">Error Code: 500 SERVER ERROR</div>
+    <h1 class="error-title">Internal Connection Issue</h1>
+    <p class="error-desc">Our portal is experiencing a temporary glitch. Don't worry, all your school records and data are safe. Please try reloading the system.</p>
+    
+    <div class="actions">
+      <a href="AllStudents.html" class="btn btn-primary"><i class="ti ti-home"></i> Back to Dashboard</a>
+      <button class="btn btn-secondary" onclick="window.location.reload()"><i class="ti ti-reload"></i> Reload System</button>
+    </div>
 
-          
-          <div class="tech-details-container">
+    
+          <div class="tech-container">
             <div class="tech-toggle" onclick="toggleTechTrace()">
-              <i class="ti ti-chevron-right"></i> View Technical Crash Report
+              <i class="ti ti-code"></i> Show Technical Report
             </div>
             <div class="tech-content">
               <pre>TypeError: Cannot read properties of undefined (reading 'status')
@@ -269,22 +196,12 @@
             </div>
           </div>
         
-        </div>
-        
-        <div class="powered-by">
-          Powered By <span>BodhyaMarg</span>
-        </div>
-      </div>
-
-    </div>
-  </main>
+  </div>
 
   <script>
     function toggleTechTrace() {
-      const toggle = document.querySelector('.tech-toggle');
       const content = document.querySelector('.tech-content');
-      toggle.classList.toggle('open');
-      content.style.display = toggle.classList.contains('open') ? 'block' : 'none';
+      content.style.display = content.style.display === 'block' ? 'none' : 'block';
     }
   </script>
 </body>
