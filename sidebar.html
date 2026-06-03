@@ -271,6 +271,15 @@ body[data-current-role="admin"] [data-allowed-roles="superadmin"] { display: non
 
   <div class="nav-group" data-allowed-roles="admin,superadmin">
     <div class="nav-label">System Pages</div>
-    <a href="ErrorPage.html" class="nav-item"><i class="ti ti-alert-circle"></i> Error Page</a>
+    <div class="nav-sub-container">
+      <a href="#" class="nav-item"><i class="ti ti-alert-triangle"></i> Error Pages <i class="ti ti-chevron-down" style="margin-left:auto;font-size:12px;"></i></a>
+      <div class="nav-sub">
+        <a href="Error401.html" class="nav-item">401 Unauthorized</a>
+        <a href="Error403.html" class="nav-item">403 Forbidden</a>
+        <a href="Error404.html" class="nav-item">404 Not Found</a>
+        <a href="Error500.html" class="nav-item">500 Server Error</a>
+        <a href="Error503.html" class="nav-item">503 Maintenance</a>
+      </div>
+    </div>
   </div>
 </aside>
