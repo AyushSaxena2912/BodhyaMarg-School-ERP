@@ -216,9 +216,9 @@ function renderGrid() {
   gateways.forEach(gw => {
     const isConn = gw.connected;
     grid.innerHTML += `
-      <div class="gateway-card">
+      <div class="gateway-card" style="gap: 20px;">
         <div class="gc-header">
-          <div class="gc-logo" style="color: ${gw.color};">${gw.name}</div>
+          <div class="gc-logo" style="color: ${gw.color}; font-size: 22px;">${gw.name}</div>
           <div class="gc-status-area">
             <span class="status-label ${isConn ? 'connected' : 'disconnected'}">${isConn ? 'Connected' : 'Not Connected'}</span>
             <label class="toggle-switch">
@@ -227,8 +227,7 @@ function renderGrid() {
             </label>
           </div>
         </div>
-        <div class="gc-desc">${gw.desc}</div>
-        <div class="gc-action">
+        <div class="gc-action" style="padding-top: 0; border-top: none; margin-top: 0;">
           <button class="btn-connect" onclick="openModal('${gw.id}')">
             <i class="ti ti-settings"></i> ${isConn ? 'View Integration' : 'Connect Now'}
           </button>
