@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Bulk Import</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38;
+  --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea;
+  --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af;
+  --radius: 8px; --radius-lg: 12px;
+  --blue: #3b82f6; --blue-light: #eff6ff;
+  --red: #ef4444; --red-light: #fef2f2;
+  --orange: #f59e0b; --orange-light: #fffbeb;
+  --purple: #8b5cf6; --purple-light: #f5f3ff;
+  --teal: #14b8a6; --teal-light: #f0fdfa;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+.topbar-search i { font-size: 14px; color: var(--text-hint); }
+.topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+.topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+.breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.breadcrumb span { color: var(--green); }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); white-space: nowrap; transition: all .15s; }
+.btn:hover { background: var(--bg); }
+.btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-lg { padding: 12px 24px; font-size: 14px; }
+
+/* ── Stepper ── */
+.stepper { display: flex; align-items: center; gap: 0; margin-bottom: 32px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 24px; }
+.step { display: flex; align-items: center; gap: 12px; flex: 1; }
+.step-num { width: 36px; height: 36px; border-radius: 50%; background: var(--bg); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--text-hint); transition: all .3s; flex-shrink: 0; }
+.step.active .step-num { background: var(--green); border-color: var(--green); color: #fff; }
+.step.done .step-num { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.step-label { font-size: 13px; font-weight: 600; color: var(--text-hint); }
+.step.active .step-label { color: var(--text); }
+.step.done .step-label { color: var(--green); }
+.step-line { flex: 0 0 auto; width: 60px; height: 2px; background: var(--border); margin: 0 8px; }
+.step-line.done { background: var(--green); }
+
+/* ── Cards ── */
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.03); }
+.card-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.card-title i { color: var(--green); font-size: 20px; }
+
+/* ── Step 1: Module Select ── */
+.modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.module-card { border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 20px; cursor: pointer; transition: all .2s; text-align: center; }
+.module-card:hover { border-color: var(--green); box-shadow: 0 4px 16px rgba(0,0,0,.06); transform: translateY(-2px); }
+.module-card.selected { border-color: var(--green); background: var(--green-light); }
+.module-icon { width: 52px; height: 52px; border-radius: 14px; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+.module-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.module-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+.module-count { margin-top: 10px; font-size: 11px; color: var(--text-hint); background: var(--bg); padding: 4px 10px; border-radius: 20px; display: inline-block; }
+
+/* ── Step 2: Upload ── */
+.upload-zone { border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 50px 30px; text-align: center; cursor: pointer; transition: all .2s; background: var(--bg); }
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--green); background: var(--green-light); }
+.upload-zone i.upload-icon { font-size: 48px; color: var(--green); margin-bottom: 12px; display: block; }
+.upload-zone h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.upload-zone p { font-size: 12.5px; color: var(--text-muted); }
+.upload-zone .or { color: var(--text-hint); margin: 12px 0; font-size: 12px; }
+.file-info { display: flex; align-items: center; gap: 14px; padding: 16px; background: var(--green-light); border: 1px solid var(--green); border-radius: var(--radius); margin-top: 16px; }
+.file-info i { font-size: 28px; color: var(--green); }
+.file-info .fname { font-size: 14px; font-weight: 600; }
+.file-info .fsize { font-size: 12px; color: var(--text-muted); }
+.file-info .remove-btn { margin-left: auto; font-size: 16px; color: var(--red); cursor: pointer; }
+.download-template { margin-top: 20px; padding: 16px; background: var(--blue-light); border: 1px solid #bfdbfe; border-radius: var(--radius); display: flex; align-items: center; gap: 12px; }
+.download-template i { font-size: 24px; color: var(--blue); }
+.download-template .dt-info h5 { font-size: 13px; font-weight: 600; }
+.download-template .dt-info p { font-size: 11.5px; color: var(--text-muted); }
+
+/* ── Step 3: Preview ── */
+.preview-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+.pstat { padding: 16px; border-radius: var(--radius); text-align: center; }
+.pstat .pval { font-size: 22px; font-weight: 700; }
+.pstat .plabel { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.preview-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); max-height: 320px; overflow-y: auto; }
+.preview-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.preview-table thead { position: sticky; top: 0; z-index: 2; }
+.preview-table th { padding: 10px 14px; background: var(--bg); font-weight: 600; color: var(--text-muted); text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.preview-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.preview-table tr:hover { background: #f8fafc; }
+.row-error { background: var(--red-light) !important; }
+.row-error td { color: var(--red); }
+.error-badge { background: var(--red-light); color: var(--red); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.valid-badge { background: var(--green-light); color: var(--green); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+
+/* ── Step 4: Import ── */
+.import-progress-card { text-align: center; padding: 40px; }
+.import-progress-card i.result-icon { font-size: 64px; margin-bottom: 16px; display: block; }
+.progress-bar-wrap { width: 100%; max-width: 500px; height: 12px; background: var(--border); border-radius: 6px; overflow: hidden; margin: 20px auto; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--teal)); border-radius: 6px; transition: width .4s ease; width: 0%; }
+.import-log { max-width: 600px; margin: 20px auto 0; text-align: left; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; max-height: 200px; overflow-y: auto; font-size: 12px; font-family: monospace; color: var(--text-muted); }
+.import-log .log-line { padding: 3px 0; }
+.import-log .log-line.success { color: var(--green); }
+.import-log .log-line.error { color: var(--red); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .modules-grid { grid-template-columns: 1fr 1fr; }
+  .preview-stats { grid-template-columns: 1fr 1fr; }
+  .stepper { flex-wrap: wrap; gap: 8px; }
+  .step-line { display: none; }
+}
+</style>
+<script src="permissions.js"></script>
+<script>BodhyaAuth.guardPage(['admin', 'superadmin']);</script>
+</head>
+<body>
+<div id="sidebar-container"></div>
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search"><i class="ti ti-search"></i><input placeholder="Search anything…" /></div>
+    <div class="topbar-right">
+      <div class="icon-btn"><i class="ti ti-bell"></i></div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <h1>Bulk Import / Data Migration</h1>
+        <div class="breadcrumb">Dashboard <i class="ti ti-chevron-right"></i> Settings <i class="ti ti-chevron-right"></i> <span>Bulk Import</span></div>
+      </div>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper" id="stepper">
+      <div class="step active" data-step="1">
+        <div class="step-num">1</div>
+        <div class="step-label">Select Module</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" data-step="2">
+        <div class="step-num">2</div>
+        <div class="step-label">Upload File</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" data-step="3">
+        <div class="step-num">3</div>
+        <div class="step-label">Preview & Validate</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" data-step="4">
+        <div class="step-num">4</div>
+        <div class="step-label">Import</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: Select Module -->
+    <div id="step1" class="card">
+      <div class="card-title"><i class="ti ti-apps"></i> Select Data Module to Import</div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Choose which type of data you want to bulk import. You can download a ready-made CSV/Excel template for each module.</p>
+      <div class="modules-grid" id="modulesGrid"></div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+        <button class="btn btn-primary btn-lg" id="btnStep1Next" disabled onclick="goStep(2)"><i class="ti ti-arrow-right"></i> Next: Upload File</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Upload -->
+    <div id="step2" class="card" style="display:none;">
+      <div class="card-title"><i class="ti ti-upload"></i> Upload Data File</div>
+      <div id="templateDownload" class="download-template">
+        <i class="ti ti-file-spreadsheet"></i>
+        <div class="dt-info">
+          <h5 id="templateName">Download Template</h5>
+          <p>Download the CSV template with all required column headers pre-filled.</p>
+        </div>
+        <button class="btn" style="margin-left: auto;" onclick="downloadTemplate()"><i class="ti ti-download"></i> Download .CSV</button>
+      </div>
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" style="margin-top: 20px;">
+        <i class="ti ti-cloud-upload upload-icon"></i>
+        <h4>Drag & Drop your file here</h4>
+        <div class="or">── or ──</div>
+        <p>Click to browse. Supports <strong>.CSV, .XLS, .XLSX</strong> (Max 10MB)</p>
+      </div>
+      <input type="file" id="fileInput" accept=".csv,.xls,.xlsx" style="display:none;" onchange="handleFile(this)" />
+      <div id="fileInfoBox" style="display:none;"></div>
+      <div style="display: flex; justify-content: space-between; margin-top: 24px;">
+        <button class="btn" onclick="goStep(1)"><i class="ti ti-arrow-left"></i> Back</button>
+        <button class="btn btn-primary btn-lg" id="btnStep2Next" disabled onclick="goStep(3)"><i class="ti ti-eye"></i> Next: Preview Data</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Preview -->
+    <div id="step3" class="card" style="display:none;">
+      <div class="card-title"><i class="ti ti-list-check"></i> Preview & Validate Data</div>
+      <div class="preview-stats" id="previewStats"></div>
+      <div class="preview-table-wrap" id="previewTableWrap"></div>
+      <div style="display: flex; justify-content: space-between; margin-top: 24px;">
+        <button class="btn" onclick="goStep(2)"><i class="ti ti-arrow-left"></i> Back</button>
+        <button class="btn btn-primary btn-lg" id="btnImport" onclick="startImport()"><i class="ti ti-database-import"></i> Start Import</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Import Progress -->
+    <div id="step4" class="card" style="display:none;">
+      <div class="import-progress-card" id="importArea">
+        <i class="ti ti-loader-2 result-icon" style="color: var(--green); animation: spin 1s linear infinite;" id="importIcon"></i>
+        <h3 id="importTitle" style="font-size: 18px; font-weight: 700;">Importing Data...</h3>
+        <p id="importSubtitle" style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">Please wait while we process your data. Do not close this tab.</p>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+        <p id="progressText" style="font-size: 13px; color: var(--text-muted);">0%</p>
+        <div class="import-log" id="importLog"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>
+
+<script>
+// ── Module Definitions ──
+const modules = [
+  { id: 'students', name: 'Students', desc: 'Admissions, roll numbers, personal details, class assignments.', icon: 'ti-school', color: 'var(--green)', bg: 'var(--green-light)',
+    cols: ['Admission No','First Name','Last Name','Date of Birth','Gender','Class','Section','Roll No','Blood Group','Religion','Phone','Email','Father Name','Mother Name','Address','City','State','Pincode'] },
+  { id: 'parents', name: 'Parents / Guardians', desc: 'Parent details, contact info, linked students.', icon: 'ti-user-check', color: 'var(--blue)', bg: 'var(--blue-light)',
+    cols: ['Parent ID','Father Name','Father Phone','Father Email','Father Occupation','Mother Name','Mother Phone','Mother Email','Mother Occupation','Student Admission No','Address'] },
+  { id: 'teachers', name: 'Teachers', desc: 'Teacher profiles, qualifications, assigned subjects.', icon: 'ti-chalkboard', color: 'var(--purple)', bg: 'var(--purple-light)',
+    cols: ['Employee ID','First Name','Last Name','Date of Birth','Gender','Phone','Email','Qualification','Specialization','Date of Joining','Designation','Department','Assigned Class','Assigned Subject','Salary','Address'] },
+  { id: 'staff', name: 'Other Staff', desc: 'Non-teaching staff, drivers, wardens, accountants.', icon: 'ti-users-group', color: 'var(--teal)', bg: 'var(--teal-light)',
+    cols: ['Employee ID','First Name','Last Name','Date of Birth','Gender','Phone','Email','Designation','Department','Date of Joining','Salary','Address'] },
+  { id: 'classes', name: 'Classes & Sections', desc: 'Class names, sections, and class teacher mapping.', icon: 'ti-books', color: '#e11d48', bg: '#fff1f2',
+    cols: ['Class Name','Section','Class Teacher','Medium','Stream','Room No'] },
+  { id: 'subjects', name: 'Subjects', desc: 'Subject names, codes, and class-subject mappings.', icon: 'ti-notebook', color: '#0891b2', bg: '#ecfeff',
+    cols: ['Subject Name','Subject Code','Subject Type','Class','Section','Assigned Teacher'] },
+  { id: 'fees', name: 'Fee Structure', desc: 'Fee groups, types, amounts, and due dates.', icon: 'ti-receipt', color: 'var(--orange)', bg: 'var(--orange-light)',
+    cols: ['Fee Group','Fee Type','Class','Amount','Due Date','Fine Per Day','Description'] },
+  { id: 'transport', name: 'Transport', desc: 'Routes, stops, vehicles, and driver assignments.', icon: 'ti-bus', color: '#4f46e5', bg: '#eef2ff',
+    cols: ['Route Name','Vehicle No','Driver Name','Driver Phone','Stop Name','Stop Distance (km)','Monthly Fee'] },
+  { id: 'hostel', name: 'Hostel', desc: 'Hostel names, room types, fees, and allocations.', icon: 'ti-building-estate', color: '#be185d', bg: '#fdf2f8',
+    cols: ['Hostel Name','Hostel Type','Room Type','Room No','Beds','Monthly Fee','Status'] },
+  { id: 'attendance', name: 'Historical Attendance', desc: 'Past attendance records for continuity.', icon: 'ti-calendar-check', color: '#059669', bg: '#ecfdf5',
+    cols: ['Admission No','Student Name','Class','Section','Date','Status','Remarks'] },
+  { id: 'exams', name: 'Exam Results', desc: 'Past exam scores, grades, and rank data.', icon: 'ti-file-certificate', color: '#7c3aed', bg: '#f5f3ff',
+    cols: ['Admission No','Student Name','Class','Exam Name','Subject','Max Marks','Obtained Marks','Grade','Academic Year'] },
+  { id: 'inventory', name: 'Library / Inventory', desc: 'Books, assets, and equipment records.', icon: 'ti-library', color: '#0d9488', bg: '#f0fdfa',
+    cols: ['Item ID','Title','Author/Brand','Category','Quantity','Location','Purchase Date','Cost','Status'] },
+];
+
+let selectedModule = null;
+let uploadedFile = null;
+let parsedData = [];
+
+// ── Render Modules ──
+function renderModules() {
+  document.getElementById('modulesGrid').innerHTML = modules.map(m => `
+    <div class="module-card ${selectedModule===m.id?'selected':''}" onclick="selectModule('${m.id}')">
+      <div class="module-icon" style="background:${m.bg}; color:${m.color};"><i class="ti ${m.icon}"></i></div>
+      <div class="module-name">${m.name}</div>
+      <div class="module-desc">${m.desc}</div>
+      <div class="module-count">${m.cols.length} columns</div>
+    </div>
+  `).join('');
+}
+
+function selectModule(id) {
+  selectedModule = id;
+  document.getElementById('btnStep1Next').disabled = false;
+  renderModules();
+}
+
+// ── Stepper Navigation ──
+function goStep(n) {
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('step' + i).style.display = i === n ? 'block' : 'none';
+  }
+  document.querySelectorAll('.step').forEach((el, idx) => {
+    el.classList.remove('active', 'done');
+    if (idx + 1 < n) el.classList.add('done');
+    if (idx + 1 === n) el.classList.add('active');
+  });
+  document.querySelectorAll('.step-line').forEach((el, idx) => {
+    el.classList.toggle('done', idx + 1 < n);
+  });
+
+  if (n === 2) {
+    const mod = modules.find(m => m.id === selectedModule);
+    document.getElementById('templateName').textContent = mod.name + ' Import Template (.CSV)';
+  }
+  if (n === 3) renderPreview();
+}
+
+// ── File Upload ──
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault(); uploadZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(input) { if (input.files.length) processFile(input.files[0]); }
+
+function processFile(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (!['csv','xls','xlsx'].includes(ext)) { alert('Unsupported file type. Use CSV, XLS, or XLSX.'); return; }
+  if (file.size > 10 * 1024 * 1024) { alert('File too large! Max 10MB allowed.'); return; }
+  uploadedFile = file;
+  document.getElementById('fileInfoBox').style.display = 'block';
+  document.getElementById('fileInfoBox').innerHTML = `
+    <div class="file-info">
+      <i class="ti ti-file-spreadsheet"></i>
+      <div><div class="fname">${file.name}</div><div class="fsize">${(file.size/1024).toFixed(1)} KB</div></div>
+      <i class="ti ti-x remove-btn" onclick="removeFile()"></i>
+    </div>`;
+  document.getElementById('btnStep2Next').disabled = false;
+  uploadZone.style.display = 'none';
+  // Simulate CSV parse
+  simulateParse();
+}
+
+function removeFile() {
+  uploadedFile = null; parsedData = [];
+  document.getElementById('fileInfoBox').style.display = 'none';
+  document.getElementById('btnStep2Next').disabled = true;
+  uploadZone.style.display = 'block';
+  document.getElementById('fileInput').value = '';
+}
+
+function simulateParse() {
+  const mod = modules.find(m => m.id === selectedModule);
+  // Generate 25 demo rows
+  parsedData = [];
+  for (let i = 1; i <= 25; i++) {
+    const row = {};
+    mod.cols.forEach((c, ci) => {
+      if (c.includes('Name') && c.includes('First')) row[c] = ['Aarav','Sneha','Rohan','Priya','Karan','Neha','Vivek','Anjali','Arjun','Meera'][i % 10];
+      else if (c.includes('Name') && c.includes('Last')) row[c] = ['Sharma','Patel','Gupta','Singh','Kumar','Joshi','Verma','Reddy','Nair','Das'][i % 10];
+      else if (c === 'Student Name' || c === 'Father Name' || c === 'Mother Name' || c === 'Driver Name' || c === 'Class Teacher' || c === 'Assigned Teacher' || (c.includes('Name') && !c.includes('First') && !c.includes('Last')))
+        row[c] = ['Aarav Sharma','Sneha Patel','Rohan Gupta','Priya Singh','Karan Kumar'][i % 5];
+      else if (c.includes('Phone')) row[c] = '9' + String(Math.floor(100000000 + Math.random() * 900000000));
+      else if (c.includes('Email')) row[c] = 'user' + i + '@school.edu';
+      else if (c === 'Admission No' || c === 'Employee ID' || c === 'Parent ID' || c === 'Item ID')
+        row[c] = (c === 'Admission No' ? 'ADM' : c === 'Employee ID' ? 'EMP' : c === 'Parent ID' ? 'PAR' : 'ITM') + String(1000 + i);
+      else if (c === 'Gender') row[c] = i % 2 === 0 ? 'Male' : 'Female';
+      else if (c === 'Class' || c === 'Class Name') row[c] = 'Class ' + ((i % 10) + 1);
+      else if (c === 'Section') row[c] = ['A','B','C'][i % 3];
+      else if (c === 'Roll No') row[c] = String(i);
+      else if (c === 'Date of Birth') row[c] = '200' + (i % 9) + '-0' + ((i % 9) + 1) + '-' + (10 + (i % 20));
+      else if (c.includes('Date')) row[c] = '2024-0' + ((i % 9) + 1) + '-15';
+      else if (c.includes('Amount') || c.includes('Salary') || c.includes('Fee') || c.includes('Cost')) row[c] = String((i * 1000) + 5000);
+      else if (c === 'Status') row[c] = i % 5 === 0 ? '' : 'Active';
+      else row[c] = 'Sample ' + i;
+    });
+    row._valid = i % 7 !== 0; // Mark every 7th row as invalid for demo
+    if (!row._valid) {
+      // Clear a required field to simulate error
+      const firstKey = mod.cols[0];
+      row[firstKey] = '';
+      row._error = 'Missing required field: ' + firstKey;
+    }
+    parsedData.push(row);
+  }
+}
+
+// ── Preview ──
+function renderPreview() {
+  const mod = modules.find(m => m.id === selectedModule);
+  const total = parsedData.length;
+  const valid = parsedData.filter(r => r._valid).length;
+  const errors = total - valid;
+
+  document.getElementById('previewStats').innerHTML = `
+    <div class="pstat" style="background: var(--blue-light);"><div class="pval" style="color: var(--blue);">${total}</div><div class="plabel">Total Rows</div></div>
+    <div class="pstat" style="background: var(--green-light);"><div class="pval" style="color: var(--green);">${valid}</div><div class="plabel">Valid Rows</div></div>
+    <div class="pstat" style="background: var(--red-light);"><div class="pval" style="color: var(--red);">${errors}</div><div class="plabel">Errors</div></div>
+    <div class="pstat" style="background: var(--orange-light);"><div class="pval" style="color: var(--orange);">${mod.cols.length}</div><div class="plabel">Columns Mapped</div></div>
+  `;
+
+  let tableHTML = '<table class="preview-table"><thead><tr><th>#</th><th>Status</th>';
+  mod.cols.forEach(c => tableHTML += `<th>${c}</th>`);
+  tableHTML += '</tr></thead><tbody>';
+  parsedData.forEach((row, idx) => {
+    tableHTML += `<tr class="${row._valid ? '' : 'row-error'}"><td>${idx + 1}</td>`;
+    tableHTML += `<td>${row._valid ? '<span class="valid-badge">✓ Valid</span>' : '<span class="error-badge">✗ ' + (row._error || 'Error') + '</span>'}</td>`;
+    mod.cols.forEach(c => tableHTML += `<td>${row[c] || '<em style="color:var(--red);">—</em>'}</td>`);
+    tableHTML += '</tr>';
+  });
+  tableHTML += '</tbody></table>';
+  document.getElementById('previewTableWrap').innerHTML = tableHTML;
+}
+
+// ── Import ──
+function startImport() {
+  goStep(4);
+  const total = parsedData.filter(r => r._valid).length;
+  let progress = 0;
+  const log = document.getElementById('importLog');
+  const bar = document.getElementById('progressBar');
+  const pText = document.getElementById('progressText');
+
+  log.innerHTML = '<div class="log-line">[INFO] Starting import for module: ' + selectedModule.toUpperCase() + '</div>';
+  log.innerHTML += '<div class="log-line">[INFO] Total valid records: ' + total + '</div>';
+
+  const interval = setInterval(() => {
+    progress += Math.floor(Math.random() * 8) + 3;
+    if (progress > 100) progress = 100;
+    bar.style.width = progress + '%';
+    pText.textContent = progress + '%';
+
+    if (progress < 100) {
+      const row = Math.floor((progress / 100) * total);
+      log.innerHTML += '<div class="log-line success">[OK] Imported record ' + row + ' of ' + total + '</div>';
+      log.scrollTop = log.scrollHeight;
+    }
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      bar.style.width = '100%';
+      pText.textContent = '100%';
+
+      document.getElementById('importIcon').className = 'ti ti-circle-check result-icon';
+      document.getElementById('importIcon').style.color = 'var(--green)';
+      document.getElementById('importIcon').style.animation = 'none';
+      document.getElementById('importTitle').textContent = 'Import Completed Successfully!';
+      document.getElementById('importSubtitle').textContent = total + ' records have been imported into the system.';
+
+      log.innerHTML += '<div class="log-line success">[DONE] All ' + total + ' records imported successfully.</div>';
+      log.innerHTML += '<div class="log-line">[INFO] Skipped ' + parsedData.filter(r => !r._valid).length + ' invalid rows.</div>';
+      log.scrollTop = log.scrollHeight;
+
+      // Add final buttons
+      const area = document.getElementById('importArea');
+      area.innerHTML += `
+        <div style="display: flex; justify-content: center; gap: 12px; margin-top: 24px;">
+          <button class="btn" onclick="location.reload()"><i class="ti ti-refresh"></i> Import More</button>
+          <button class="btn btn-primary" onclick="window.location.href='AdminDashboard.html'"><i class="ti ti-layout-dashboard"></i> Go to Dashboard</button>
+        </div>`;
+    }
+  }, 300);
+}
+
+// ── Template Download ──
+function downloadTemplate() {
+  const mod = modules.find(m => m.id === selectedModule);
+  const csvContent = mod.cols.join(',') + '\n';
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = mod.id + '_import_template.csv';
+  a.click();
+}
+
+// ── Init ──
+renderModules();
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
