@@ -414,7 +414,48 @@ select.form-control {
 .table-avatar .info .name { font-weight: 600; color: var(--text-main); }
 .table-avatar .info .roll { font-size: 12px; color: var(--text-muted); }
 
+
+/* Routine Styles */
+:root {
+  --c-math: #dbeafe; --c-math-text: #1e40af;
+  --c-sci: #dcfce7; --c-sci-text: #166534;
+  --c-eng: #fee2e2; --c-eng-text: #991b1b;
+  --c-hist: #fef3c7; --c-hist-text: #92400e;
+  --c-comp: #f3e8ff; --c-comp-text: #6b21a8;
+  --c-break: #f1f5f9; --c-break-text: #475569;
+}
+.routine-container { background: var(--surface); border-radius: var(--radius-lg); overflow: hidden; }
+.routine-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: #fcfdfe; }
+.routine-title { font-size: 15px; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+.routine-title i { color: var(--primary); font-size: 18px; }
+.routine-body { padding: 12px 20px; display: flex; flex-direction: column; gap: 12px; }
+.routine-day { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px dashed var(--border); }
+.routine-day:last-child { border-bottom: none; }
+.day-label { width: 100px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; border-right: 2px solid var(--primary-light); padding-right: 16px; }
+.day-name { font-size: 14px; font-weight: 700; color: var(--text-main); }
+.day-status { font-size: 11px; color: var(--text-hint); margin-top: 4px; }
+.day-timeline-wrapper { flex: 1; overflow-x: auto; padding: 4px 0 12px 0; min-height: min-content; }
+.day-timeline-wrapper::-webkit-scrollbar { height: 4px; }
+.day-timeline-wrapper::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.day-timeline { display: flex; align-items: stretch; gap: 12px; min-width: max-content; }
+.lecture-card { width: 210px; padding: 14px 16px; border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid transparent; transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+.lecture-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.lecture-card .time { font-size: 11.5px; font-weight: 600; opacity: 0.8; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; padding-right: 48px; }
+.lecture-card .time i { font-size: 13px; }
+.lecture-card .subject { font-size: 14px; font-weight: 700; margin-bottom: 12px; line-height: 1.3; }
+.lecture-card .teacher { font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 6px; opacity: 0.9; margin-bottom: 6px; }
+.lecture-card .room { font-size: 11px; font-weight: 500; display: flex; align-items: center; gap: 6px; opacity: 0.7; }
+.card-math { background: var(--c-math); color: var(--c-math-text); border-left-color: #3b82f6; }
+.card-sci { background: var(--c-sci); color: var(--c-sci-text); border-left-color: #22c55e; }
+.card-eng { background: var(--c-eng); color: var(--c-eng-text); border-left-color: #ef4444; }
+.card-hist { background: var(--c-hist); color: var(--c-hist-text); border-left-color: #f59e0b; }
+.card-comp { background: var(--c-comp); color: var(--c-comp-text); border-left-color: #a855f7; }
+.card-break { background: var(--c-break); color: var(--c-break-text); border-left-color: #94a3b8; width: 140px; justify-content: center; text-align: center; border: 1px dashed #cbd5e1; border-radius: 8px; }
+.card-break .subject { margin-bottom: 0; }
+
+.timetable-modal-content { max-width: 900px !important; width: 90%; max-height: 90vh; }
 </style>
+
 <script src="permissions.js"></script>
 <script>BodhyaAuth.guardPage(['teacher']);</script>
 </head>
@@ -519,7 +560,7 @@ select.form-control {
           <div class="card">
             <div class="card-header">
               <div class="card-title"><i class="ti ti-clock-play"></i> Today's Schedule</div>
-              <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;"><i class="ti ti-calendar"></i> View Full Timetable</button>
+              <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="openTimetableModal()"><i class="ti ti-calendar"></i> View Full Timetable</button>
             </div>
             <div class="schedule-scroll" id="scheduleCards">
               <!-- JS Populated -->
@@ -1333,5 +1374,27 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script src="sidebar.js"></script>
+
+<!-- Timetable Modal -->
+<div class="modal-overlay" id="timetableModal">
+  <div class="modal-content timetable-modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">My Full Timetable</h2>
+      <button class="modal-close" onclick="closeTimetableModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body" style="padding: 0; overflow-y: auto;">
+      <div class="routine-container" style="border-radius: 0;">
+        <div class="routine-header">
+          <div class="routine-title"><i class="ti ti-calendar-time"></i> Weekly Routine: Anjali Sharma</div>
+          <button class="btn btn-secondary"><i class="ti ti-printer"></i> Print</button>
+        </div>
+        <div class="routine-body" id="fullRoutineBody">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
