@@ -6,158 +6,116 @@
 <title>Access Denied - BodhyaMarg ERP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 <style>
-  :root {
-    --green: #1a7a4a;
-    --green-dark: #125734;
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --bg-color: #f8fafc;
-    --white: #ffffff;
-    --border: #e2e8f0;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { 
+    --green: #1a7a4a; --green-light: #e6f4ee; --green-dark: #145e38; 
+    --bg: #f4f6f8; --white: #ffffff; --border: #e2e6ea; 
+    --text: #1a1d23; --text-muted: #6b7280; --text-hint: #9ca3af; 
+    --radius: 8px; --radius-lg: 12px; 
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-color);
-    background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-    background-size: 32px 32px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
   
-  .error-container {
+  /* Layout Classes */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .topbar { display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .topbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 12px; width: 280px; }
+  .topbar-search i { font-size: 14px; color: var(--text-hint); } 
+  .topbar-search input { border: none; background: transparent; font-size: 12.5px; font-family: inherit; outline: none; width: 100%; }
+  .topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .icon-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text-muted); }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+  
+  .content { flex: 1; overflow-y: auto; padding: 24px; display: flex; align-items: center; justify-content: center; }
+  .content::-webkit-scrollbar { width: 4px; } 
+  .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  
+  /* Error Card */
+  .form-section { 
+    background: var(--white); 
+    border: 1px solid var(--border); 
+    border-radius: var(--radius-lg); 
+    padding: 48px; 
+    max-width: 600px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    max-width: 600px;
-    width: 100%;
-    animation: fadeInUp 0.5s ease-out forwards;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
   }
 
+  /* Error Specific */
   .art-wrapper {
-    width: 220px;
-    height: 220px;
+    width: 200px;
+    height: 200px;
     margin-bottom: 24px;
-    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .art-wrapper svg {
-    width: 100%;
-    height: 100%;
-    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
-  }
-
+  .art-wrapper svg { width: 100%; height: 100%; }
+  
   .badge {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    padding: 6px 16px;
+    padding: 6px 14px;
     border-radius: 20px;
     display: inline-block;
-    margin-bottom: 20px;
-    background: #fef3c7;
-    color: #92400e;
-    box-shadow: 0 4px 12px rgba(146, 64, 14, 0.15);
-  }
-
-  .error-title {
-    font-size: 40px;
-    font-weight: 800;
-    color: var(--text-main);
     margin-bottom: 16px;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    background: #fef3c7;
+    color: #b45309;
   }
 
-  .error-desc {
-    font-size: 16px;
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 36px;
-    max-width: 500px;
-  }
+  .error-title { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .error-desc { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 32px; }
 
-  .actions {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    flex-wrap: wrap;
+  /* Buttons */
+  .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn { 
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; 
+    border-radius: var(--radius); font-size: 13.5px; font-weight: 600; 
+    cursor: pointer; transition: all 0.2s; text-decoration: none; 
+    border: 1px solid var(--border); background: var(--white); color: var(--text);
   }
-  
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 28px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-    border: none;
-    outline: none;
-  }
-  
-  .btn-primary {
-    background: var(--green);
-    color: var(--white);
-    box-shadow: 0 4px 12px rgba(26, 122, 74, 0.25);
-  }
-  .btn-primary:hover {
-    background: var(--green-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(26, 122, 74, 0.35);
-  }
-  
-  .btn-secondary {
-    background: var(--white);
-    color: var(--text-main);
-    border: 1px solid var(--border);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-  }
-  .btn-secondary:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
-  }
+  .btn:hover { background: var(--bg); }
+  .btn-primary { background: var(--green); color: var(--white); border-color: var(--green); }
+  .btn-primary:hover { background: var(--green-dark); border-color: var(--green-dark); }
 
   /* Animations */
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  /* SVG specific animations */
   .float { animation: floatAnim 4s ease-in-out infinite; }
   .pulse { animation: pulseAnim 2.5s ease-in-out infinite; }
-  
-  @keyframes floatAnim { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+  @keyframes floatAnim { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
   @keyframes pulseAnim { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1); } }
 
-  /* Tech Stack Trace for 500 */
-  .tech-container { margin-top: 40px; width: 100%; text-align: left; }
-  .tech-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #94a3b8; cursor: pointer; user-select: none; transition: color 0.2s; margin-bottom: 8px; }
+  /* Tech Trace */
+  .tech-container { margin-top: 32px; width: 100%; text-align: left; }
+  .tech-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--text-hint); cursor: pointer; user-select: none; transition: color 0.2s; }
   .tech-toggle:hover { color: var(--text-muted); }
-  .tech-content { display: none; background: #0f172a; color: #94a3b8; border-radius: 8px; padding: 20px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.2); }
-  .tech-content pre { font-family: 'Fira Code', monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; }
+  .tech-content { display: none; margin-top: 12px; background: #1a1d23; color: #a1a1aa; border-radius: 6px; padding: 16px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 11px; line-height: 1.5; }
 </style>
 </head>
 <body>
 
-  <div class="error-container">
-    <div class="art-wrapper">
-      
+<div id="sidebar-container"></div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-search"><i class="ti ti-search"></i><input placeholder="Search anything…" /></div>
+    <div class="topbar-right">
+      <div class="icon-btn"><i class="ti ti-bell"></i></div>
+      <div class="avatar">AD</div>
+    </div>
+  </div>
+  
+  <div class="content">
+    <div class="form-section">
+      <div class="art-wrapper">
+        
         <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="float">
             <path d="M60 15C40 15 30 35 30 50V60H90V50C90 35 80 15 60 15Z" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
             <rect x="20" y="60" width="80" height="50" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="6"/>
@@ -165,25 +123,28 @@
             <path d="M60 88V98" stroke="#d97706" stroke-width="5" stroke-linecap="round"/>
         </svg>
     
-    </div>
+      </div>
 
-    <div class="badge">Error Code: 403 FORBIDDEN</div>
-    <h1 class="error-title">Access Denied</h1>
-    <p class="error-desc">You don't have permission to view this module. If you believe this is a mistake, please contact your school administrator.</p>
-    
-    <div class="actions">
-      <a href="AllStudents.html" class="btn btn-primary"><i class="ti ti-home"></i> Back to Dashboard</a>
-      <a href="Login.html" class="btn btn-secondary"><i class="ti ti-login"></i> Login Again</a>
-    </div>
+      <div class="badge">Error Code: 403 FORBIDDEN</div>
+      <h1 class="error-title">Access Denied</h1>
+      <p class="error-desc">You don't have permission to view this module. If you believe this is a mistake, please contact your school administrator.</p>
+      
+      <div class="actions">
+        <a href="AllStudents.html" class="btn btn-primary"><i class="ti ti-home"></i> Back to Dashboard</a>
+        <a href="Login.html" class="btn"><i class="ti ti-login"></i> Login</a>
+      </div>
 
-    
+      
+    </div>
   </div>
+</div>
 
-  <script>
-    function toggleTechTrace() {
-      const content = document.querySelector('.tech-content');
-      content.style.display = content.style.display === 'block' ? 'none' : 'block';
-    }
-  </script>
+<script src="sidebar.js"></script>
+<script>
+  function toggleTechTrace() {
+    const content = document.querySelector('.tech-content');
+    content.style.display = content.style.display === 'block' ? 'none' : 'block';
+  }
+</script>
 </body>
 </html>
