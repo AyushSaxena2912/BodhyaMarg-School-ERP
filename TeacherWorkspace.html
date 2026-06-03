@@ -453,7 +453,8 @@ select.form-control {
 .card-break { background: var(--c-break); color: var(--c-break-text); border-left-color: #94a3b8; width: 140px; justify-content: center; text-align: center; border: 1px dashed #cbd5e1; border-radius: 8px; }
 .card-break .subject { margin-bottom: 0; }
 
-.timetable-modal-content { max-width: 900px !important; width: 90%; max-height: 90vh; }
+.timetable-modal-content { max-width: 900px !important; width: 90%; max-height: 90vh; display: flex; flex-direction: column; }
+.timetable-modal-content .modal-body { flex: 1; overflow-y: auto; }
 </style>
 
 <script src="permissions.js"></script>
