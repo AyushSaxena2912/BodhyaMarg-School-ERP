@@ -186,15 +186,10 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 <script>
 const gateways = [
-  { id: 'paypal', name: 'PayPal', color: '#003087', desc: 'PayPal is the faster, safer way to send and receive money or make an online payment.', connected: true },
-  { id: 'stripe', name: 'stripe', color: '#635bff', desc: 'APIs to accept credit cards, manage subscriptions, send money.', connected: false },
-  { id: 'braintree', name: 'Braintree', color: '#000000', desc: 'Braintree offers more fraud protection and security features.', connected: false },
-  { id: '2checkout', name: '2checkout', color: '#00a1e0', desc: 'Works stably and reliably and features are valuable and necessary for any software.', connected: false },
-  { id: 'razorpay', name: 'Razorpay', color: '#0b58cb', desc: 'Razorpay is a comprehensive payment gateway and financial solutions provider in India.', connected: true },
-  { id: 'skrill', name: 'Skrill', color: '#8b1331', desc: 'Allows send international money transfers and payments quickly with low fees.', connected: false },
-  { id: 'applepay', name: 'Apple Pay', color: '#000000', desc: 'A safer, more secure and private way to pay with iPhone and Apple Watch.', connected: false },
-  { id: 'payoneer', name: 'Payoneer', color: '#ff4800', desc: 'Cross-border payments platform that empowers businesses to grow globally.', connected: false },
-  { id: 'payu', name: 'PayU', color: '#a5cd39', desc: 'Provides payment gateway solutions to online businesses.', connected: true }
+  { id: 'razorpay', name: 'Razorpay', color: '#0b58cb', connected: true },
+  { id: 'cashfree', name: 'Cashfree', color: '#5b2f91', connected: false },
+  { id: 'paypal', name: 'PayPal', color: '#003087', connected: false },
+  { id: 'stripe', name: 'stripe', color: '#635bff', connected: false }
 ];
 
 function renderGrid() {
