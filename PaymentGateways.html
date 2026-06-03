@@ -218,7 +218,7 @@ function renderGrid() {
           </div>
         </div>
         <div class="gc-action" style="padding-top: 0; border-top: none; margin-top: 0;">
-          <button class="btn-connect" onclick="openModal('${gw.id}')">
+          <button id="btn-${gw.id}" class="btn-connect" onclick="openModal('${gw.id}')">
             <i class="ti ti-settings"></i> ${isConn ? 'View Integration' : 'Connect Now'}
           </button>
         </div>
@@ -231,7 +231,10 @@ function toggleStatus(id, checked) {
   const gw = gateways.find(g => g.id === id);
   if(gw) {
     gw.connected = checked;
-    renderGrid();
+    const btn = document.getElementById(`btn-${id}`);
+    if(btn) {
+      btn.innerHTML = `<i class="ti ti-settings"></i> ${checked ? 'View Integration' : 'Connect Now'}`;
+    }
   }
 }
 
