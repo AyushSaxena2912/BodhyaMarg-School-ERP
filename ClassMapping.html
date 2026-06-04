@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BodhyaMarg ERP – Class Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #1a7a4a;
+    --green-light: #e6f4ee;
+    --green-dark: #145e38;
+    --bg: #f4f6f8;
+    --white: #ffffff;
+    --border: #e2e6ea;
+    --text: #1a1d23;
+    --text-muted: #6b7280;
+    --text-hint: #9ca3af;
+    --warn: #d97706;
+    --danger: #dc2626;
+    --blue: #2563eb;
+    --blue-light: #eff6ff;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+  }
+
+  /* ── Main ─────────────────────────────────── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* Topbar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .topbar-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 7px 12px;
+    width: 280px;
+  }
+  .topbar-search i { font-size: 14px; color: var(--text-hint); }
+  .topbar-search input {
+    border: none; background: transparent;
+    font-size: 12.5px; color: var(--text);
+    font-family: inherit; outline: none; width: 100%;
+  }
+  .topbar-search input::placeholder { color: var(--text-hint); }
+  .topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+  .ay-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .ay-pill i { font-size: 14px; color: var(--text-hint); }
+
+  .icon-btn {
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--white);
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: background 0.12s;
+  }
+  .icon-btn:hover { background: var(--bg); }
+  .icon-btn i { font-size: 16px; }
+
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+
+  /* Content area */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+  }
+  .content::-webkit-scrollbar { width: 4px; }
+  .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* Page header */
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .page-title h1 { font-size: 20px; font-weight: 600; color: var(--text); }
+  .breadcrumb {
+    font-size: 11.5px;
+    color: var(--text-hint);
+    margin-top: 3px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .breadcrumb span { color: var(--green); }
+  .breadcrumb i { font-size: 11px; }
+
+  .header-actions { display: flex; gap: 8px; }
+
+  .btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-size: 12.5px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+    transition: background 0.12s;
+  }
+  .btn:hover { background: var(--bg); }
+  .btn i { font-size: 15px; }
+  .btn-primary {
+    background: var(--green); color: #fff;
+    border-color: var(--green);
+  }
+  .btn-primary:hover { background: var(--green-dark); border-color: var(--green-dark); }
+
+  /* Table card */
+  .table-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .table-toolbar {
+    display: flex; align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    gap: 10px;
+  }
+  .table-toolbar-title { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+
+  .toolbar-btn {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: var(--white);
+    font-family: inherit;
+    transition: background 0.12s;
+  }
+  .toolbar-btn:hover { background: var(--bg); }
+  .toolbar-btn i { font-size: 14px; }
+
+  .table-controls {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    background: #fafbfc;
+  }
+  .rpp {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--text-muted);
+  }
+  .rpp select {
+    font-size: 12px; font-family: inherit;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px 8px;
+    background: var(--white);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .tbl-search {
+    display: flex; align-items: center; gap: 7px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    background: var(--white);
+  }
+  .tbl-search i { font-size: 13px; color: var(--text-hint); }
+  .tbl-search input {
+    border: none; background: transparent;
+    font-size: 12px; font-family: inherit; color: var(--text);
+    outline: none; width: 160px;
+  }
+  .tbl-search input::placeholder { color: var(--text-hint); }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  thead tr { background: #f8f9fb; }
+  th {
+    font-size: 11.5px; font-weight: 600;
+    color: var(--text-muted);
+    padding: 11px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    user-select: none;
+    cursor: pointer;
+  }
+  th i { font-size: 11px; vertical-align: middle; margin-left: 3px; color: var(--text-hint); }
+  th:hover { background: #f0f1f3; }
+
+  td {
+    font-size: 12.5px;
+    color: var(--text);
+    padding: 11px 18px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #f8faf9; }
+
+  .cb {
+    width: 15px; height: 15px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    accent-color: var(--green);
+  }
+
+  .room-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 36px; height: 28px;
+    background: var(--blue-light);
+    color: var(--blue);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 0 8px;
+  }
+
+  .class-chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 28px; height: 24px;
+    background: var(--green-light);
+    color: var(--green);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0 8px;
+  }
+
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11.5px; font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .status-badge.available { background: var(--green-light); color: var(--green); }
+  .status-badge.occupied { background: #fef3c7; color: var(--warn); }
+  .status-badge.maintenance { background: #fee2e2; color: var(--danger); }
+  .status-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .cap-wrap { display: flex; align-items: center; gap: 10px; }
+  .cap-bar {
+    width: 64px; height: 5px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .cap-fill { height: 100%; border-radius: 3px; }
+  .cap-fill.ok     { background: var(--green); }
+  .cap-fill.warn   { background: var(--warn); }
+  .cap-fill.danger { background: var(--danger); }
+  .cap-text { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+  .three-dot {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: background 0.12s;
+  }
+  .three-dot:hover { background: var(--bg); }
+  .three-dot i { font-size: 16px; }
+
+  /* Pagination */
+  .pagination {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 4px;
+    padding: 12px 18px;
+    border-top: 1px solid var(--border);
+    background: #fafbfc;
+  }
+  .pg-btn {
+    min-width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius);
+    font-size: 12px; font-family: inherit;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text-muted);
+    padding: 0 8px;
+    transition: background 0.12s;
+    gap: 4px;
+  }
+  .pg-btn:hover { background: var(--bg); }
+  .pg-btn.active { background: var(--green); color: #fff; border-color: var(--green); font-weight: 600; }
+  .pg-btn i { font-size: 12px; }
+  .pg-dots { font-size: 12px; color: var(--text-hint); padding: 0 4px; }
+
+
+select {
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; cursor: pointer;
+}
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.4);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.show { opacity: 1; pointer-events: auto; }
+  
+  .modal {
+    background: var(--white);
+    width: 440px;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transform: translateY(20px);
+    transition: transform 0.2s;
+    display: flex; flex-direction: column;
+  }
+  .modal-overlay.show .modal { transform: translateY(0); }
+  
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-header h2 { font-size: 16px; font-weight: 600; color: var(--text); }
+  .modal-close {
+    background: transparent; border: none; cursor: pointer;
+    color: var(--text-hint); transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--text); }
+  
+  .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+  .form-group input, .form-group select {
+    padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius);
+    font-size: 13px; font-family: inherit; color: var(--text); background: var(--bg);
+    outline: none; transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--green); }
+  
+  .modal-footer {
+    padding: 16px 24px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+    background: #fafbfc; border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+
+
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div id="sidebar-container"></div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-search">
+      <i class="ti ti-search"></i>
+      <input type="text" placeholder="Search anything…" />
+    </div>
+    <div class="topbar-right">
+      <div class="ay-pill">
+        <i class="ti ti-calendar"></i>
+        Academic Year : 2026 / 2027
+        <i class="ti ti-chevron-down"></i>
+      </div>
+      <div class="icon-btn"><i class="ti ti-clock"></i></div>
+      <div class="icon-btn"><i class="ti ti-settings"></i></div>
+      <div class="icon-btn" style="position:relative;">
+        <i class="ti ti-bell"></i>
+        <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-title">
+        <h1>Class-Section Mapping</h1>
+        <div class="breadcrumb">
+          Dashboard <i class="ti ti-chevron-right"></i>
+          Academic <i class="ti ti-chevron-right"></i>
+          <span>Mapping</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" onclick="openMappingModal()"><i class="ti ti-plus"></i> New Mapping</button>
+      </div>
+    </div>
+
+    <!-- Table card -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <span class="table-toolbar-title">Mapped Classes</span>
+        <button class="toolbar-btn"><i class="ti ti-filter"></i> Filter</button>
+        <button class="toolbar-btn"><i class="ti ti-arrows-sort"></i> Sort By A-Z <i class="ti ti-chevron-down"></i></button>
+      </div>
+
+      <div class="table-controls">
+        <div class="rpp">
+          Row Per Page
+          <select><option>10</option><option>25</option><option>50</option><option>100</option></select>
+          Entries
+        </div>
+        <div class="tbl-search">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Search" />
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:44px;"><input type="checkbox" class="cb" /></th>
+            <th>Class <i class="ti ti-selector"></i></th>
+            <th>Section <i class="ti ti-selector"></i></th>
+            <th>Assigned Room <i class="ti ti-selector"></i></th>
+            <th>Class Teacher <i class="ti ti-selector"></i></th>
+            <th style="width:100px; text-align:center;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- Modal: Class Mapping -->
+<div class="modal-overlay" id="mappingModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>New Class-Section Mapping</h2>
+      <button class="modal-close" onclick="closeMappingModal()"><i class="ti ti-x" style="font-size:20px;"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Select Class (from Class Master)</label>
+        <select>
+          <option>-- Select Class --</option>
+          <option>Class I</option>
+          <option>Class II</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Select Section (from Section Master)</label>
+        <select>
+          <option>-- Select Section --</option>
+          <option>A</option>
+          <option>B</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Assign Room (from Room Master)</label>
+        <select>
+          <option>-- Select Room --</option>
+          <option>Room 101 (Cap: 40)</option>
+          <option>Room 102 (Cap: 40)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Assign Class Teacher</label>
+        <select>
+          <option>-- Select Teacher --</option>
+          <option>Amit Patel</option>
+          <option>Riya Sharma</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeMappingModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMapping()">Save Mapping</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+const data = [
+  { cls: "Class I", sec: "A", room: "Room 101", teacher: "Riya Sharma" },
+  { cls: "Class I", sec: "B", room: "Room 102", teacher: "Amit Patel" },
+  { cls: "Class II", sec: "A", room: "Room 103", teacher: "Sneha Iyer" },
+  { cls: "Class II", sec: "B", room: "Unassigned", teacher: "Unassigned" },
+];
+const tbody = document.getElementById("table-body");
+data.forEach(r => {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="checkbox" class="cb" /></td>
+    <td><span class="class-badge" style="width:auto;padding:0 12px;">${r.cls}</span></td>
+    <td><span class="class-chip">${r.sec}</span></td>
+    <td style="color:var(--text-muted);">${r.room}</td>
+    <td style="color:var(--text-muted);">${r.teacher}</td>
+    <td style="text-align:center;"><div class="three-dot" style="margin: 0 auto;"><i class="ti ti-dots-vertical"></i></div></td>
+  `;
+  tbody.appendChild(tr);
+});
+
+
+document.querySelector('thead .cb').addEventListener('change', function(){
+  document.querySelectorAll('tbody .cb').forEach(cb => cb.checked = this.checked);
+});
+
+// Modal Logic
+function openMappingModal() {
+  document.getElementById('mappingModal').classList.add('show');
+}
+function closeMappingModal() {
+  document.getElementById('mappingModal').classList.remove('show');
+}
+function saveMapping() {
+  alert('Mapping saved successfully!');
+  closeMappingModal();
+}
+</script>
+<script src="sidebar.js"></script>
+</body>
+</html>
