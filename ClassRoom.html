@@ -489,14 +489,17 @@ select {
     <div class="modal-grid">
       <div class="modal-field full">
         <label>Room Type</label>
-        <input list="roomTypes" id="fRoomType" placeholder="Select or type room type..." />
-        <datalist id="roomTypes">
-          <option value="Classroom">
-          <option value="Computer Lab">
-          <option value="Science Lab">
-          <option value="Library">
-          <option value="Auditorium">
-        </datalist>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <select id="fRoomType" onchange="toggleCustomRoomType(this)" style="flex: 1;">
+            <option value="Classroom">Classroom</option>
+            <option value="Computer Lab">Computer Lab</option>
+            <option value="Science Lab">Science Lab</option>
+            <option value="Library">Library</option>
+            <option value="Auditorium">Auditorium</option>
+            <option value="Other">Add Custom Type...</option>
+          </select>
+          <input type="text" id="fCustomRoomType" placeholder="e.g. Music Room" style="display: none; flex: 1;" />
+        </div>
       </div>
       <div class="modal-field">
         <label>Room Number / Name</label>
@@ -564,9 +567,22 @@ document.querySelector('thead .cb').addEventListener('change', function(){
 function openModal() { 
   document.getElementById('roomModal').classList.add('open');
   document.getElementById('fRoomType').value = 'Classroom';
+  toggleCustomRoomType(document.getElementById('fRoomType'));
 }
 function closeModal() { document.getElementById('roomModal').classList.remove('open'); }
 function closeModalOutside(e) { if(e.target===document.getElementById('roomModal')) closeModal(); }
+
+function toggleCustomRoomType(sel) {
+  const customInput = document.getElementById('fCustomRoomType');
+  if(sel.value === 'Other') {
+    customInput.style.display = 'block';
+    customInput.focus();
+  } else {
+    customInput.style.display = 'none';
+    customInput.value = '';
+  }
+}
+
 function saveRoom() {
   alert('Room saved successfully! (Demo Mode)');
   closeModal();
