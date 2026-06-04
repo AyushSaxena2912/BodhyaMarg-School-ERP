@@ -69,6 +69,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 /* Filters Section */
 .filter-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+.routine-form-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; gap: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
 .filter-group { display: flex; flex-direction: column; gap: 6px; }
 .filter-group label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
 .filter-group select { font-family: inherit; font-size: 13px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 30px 8px 12px; background: var(--white); outline: none; cursor: pointer; min-width: 160px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; transition: border-color 0.2s; }
@@ -215,8 +216,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
     </div>
 
-    <div class="filter-card" style="margin-top: 24px;">
-<div class="modal-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid var(--border);">
+    <div class="routine-form-card" style="margin-top: 24px;">
+      <div class="modal-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 0px; padding-bottom: 20px; border-bottom: 2px solid var(--border);">
       <div class="modal-field">
         <label>Class</label>
         <select id="fClass" onchange="autoPopulateRoom()">
@@ -410,14 +411,12 @@ function autoPopulateRoom() {
   });
 }
 
-// Ensure at least 1 row exists when opening modal
-// removed
+// Ensure at least 1 row exists when loading page
 window.onload = function() {
   const container = document.getElementById('lectureRowsContainer');
-  if(container.children.length === 0) {
+  if(container && container.children.length === 0) {
     addLectureRow();
   }
-  originalOpenModal();
 };
 
 // Custom Select Logic
@@ -450,8 +449,7 @@ document.addEventListener("click", function (e) {
   }
 });
 
-// Initial Render
-renderRoutine();
+
 
 </script>
 <script src="sidebar.js"></script>
