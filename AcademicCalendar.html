@@ -223,7 +223,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
       <div class="page-actions">
         <button class="btn-export"><i class="ti ti-download"></i> Export</button>
-        <button class="btn-add" onclick="openAddModal()"><i class="ti ti-circle-plus"></i> Add Event</button>
+        <button class="btn-add" onclick="openAddModal()" data-allowed-roles="teacher,staff"><i class="ti ti-circle-plus"></i> Add Event</button>
       </div>
     </div>
 
@@ -315,9 +315,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     </div>
 
     <div class="modal-footer">
-      <button class="btn-delete" id="btnDelete" style="display:none;" onclick="deleteEvent()"><i class="ti ti-trash"></i> Delete</button>
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" onclick="saveEvent()"><i class="ti ti-check"></i> Save Event</button>
+      <button class="btn-delete" id="btnDelete" style="display:none;" onclick="deleteEvent()" data-allowed-roles="teacher,staff"><i class="ti ti-trash"></i> Delete</button>
+      <button class="btn-cancel" onclick="closeModal()" id="btnCancel">Cancel</button>
+      <button class="btn-save" id="btnSave" onclick="saveEvent()" data-allowed-roles="teacher,staff"><i class="ti ti-check"></i> Save Event</button>
     </div>
   </div>
 </div>
@@ -588,13 +588,33 @@ function openEditModal(e, id) {
   if (!ev) return;
   editingId = id;
   selectedColor = ev.colorIdx;
-  document.getElementById('modalTitle').textContent = 'Edit Event';
+  document.getElementById('modalTitle').textContent = 'Event Details';
   document.getElementById('fTitle').value = ev.title;
   document.getElementById('fStart').value = ev.start;
   document.getElementById('fEnd').value   = ev.end;
   document.getElementById('fCat').value   = ev.cat;
   document.getElementById('fDesc').value  = ev.desc;
-  document.getElementById('btnDelete').style.display = 'inline-flex';
+  
+  const isStudent = typeof BodhyaAuth !== 'undefined' && BodhyaAuth.getRole() === 'student';
+  if (isStudent) {
+    document.getElementById('fTitle').disabled = true;
+    document.getElementById('fStart').disabled = true;
+    document.getElementById('fEnd').disabled = true;
+    document.getElementById('fCat').disabled = true;
+    document.getElementById('fDesc').disabled = true;
+    document.getElementById('colorSwatches').style.pointerEvents = 'none';
+    document.getElementById('btnCancel').textContent = 'Close';
+  } else {
+    document.getElementById('fTitle').disabled = false;
+    document.getElementById('fStart').disabled = false;
+    document.getElementById('fEnd').disabled = false;
+    document.getElementById('fCat').disabled = false;
+    document.getElementById('fDesc').disabled = false;
+    document.getElementById('colorSwatches').style.pointerEvents = 'auto';
+    document.getElementById('btnCancel').textContent = 'Cancel';
+    document.getElementById('btnDelete').style.display = 'inline-flex';
+  }
+  
   buildSwatches();
   document.getElementById('modalOverlay').classList.add('open');
 }
