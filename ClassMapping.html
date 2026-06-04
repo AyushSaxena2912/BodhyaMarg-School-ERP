@@ -482,11 +482,11 @@ select {
     <!-- Page header -->
     <div class="page-header">
       <div class="page-title">
-        <h1>Class-Section Mapping</h1>
+        <h1>Class Allocation</h1>
         <div class="breadcrumb">
           Dashboard <i class="ti ti-chevron-right"></i>
           Academic <i class="ti ti-chevron-right"></i>
-          <span>Mapping</span>
+          <span>Class Allocation</span>
         </div>
       </div>
       <div class="header-actions">
@@ -522,6 +522,7 @@ select {
             <th>Section <i class="ti ti-selector"></i></th>
             <th>Assigned Room <i class="ti ti-selector"></i></th>
             <th>Class Teacher <i class="ti ti-selector"></i></th>
+            <th>Capacity & Status <i class="ti ti-selector"></i></th>
             <th style="width:100px; text-align:center;">Action</th>
           </tr>
         </thead>
@@ -590,20 +591,34 @@ select {
 <script>
 
 const data = [
-  { cls: "Class I", sec: "A", room: "Room 101", teacher: "Riya Sharma" },
-  { cls: "Class I", sec: "B", room: "Room 102", teacher: "Amit Patel" },
-  { cls: "Class II", sec: "A", room: "Room 103", teacher: "Sneha Iyer" },
-  { cls: "Class II", sec: "B", room: "Unassigned", teacher: "Unassigned" },
+  { cls: "Class I", sec: "A", room: "Room 101", teacher: "Riya Sharma", cap: 40, stu: 38 },
+  { cls: "Class I", sec: "B", room: "Room 102", teacher: "Amit Patel", cap: 40, stu: 42 },
+  { cls: "Class II", sec: "A", room: "Room 103", teacher: "Sneha Iyer", cap: 45, stu: 30 },
+  { cls: "Class II", sec: "B", room: "Unassigned", teacher: "Unassigned", cap: 0, stu: 0 },
 ];
 const tbody = document.getElementById("table-body");
 data.forEach(r => {
   const tr = document.createElement("tr");
+
+  let capHtml = `<span style="color:var(--text-hint);font-style:italic;">N/A</span>`;
+  if (r.cap > 0) {
+    const pct = Math.min(Math.round((r.stu / r.cap) * 100), 100);
+    const fillCls = r.stu > r.cap ? "danger" : pct >= 90 ? "warn" : "ok";
+    capHtml = `
+      <div class="cap-wrap">
+        <div class="cap-bar"><div class="cap-fill ${fillCls}" style="width:${pct}%"></div></div>
+        <div class="cap-text" style="${r.stu > r.cap ? 'color:var(--danger);font-weight:600;' : ''}">${r.stu}/${r.cap}</div>
+      </div>
+    `;
+  }
+
   tr.innerHTML = `
     <td><input type="checkbox" class="cb" /></td>
     <td><span class="class-badge" style="width:auto;padding:0 12px;">${r.cls}</span></td>
     <td><span class="class-chip">${r.sec}</span></td>
     <td style="color:var(--text-muted);">${r.room}</td>
     <td style="color:var(--text-muted);">${r.teacher}</td>
+    <td>${capHtml}</td>
     <td style="text-align:center;"><div class="three-dot" style="margin: 0 auto;"><i class="ti ti-dots-vertical"></i></div></td>
   `;
   tbody.appendChild(tr);
