@@ -435,8 +435,7 @@ select {
             <th style="width:44px;"><input type="checkbox" class="cb" /></th>
             <th>Room No <i class="ti ti-selector"></i></th>
 
-            <th>Building <i class="ti ti-selector"></i></th>
-            <th>Floor <i class="ti ti-selector"></i></th>
+
             <th>Capacity <i class="ti ti-selector"></i></th>
             <th style="width:100px; text-align:center;">Action</th>
           </tr>
@@ -483,8 +482,7 @@ rooms.forEach(r => {
     <td><input type="checkbox" class="cb" /></td>
     <td><span class="room-badge">${r.room}</span></td>
 
-    <td style="color:var(--text-muted);">${r.building}</td>
-    <td style="color:var(--text-muted);">${r.floor}</td>
+
     <td style="color:var(--text-muted);">${r.capacity} seats</td>
     <td style="text-align:center;"><div class="three-dot" style="margin: 0 auto;"><i class="ti ti-dots-vertical"></i></div></td>
   `;
