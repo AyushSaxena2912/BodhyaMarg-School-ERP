@@ -183,7 +183,7 @@ body {
 .welcome-banner { 
   background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); 
   border-radius: var(--radius-lg); padding: 32px 40px; color: white;
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap;
   position: relative; overflow: hidden; box-shadow: var(--shadow-md);
   margin-top: 16px; margin-bottom: 24px;
 }
@@ -193,6 +193,7 @@ body {
   background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
   border-radius: 50%; pointer-events: none;
 }
+.welcome-text { flex: 1; min-width: 300px; }
 .welcome-text h2 { font-size: 32px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
 .welcome-text p.sub-text { font-size: 16px; font-weight: 500; margin-bottom: 24px; color: rgba(255,255,255,0.9); }
 .welcome-notice { font-size: 15px; font-weight: 500; }
