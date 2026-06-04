@@ -461,16 +461,16 @@ select {
 
 <script>
 const rooms = [
-  { room: 101, building: "Main Block", floor: "Ground Floor", cls: "I-A",   capacity: 40, students: 30, status: "available" },
-  { room: 102, building: "Main Block", floor: "Ground Floor", cls: "I-B",   capacity: 40, students: 25, status: "available" },
-  { room: 103, building: "Main Block", floor: "1st Floor",    cls: "II-A",  capacity: 45, students: 40, status: "occupied" },
-  { room: 104, building: "Main Block", floor: "1st Floor",    cls: "II-B",  capacity: 45, students: 35, status: "available" },
-  { room: 105, building: "Main Block", floor: "1st Floor",    cls: "II-C",  capacity: 40, students: 25, status: "available" },
-  { room: 201, building: "Science Block", floor: "Ground Floor", cls: "III-A", capacity: 50, students: 30, status: "available" },
-  { room: 202, building: "Science Block", floor: "Ground Floor", cls: "III-B", capacity: 50, students: 33, status: "available" },
-  { room: 203, building: "Science Block", floor: "1st Floor",    cls: "IV-A",  capacity: 35, students: 20, status: "available" },
-  { room: 204, building: "Science Block", floor: "1st Floor",    cls: "IV-B",  capacity: 35, students: 34, status: "occupied" },
-  { room: 301, building: "Arts Block",    floor: "Ground Floor", cls: "V-A",   capacity: 40, students: 35, status: "maintenance" },
+  { room: 101, building: "Main Block", floor: "Ground Floor", cls: "I-A",   capacity: 40, students: 30, status: "available", roomType: "Classroom" },
+  { room: 102, building: "Main Block", floor: "Ground Floor", cls: "I-B",   capacity: 40, students: 25, status: "available", roomType: "Classroom" },
+  { room: 103, building: "Main Block", floor: "1st Floor",    cls: "II-A",  capacity: 45, students: 40, status: "occupied", roomType: "Classroom" },
+  { room: 104, building: "Main Block", floor: "1st Floor",    cls: "II-B",  capacity: 45, students: 35, status: "available", roomType: "Classroom" },
+  { room: 105, building: "Main Block", floor: "1st Floor",    cls: "II-C",  capacity: 40, students: 25, status: "available", roomType: "Classroom" },
+  { room: 201, building: "Science Block", floor: "Ground Floor", cls: "III-A", capacity: 50, students: 30, status: "available", roomType: "Science Lab" },
+  { room: 202, building: "Science Block", floor: "Ground Floor", cls: "III-B", capacity: 50, students: 33, status: "available", roomType: "Computer Lab" },
+  { room: 203, building: "Science Block", floor: "1st Floor",    cls: "IV-A",  capacity: 35, students: 20, status: "available", roomType: "Classroom" },
+  { room: 204, building: "Science Block", floor: "1st Floor",    cls: "IV-B",  capacity: 35, students: 34, status: "occupied", roomType: "Classroom" },
+  { room: 301, building: "Arts Block",    floor: "Ground Floor", cls: "V-A",   capacity: 40, students: 35, status: "maintenance", roomType: "Library" },
 ];
 
 localStorage.setItem('bodhya_rooms', JSON.stringify(rooms.map(r => r.room)));
@@ -481,11 +481,16 @@ rooms.forEach(r => {
   const pct = Math.min(Math.round((r.students / r.capacity) * 100), 100);
   const fillCls = pct >= 90 ? "danger" : pct >= 65 ? "warn" : "ok";
   const tr = document.createElement("tr");
+  
+  let icon = 'ti-chalkboard';
+  if(r.roomType === 'Computer Lab') icon = 'ti-device-desktop';
+  if(r.roomType === 'Science Lab') icon = 'ti-flask';
+  if(r.roomType === 'Library') icon = 'ti-books';
+
   tr.innerHTML = `
     <td><input type="checkbox" class="cb" /></td>
     <td><span class="room-badge">${r.room}</span></td>
-
-
+    <td><div style="display:flex; align-items:center; gap:6px; color:var(--text); font-weight:500;"><i class="ti ${icon}" style="color:var(--text-hint); font-size:14px;"></i> ${r.roomType}</div></td>
     <td style="color:var(--text-muted);">${r.capacity} seats</td>
     <td style="text-align:center;"><div class="three-dot" style="margin: 0 auto;"><i class="ti ti-dots-vertical"></i></div></td>
   `;
