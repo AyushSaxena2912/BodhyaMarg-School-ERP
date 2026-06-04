@@ -121,7 +121,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 /* Modal */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity .15s; }
 .modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal { background: var(--white); border-radius: var(--radius-lg); width: 500px; padding: 28px; box-shadow: 0 8px 32px rgba(0,0,0,.14); transform: translateY(10px); transition: transform .15s; }
+.modal { background: var(--white); border-radius: var(--radius-lg); width: 900px; max-width: 95vw; padding: 28px; box-shadow: 0 8px 32px rgba(0,0,0,.14); transform: translateY(10px); transition: transform .15s; }
 .modal-overlay.open .modal { transform: translateY(0); }
 .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
 .modal-close { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); }
@@ -135,7 +135,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .modal-field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 30px; cursor: pointer; }
 .modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px; }
 
+
+.lecture-row { display: grid; grid-template-columns: 1.5fr 2fr 1fr 1fr 1.2fr auto; gap: 12px; align-items: end; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px dashed var(--border); }
+.lecture-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.remove-row-btn { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid #fee2e2; background: #fff; color: #ef4444; cursor: pointer; transition: background 0.15s; }
+.remove-row-btn:hover { background: #fee2e2; }
+.remove-row-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 /* Custom Select */
+
 .custom-select-wrapper { position: relative; user-select: none; }
 .custom-select {
   font-family: inherit; font-size: 13px; color: var(--text);
@@ -252,8 +259,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
     </div>
     
-    <div class="modal-grid">
-      <div class="modal-field full">
+    <div class="modal-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid var(--border);">
+      <div class="modal-field">
         <label>Day of Week</label>
         <select id="fDay">
           <option value="Monday">Monday</option>
@@ -280,45 +287,16 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <option value="B">Section B</option>
         </select>
       </div>
-      <div class="modal-field">
-        <label>Subject</label>
-        <select id="fSubject">
-          <option value="Mathematics">Mathematics</option>
-          <option value="Science">Science</option>
-          <option value="English">English</option>
-          <option value="History">History</option>
-          <option value="Computer">Computer</option>
-        </select>
-      </div>
-      <div class="modal-field custom-select-wrapper">
-        <label>Teacher</label>
-        <div class="custom-select" id="teacherSelect" onclick="toggleSelect(this)">
-          <div class="select-selected">Select Teacher</div>
-          <div class="select-items">
-            <div class="select-search">
-              <input type="text" placeholder="Search by name or ID..." onkeyup="filterSelect(this)" onclick="event.stopPropagation()">
-            </div>
-            <div class="select-option" onclick="selectOption(this)">Ramesh Patel (T001)</div>
-            <div class="select-option" onclick="selectOption(this)">Suresh Yadav (T002)</div>
-            <div class="select-option" onclick="selectOption(this)">Meera Sharma (T003)</div>
-            <div class="select-option" onclick="selectOption(this)">Priya Gupta (T004)</div>
-            <div class="select-option" onclick="selectOption(this)">Vikash Jain (T005)</div>
-            <div class="select-option" onclick="selectOption(this)">Self (Break)</div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-field">
-        <label>Start Time</label>
-        <input type="time" id="fStartTime" value="08:00" />
-      </div>
-      <div class="modal-field">
-        <label>End Time</label>
-        <input type="time" id="fEndTime" value="08:40" />
-      </div>
-      <div class="modal-field full">
-        <label>Room No.</label>
-        <input type="text" id="fRoom" placeholder="e.g. Room 102" />
-      </div>
+    </div>
+    
+    <div id="lectureRowsContainer">
+      <!-- Rows will be added here by JS -->
+    </div>
+    
+    <div style="margin-top: 16px;">
+      <button class="btn" style="color: var(--green); border-color: var(--green-light); background: var(--green-light);" onclick="addLectureRow()">
+        <i class="ti ti-plus"></i> Add Another Lecture
+      </button>
     </div>
     
     <div class="modal-footer">
@@ -434,21 +412,112 @@ function saveRoutine() {
   closeModal();
 }
 
+// Lecture Row Template
+const lectureRowHTML = `
+  <div class="modal-field">
+    <label>Subject</label>
+    <select>
+      <option value="Mathematics">Mathematics</option>
+      <option value="Science">Science</option>
+      <option value="English">English</option>
+      <option value="History">History</option>
+      <option value="Computer">Computer</option>
+    </select>
+  </div>
+  <div class="modal-field custom-select-wrapper">
+    <label>Teacher</label>
+    <div class="custom-select" onclick="toggleSelect(this)">
+      <div class="select-selected">Select Teacher</div>
+      <div class="select-items">
+        <div class="select-search">
+          <input type="text" placeholder="Search by name or ID..." onkeyup="filterSelect(this)" onclick="event.stopPropagation()">
+        </div>
+        <div class="select-option" onclick="selectOption(this)">Ramesh Patel (T001)</div>
+        <div class="select-option" onclick="selectOption(this)">Suresh Yadav (T002)</div>
+        <div class="select-option" onclick="selectOption(this)">Meera Sharma (T003)</div>
+        <div class="select-option" onclick="selectOption(this)">Priya Gupta (T004)</div>
+        <div class="select-option" onclick="selectOption(this)">Vikash Jain (T005)</div>
+        <div class="select-option" onclick="selectOption(this)">Self (Break)</div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-field">
+    <label>Start Time</label>
+    <input type="time" class="time-start" value="08:00" />
+  </div>
+  <div class="modal-field">
+    <label>End Time</label>
+    <input type="time" class="time-end" value="08:40" />
+  </div>
+  <div class="modal-field">
+    <label>Room No.</label>
+    <input type="text" class="room-input" placeholder="e.g. Room 102" />
+  </div>
+  <div class="modal-field" style="justify-content: flex-end;">
+    <button class="remove-row-btn" onclick="removeLectureRow(this)" title="Remove Lecture">
+      <i class="ti ti-trash"></i>
+    </button>
+  </div>
+`;
+
+function addLectureRow() {
+  const container = document.getElementById('lectureRowsContainer');
+  const row = document.createElement('div');
+  row.className = 'lecture-row';
+  row.innerHTML = lectureRowHTML;
+  container.appendChild(row);
+  
+  autoPopulateRoom(); // auto-fill room for the new row if class/section already selected
+  
+  // Disable remove button if it's the only row
+  updateRemoveButtons();
+}
+
+function removeLectureRow(btn) {
+  const rows = document.querySelectorAll('.lecture-row');
+  if(rows.length > 1) {
+    btn.closest('.lecture-row').remove();
+    updateRemoveButtons();
+  }
+}
+
+function updateRemoveButtons() {
+  const btns = document.querySelectorAll('.remove-row-btn');
+  if(btns.length === 1) {
+    btns[0].disabled = true;
+  } else {
+    btns.forEach(b => b.disabled = false);
+  }
+}
+
 // Auto-Populate Room Logic
 function autoPopulateRoom() {
   const cls = document.getElementById("fClass").value;
   const sec = document.getElementById("fSection").value;
-  const roomInput = document.getElementById("fRoom");
+  const roomInputs = document.querySelectorAll(".room-input");
   
+  let roomVal = "";
   if (cls && sec) {
-    if (cls === "Class X" && sec === "A") roomInput.value = "Room 101";
-    else if (cls === "Class X" && sec === "B") roomInput.value = "Room 102";
-    else if (cls === "Class IX" && sec === "A") roomInput.value = "Room 103";
-    else roomInput.value = "Room 104";
-  } else {
-    roomInput.value = "";
+    if (cls === "Class X" && sec === "A") roomVal = "Room 101";
+    else if (cls === "Class X" && sec === "B") roomVal = "Room 102";
+    else if (cls === "Class IX" && sec === "A") roomVal = "Room 103";
+    else roomVal = "Room 104";
   }
+  
+  roomInputs.forEach(input => {
+    input.value = roomVal;
+  });
 }
+
+// Ensure at least 1 row exists when opening modal
+const originalOpenModal = openModal;
+window.openModal = function() {
+  const container = document.getElementById('lectureRowsContainer');
+  if(container.children.length === 0) {
+    addLectureRow();
+  }
+  originalOpenModal();
+};
 
 // Custom Select Logic
 function toggleSelect(elm) {
