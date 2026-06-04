@@ -489,14 +489,15 @@ select {
     <div class="modal-grid">
       <div class="modal-field full">
         <label>Room Type</label>
-        <select id="fRoomType">
+        <select id="fRoomType" onchange="toggleCustomRoomType(this)">
           <option value="Classroom">Classroom</option>
           <option value="Computer Lab">Computer Lab</option>
           <option value="Science Lab">Science Lab</option>
           <option value="Library">Library</option>
           <option value="Auditorium">Auditorium</option>
-          <option value="Other">Other</option>
+          <option value="Other">Other (Specify Custom)</option>
         </select>
+        <input type="text" id="fCustomRoomType" placeholder="Enter custom room type..." style="display: none; margin-top: 8px;" />
       </div>
       <div class="modal-field">
         <label>Room Number / Name</label>
@@ -561,9 +562,23 @@ document.querySelector('thead .cb').addEventListener('change', function(){
 
 
 // Modal Logic
-function openModal() { document.getElementById('roomModal').classList.add('open'); }
+function openModal() { 
+  document.getElementById('roomModal').classList.add('open');
+  document.getElementById('fRoomType').value = 'Classroom';
+  toggleCustomRoomType(document.getElementById('fRoomType'));
+}
 function closeModal() { document.getElementById('roomModal').classList.remove('open'); }
 function closeModalOutside(e) { if(e.target===document.getElementById('roomModal')) closeModal(); }
+function toggleCustomRoomType(sel) {
+  const customInput = document.getElementById('fCustomRoomType');
+  if(sel.value === 'Other') {
+    customInput.style.display = 'block';
+    customInput.focus();
+  } else {
+    customInput.style.display = 'none';
+    customInput.value = '';
+  }
+}
 function saveRoom() {
   alert('Room saved successfully! (Demo Mode)');
   closeModal();
