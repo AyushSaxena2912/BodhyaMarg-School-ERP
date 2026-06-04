@@ -136,8 +136,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px; }
 
 
-.lecture-row { display: grid; grid-template-columns: 1.5fr 2fr 1fr 1fr 1.2fr auto; gap: 12px; align-items: end; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px dashed var(--border); }
-.lecture-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.lecture-row { background: #f8fafc; padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px; }
+.row-top { display: grid; grid-template-columns: 1fr 1fr 1.5fr auto; gap: 12px; align-items: end; margin-bottom: 12px; }
+.row-bottom { display: grid; grid-template-columns: 1fr 1fr 1.5fr 1.5fr; gap: 12px; align-items: end; }
 .remove-row-btn { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid #fee2e2; background: #fff; color: #ef4444; cursor: pointer; transition: background 0.15s; }
 .remove-row-btn:hover { background: #fee2e2; }
 .remove-row-btn:disabled { opacity: 0.3; cursor: not-allowed; }
@@ -259,18 +260,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
     </div>
     
-    <div class="modal-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid var(--border);">
-      <div class="modal-field">
-        <label>Day of Week</label>
-        <select id="fDay">
-          <option value="Monday">Monday</option>
-          <option value="Tuesday">Tuesday</option>
-          <option value="Wednesday">Wednesday</option>
-          <option value="Thursday">Thursday</option>
-          <option value="Friday">Friday</option>
-          <option value="Saturday">Saturday</option>
-        </select>
-      </div>
+    <div class="modal-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid var(--border);">
       <div class="modal-field">
         <label>Class</label>
         <select id="fClass" onchange="autoPopulateRoom()">
@@ -414,64 +404,130 @@ function saveRoutine() {
 
 // Lecture Row Template
 const lectureRowHTML = `
-  <div class="modal-field">
-    <label>Subject</label>
-    <select>
-      <option value="Mathematics">Mathematics</option>
-      <option value="Science">Science</option>
-      <option value="English">English</option>
-      <option value="History">History</option>
-      <option value="Computer">Computer</option>
-    </select>
-  </div>
-  <div class="modal-field custom-select-wrapper">
-    <label>Teacher</label>
-    <div class="custom-select" onclick="toggleSelect(this)">
-      <div class="select-selected">Select Teacher</div>
-      <div class="select-items">
-        <div class="select-search">
-          <input type="text" placeholder="Search by name or ID..." onkeyup="filterSelect(this)" onclick="event.stopPropagation()">
+  <div class="row-top">
+    <div class="modal-field">
+      <label>Day</label>
+      <select class="fDayRow">
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <option value="Wednesday">Wednesday</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Subject</label>
+      <select>
+        <option value="Mathematics">Mathematics</option>
+        <option value="Science">Science</option>
+        <option value="English">English</option>
+        <option value="History">History</option>
+        <option value="Computer">Computer</option>
+      </select>
+    </div>
+    <div class="modal-field custom-select-wrapper">
+      <label>Teacher</label>
+      <div class="custom-select" onclick="toggleSelect(this)">
+        <div class="select-selected">Select Teacher</div>
+        <div class="select-items">
+          <div class="select-search">
+            <input type="text" placeholder="Search by name or ID..." onkeyup="filterSelect(this)" onclick="event.stopPropagation()">
+          </div>
+          <div class="select-option" onclick="selectOption(this)">Ramesh Patel (T001)</div>
+          <div class="select-option" onclick="selectOption(this)">Suresh Yadav (T002)</div>
+          <div class="select-option" onclick="selectOption(this)">Meera Sharma (T003)</div>
+          <div class="select-option" onclick="selectOption(this)">Priya Gupta (T004)</div>
+          <div class="select-option" onclick="selectOption(this)">Vikash Jain (T005)</div>
+          <div class="select-option" onclick="selectOption(this)">Self (Break)</div>
         </div>
-        <div class="select-option" onclick="selectOption(this)">Ramesh Patel (T001)</div>
-        <div class="select-option" onclick="selectOption(this)">Suresh Yadav (T002)</div>
-        <div class="select-option" onclick="selectOption(this)">Meera Sharma (T003)</div>
-        <div class="select-option" onclick="selectOption(this)">Priya Gupta (T004)</div>
-        <div class="select-option" onclick="selectOption(this)">Vikash Jain (T005)</div>
-        <div class="select-option" onclick="selectOption(this)">Self (Break)</div>
       </div>
     </div>
+    <div class="modal-field" style="justify-content: flex-end;">
+      <button class="remove-row-btn" onclick="removeLectureRow(this)" title="Remove Lecture">
+        <i class="ti ti-trash"></i>
+      </button>
+    </div>
   </div>
-  <div class="modal-field">
-    <label>Start Time</label>
-    <input type="time" class="time-start" value="08:00" />
-  </div>
-  <div class="modal-field">
-    <label>End Time</label>
-    <input type="time" class="time-end" value="08:40" />
-  </div>
-  <div class="modal-field">
-    <label>Room No.</label>
-    <input type="text" class="room-input" placeholder="e.g. Room 102" />
-  </div>
-  <div class="modal-field" style="justify-content: flex-end;">
-    <button class="remove-row-btn" onclick="removeLectureRow(this)" title="Remove Lecture">
-      <i class="ti ti-trash"></i>
-    </button>
+  
+  <div class="row-bottom">
+    <div class="modal-field">
+      <label>Start Time</label>
+      <input type="time" class="time-start" value="08:00" />
+    </div>
+    <div class="modal-field">
+      <label>End Time</label>
+      <input type="time" class="time-end" value="08:40" />
+    </div>
+    <div class="modal-field">
+      <label>Room Type</label>
+      <select class="fRoomTypeRow" onchange="autoPopulateRoomRow(this)">
+        <option value="Classroom">Classroom</option>
+        <option value="Computer Lab">Computer Lab</option>
+        <option value="Science Lab">Science Lab</option>
+        <option value="Library">Library</option>
+        <option value="Auditorium">Auditorium</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Room No.</label>
+      <input type="text" class="room-input" placeholder="e.g. 101 or Lab 1" />
+    </div>
   </div>
 `;
 
 function addLectureRow() {
   const container = document.getElementById('lectureRowsContainer');
+  
+  // Get last day if available
+  let lastDay = 'Monday';
+  const existingDays = container.querySelectorAll('.fDayRow');
+  if(existingDays.length > 0) {
+    lastDay = existingDays[existingDays.length - 1].value;
+  }
+  
   const row = document.createElement('div');
   row.className = 'lecture-row';
   row.innerHTML = lectureRowHTML;
   container.appendChild(row);
   
-  autoPopulateRoom(); // auto-fill room for the new row if class/section already selected
+  // Set day
+  row.querySelector('.fDayRow').value = lastDay;
+  
+  // Populate room logic
+  autoPopulateRoomRow(row.querySelector('.fRoomTypeRow'));
   
   // Disable remove button if it's the only row
   updateRemoveButtons();
 }
+
+function autoPopulateRoomRow(selectElem) {
+  const cls = document.getElementById("fClass").value;
+  const sec = document.getElementById("fSection").value;
+  const type = selectElem.value;
+  
+  const row = selectElem.closest('.lecture-row');
+  const roomInput = row.querySelector('.room-input');
+  
+  if(type === 'Computer Lab') {
+    roomInput.value = 'Comp Lab';
+  } else if (type === 'Science Lab') {
+    roomInput.value = 'Lab 1';
+  } else if (type === 'Library') {
+    roomInput.value = 'Lib Main';
+  } else {
+    // Normal classroom logic
+    let roomVal = "";
+    if (cls && sec) {
+      if (cls === "Class X" && sec === "A") roomVal = "Room 101";
+      else if (cls === "Class X" && sec === "B") roomVal = "Room 102";
+      else if (cls === "Class IX" && sec === "A") roomVal = "Room 103";
+      else roomVal = "Room 104";
+    }
+    roomInput.value = roomVal;
+  }
+}
+
 
 function removeLectureRow(btn) {
   const rows = document.querySelectorAll('.lecture-row');
@@ -492,20 +548,10 @@ function updateRemoveButtons() {
 
 // Auto-Populate Room Logic
 function autoPopulateRoom() {
-  const cls = document.getElementById("fClass").value;
-  const sec = document.getElementById("fSection").value;
-  const roomInputs = document.querySelectorAll(".room-input");
-  
-  let roomVal = "";
-  if (cls && sec) {
-    if (cls === "Class X" && sec === "A") roomVal = "Room 101";
-    else if (cls === "Class X" && sec === "B") roomVal = "Room 102";
-    else if (cls === "Class IX" && sec === "A") roomVal = "Room 103";
-    else roomVal = "Room 104";
-  }
-  
-  roomInputs.forEach(input => {
-    input.value = roomVal;
+  // Trigger logic for all rows when global class/section changes
+  const selects = document.querySelectorAll('.fRoomTypeRow');
+  selects.forEach(sel => {
+    autoPopulateRoomRow(sel);
   });
 }
 
