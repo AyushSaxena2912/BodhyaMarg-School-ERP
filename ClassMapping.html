@@ -407,6 +407,42 @@ select {
     background: #fafbfc; border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
 
+  /* Custom Select */
+  .custom-select-wrapper { position: relative; user-select: none; }
+  .custom-select {
+    position: relative;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--bg); color: var(--text);
+    font-size: 13px; font-family: inherit; cursor: pointer;
+  }
+  .select-selected { padding: 10px 14px; }
+  .select-selected::after {
+    content: ""; position: absolute; right: 14px; top: 16px;
+    border: 5px solid transparent; border-top-color: var(--text-hint);
+  }
+  .custom-select.active .select-selected::after {
+    border-top-color: transparent; border-bottom-color: var(--text-hint); top: 10px;
+  }
+  .select-items {
+    position: absolute; background: var(--white);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    top: 100%; left: 0; right: 0; z-index: 99;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-height: 200px; overflow-y: auto;
+    display: none; flex-direction: column;
+    margin-top: 4px;
+  }
+  .custom-select.active .select-items { display: flex; }
+  .select-search { padding: 8px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--white); }
+  .select-search input {
+    width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px;
+    font-size: 12px; outline: none; background: var(--white); color: var(--text);
+  }
+  .select-search input:focus { border-color: var(--green); }
+  .select-option { padding: 10px 14px; transition: background 0.1s; }
+  .select-option:hover { background: var(--bg); }
+  .select-option.hide { display: none; }
+
 
 </style>
 </head>
@@ -527,13 +563,21 @@ select {
           <option>Room 102 (Cap: 40)</option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="form-group custom-select-wrapper">
         <label>Assign Class Teacher</label>
-        <select>
-          <option>-- Select Teacher --</option>
-          <option>Amit Patel</option>
-          <option>Riya Sharma</option>
-        </select>
+        <div class="custom-select" id="teacherSelect" onclick="toggleSelect(this)">
+          <div class="select-selected">-- Select Teacher --</div>
+          <div class="select-items">
+            <div class="select-search">
+              <input type="text" placeholder="Search by name or ID..." onkeyup="filterSelect(this)" onclick="event.stopPropagation()">
+            </div>
+            <div class="select-option" onclick="selectOption(this)">T001 - Amit Patel</div>
+            <div class="select-option" onclick="selectOption(this)">T002 - Riya Sharma</div>
+            <div class="select-option" onclick="selectOption(this)">T003 - Sneha Iyer</div>
+            <div class="select-option" onclick="selectOption(this)">T004 - Rahul Verma</div>
+            <div class="select-option" onclick="selectOption(this)">T005 - Priya Singh</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -581,6 +625,41 @@ function saveMapping() {
   alert('Mapping saved successfully!');
   closeMappingModal();
 }
+
+// Custom Select Logic
+function toggleSelect(elm) {
+  // close others
+  document.querySelectorAll('.custom-select').forEach(el => {
+    if (el !== elm) el.classList.remove('active');
+  });
+  elm.classList.toggle('active');
+  // focus search
+  if (elm.classList.contains('active')) {
+    const input = elm.querySelector('.select-search input');
+    if (input) input.focus();
+  }
+}
+function selectOption(elm) {
+  const wrapper = elm.closest('.custom-select');
+  wrapper.querySelector('.select-selected').innerText = elm.innerText;
+}
+function filterSelect(input) {
+  const filter = input.value.toUpperCase();
+  const items = input.closest('.select-items').querySelectorAll('.select-option');
+  items.forEach(item => {
+    const text = item.innerText.toUpperCase();
+    if (text.includes(filter)) {
+      item.classList.remove('hide');
+    } else {
+      item.classList.add('hide');
+    }
+  });
+}
+document.addEventListener("click", function (e) {
+  if (!e.target.closest('.custom-select')) {
+    document.querySelectorAll('.custom-select').forEach(el => el.classList.remove('active'));
+  }
+});
 </script>
 <script src="sidebar.js"></script>
 </body>
