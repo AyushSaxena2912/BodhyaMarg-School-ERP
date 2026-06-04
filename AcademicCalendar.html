@@ -565,6 +565,12 @@ function selectColor(i) {
 }
 
 function openAddModal(dateStr) {
+  const isStudent = typeof BodhyaAuth !== 'undefined' && BodhyaAuth.getRole() === 'student';
+  if (isStudent) {
+    showToast('Students cannot add events.');
+    return;
+  }
+  
   editingId = null;
   selectedColor = 0;
   document.getElementById('modalTitle').textContent = 'Add Event';
