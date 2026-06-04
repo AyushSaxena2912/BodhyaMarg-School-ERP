@@ -206,7 +206,7 @@
     font-size: 12px; font-family: inherit;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 4px 8px;
+    padding: 4px 28px 4px 8px;
     background: var(--white);
     color: var(--text);
     cursor: pointer;
@@ -437,6 +437,14 @@ select {
         </thead>
         <tbody id="table-body"></tbody>
       </table>
+      <div class="pagination">
+        <button class="pg-btn"><i class="ti ti-chevron-left"></i> Pre</button>
+        <button class="pg-btn active">1</button>
+        <button class="pg-btn">2</button>
+        <span class="pg-dots">…</span>
+        <button class="pg-btn">5</button>
+        <button class="pg-btn">Next <i class="ti ti-chevron-right"></i></button>
+      </div>
     </div>
   </div><!-- /content -->
 </div><!-- /main -->
