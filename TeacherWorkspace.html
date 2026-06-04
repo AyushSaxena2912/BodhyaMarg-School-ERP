@@ -535,45 +535,45 @@ select.form-control {
           <!-- Profile and Syllabus Row -->
           <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; margin-bottom: 24px;">
             <!-- Profile Card -->
-            <div class="card" style="background: #fff; color: var(--text-dark); border: none; display: flex; align-items: center; justify-content: space-between; padding: 24px; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-               <!-- decorative elements -->
-               <div style="position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; border-radius: 50%; border: 15px solid rgba(0,0,0,0.02);"></div>
-               <div style="position: absolute; left: 40%; bottom: -30px; width: 80px; height: 80px; border-radius: 50%; border: 10px solid rgba(0,0,0,0.02);"></div>
-               
-               <div style="display: flex; align-items: center; gap: 16px; z-index: 2;">
+            <div class="card" style="background: #fff; color: var(--text-dark); border: none; display: flex; align-items: center; justify-content: space-between; padding: 24px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.05); flex-wrap: wrap; gap: 16px;">
+               <div style="display: flex; align-items: center; gap: 16px;">
                   <div style="width: 70px; height: 70px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; color: var(--primary);">MS</div>
                   <div>
                     <span style="background: #f1f5f9; color: var(--primary); font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 4px;">#T594651</span>
                     <h3 style="margin: 0 0 6px 0; font-size: 22px; color: var(--text-dark); letter-spacing: -0.3px;">Mohan Sharma</h3>
-                    <div style="font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 12px;">
-                      <span>Classes : X-A, IX-B</span>
-                      <span style="color: #cbd5e1; font-size: 8px;">●</span>
-                      <span>Physics, Maths</span>
+                    <div style="font-size: 13.5px; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: #f1f5f9; color: var(--primary); padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 11px;">Class Teacher</span>
+                        <span style="color: var(--text-dark); font-weight: 500;">X-A</span>
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: #f1f5f9; color: var(--primary); padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 11px;">Maths</span>
+                        <span style="color: var(--text-dark); font-weight: 500;">IX-A, X-B</span>
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="background: #f1f5f9; color: var(--primary); padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 11px;">Physics</span>
+                        <span style="color: var(--text-dark); font-weight: 500;">X-A, IX-B</span>
+                      </div>
                     </div>
                   </div>
                </div>
-               <a href="TeacherDetails.html" class="btn" style="background: var(--primary); color: #fff; border: none; padding: 10px 20px; border-radius: 6px; z-index: 2; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">Edit Profile</a>
+               <a href="TeacherDetails.html" class="btn" style="background: var(--primary); color: #fff; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.1); white-space: nowrap; text-decoration: none;">Edit Profile</a>
             </div>
 
             <!-- Syllabus Card -->
             <div class="card" style="display: flex; align-items: center; gap: 24px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-              <div style="position: relative; width: 80px; height: 80px;">
-                <svg viewBox="0 0 36 36" style="width: 100%; height: 100%; transform: rotate(-90deg);">
-                  <path style="fill:none; stroke:#e2e8f0; stroke-width:4;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path style="fill:none; stroke:var(--primary); stroke-width:4; stroke-dasharray: 95, 100;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path style="fill:none; stroke:var(--danger); stroke-width:4; stroke-dasharray: 5, 100; stroke-dashoffset: -95;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                </svg>
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: var(--text-dark);">
-                  95%
-                </div>
+              <div style="width: 90px; height: 90px; border-radius: 50%; background: conic-gradient(var(--primary) 95%, var(--danger) 0); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                 <div style="width: 66px; height: 66px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; color: var(--text-dark);">
+                    95%
+                 </div>
               </div>
               <div style="flex: 1;">
-                <h3 style="margin-bottom: 12px; font-size: 18px; color: var(--text-dark);">Syllabus</h3>
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 14px; color: var(--text-muted);">
-                  <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--primary);"></span> Completed : <strong style="color: var(--text-dark);">95%</strong>
+                <h3 style="margin-bottom: 12px; font-size: 20px; color: var(--text-dark); font-weight: 700;">Syllabus</h3>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 15px; color: var(--text-muted);">
+                  <span style="width: 12px; height: 12px; border-radius: 50%; background: var(--primary);"></span> Completed: <strong style="color: var(--text-dark);">95%</strong>
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted);">
-                  <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--danger);"></span> Pending : <strong style="color: var(--text-dark);">5%</strong>
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--text-muted);">
+                  <span style="width: 12px; height: 12px; border-radius: 50%; background: var(--danger);"></span> Pending: <strong style="color: var(--text-dark);">5%</strong>
                 </div>
               </div>
             </div>
