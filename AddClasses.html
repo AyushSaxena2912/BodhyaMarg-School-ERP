@@ -468,7 +468,7 @@ data.forEach(r => {
   const tr = document.createElement("tr");
   tr.innerHTML = `
     <td><input type="checkbox" class="cb" /></td>
-    <td><span class="class-badge" style="width:auto;padding:0 12px;">${r.name}</span></td>
+    <td><span style="font-weight: 500; color: var(--text);">${r.name}</span></td>
     <td><span class="badge ${statusCls}"><span class="badge-dot"></span>${statusLbl}</span></td>
     <td style="text-align:center;"><div class="three-dot" style="margin: 0 auto;"><i class="ti ti-dots-vertical"></i></div></td>
   `;
