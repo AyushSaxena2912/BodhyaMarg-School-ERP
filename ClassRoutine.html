@@ -135,6 +135,38 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .modal-field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 30px; cursor: pointer; }
 .modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px; }
 
+/* Custom Select */
+.custom-select-wrapper { position: relative; user-select: none; }
+.custom-select {
+  font-family: inherit; font-size: 13px; color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 10px 12px; background: var(--white); cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.custom-select::after {
+  content: ''; width: 12px; height: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: center; transition: transform 0.2s;
+}
+.custom-select.active { border-color: var(--green); }
+.custom-select.active::after { transform: rotate(180deg); }
+.select-items {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 99; max-height: 220px; overflow-y: auto;
+  display: none; flex-direction: column;
+}
+.custom-select.active .select-items { display: flex; }
+.select-search { padding: 8px; position: sticky; top: 0; background: var(--white); border-bottom: 1px solid var(--border); }
+.select-search input {
+  width: 100%; border: 1px solid var(--border) !important; padding: 6px 10px !important;
+  border-radius: 4px; font-size: 12px !important; outline: none;
+}
+.select-search input:focus { border-color: var(--green) !important; }
+.select-option { padding: 10px 12px; cursor: pointer; transition: background 0.12s; }
+.select-option:hover { background: var(--bg); }
+.select-option.hide { display: none; }
 
 
 </style>
@@ -233,6 +265,22 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         </select>
       </div>
       <div class="modal-field">
+        <label>Class</label>
+        <select id="fClass" onchange="autoPopulateRoom()">
+          <option value="">Select Class</option>
+          <option value="Class X">Class X</option>
+          <option value="Class IX">Class IX</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>Section</label>
+        <select id="fSection" onchange="autoPopulateRoom()">
+          <option value="">Select Section</option>
+          <option value="A">Section A</option>
+          <option value="B">Section B</option>
+        </select>
+      </div>
+      <div class="modal-field">
         <label>Subject</label>
         <select id="fSubject">
           <option value="Mathematics">Mathematics</option>
@@ -242,15 +290,22 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <option value="Computer">Computer</option>
         </select>
       </div>
-      <div class="modal-field">
+      <div class="modal-field custom-select-wrapper">
         <label>Teacher</label>
-        <select id="fTeacher">
-          <option value="Ramesh Patel">Ramesh Patel</option>
-          <option value="Suresh Yadav">Suresh Yadav</option>
-          <option value="Meera Sharma">Meera Sharma</option>
-          <option value="Priya Gupta">Priya Gupta</option>
-          <option value="Self (Break)">Self (Break)</option>
-        </select>
+        <div class="custom-select" id="teacherSelect" onclick="toggleSelect(this)">
+          <div class="select-selected">Select Teacher</div>
+          <div class="select-items">
+            <div class="select-search">
+              <input type="text" placeholder="Search by name or ID..." onkeyup="filterSelect(this)" onclick="event.stopPropagation()">
+            </div>
+            <div class="select-option" onclick="selectOption(this)">Ramesh Patel (T001)</div>
+            <div class="select-option" onclick="selectOption(this)">Suresh Yadav (T002)</div>
+            <div class="select-option" onclick="selectOption(this)">Meera Sharma (T003)</div>
+            <div class="select-option" onclick="selectOption(this)">Priya Gupta (T004)</div>
+            <div class="select-option" onclick="selectOption(this)">Vikash Jain (T005)</div>
+            <div class="select-option" onclick="selectOption(this)">Self (Break)</div>
+          </div>
+        </div>
       </div>
       <div class="modal-field">
         <label>Start Time</label>
@@ -378,6 +433,52 @@ function saveRoutine() {
   alert('Routine block saved successfully! (Demo Mode)');
   closeModal();
 }
+
+// Auto-Populate Room Logic
+function autoPopulateRoom() {
+  const cls = document.getElementById("fClass").value;
+  const sec = document.getElementById("fSection").value;
+  const roomInput = document.getElementById("fRoom");
+  
+  if (cls && sec) {
+    if (cls === "Class X" && sec === "A") roomInput.value = "Room 101";
+    else if (cls === "Class X" && sec === "B") roomInput.value = "Room 102";
+    else if (cls === "Class IX" && sec === "A") roomInput.value = "Room 103";
+    else roomInput.value = "Room 104";
+  } else {
+    roomInput.value = "";
+  }
+}
+
+// Custom Select Logic
+function toggleSelect(elm) {
+  document.querySelectorAll('.custom-select').forEach(el => {
+    if (el !== elm) el.classList.remove('active');
+  });
+  elm.classList.toggle('active');
+  if (elm.classList.contains('active')) {
+    const input = elm.querySelector('.select-search input');
+    if (input) input.focus();
+  }
+}
+function selectOption(elm) {
+  const wrapper = elm.closest('.custom-select');
+  wrapper.querySelector('.select-selected').innerText = elm.innerText;
+}
+function filterSelect(input) {
+  const filter = input.value.toUpperCase();
+  const items = input.closest('.select-items').querySelectorAll('.select-option');
+  items.forEach(item => {
+    const text = item.innerText.toUpperCase();
+    if (text.includes(filter)) item.classList.remove('hide');
+    else item.classList.add('hide');
+  });
+}
+document.addEventListener("click", function (e) {
+  if (!e.target.closest('.custom-select')) {
+    document.querySelectorAll('.custom-select').forEach(el => el.classList.remove('active'));
+  }
+});
 
 // Initial Render
 renderRoutine();
