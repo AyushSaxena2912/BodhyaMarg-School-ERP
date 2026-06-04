@@ -541,16 +541,11 @@ rooms.forEach(r => {
   const pct = Math.min(Math.round((r.students / r.capacity) * 100), 100);
   const fillCls = pct >= 90 ? "danger" : pct >= 65 ? "warn" : "ok";
   const tr = document.createElement("tr");
-  
-  let icon = 'ti-chalkboard';
-  if(r.roomType === 'Computer Lab') icon = 'ti-device-desktop';
-  if(r.roomType === 'Science Lab') icon = 'ti-flask';
-  if(r.roomType === 'Library') icon = 'ti-books';
 
   tr.innerHTML = `
     <td><input type="checkbox" class="cb" /></td>
     <td><span class="room-badge">${r.room}</span></td>
-    <td><div style="display:flex; align-items:center; gap:6px; color:var(--text); font-weight:500;"><i class="ti ${icon}" style="color:var(--text-hint); font-size:14px;"></i> ${r.roomType}</div></td>
+    <td><div style="display:flex; align-items:center; gap:6px; color:var(--text); font-weight:500;">${r.roomType}</div></td>
     <td style="color:var(--text-muted);">${r.capacity} seats</td>
     <td style="text-align:center;"><div class="three-dot" style="margin: 0 auto;"><i class="ti ti-dots-vertical"></i></div></td>
   `;
