@@ -565,8 +565,8 @@ function selectColor(i) {
 }
 
 function openAddModal(dateStr) {
-  const isStudent = typeof BodhyaAuth !== 'undefined' && BodhyaAuth.getRole() === 'student';
-  if (isStudent) {
+  const currentRole = document.body.getAttribute('data-current-role') || localStorage.getItem('bodhya_user_role');
+  if (currentRole === 'student') {
     showToast('Students cannot add events.');
     return;
   }
@@ -601,7 +601,9 @@ function openEditModal(e, id) {
   document.getElementById('fCat').value   = ev.cat;
   document.getElementById('fDesc').value  = ev.desc;
   
-  const isStudent = typeof BodhyaAuth !== 'undefined' && BodhyaAuth.getRole() === 'student';
+  const currentRole = document.body.getAttribute('data-current-role') || localStorage.getItem('bodhya_user_role');
+  const isStudent = currentRole === 'student';
+  
   if (isStudent) {
     document.getElementById('fTitle').disabled = true;
     document.getElementById('fStart').disabled = true;
