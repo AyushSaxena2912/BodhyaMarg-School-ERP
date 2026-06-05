@@ -60,10 +60,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
 .page-header h1 { font-size: 20px; font-weight: 600; }
 .breadcrumb { font-size: 11.5px; color: var(--text-hint); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.breadcrumb a { color: var(--text-hint); text-decoration: none; transition: color 0.2s; }
+.breadcrumb a:hover { color: var(--green); }
 .bc-green { color: var(--green); font-weight: 500; }
 
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); transition: background .12s; white-space: nowrap; }
-.btn:hover { background: var(--bg); }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); transition: background .12s; white-space: nowrap; text-decoration: none; }
+.btn:hover { background: var(--bg); text-decoration: none; }
 .btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
 .btn-primary:hover { background: var(--green-dark); }
 
