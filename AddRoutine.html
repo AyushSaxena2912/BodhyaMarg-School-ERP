@@ -121,6 +121,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .act-btn { width: 24px; height: 24px; border-radius: 6px; border: none; background: #ffffff; display: flex; align-items: center; justify-content: center; cursor: pointer; color: inherit; transition: background 0.2s, color 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
 .act-btn:hover { background: #f8fafc; }
 
+/* Tabs */
+.routine-tabs { display: flex; align-items: center; border-bottom: 1px solid var(--border); background: var(--white); padding: 0 2px; gap: 32px; overflow-x: auto; margin-bottom: 24px; }
+.routine-tabs::-webkit-scrollbar { height: 0; }
+.tab-btn { padding: 14px 0; font-size: 13.5px; font-weight: 500; color: var(--text-muted); cursor: pointer; border: none; background: transparent; position: relative; transition: color 0.2s; white-space: nowrap; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--green); font-weight: 600; }
+.tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--green); border-radius: 2px 2px 0 0; }
+
 /* Modal */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity .15s; }
 .modal-overlay.open { opacity: 1; pointer-events: all; }
@@ -238,6 +246,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       </div>
     </div>
     
+    <div class="routine-tabs" id="routineTabs">
+      <!-- Tabs rendered via JS -->
+    </div>
+    
     <div id="lectureRowsContainer">
       <!-- Rows will be added here by JS -->
     </div>
@@ -257,18 +269,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <script>
 // Lecture Row Template
 const lectureRowHTML = `
-  <div class="row-top">
-    <div class="modal-field">
-      <label>Day</label>
-      <select class="fDayRow">
-        <option value="Monday">Monday</option>
-        <option value="Tuesday">Tuesday</option>
-        <option value="Wednesday">Wednesday</option>
-        <option value="Thursday">Thursday</option>
-        <option value="Friday">Friday</option>
-        <option value="Saturday">Saturday</option>
-      </select>
-    </div>
+  <div class="row-top" style="grid-template-columns: 1fr 1.5fr auto;">
+    <input type="hidden" class="fDayRow" value="Monday" />
     <div class="modal-field">
       <label>Subject</label>
       <select>
@@ -330,15 +332,45 @@ const lectureRowHTML = `
   </div>
 `;
 
+let activeTabDay = 'Monday';
+const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+function renderTabs() {
+  const container = document.getElementById('routineTabs');
+  let html = '';
+  daysOfWeek.forEach(day => {
+    const isActive = day === activeTabDay ? 'active' : '';
+    html += '<button class="tab-btn ' + isActive + '" onclick="setActiveTabDay(\\'' + day + '\\')">' + day + '</button>';
+  });
+  container.innerHTML = html;
+  filterRowsByDay();
+}
+
+function setActiveTabDay(day) {
+  activeTabDay = day;
+  renderTabs();
+  
+  // Ensure there's at least one row for the active day
+  const rowsForDay = Array.from(document.querySelectorAll('.lecture-row')).filter(r => r.querySelector('.fDayRow').value === activeTabDay);
+  if(rowsForDay.length === 0) {
+    addLectureRow();
+  }
+}
+
+function filterRowsByDay() {
+  const rows = document.querySelectorAll('.lecture-row');
+  rows.forEach(row => {
+    if(row.querySelector('.fDayRow').value === activeTabDay) {
+      row.style.display = 'block';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+  updateRemoveButtons();
+}
+
 function addLectureRow() {
   const container = document.getElementById('lectureRowsContainer');
-  
-  // Get last day if available
-  let lastDay = 'Monday';
-  const existingDays = container.querySelectorAll('.fDayRow');
-  if(existingDays.length > 0) {
-    lastDay = existingDays[existingDays.length - 1].value;
-  }
   
   const row = document.createElement('div');
   row.className = 'lecture-row';
@@ -346,13 +378,12 @@ function addLectureRow() {
   container.appendChild(row);
   
   // Set day
-  row.querySelector('.fDayRow').value = lastDay;
+  row.querySelector('.fDayRow').value = activeTabDay;
   
   // Populate room logic
   autoPopulateRoomRow(row.querySelector('.fRoomTypeRow'));
   
-  // Disable remove button if it's the only row
-  updateRemoveButtons();
+  filterRowsByDay();
 }
 
 const roomsMasterData = {
@@ -398,11 +429,17 @@ function removeLectureRow(btn) {
 }
 
 function updateRemoveButtons() {
-  const btns = document.querySelectorAll('.remove-row-btn');
-  if(btns.length === 1) {
-    btns[0].disabled = true;
+  const visibleRows = Array.from(document.querySelectorAll('.lecture-row')).filter(r => r.style.display !== 'none');
+  if(visibleRows.length <= 1) {
+    visibleRows.forEach(row => {
+      const btn = row.querySelector('.remove-row-btn');
+      if(btn) btn.disabled = true;
+    });
   } else {
-    btns.forEach(b => b.disabled = false);
+    visibleRows.forEach(row => {
+      const btn = row.querySelector('.remove-row-btn');
+      if(btn) btn.disabled = false;
+    });
   }
 }
 
@@ -417,10 +454,7 @@ function autoPopulateRoom() {
 
 // Ensure at least 1 row exists when loading page
 window.onload = function() {
-  const container = document.getElementById('lectureRowsContainer');
-  if(container && container.children.length === 0) {
-    addLectureRow();
-  }
+  setActiveTabDay('Monday');
 };
 
 // Custom Select Logic

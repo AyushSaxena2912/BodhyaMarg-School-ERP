@@ -82,15 +82,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .routine-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: #fcfdfe; }
 .routine-title { font-size: 15px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
 .routine-title i { color: var(--green); font-size: 18px; }
-
-/* Tabs */
-.routine-tabs { display: flex; align-items: center; border-bottom: 1px solid var(--border); background: #fcfdfe; padding: 0 20px; gap: 32px; overflow-x: auto; }
-.routine-tabs::-webkit-scrollbar { height: 0; }
-.tab-btn { padding: 14px 0; font-size: 13.5px; font-weight: 500; color: var(--text-muted); cursor: pointer; border: none; background: transparent; position: relative; transition: color 0.2s; white-space: nowrap; }
-.tab-btn:hover { color: var(--text); }
-.tab-btn.active { color: var(--blue); font-weight: 600; }
-.tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--blue); border-radius: 2px 2px 0 0; }
-
 .routine-body { padding: 12px 20px; display: flex; flex-direction: column; gap: 12px; }
 
 /* Day Row */
@@ -196,10 +187,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <button class="btn"><i class="ti ti-printer"></i> Print</button>
       </div>
       
-      <div class="routine-tabs" id="routineTabs">
-        <!-- Rendered via JS -->
-      </div>
-      
       <div class="routine-body" id="routineBody">
         <!-- Rendered via JS -->
       </div>
@@ -259,31 +246,21 @@ function formatTime(timeStr) {
   return String(h).padStart(2, '0') + ':' + m + ' ' + ampm;
 }
 
-let activeDay = 'Monday';
-
 function renderRoutine() {
-  var tabsContainer = document.getElementById('routineTabs');
   var container = document.getElementById('routineBody');
-  
-  // Render Tabs
-  var tabsHtml = '';
-  routineData.forEach(function(dayObj) {
-    var isActive = dayObj.day === activeDay ? 'active' : '';
-    tabsHtml += '<button class="tab-btn ' + isActive + '" onclick="setActiveDay(\'' + dayObj.day + '\')">' + dayObj.day + '</button>';
-  });
-  tabsContainer.innerHTML = tabsHtml;
-
-  // Render Body
   var html = '';
-  var dayObj = routineData.find(function(d) { return d.day === activeDay; });
   
-  if (dayObj) {
+  routineData.forEach(function(dayObj) {
     var count = dayObj.lectures.length;
     var status = count > 0 ? count + ' Lectures' : 'No Classes';
     
-    html += '<div class="routine-day" style="border:none; padding: 4px 0;">';
-    html += '  <div class="day-timeline-wrapper" style="padding-left:0;">';
-    html += '    <div style="margin-bottom: 12px; font-size: 12px; color: var(--text-hint); font-weight: 500;">' + status + ' found for ' + activeDay + '</div>';
+    html += '<div class="routine-day">';
+    html += '  <div class="day-label">';
+    html += '    <div class="day-name">' + dayObj.day + '</div>';
+    html += '    <div class="day-status">' + status + '</div>';
+    html += '  </div>';
+    
+    html += '  <div class="day-timeline-wrapper">';
     html += '    <div class="day-timeline">';
     
     // Sort lectures by start time
@@ -292,13 +269,13 @@ function renderRoutine() {
     sorted.forEach(function(lec) {
       if(lec.type === 'break') {
         html += '<div class="lecture-card card-break">';
-        html += '  <div class="lecture-actions"><button class="act-btn" title="Edit"><i class="ti ti-edit"></i></button><button class="act-btn" style="color:#ef4444;" title="Delete"><i class="ti ti-trash"></i></button></div>';
+        html += '  <div class="lecture-actions"><button class="act-btn" title="Edit" onclick="openModal()"><i class="ti ti-edit"></i></button><button class="act-btn" style="color:#ef4444;" title="Delete"><i class="ti ti-trash"></i></button></div>';
         html += '  <div class="time"><i class="ti ti-clock"></i> ' + formatTime(lec.start) + ' - ' + formatTime(lec.end) + '</div>';
         html += '  <div class="subject"><i class="ti ti-coffee"></i> ' + lec.subject + '</div>';
         html += '</div>';
       } else {
         html += '<div class="lecture-card card-' + lec.color + '">';
-        html += '  <div class="lecture-actions"><button class="act-btn" title="Edit"><i class="ti ti-edit"></i></button><button class="act-btn" style="color:#ef4444;" title="Delete"><i class="ti ti-trash"></i></button></div>';
+        html += '  <div class="lecture-actions"><button class="act-btn" title="Edit" onclick="openModal()"><i class="ti ti-edit"></i></button><button class="act-btn" style="color:#ef4444;" title="Delete"><i class="ti ti-trash"></i></button></div>';
         html += '  <div class="time"><i class="ti ti-clock"></i> ' + formatTime(lec.start) + ' - ' + formatTime(lec.end) + '</div>';
         html += '  <div class="subject">' + lec.subject + '</div>';
         html += '  <div class="teacher"><i class="ti ti-user"></i> ' + lec.teacher + '</div>';
@@ -310,14 +287,9 @@ function renderRoutine() {
     html += '    </div>';
     html += '  </div>';
     html += '</div>';
-  }
+  });
   
   container.innerHTML = html;
-}
-
-function setActiveDay(day) {
-  activeDay = day;
-  renderRoutine();
 }
 
 window.onload = function() {
