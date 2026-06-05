@@ -149,8 +149,8 @@
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   
   /* Color Palette Picker */
-  .color-picker { display: flex; gap: 10px; margin-top: 4px; }
-  .color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.1s; position: relative; }
+  .color-picker { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+  .color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.1s; position: relative; flex-shrink: 0; }
   .color-swatch:hover { transform: scale(1.1); }
   .color-swatch.active::after { content: ''; position: absolute; inset: -4px; border: 2px solid var(--text); border-radius: 50%; }
   
@@ -264,13 +264,14 @@
     <div class="grid-2">
       <div class="form-group">
         <label>Category</label>
-        <select id="evCat" class="form-control">
-          <option value="Exam">Exam</option>
-          <option value="Holiday">Holiday</option>
-          <option value="Meeting">Meeting</option>
-          <option value="Activity">Activity</option>
-          <option value="Other">Other</option>
-        </select>
+        <input type="text" id="evCat" class="form-control" list="catList" placeholder="Select or type..." />
+        <datalist id="catList">
+          <option value="Exam"></option>
+          <option value="Holiday"></option>
+          <option value="Meeting"></option>
+          <option value="Activity"></option>
+          <option value="Other"></option>
+        </datalist>
       </div>
       <div class="form-group">
         <label>Color</label>
@@ -302,6 +303,12 @@ const COLORS = [
   { id: 'purple', bg: '#f3e8ff', text: '#6b21a8', border: '#e9d5ff' },
   { id: 'yellow', bg: '#fef9c3', text: '#854d0e', border: '#fef08a' },
   { id: 'red', bg: '#fee2e2', text: '#991b1b', border: '#fecaca' },
+  { id: 'orange', bg: '#ffedd5', text: '#c2410c', border: '#fed7aa' },
+  { id: 'teal', bg: '#ccfbf1', text: '#0f766e', border: '#99f6e4' },
+  { id: 'pink', bg: '#fce7f3', text: '#be185d', border: '#fbcfe8' },
+  { id: 'indigo', bg: '#e0e7ff', text: '#4338ca', border: '#c7d2fe' },
+  { id: 'cyan', bg: '#cffafe', text: '#0e7490', border: '#a5f3fc' },
+  { id: 'gray', bg: '#f3f4f6', text: '#374151', border: '#e5e7eb' },
 ];
 
 // Ensure we have a local, timezone-safe date string (YYYY-MM-DD)
