@@ -177,7 +177,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <input type="text" placeholder="Search anything…" />
     </div>
     <div class="topbar-right">
-      <div class="ay-pill"><i class="ti ti-calendar"></i> Academic Year : 2026 / 2027 <i class="ti ti-chevron-down"></i></div>
+      <select id="aySwitcher" class="ay-pill" style="appearance:none; padding-right:24px; outline:none; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%236b7280\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polyline points=\'6 9 12 15 18 9\'></polyline></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
+        <option value="2025-2026">Academic Year : 2025 / 2026</option>
+        <option value="2026-2027" selected>Academic Year : 2026 / 2027</option>
+        <option value="2027-2028">Academic Year : 2027 / 2028</option>
+      </select>
       <div class="icon-btn"><i class="ti ti-clock"></i></div>
       <div class="icon-btn"><i class="ti ti-settings"></i></div>
       <div class="icon-btn" style="position:relative;">
@@ -399,9 +403,11 @@ function saveNotice() {
   notices.unshift({ id: nextId++, title, date: formatted });
   
   if (document.getElementById('fAddToCalendar').checked) {
+    const currentAY = document.getElementById('aySwitcher').value || '2026-2027';
+    const storageKey = 'academic_events_' + currentAY;
     let academicEvents = [];
-    if (localStorage.getItem('academic_events')) {
-      academicEvents = JSON.parse(localStorage.getItem('academic_events'));
+    if (localStorage.getItem(storageKey)) {
+      academicEvents = JSON.parse(localStorage.getItem(storageKey));
     }
     const maxId = academicEvents.length > 0 ? Math.max(...academicEvents.map(e => e.id)) : 0;
     
@@ -420,7 +426,7 @@ function saveNotice() {
       color: 'red',
       desc: document.getElementById('fMessage').value || 'Added from Notice Board'
     });
-    localStorage.setItem('academic_events', JSON.stringify(academicEvents));
+    localStorage.setItem(storageKey, JSON.stringify(academicEvents));
   }
 
   closeModal();
