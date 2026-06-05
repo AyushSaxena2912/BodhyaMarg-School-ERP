@@ -241,9 +241,17 @@
 <!-- Add/Edit Event Modal -->
 <div class="modal-overlay" id="eventModal" onclick="if(event.target===this) closeEventModal()">
   <div class="modal">
-    <div class="modal-header">
-      <h2 id="modalTitle">Add Event</h2>
-      <button class="btn-close" onclick="closeEventModal()"><i class="ti ti-x"></i></button>
+    <div class="modal-header" style="flex-direction:column; align-items:flex-start; gap:6px;">
+      <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+        <h2 id="modalTitle">Add Event</h2>
+        <button class="btn-close" onclick="closeEventModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <p style="font-size:12px; color:var(--text-muted); margin:0;">Add one-day events (e.g., Unit Tests) or multi-day schedules (e.g., Holidays).</p>
+    </div>
+    
+    <div class="form-group" style="display:flex; gap:16px; margin-bottom:16px;">
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:13px; font-weight:600;"><input type="radio" name="evType" value="single" checked onchange="toggleEventType()" style="accent-color:var(--green);"> One-Day Event</label>
+      <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:13px; font-weight:600;"><input type="radio" name="evType" value="multi" onchange="toggleEventType()" style="accent-color:var(--green);"> Multiple Days</label>
     </div>
     
     <div class="form-group">
@@ -251,12 +259,12 @@
       <input type="text" id="evTitle" class="form-control" placeholder="e.g. Science Exhibition" />
     </div>
     
-    <div class="grid-2">
+    <div class="grid-2" id="dateGrid">
       <div class="form-group">
-        <label>Start Date</label>
+        <label id="lblStart">Date</label>
         <input type="date" id="evStart" class="form-control" />
       </div>
-      <div class="form-group">
+      <div class="form-group" id="grpEnd" style="display:none;">
         <label>End Date</label>
         <input type="date" id="evEnd" class="form-control" />
       </div>
@@ -521,6 +529,23 @@ function selectColor(colorId) {
   initColorPicker();
 }
 
+function toggleEventType() {
+  const isMulti = document.querySelector('input[name="evType"][value="multi"]').checked;
+  const grpEnd = document.getElementById('grpEnd');
+  const lblStart = document.getElementById('lblStart');
+  const grid = document.getElementById('dateGrid');
+  
+  if (isMulti) {
+    grpEnd.style.display = 'block';
+    lblStart.innerText = 'Start Date';
+    grid.style.gridTemplateColumns = '1fr 1fr';
+  } else {
+    grpEnd.style.display = 'none';
+    lblStart.innerText = 'Date';
+    grid.style.gridTemplateColumns = '1fr';
+  }
+}
+
 function openEventModal(dateStr = '') {
   activeEditId = null;
   document.getElementById('modalTitle').innerText = 'Add Event';
@@ -531,6 +556,10 @@ function openEventModal(dateStr = '') {
   document.getElementById('evEnd').value = dateStr || todayStr;
   document.getElementById('evCat').value = 'Exam';
   document.getElementById('evDesc').value = '';
+  
+  document.querySelector('input[name="evType"][value="single"]').checked = true;
+  toggleEventType();
+  
   selectColor('blue');
   
   document.getElementById('eventModal').classList.add('open');
@@ -550,6 +579,14 @@ function openEditModal(e, id) {
   document.getElementById('evEnd').value = ev.end;
   document.getElementById('evCat').value = ev.cat;
   document.getElementById('evDesc').value = ev.desc;
+  
+  if (ev.start === ev.end) {
+    document.querySelector('input[name="evType"][value="single"]').checked = true;
+  } else {
+    document.querySelector('input[name="evType"][value="multi"]').checked = true;
+  }
+  toggleEventType();
+  
   selectColor(ev.color);
   
   document.getElementById('eventModal').classList.add('open');
@@ -562,12 +599,15 @@ function closeEventModal() {
 function saveEvent() {
   const title = document.getElementById('evTitle').value.trim();
   const start = document.getElementById('evStart').value;
-  const end = document.getElementById('evEnd').value;
+  const isMulti = document.querySelector('input[name="evType"][value="multi"]').checked;
+  let end = document.getElementById('evEnd').value;
+  if (!isMulti) end = start;
+  
   const cat = document.getElementById('evCat').value;
   const desc = document.getElementById('evDesc').value;
   
   if (!title || !start || !end) {
-    alert("Please fill Title, Start Date, and End Date.");
+    alert("Please fill all required fields.");
     return;
   }
   if (end < start) {
