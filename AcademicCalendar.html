@@ -111,10 +111,7 @@
   .agenda-list::-webkit-scrollbar { width: 4px; }
   .agenda-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
   
-  .agenda-item { display: flex; gap: 16px; position: relative; }
-  .agenda-item::before { content: ''; position: absolute; left: 47px; top: 20px; bottom: -12px; width: 2px; background: var(--border); }
-  .agenda-item:last-child::before { display: none; }
-  .agenda-item::after { content: ''; position: absolute; left: 43px; top: 12px; width: 10px; height: 10px; border-radius: 50%; background: var(--border); box-shadow: 0 0 0 2px var(--white); box-sizing: border-box; }
+  .agenda-item { display: flex; gap: 12px; align-items: flex-start; }
   
   .agenda-date { width: 40px; flex-shrink: 0; text-align: center; }
   .agenda-date-mon { font-size: 10px; font-weight: 700; color: var(--text-hint); text-transform: uppercase; }
