@@ -323,14 +323,27 @@ const todayStr = toLocalDateStr(new Date());
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
 
-// Dummy Events
-let events = [
+// Dummy Events Initialization
+let defaultEvents = [
   { id: 1, title: 'Half-Yearly Exams', start: '2026-06-10', end: '2026-06-18', cat: 'Exam', color: 'blue', desc: 'Mid-term exams for all classes' },
   { id: 2, title: 'Summer Vacation', start: '2026-06-20', end: '2026-07-15', cat: 'Holiday', color: 'green', desc: 'Annual summer break' },
   { id: 3, title: 'Parent-Teacher Meeting', start: '2026-08-05', end: '2026-08-05', cat: 'Meeting', color: 'purple', desc: 'Term 1 progress discussion' },
   { id: 4, title: 'Annual Sports Day', start: '2026-11-12', end: '2026-11-14', cat: 'Activity', color: 'yellow', desc: 'Sports competitions and closing ceremony' }
 ];
-let nextId = 5;
+
+let events = [];
+if (localStorage.getItem('academic_events')) {
+  events = JSON.parse(localStorage.getItem('academic_events'));
+} else {
+  events = defaultEvents;
+  localStorage.setItem('academic_events', JSON.stringify(events));
+}
+
+let nextId = events.length > 0 ? Math.max(...events.map(e => e.id)) + 1 : 1;
+
+function saveEventsToStorage() {
+  localStorage.setItem('academic_events', JSON.stringify(events));
+}
 
 let activeEditId = null;
 let selectedColor = 'blue';
@@ -545,13 +558,15 @@ function saveEvent() {
     events.push({ id: nextId++, title, start, end, cat, color: selectedColor, desc });
   }
   
+  saveEventsToStorage();
   closeEventModal();
   renderCalendar();
 }
 
 function deleteEvent() {
-  if (confirm("Are you sure you want to delete this event?")) {
+  if (activeEditId) {
     events = events.filter(e => e.id !== activeEditId);
+    saveEventsToStorage();
     closeEventModal();
     renderCalendar();
   }

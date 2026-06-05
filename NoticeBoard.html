@@ -272,6 +272,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
         <label class="check-row"><input type="checkbox" value="Super Admin" /> Super Admin</label>
       </div>
     </div>
+    
+    <div class="form-field">
+      <label class="check-row" style="border:1px solid var(--border); border-radius:var(--radius); display:flex; align-items:center; gap:10px; background:var(--bg); border-left: 3px solid var(--green);">
+        <input type="checkbox" id="fAddToCalendar" checked style="width:16px; height:16px; accent-color:var(--green); cursor:pointer;" />
+        <span style="font-weight: 600; color:var(--text); font-size:13px;">Publish to Academic Calendar automatically</span>
+      </label>
+    </div>
 
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -368,6 +375,7 @@ function openModal() {
   document.getElementById('fPublishDate').value = '2026-05-26';
   document.getElementById('attachFileName').style.display = 'none';
   document.querySelectorAll('.msg-to-grid input[type=checkbox]').forEach(c=>c.checked=false);
+  document.getElementById('fAddToCalendar').checked = true;
   document.getElementById('modalOverlay').classList.add('open');
 }
 function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
@@ -389,6 +397,32 @@ function saveNotice() {
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const formatted = `${String(d.getDate()).padStart(2,'0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
   notices.unshift({ id: nextId++, title, date: formatted });
+  
+  if (document.getElementById('fAddToCalendar').checked) {
+    let academicEvents = [];
+    if (localStorage.getItem('academic_events')) {
+      academicEvents = JSON.parse(localStorage.getItem('academic_events'));
+    }
+    const maxId = academicEvents.length > 0 ? Math.max(...academicEvents.map(e => e.id)) : 0;
+    
+    // Ensure notice date is YYYY-MM-DD
+    const yy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const yyyymmdd = `${yy}-${mm}-${dd}`;
+    
+    academicEvents.push({
+      id: maxId + 1,
+      title: title,
+      start: yyyymmdd,
+      end: yyyymmdd,
+      cat: 'Notice',
+      color: 'red',
+      desc: document.getElementById('fMessage').value || 'Added from Notice Board'
+    });
+    localStorage.setItem('academic_events', JSON.stringify(academicEvents));
+  }
+
   closeModal();
   currentPage = 1;
   render();
