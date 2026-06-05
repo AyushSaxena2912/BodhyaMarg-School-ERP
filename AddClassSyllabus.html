@@ -136,6 +136,70 @@ select {
   background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; cursor: pointer;
 }
 
+
+  /* ── Split Layout ── */
+  .split-layout { display: flex; gap: 24px; height: calc(100vh - 160px); }
+  
+  /* Class List */
+  .class-list-panel { width: 240px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow-y: auto; display: flex; flex-direction: column; }
+  .class-list-panel::-webkit-scrollbar { width: 4px; }
+  .class-list-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .panel-header { padding: 16px 20px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; color: var(--text); background: #fcfdfe; position: sticky; top: 0; }
+  .class-item { padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  .class-item:last-child { border-bottom: none; }
+  .class-item:hover { background: #f8faf9; }
+  .class-item.active { background: var(--green-light); border-left: 3px solid var(--green); padding-left: 17px; }
+  .class-name { font-size: 13.5px; font-weight: 600; color: var(--text); }
+  .class-item.active .class-name { color: var(--green); }
+  .class-meta { font-size: 11px; color: var(--text-hint); }
+  
+  /* Subjects Panel */
+  .subject-panel { flex: 1; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); display: flex; flex-direction: column; overflow: hidden; }
+  .subject-panel-header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: #fcfdfe; }
+  .subject-panel-title { font-size: 16px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .subject-panel-title i { color: var(--green); font-size: 20px; }
+  .subject-grid { padding: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; overflow-y: auto; flex: 1; align-content: start; }
+  
+  /* Subject Card */
+  .subject-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; position: relative; transition: transform 0.2s, box-shadow 0.2s; }
+  .subject-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .sc-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; }
+  .sc-name { font-size: 14.5px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .sc-type { font-size: 11px; color: var(--text-hint); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }
+  .sc-remove { position: absolute; top: 12px; right: 12px; width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--text-hint); cursor: pointer; transition: all 0.2s; background: transparent; border: none; }
+  .sc-remove:hover { background: #fee2e2; color: #ef4444; }
+  
+  /* Add Subject Button Card */
+  .add-subject-card { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; min-height: 120px; color: var(--text-muted); }
+  .add-subject-card i { font-size: 24px; margin-bottom: 8px; color: var(--text-hint); transition: color 0.2s; }
+  .add-subject-card span { font-size: 13px; font-weight: 600; transition: color 0.2s; }
+  .add-subject-card:hover { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .add-subject-card:hover i { color: var(--green); }
+  
+  /* Colors for Subjects */
+  .bg-math { background: #eff6ff; color: #3b82f6; }
+  .bg-sci { background: #f0fdf4; color: #22c55e; }
+  .bg-lang { background: #fef2f2; color: #ef4444; }
+  .bg-arts { background: #fdf4ff; color: #d946ef; }
+  .bg-comp { background: #f5f3ff; color: #8b5cf6; }
+  
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: var(--white); border-radius: var(--radius-lg); width: 600px; max-width: 90vw; padding: 24px; transform: translateY(10px); transition: transform 0.2s; display: flex; flex-direction: column; max-height: 80vh; }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .modal-header h2 { font-size: 18px; font-weight: 600; }
+  .modal-close { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 20px; }
+  .modal-body { overflow-y: auto; flex: 1; padding-right: 4px; }
+  .subject-list-item { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; cursor: pointer; transition: border-color 0.2s; }
+  .subject-list-item:hover { border-color: var(--green); }
+  .cb { width: 16px; height: 16px; accent-color: var(--green); pointer-events: none; }
+  .sli-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .sli-info { flex: 1; }
+  .sli-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .sli-type { font-size: 11px; color: var(--text-hint); }
+  .modal-footer { margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px; }
 </style>
 <style>
 .sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
@@ -170,135 +234,209 @@ select {
   <div class="content">
     <div class="page-header">
       <div class="page-title">
-        <h1>Class Syllabus</h1>
+        <h1>Manage Class Syllabus</h1>
         <div class="breadcrumb">
           Dashboard <i class="ti ti-chevron-right"></i>
           Academic <i class="ti ti-chevron-right"></i>
           <span>Class Syllabus</span>
         </div>
       </div>
-      <div class="header-actions">
-        <button class="btn"><i class="ti ti-download"></i> Export</button>
-        <button class="btn btn-primary"><i class="ti ti-plus"></i> Add Syllabus</button>
-      </div>
     </div>
 
-    <div class="table-card">
-      <div class="table-toolbar">
-        <span class="table-toolbar-title">Class Syllabus</span>
-        <button class="toolbar-btn"><i class="ti ti-filter"></i> Filter</button>
-        <button class="toolbar-btn"><i class="ti ti-arrows-sort"></i> Sort By A-Z <i class="ti ti-chevron-down"></i></button>
-      </div>
-      <div class="table-controls">
-        <div class="rpp">
-          Row Per Page
-          <select><option>10</option><option>25</option><option>50</option></select>
-          Entries
+    <div class="split-layout">
+      <!-- Left Panel: Classes -->
+      <div class="class-list-panel">
+        <div class="panel-header">Select Class</div>
+        <div id="classListContainer">
+          <!-- Class items injected here -->
         </div>
-        <div class="tbl-search"><i class="ti ti-search"></i><input type="text" placeholder="Search" /></div>
       </div>
-
-      <table>
-        <colgroup>
-          <col class="col-cb" />
-          <col class="col-class" />
-          <col class="col-group" />
-          <col class="col-action" />
-        </colgroup>
-        <thead>
-          <tr>
-            <th><input type="checkbox" class="cb" id="selectAll" /></th>
-            <th>Class <i class="ti ti-selector"></i></th>
-            <th>Subject Group</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-      </table>
-
-      <div class="pagination">
-        <button class="pg-btn"><i class="ti ti-chevron-left"></i> Pre</button>
-        <button class="pg-btn active">1</button>
-        <button class="pg-btn">2</button>
-        <span class="pg-dots">…</span>
-        <button class="pg-btn">20</button>
-        <button class="pg-btn">Next <i class="ti ti-chevron-right"></i></button>
+      
+      <!-- Right Panel: Subjects -->
+      <div class="subject-panel">
+        <div class="subject-panel-header">
+          <div class="subject-panel-title">
+            <i class="ti ti-books"></i> <span id="activeClassTitle">Class X Syllabus</span>
+          </div>
+          <button class="btn btn-primary" onclick="openAddModal()"><i class="ti ti-plus"></i> Add Subject</button>
+        </div>
+        <div class="subject-grid" id="subjectGridContainer">
+          <!-- Subject cards injected here -->
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Dropdown menu (shared) -->
-<div class="dropdown-menu" id="dropdownMenu">
-  <div class="dropdown-item"><i class="ti ti-eye"></i> View</div>
-  <div class="dropdown-item"><i class="ti ti-edit"></i> Edit</div>
-  <div class="dropdown-item danger"><i class="ti ti-trash"></i> Delete</div>
+<!-- Add Subject Modal -->
+<div class="modal-overlay" id="addSubjectModal" onclick="if(event.target===this) closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Add Subjects to <span id="modalClassName">Class</span></h2>
+      <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body" id="modalSubjectList">
+      <!-- Master subject list injected here -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAddedSubjects()">Add Selected Subjects</button>
+    </div>
+  </div>
 </div>
 
 <script>
-const syllabusData = [
-  { class: "I",    roman: "I",    subjects: ["English", "Hindi", "Maths", "EVS"] },
-  { class: "II",   roman: "II",   subjects: ["Maths", "Drawing", "English", "Hindi"] },
-  { class: "III",  roman: "III",  subjects: ["Moral Science", "English", "Hindi", "Maths"] },
-  { class: "IV",   roman: "IV",   subjects: ["Moral Science", "English", "Hindi", "Maths"] },
-  { class: "V",    roman: "V",    subjects: ["Moral Science", "English", "Hindi", "Maths"] },
-  { class: "VI",   roman: "VI",   subjects: ["Moral Science", "English", "Hindi", "Science", "Social"] },
-  { class: "VII",  roman: "VII",  subjects: ["Moral Science", "English", "Hindi", "Science", "Maths"] },
-  { class: "VIII", roman: "VIII", subjects: ["Moral Science", "English", "Hindi", "Science", "Maths"] },
-  { class: "IX",   roman: "IX",   subjects: ["Chemistry", "Physics", "Biology", "Maths", "English", "Hindi"] },
-  { class: "X",    roman: "X",    subjects: ["Chemistry", "Physics", "Biology", "Maths", "English", "Hindi"] },
+// Master Data
+const masterSubjects = [
+  { id: 'sub1', name: 'Mathematics', type: 'Core', icon: 'ti-calculator', colorClass: 'bg-math' },
+  { id: 'sub2', name: 'Science', type: 'Core', icon: 'ti-flask', colorClass: 'bg-sci' },
+  { id: 'sub3', name: 'English', type: 'Language', icon: 'ti-language', colorClass: 'bg-lang' },
+  { id: 'sub4', name: 'Hindi', type: 'Language', icon: 'ti-language', colorClass: 'bg-lang' },
+  { id: 'sub5', name: 'Computer Science', type: 'Practical', icon: 'ti-device-desktop', colorClass: 'bg-comp' },
+  { id: 'sub6', name: 'Social Studies', type: 'Core', icon: 'ti-globe', colorClass: 'bg-math' },
+  { id: 'sub7', name: 'Moral Science', type: 'General', icon: 'ti-star', colorClass: 'bg-arts' },
+  { id: 'sub8', name: 'Drawing', type: 'Art', icon: 'ti-palette', colorClass: 'bg-arts' },
+  { id: 'sub9', name: 'Physics', type: 'Science', icon: 'ti-atom', colorClass: 'bg-sci' },
+  { id: 'sub10', name: 'Chemistry', type: 'Science', icon: 'ti-flask-2', colorClass: 'bg-sci' },
+  { id: 'sub11', name: 'Biology', type: 'Science', icon: 'ti-microscope', colorClass: 'bg-sci' },
 ];
 
-const VISIBLE = 2; // show first 2, rest as +N
+let classSyllabus = [
+  { id: 'c1', name: 'Class I', subjects: ['sub3', 'sub4', 'sub1'] },
+  { id: 'c2', name: 'Class II', subjects: ['sub1', 'sub8', 'sub3'] },
+  { id: 'c3', name: 'Class III', subjects: ['sub7', 'sub3', 'sub4'] },
+  { id: 'c4', name: 'Class IV', subjects: ['sub7', 'sub3', 'sub4', 'sub1'] },
+  { id: 'c5', name: 'Class V', subjects: ['sub7', 'sub3', 'sub4', 'sub1', 'sub2'] },
+  { id: 'c6', name: 'Class VI', subjects: ['sub3', 'sub4', 'sub1', 'sub2', 'sub6'] },
+  { id: 'c7', name: 'Class VII', subjects: ['sub3', 'sub4', 'sub1', 'sub2', 'sub6'] },
+  { id: 'c8', name: 'Class VIII', subjects: ['sub3', 'sub4', 'sub1', 'sub2', 'sub6'] },
+  { id: 'c9', name: 'Class IX', subjects: ['sub3', 'sub4', 'sub1', 'sub9', 'sub10', 'sub11', 'sub5'] },
+  { id: 'c10', name: 'Class X', subjects: ['sub3', 'sub4', 'sub1', 'sub9', 'sub10', 'sub11', 'sub5'] }
+];
 
-const tbody = document.getElementById("table-body");
-syllabusData.forEach(row => {
-  const visible = row.subjects.slice(0, VISIBLE);
-  const extra = row.subjects.length - VISIBLE;
-  const tagsHTML = visible.map(s => `<span class="s-tag">${s}</span>`).join("")
-    + (extra > 0 ? `<span class="s-tag more">+${extra}</span>` : "");
+let activeClassId = 'c10';
 
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td><input type="checkbox" class="cb row-cb" /></td>
-    <td style="font-weight:600;">${row.roman}</td>
-    <td><div class="subject-tags">${tagsHTML}</div></td>
-    <td style="position:relative;">
-      <div class="three-dot action-btn"><i class="ti ti-dots-vertical"></i></div>
-    </td>
-  `;
-  tbody.appendChild(tr);
-});
+function init() {
+  renderClassList();
+  renderActiveSyllabus();
+}
 
-// Select all
-document.getElementById("selectAll").addEventListener("change", function(){
-  document.querySelectorAll(".row-cb").forEach(cb => cb.checked = this.checked);
-});
-
-// Pagination active
-document.querySelectorAll(".pg-btn").forEach(btn => {
-  btn.addEventListener("click", function(){
-    if(this.textContent.trim().match(/^\d+$/)){
-      document.querySelectorAll(".pg-btn").forEach(b => b.classList.remove("active"));
-      this.classList.add("active");
-    }
+function renderClassList() {
+  const container = document.getElementById('classListContainer');
+  container.innerHTML = '';
+  
+  classSyllabus.forEach(cls => {
+    const div = document.createElement('div');
+    div.className = `class-item ${cls.id === activeClassId ? 'active' : ''}`;
+    div.onclick = () => {
+      activeClassId = cls.id;
+      renderClassList();
+      renderActiveSyllabus();
+    };
+    
+    div.innerHTML = `
+      <div class="class-name">${cls.name}</div>
+      <div class="class-meta">${cls.subjects.length} Subjects</div>
+    `;
+    container.appendChild(div);
   });
-});
+}
 
-// Dropdown
-const dropdown = document.getElementById("dropdownMenu");
-document.addEventListener("click", function(e) {
-  const btn = e.target.closest(".action-btn");
-  if (btn) {
-    const rect = btn.getBoundingClientRect();
-    dropdown.style.top = (rect.bottom + window.scrollY + 4) + "px";
-    dropdown.style.left = (rect.left + window.scrollX - 100) + "px";
-    dropdown.classList.toggle("open");
-    e.stopPropagation();
+function renderActiveSyllabus() {
+  const cls = classSyllabus.find(c => c.id === activeClassId);
+  document.getElementById('activeClassTitle').innerText = `${cls.name} Syllabus`;
+  
+  const grid = document.getElementById('subjectGridContainer');
+  grid.innerHTML = '';
+  
+  cls.subjects.forEach(subId => {
+    const sub = masterSubjects.find(s => s.id === subId);
+    if(!sub) return;
+    
+    const card = document.createElement('div');
+    card.className = 'subject-card';
+    card.innerHTML = `
+      <div class="sc-icon ${sub.colorClass}"><i class="ti ${sub.icon}"></i></div>
+      <div class="sc-name">${sub.name}</div>
+      <div class="sc-type">${sub.type}</div>
+      <button class="sc-remove" onclick="removeSubject('${sub.id}')" title="Remove Subject"><i class="ti ti-trash"></i></button>
+    `;
+    grid.appendChild(card);
+  });
+  
+  // Add Subject Card
+  const addCard = document.createElement('div');
+  addCard.className = 'add-subject-card';
+  addCard.onclick = openAddModal;
+  addCard.innerHTML = `
+    <i class="ti ti-plus"></i>
+    <span>Add Subject</span>
+  `;
+  grid.appendChild(addCard);
+}
+
+function removeSubject(subId) {
+  const cls = classSyllabus.find(c => c.id === activeClassId);
+  cls.subjects = cls.subjects.filter(id => id !== subId);
+  renderClassList();
+  renderActiveSyllabus();
+}
+
+// Modal Logic
+function openAddModal() {
+  const cls = classSyllabus.find(c => c.id === activeClassId);
+  document.getElementById('modalClassName').innerText = cls.name;
+  
+  const list = document.getElementById('modalSubjectList');
+  list.innerHTML = '';
+  
+  // Filter out already added subjects
+  const availableSubjects = masterSubjects.filter(s => !cls.subjects.includes(s.id));
+  
+  if (availableSubjects.length === 0) {
+    list.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted);">All available subjects are already assigned.</div>';
   } else {
-    dropdown.classList.remove("open");
+    availableSubjects.forEach(sub => {
+      const item = document.createElement('div');
+      item.className = 'subject-list-item';
+      item.onclick = function() {
+        const cb = this.querySelector('.cb');
+        cb.checked = !cb.checked;
+        this.style.borderColor = cb.checked ? 'var(--green)' : 'var(--border)';
+      };
+      
+      item.innerHTML = `
+        <input type="checkbox" class="cb sub-cb" value="${sub.id}" />
+        <div class="sli-icon ${sub.colorClass}"><i class="ti ${sub.icon}"></i></div>
+        <div class="sli-info">
+          <div class="sli-name">${sub.name}</div>
+          <div class="sli-type">${sub.type}</div>
+        </div>
+      `;
+      list.appendChild(item);
+    });
   }
-});
+  
+  document.getElementById('addSubjectModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('addSubjectModal').classList.remove('open');
+}
+
+function saveAddedSubjects() {
+  const cls = classSyllabus.find(c => c.id === activeClassId);
+  const checked = document.querySelectorAll('.sub-cb:checked');
+  checked.forEach(cb => {
+    cls.subjects.push(cb.value);
+  });
+  
+  closeModal();
+  renderClassList();
+  renderActiveSyllabus();
+}
+
+window.onload = init;
 </script>
 <script src="sidebar.js"></script>
 </body>
