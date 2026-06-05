@@ -452,7 +452,7 @@ function renderWeek() {
       </div>`;
     }).join('')}
     ${hours.map(h=>`
-      <div class="wk-time-col">${h===0?'':h<12?h+'am':h===12?'12pm':(h-12)+'pm'}</div>
+      <div class="wk-time-col">${h===0?'12am':h<12?h+'am':h===12?'12pm':(h-12)+'pm'}</div>
       ${days.map(d=>{
         const ds=ymd(d);
         const hevs = eventsOnDate(ds);
@@ -476,17 +476,19 @@ function renderDay() {
   const hours = Array.from({length:24},(_,i)=>i);
   const dayEvs = eventsOnDate(ds);
 
-  let html = `<div class="day-header">
-    <div class="day-title">${DAYS[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}</div>
-    <div class="day-sub">${dayEvs.length} event${dayEvs.length!==1?'s':''} today</div>
-  </div>
-  <div class="day-slots">
+  let html = `
+  <div class="day-slots" style="border-left: 1px solid var(--border);">
+    <div class="wk-head" style="border-top:none;border-left:none;"></div>
+    <div class="day-header" style="border-bottom: 1px solid var(--border); padding: 14px 20px; background: var(--bg);">
+      <div class="day-title">${DAYS[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}</div>
+      <div class="day-sub" style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">${dayEvs.length} event${dayEvs.length!==1?'s':''} today</div>
+    </div>
     ${hours.map(h=>{
       const ev = dayEvs.length && h===9 ? dayEvs.map(e=>{
         const c=COLORS[e.colorIdx];
         return `<span class="day-ev" style="background:${c.bg};color:${c.text};" onclick="openEditModal(event,${e.id})">${e.title}</span> `;
       }).join('') : '';
-      return `<div class="day-time">${h===0?'':h<12?h+'am':h===12?'12pm':(h-12)+'pm'}</div>
+      return `<div class="day-time">${h===0?'12am':h<12?h+'am':h===12?'12pm':(h-12)+'pm'}</div>
               <div class="day-slot">${ev}</div>`;
     }).join('')}
   </div>`;
