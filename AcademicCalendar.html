@@ -383,11 +383,13 @@ function renderCalendar() {
 function renderChips(dateStr) {
   // Find events active on this date
   const activeEvents = events.filter(e => dateStr >= e.start && dateStr <= e.end);
+  const dow = new Date(dateStr).getDay();
+  
   return activeEvents.map(e => {
     const c = COLORS.find(col => col.id === e.color) || COLORS[0];
     let classes = "event-chip";
-    if (e.start < dateStr) classes += " span-left";
-    if (e.end > dateStr) classes += " span-right";
+    if (e.start < dateStr && dow !== 0) classes += " span-left";
+    if (e.end > dateStr && dow !== 6) classes += " span-right";
     
     return `<div class="${classes}" style="background:${c.bg}; color:${c.text}; border-left-color:${c.text}" onclick="openEditModal(event, ${e.id})">
       ${e.title}
