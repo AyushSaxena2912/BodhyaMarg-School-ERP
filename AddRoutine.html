@@ -340,7 +340,7 @@ function renderTabs() {
   let html = '';
   daysOfWeek.forEach(day => {
     const isActive = day === activeTabDay ? 'active' : '';
-    html += '<button class="tab-btn ' + isActive + '" onclick="setActiveTabDay(\\'' + day + '\\')">' + day + '</button>';
+    html += '<button class="tab-btn ' + isActive + '" onclick="setActiveTabDay(\'' + day + '\')">' + day + '</button>';
   });
   container.innerHTML = html;
   filterRowsByDay();
