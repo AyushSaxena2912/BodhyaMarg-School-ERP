@@ -327,7 +327,8 @@ const lectureRowHTML = `
     </div>
     <div class="modal-field">
       <label>Room No.</label>
-      <input type="text" class="room-input" placeholder="e.g. 101 or Lab 1" />
+      <select class="fRoomNoRow">
+      </select>
     </div>
   </div>
 `;
@@ -357,31 +358,37 @@ function addLectureRow() {
   updateRemoveButtons();
 }
 
+const roomsMasterData = {
+  'Classroom': ['101', '102', '103', '104', '105', '203', '204'],
+  'Computer Lab': ['202', '305'],
+  'Science Lab': ['201', '302'],
+  'Library': ['301'],
+  'Auditorium': ['Auditorium A']
+};
+
 function autoPopulateRoomRow(selectElem) {
-  const cls = document.getElementById("fClass").value;
-  const sec = document.getElementById("fSection").value;
   const type = selectElem.value;
-  
   const row = selectElem.closest('.lecture-row');
-  const roomInput = row.querySelector('.room-input');
+  const roomSelect = row.querySelector('.fRoomNoRow');
   
-  if(type === 'Computer Lab') {
-    roomInput.value = 'Comp Lab';
-  } else if (type === 'Science Lab') {
-    roomInput.value = 'Lab 1';
-  } else if (type === 'Library') {
-    roomInput.value = 'Lib Main';
-  } else {
-    // Normal classroom logic
-    let roomVal = "";
-    if (cls && sec) {
-      if (cls === "Class X" && sec === "A") roomVal = "Room 101";
-      else if (cls === "Class X" && sec === "B") roomVal = "Room 102";
-      else if (cls === "Class IX" && sec === "A") roomVal = "Room 103";
-      else roomVal = "Room 104";
-    }
-    roomInput.value = roomVal;
+  // Clear current options
+  roomSelect.innerHTML = '';
+  
+  const availableRooms = roomsMasterData[type] || [];
+  if (availableRooms.length === 0) {
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.text = 'No rooms available';
+    roomSelect.appendChild(opt);
+    return;
   }
+  
+  availableRooms.forEach(room => {
+    const opt = document.createElement('option');
+    opt.value = room;
+    opt.text = room;
+    roomSelect.appendChild(opt);
+  });
 }
 
 
