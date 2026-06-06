@@ -196,8 +196,19 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
         <select id="filterSubject"><option value="">All My Subjects</option></select>
       </div>
       <div class="filter-group">
-        <label>Date</label>
-        <input type="date" id="filterDate" />
+        <label>Date Range</label>
+        <select id="filterDateRange" onchange="toggleCustomDate()">
+          <option value="">All Time</option>
+          <option value="today">Today</option>
+          <option value="last_week">Last 7 Days</option>
+          <option value="last_month">Last 30 Days</option>
+          <option value="custom">Custom Range...</option>
+        </select>
+        <div id="customDateWrapper" style="display: none; align-items: center; gap: 8px; margin-top: 8px;">
+          <input type="date" id="filterStartDate" style="flex:1; border:1px solid var(--border); border-radius:var(--radius); padding:6px; font-family:inherit; font-size:12px; outline:none;" title="Start Date" />
+          <span style="color:var(--text-hint); font-size:12px;">to</span>
+          <input type="date" id="filterEndDate" style="flex:1; border:1px solid var(--border); border-radius:var(--radius); padding:6px; font-family:inherit; font-size:12px; outline:none;" title="End Date" />
+        </div>
       </div>
       <div class="filter-group" style="flex: 1; min-width: 200px;">
         <label>Search Keyword</label>
@@ -381,6 +392,11 @@ var students = [
   { id: 106, name: 'Meera Rajput', roll: 'Roll: 06', done: true }
 ];
 
+function toggleCustomDate() {
+  const val = document.getElementById('filterDateRange').value;
+  document.getElementById('customDateWrapper').style.display = val === 'custom' ? 'flex' : 'none';
+}
+
 function renderHomeworks() {
   var html = '';
   
@@ -390,18 +406,46 @@ function renderHomeworks() {
   // Apply UI filters
   const filterClassVal = document.getElementById('filterClass') ? document.getElementById('filterClass').value : '';
   const filterSubjectVal = document.getElementById('filterSubject') ? document.getElementById('filterSubject').value : '';
-  const filterDateVal = document.getElementById('filterDate') ? document.getElementById('filterDate').value : '';
+  const filterDateRange = document.getElementById('filterDateRange') ? document.getElementById('filterDateRange').value : '';
+  const filterStartDate = document.getElementById('filterStartDate') ? document.getElementById('filterStartDate').value : '';
+  const filterEndDate = document.getElementById('filterEndDate') ? document.getElementById('filterEndDate').value : '';
   const filterKeywordVal = document.getElementById('filterKeyword') ? document.getElementById('filterKeyword').value.toLowerCase().trim() : '';
   
   if (filterClassVal) myHwData = myHwData.filter(h => h.class === filterClassVal);
   if (filterSubjectVal) myHwData = myHwData.filter(h => h.subject === filterSubjectVal);
   
-  if (filterDateVal) {
-    const d = new Date(filterDateVal);
-    if (!isNaN(d)) {
-      const formattedFilterDate = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-      myHwData = myHwData.filter(h => h.assignDate.includes(formattedFilterDate) || h.deadline.includes(formattedFilterDate));
-    }
+  if (filterDateRange) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    
+    myHwData = myHwData.filter(h => {
+      const hwDate = new Date(h.assignDate);
+      if (isNaN(hwDate)) return true;
+      
+      if (filterDateRange === 'today') {
+        return hwDate.getTime() === today.getTime();
+      } else if (filterDateRange === 'last_week') {
+        const lastWeek = new Date(today);
+        lastWeek.setDate(lastWeek.getDate() - 7);
+        return hwDate >= lastWeek && hwDate <= today;
+      } else if (filterDateRange === 'last_month') {
+        const lastMonth = new Date(today);
+        lastMonth.setDate(lastMonth.getDate() - 30);
+        return hwDate >= lastMonth && hwDate <= today;
+      } else if (filterDateRange === 'custom') {
+        let isValid = true;
+        if (filterStartDate) {
+          isValid = isValid && hwDate >= new Date(filterStartDate);
+        }
+        if (filterEndDate) {
+          const eDate = new Date(filterEndDate);
+          eDate.setHours(23,59,59,999);
+          isValid = isValid && hwDate <= eDate;
+        }
+        return isValid;
+      }
+      return true;
+    });
   }
   
   if (filterKeywordVal) {
