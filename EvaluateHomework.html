@@ -135,67 +135,7 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 .modal-footer { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
 
 .sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
-
-/* Filter Card Styles (Safari compatibility and visual matching) */
-.filter-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 16px 20px;
-  display: flex;
-  align-items: flex-end;
-  gap: 16px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  flex-wrap: wrap;
-}
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1;
-  min-width: 140px;
-}
-.filter-group label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.filter-group select, .filter-group input {
-  font-family: inherit;
-  font-size: 13px;
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 8px 12px;
-  background: var(--white);
-  outline: none;
-  transition: border-color 0.2s;
-  width: 100%;
-}
-.filter-group select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 32px;
-  cursor: pointer;
-}
-.filter-group select:focus, .filter-group input:focus {
-  border-color: var(--green);
-}
-#evalSelectHw {
-  border: 1.5px solid var(--green) !important;
-  color: var(--green) !important;
-  font-weight: 600 !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231a7a4a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
-}
 </style>
-<script src="permissions.js"></script>
 </head>
 <body>
 
@@ -224,36 +164,6 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
       </div>
       <div class="page-actions">
         <a href="HomeworkList.html" class="btn"><i class="ti ti-arrow-left"></i> Back to Homeworks</a>
-      </div>
-    </div>
-
-    <!-- SuperAdmin Search and Filter for Evaluated Homework -->
-    <div class="filter-card" id="adminEvalFilters" style="display: none;">
-      <div class="filter-group">
-        <label>Teacher</label>
-        <select id="evalFilterTeacher" onchange="onEvalFilterChange()">
-          <option value="">All Teachers</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Class & Section</label>
-        <select id="evalFilterClass" onchange="onEvalFilterChange()">
-          <option value="">All Classes</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Subject</label>
-        <select id="evalFilterSubject" onchange="onEvalFilterChange()">
-          <option value="">All Subjects</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Date</label>
-        <input type="date" id="evalFilterDate" onchange="onEvalFilterChange()" />
-      </div>
-      <div class="filter-group" style="flex: 1.5; min-width: 220px;">
-        <label style="color: var(--green); font-weight: 700;">Select Homework to Evaluate</label>
-        <select id="evalSelectHw" onchange="onSelectHwChange()"></select>
       </div>
     </div>
 
@@ -370,13 +280,8 @@ var defaultHwDatabase = {
 var hwDatabase = {};
 function initHwDatabase() {
   const cachedDb = localStorage.getItem('bodhyamarg_hw_database');
-  if (cachedDb && cachedDb !== '{}' && cachedDb !== 'null' && cachedDb !== 'undefined') {
-    try {
-      hwDatabase = JSON.parse(cachedDb);
-    } catch (e) {
-      hwDatabase = defaultHwDatabase;
-      localStorage.setItem('bodhyamarg_hw_database', JSON.stringify(hwDatabase));
-    }
+  if (cachedDb) {
+    hwDatabase = JSON.parse(cachedDb);
   } else {
     hwDatabase = defaultHwDatabase;
     localStorage.setItem('bodhyamarg_hw_database', JSON.stringify(hwDatabase));
@@ -412,9 +317,7 @@ var submissionsData = {
 function getHomeworkId() {
   const params = new URLSearchParams(window.location.search);
   const id = parseInt(params.get('id'));
-  if (hwDatabase && hwDatabase[id]) return id;
-  const firstKey = Object.keys(hwDatabase || {})[0];
-  return firstKey ? parseInt(firstKey) : 1;
+  return hwDatabase[id] ? id : 1;
 }
 
 var currentHwId = getHomeworkId();
@@ -443,14 +346,14 @@ function initData() {
   document.getElementById('toggleGrading').checked = gradingEnabled;
   
   // Render details
-  const hw = hwDatabase[currentHwId] || defaultHwDatabase[currentHwId] || { topic: 'Homework Detail', subject: 'Subject', classSec: 'Class', assigned: '', deadline: '', teacher: '', desc: '' };
-  document.getElementById('hwTopic').textContent = hw.topic || 'Homework Topic';
-  document.getElementById('hwSubject').textContent = hw.subject || 'Subject';
-  document.getElementById('hwClass').textContent = hw.classSec || 'Class & Section';
-  document.getElementById('hwAssigned').textContent = hw.assigned || '';
-  document.getElementById('hwDeadline').textContent = hw.deadline || '';
-  document.getElementById('hwTeacher').textContent = hw.teacher || '';
-  document.getElementById('hwDesc').textContent = hw.desc || '';
+  const hw = hwDatabase[currentHwId];
+  document.getElementById('hwTopic').textContent = hw.topic;
+  document.getElementById('hwSubject').textContent = hw.subject;
+  document.getElementById('hwClass').textContent = hw.classSec;
+  document.getElementById('hwAssigned').textContent = hw.assigned;
+  document.getElementById('hwDeadline').textContent = hw.deadline;
+  document.getElementById('hwTeacher').textContent = hw.teacher;
+  document.getElementById('hwDesc').textContent = hw.desc;
 
   updateStats();
 }
@@ -668,126 +571,10 @@ function downloadMock() {
   closePreview();
 }
 
-function formatDateString(dateStr) {
-  if (!dateStr) return '';
-  var parts = dateStr.split('-');
-  if (parts.length !== 3) return dateStr;
-  var year = parts[0];
-  var monthNum = parseInt(parts[1]) - 1;
-  var day = parseInt(parts[2]);
-  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return day + ' ' + months[monthNum] + ' ' + year;
-}
-
-function populateEvalFilters() {
-  const teacherSelect = document.getElementById('evalFilterTeacher');
-  const classSelect = document.getElementById('evalFilterClass');
-  const subjectSelect = document.getElementById('evalFilterSubject');
-  
-  const teachers = [...new Set(Object.values(hwDatabase).map(h => h.teacher))].sort();
-  const classes = [...new Set(Object.values(hwDatabase).map(h => h.classSec))].sort();
-  const subjects = [...new Set(Object.values(hwDatabase).map(h => h.subject))].sort();
-  
-  if (teacherSelect) {
-    teacherSelect.innerHTML = '<option value="">All Teachers</option>' + teachers.map(t => `<option value="${t}">${t}</option>`).join('');
-  }
-  if (classSelect) {
-    classSelect.innerHTML = '<option value="">All Classes</option>' + classes.map(c => `<option value="${c}">${c}</option>`).join('');
-  }
-  if (subjectSelect) {
-    subjectSelect.innerHTML = '<option value="">All Subjects</option>' + subjects.map(s => `<option value="${s}">${s}</option>`).join('');
-  }
-  
-  // Sync filters with the currently loaded homework
-  const currentHw = hwDatabase[currentHwId];
-  if (currentHw) {
-    if (teacherSelect) teacherSelect.value = currentHw.teacher;
-    if (classSelect) classSelect.value = currentHw.classSec;
-    if (subjectSelect) subjectSelect.value = currentHw.subject;
-  }
-  
-  updateEvalHwList();
-}
-
-function updateEvalHwList() {
-  const teacherVal = document.getElementById('evalFilterTeacher').value;
-  const classVal = document.getElementById('evalFilterClass').value;
-  const subjectVal = document.getElementById('evalFilterSubject').value;
-  const dateVal = document.getElementById('evalFilterDate').value;
-  const selectHw = document.getElementById('evalSelectHw');
-  
-  let filteredHw = Object.entries(hwDatabase).map(([id, info]) => ({ id: parseInt(id), ...info }));
-  
-  if (teacherVal) {
-    filteredHw = filteredHw.filter(h => h.teacher === teacherVal);
-  }
-  if (classVal) {
-    filteredHw = filteredHw.filter(h => h.classSec === classVal);
-  }
-  if (subjectVal) {
-    filteredHw = filteredHw.filter(h => h.subject === subjectVal);
-  }
-  if (dateVal) {
-    const formattedDate = formatDateString(dateVal);
-    filteredHw = filteredHw.filter(h => h.assigned === formattedDate || h.deadline === formattedDate);
-  }
-  
-  if (selectHw) {
-    if (filteredHw.length === 0) {
-      selectHw.innerHTML = '<option value="">No matching homeworks</option>';
-    } else {
-      selectHw.innerHTML = filteredHw.map(h => `<option value="${h.id}" ${h.id === currentHwId ? 'selected' : ''}>${h.topic} (${h.classSec})</option>`).join('');
-    }
-  }
-}
-
-function onEvalFilterChange() {
-  updateEvalHwList();
-  const selectHw = document.getElementById('evalSelectHw');
-  if (selectHw && selectHw.value) {
-    onSelectHwChange();
-  }
-}
-
-function onSelectHwChange() {
-  const selectHw = document.getElementById('evalSelectHw');
-  if (selectHw && selectHw.value) {
-    const newId = parseInt(selectHw.value);
-    if (newId !== currentHwId) {
-      currentHwId = newId;
-      const url = new URL(window.location);
-      url.searchParams.set('id', currentHwId);
-      window.history.replaceState({}, '', url);
-      
-      initData();
-      render();
-    }
-  }
-}
-
 // Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
-  if (window.BodhyaAuth) {
-    BodhyaAuth.guardPage(['admin', 'superadmin', 'teacher']);
-  }
   initData();
   render();
-  
-  // Set up Admin filters if user is SuperAdmin/Admin
-  let isAdmin = false;
-  if (window.BodhyaAuth && BodhyaAuth.isLoggedIn()) {
-    const role = BodhyaAuth.getRole();
-    if (role === 'admin' || role === 'superadmin') {
-      isAdmin = true;
-    }
-  }
-  if (isAdmin) {
-    const filtersCard = document.getElementById('adminEvalFilters');
-    if (filtersCard) {
-      filtersCard.style.display = 'flex';
-      populateEvalFilters();
-    }
-  }
 });
 </script>
 <script src="sidebar.js"></script>

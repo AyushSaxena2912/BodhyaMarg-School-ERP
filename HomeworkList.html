@@ -152,7 +152,6 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
 <style>
 .sidebar a,.sidebar a:link,.sidebar a:visited,.sidebar a:hover,.sidebar a:active{text-decoration:none!important;color:inherit;}
 </style>
-<script src="permissions.js"></script>
 </head>
 <body>
 
@@ -195,10 +194,6 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
       <div class="filter-group">
         <label>Subject</label>
         <select id="filterSubject"><option value="">All My Subjects</option></select>
-      </div>
-      <div class="filter-group" id="filterTeacherGroup" style="display: none;">
-        <label>Teacher</label>
-        <select id="filterTeacher"><option value="">All Teachers</option></select>
       </div>
       <div class="filter-group">
         <label>Date</label>
@@ -308,10 +303,6 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
 </div>
 
 <script>
-if (window.BodhyaAuth) {
-  BodhyaAuth.guardPage(['admin', 'superadmin', 'teacher']);
-}
-
 // Mock Teachers Data
 const TEACHERS = {
   mohan: {
@@ -327,30 +318,7 @@ const TEACHERS = {
     ]
   }
 };
-
-// Resolve logged in teacher or default to Mohan Sharma
-let currentUser = TEACHERS.mohan;
-let isAdmin = false;
-let activeRole = 'teacher';
-
-if (window.BodhyaAuth && BodhyaAuth.isLoggedIn()) {
-  const authUser = BodhyaAuth.getUser();
-  activeRole = authUser.role;
-  if (activeRole === 'admin' || activeRole === 'superadmin') {
-    isAdmin = true;
-    currentUser = {
-      id: authUser.id,
-      name: authUser.name,
-      classes: [] // Admins don't have restricted classes
-    };
-  } else if (activeRole === 'teacher') {
-    currentUser = {
-      id: authUser.id,
-      name: (authUser.name === 'Teacher' || authUser.name === 'Mohan Lal' || authUser.name === 'Mohan Sharma') ? 'Mohan Sharma' : authUser.name,
-      classes: TEACHERS.mohan.classes
-    };
-  }
-}
+const currentUser = TEACHERS.mohan;
 
 // Default Mock Homework Data
 var defaultHwData = [
@@ -378,56 +346,14 @@ function initHomeworkList() {
 function populateDropdowns() {
   const classFilter = document.getElementById('filterClass');
   const subjectFilter = document.getElementById('filterSubject');
-  const teacherFilter = document.getElementById('filterTeacher');
-  const teacherGroup = document.getElementById('filterTeacherGroup');
   const modalClass = document.getElementById('newHwClass');
   
-  // Set labels and visibility based on role
-  if (isAdmin) {
-    if (teacherGroup) teacherGroup.style.display = 'flex';
-  } else {
-    if (teacherGroup) teacherGroup.style.display = 'none';
-  }
-
-  let uniqueClasses = [];
-  let uniqueSubjects = [];
-  let uniqueTeachers = [];
-
-  if (isAdmin) {
-    // Populate all unique classes, subjects and teachers from global homework database
-    uniqueClasses = [...new Set(hwData.map(h => h.class))];
-    uniqueSubjects = [...new Set(hwData.map(h => h.subject))];
-    uniqueTeachers = [...new Set(hwData.map(h => h.teacher))];
-  } else {
-    // Populate classes and subjects assigned to the current teacher
-    uniqueClasses = [...new Set(currentUser.classes.map(c => c.cls))];
-    uniqueSubjects = [...new Set(currentUser.classes.map(c => c.name))];
-  }
-
-  // Sort lists for clean UI presentation
-  uniqueClasses.sort();
-  uniqueSubjects.sort();
-  uniqueTeachers.sort();
-
-  // Populate Filter Dropdowns
-  if (classFilter) {
-    const defaultText = isAdmin ? 'All Classes' : 'All My Classes';
-    classFilter.innerHTML = `<option value="">${defaultText}</option>` + uniqueClasses.map(c => `<option value="${c}">${c}</option>`).join('');
-  }
-  if (subjectFilter) {
-    const defaultText = isAdmin ? 'All Subjects' : 'All My Subjects';
-    subjectFilter.innerHTML = `<option value="">${defaultText}</option>` + uniqueSubjects.map(s => `<option value="${s}">${s}</option>`).join('');
-  }
-  if (teacherFilter && isAdmin) {
-    teacherFilter.innerHTML = '<option value="">All Teachers</option>' + uniqueTeachers.map(t => `<option value="${t}">${t}</option>`).join('');
-  }
-
-  // Populate Assign Homework Modal Dropdown
-  if (modalClass) {
-    // Admin gets all classes, teacher gets their own classes
-    const classesForModal = isAdmin ? [...new Set(hwData.map(h => h.class))].sort() : uniqueClasses;
-    modalClass.innerHTML = '<option value="">Select Class & Section</option>' + classesForModal.map(c => `<option value="${c}">${c}</option>`).join('');
-  }
+  const uniqueClasses = [...new Set(currentUser.classes.map(c => c.cls))];
+  const uniqueSubjects = [...new Set(currentUser.classes.map(c => c.name))];
+  
+  if (classFilter) classFilter.innerHTML = '<option value="">All My Classes</option>' + uniqueClasses.map(c => `<option value="${c}">${c}</option>`).join('');
+  if (subjectFilter) subjectFilter.innerHTML = '<option value="">All My Subjects</option>' + uniqueSubjects.map(s => `<option value="${s}">${s}</option>`).join('');
+  if (modalClass) modalClass.innerHTML = '<option value="">Select Class & Section</option>' + uniqueClasses.map(c => `<option value="${c}">${c}</option>`).join('');
 }
 
 function updateModalSubjects() {
@@ -437,20 +363,7 @@ function updateModalSubjects() {
     modalSubject.innerHTML = '<option value="">Select Subject</option>';
     return;
   }
-  
-  let subjectsForClass = [];
-  if (isAdmin) {
-    // For admin, get all subjects associated with this class in hwData
-    subjectsForClass = [...new Set(hwData.filter(h => h.class === selectedClass).map(h => h.subject))];
-    // If no homework has been assigned to this class yet, fallback to all unique subjects in the system
-    if (subjectsForClass.length === 0) {
-      subjectsForClass = [...new Set(hwData.map(h => h.subject))];
-    }
-  } else {
-    subjectsForClass = currentUser.classes.filter(c => c.cls === selectedClass).map(c => c.name);
-  }
-  subjectsForClass.sort();
-
+  const subjectsForClass = currentUser.classes.filter(c => c.cls === selectedClass).map(c => c.name);
   modalSubject.innerHTML = '<option value="">Select Subject</option>' + subjectsForClass.map(s => `<option value="${s}">${s}</option>`).join('');
 }
 initHomeworkList();
@@ -467,26 +380,15 @@ var students = [
 function renderHomeworks() {
   var html = '';
   
-  let myHwData = hwData;
-  if (!isAdmin) {
-    // Filter for teacher logic: only show assignments created by currentUser
-    myHwData = hwData.filter(hw => hw.teacher === currentUser.name);
-  }
+  // Filter for teacher logic: only show assignments created by currentUser
+  let myHwData = hwData.filter(hw => hw.teacher === currentUser.name);
   
   // Apply UI filters
   const filterClassVal = document.getElementById('filterClass') ? document.getElementById('filterClass').value : '';
   const filterSubjectVal = document.getElementById('filterSubject') ? document.getElementById('filterSubject').value : '';
-  const filterTeacherVal = document.getElementById('filterTeacher') ? document.getElementById('filterTeacher').value : '';
-  const filterDateVal = document.getElementById('filterDate') ? document.getElementById('filterDate').value : '';
   
   if (filterClassVal) myHwData = myHwData.filter(h => h.class === filterClassVal);
   if (filterSubjectVal) myHwData = myHwData.filter(h => h.subject === filterSubjectVal);
-  if (isAdmin && filterTeacherVal) myHwData = myHwData.filter(h => h.teacher === filterTeacherVal);
-  
-  if (filterDateVal) {
-    const formattedFilterDate = formatDateString(filterDateVal);
-    myHwData = myHwData.filter(h => h.assignDate === formattedFilterDate || h.deadline === formattedFilterDate);
-  }
   
   if (myHwData.length === 0) {
     document.getElementById('hwBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding: 30px;">No homework found for the selected filters.</td></tr>';
@@ -591,7 +493,7 @@ function saveHomework() {
   };
 
   hwData.push(newHwObj);
-  localStorage.setItem('bodhyamarg_homework_list_v2', JSON.stringify(hwData));
+  localStorage.setItem('bodhyamarg_homework_list', JSON.stringify(hwData));
 
   // 2. Save homework details to evaluation database
   var defaultHwDatabase = {
@@ -635,7 +537,7 @@ function saveHomework() {
 function deleteHomework(id) {
   if (confirm('Are you sure you want to delete this homework assignment?')) {
     hwData = hwData.filter(function(h) { return h.id !== id; });
-    localStorage.setItem('bodhyamarg_homework_list_v2', JSON.stringify(hwData));
+    localStorage.setItem('bodhyamarg_homework_list', JSON.stringify(hwData));
     renderHomeworks();
   }
 }
