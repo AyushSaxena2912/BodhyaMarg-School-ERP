@@ -199,6 +199,10 @@ tbody td { padding: 14px 20px; font-size: 13px; color: var(--text); vertical-ali
         <label>Date</label>
         <input type="date" id="filterDate" />
       </div>
+      <div class="filter-group" style="flex: 1; min-width: 200px;">
+        <label>Search Keyword</label>
+        <input type="text" id="filterKeyword" placeholder="Search title or topic..." style="width:100%; border:1px solid var(--border); border-radius:var(--radius); padding:8px 12px; font-family:inherit; font-size:13px; outline:none;" />
+      </div>
       <div class="filter-actions">
         <button class="btn btn-primary" onclick="renderHomeworks()"><i class="ti ti-search"></i> Search</button>
       </div>
@@ -386,9 +390,23 @@ function renderHomeworks() {
   // Apply UI filters
   const filterClassVal = document.getElementById('filterClass') ? document.getElementById('filterClass').value : '';
   const filterSubjectVal = document.getElementById('filterSubject') ? document.getElementById('filterSubject').value : '';
+  const filterDateVal = document.getElementById('filterDate') ? document.getElementById('filterDate').value : '';
+  const filterKeywordVal = document.getElementById('filterKeyword') ? document.getElementById('filterKeyword').value.toLowerCase().trim() : '';
   
   if (filterClassVal) myHwData = myHwData.filter(h => h.class === filterClassVal);
   if (filterSubjectVal) myHwData = myHwData.filter(h => h.subject === filterSubjectVal);
+  
+  if (filterDateVal) {
+    const d = new Date(filterDateVal);
+    if (!isNaN(d)) {
+      const formattedFilterDate = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      myHwData = myHwData.filter(h => h.assignDate.includes(formattedFilterDate) || h.deadline.includes(formattedFilterDate));
+    }
+  }
+  
+  if (filterKeywordVal) {
+    myHwData = myHwData.filter(h => h.title.toLowerCase().includes(filterKeywordVal) || h.subject.toLowerCase().includes(filterKeywordVal));
+  }
   
   if (myHwData.length === 0) {
     document.getElementById('hwBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding: 30px;">No homework found for the selected filters.</td></tr>';
