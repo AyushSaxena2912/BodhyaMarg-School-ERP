@@ -67,6 +67,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .modal-field textarea { width: 100%; font-family: inherit; font-size: 12.5px; border: 1px solid var(--border); border-radius: var(--radius); padding: 9px 10px; outline: none; resize: vertical; min-height: 60px; }
 .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 </style>
+<script src="permissions.js"></script>
+<script>
+  // Strict check: only allow student role, even for admins/superadmins (on student-only pages)
+  if (BodhyaAuth.getRole() !== 'student') {
+    window.location.href = BodhyaAuth.getDashboard(BodhyaAuth.getRole());
+  }
+</script>
 </head>
 <body>
 <div id="sidebar-container"></div>

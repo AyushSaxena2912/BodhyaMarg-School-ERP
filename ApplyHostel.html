@@ -72,6 +72,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .form-field textarea { resize: vertical; min-height: 70px; }
 .form-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
 </style>
+<script src="permissions.js"></script>
+<script>
+  // Strict check: only allow student role, even for admins/superadmins (on student-only pages)
+  if (BodhyaAuth.getRole() !== 'student') {
+    window.location.href = BodhyaAuth.getDashboard(BodhyaAuth.getRole());
+  }
+</script>
 </head>
 <body>
 <div id="sidebar-container"></div>
