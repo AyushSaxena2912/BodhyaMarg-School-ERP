@@ -458,9 +458,9 @@ select {
           <tr>
             <th style="width:44px;"><input type="checkbox" class="cb" /></th>
             <th>Room No <i class="ti ti-selector"></i></th>
-
-
+            <th>Room Type <i class="ti ti-selector"></i></th>
             <th>Capacity <i class="ti ti-selector"></i></th>
+            <th>Status <i class="ti ti-selector"></i></th>
             <th style="width:100px; text-align:center;">Action</th>
           </tr>
         </thead>
@@ -547,6 +547,7 @@ rooms.forEach(r => {
     <td><span class="room-badge">${r.room}</span></td>
     <td><div style="display:flex; align-items:center; gap:6px; color:var(--text); font-weight:500;">${r.roomType}</div></td>
     <td style="color:var(--text-muted);">${r.capacity} seats</td>
+    <td><span class="status-badge ${r.status}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span></td>
     <td style="text-align:center;"><div class="three-dot" style="margin: 0 auto;"><i class="ti ti-dots-vertical"></i></div></td>
   `;
   tbody.appendChild(tr);
