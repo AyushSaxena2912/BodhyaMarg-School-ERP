@@ -411,9 +411,9 @@ function renderHomeworks() {
     html += '  <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ' + perc + '%;"></div></div>';
     html += '</td>';
     html += '<td style="text-align:right;">';
-    html += '  <a href="EvaluateHomework.html?id=' + hw.id + '" class="action-btn primary" title="Evaluate Progress" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;" data-allowed-roles="admin,teacher"><i class="ti ti-checklist"></i></a>';
-    html += '  <button class="action-btn" title="Edit" data-allowed-roles="admin,teacher"><i class="ti ti-edit"></i></button>';
-    html += '  <button class="action-btn" style="color:#ef4444;" title="Delete" onclick="deleteHomework(' + hw.id + ')" data-allowed-roles="admin,teacher"><i class="ti ti-trash"></i></button>';
+    html += '  <a href="EvaluateHomework.html?id=' + hw.id + '" class="action-btn primary" title="Evaluate Progress" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;" data-allowed-roles="admin,superadmin,teacher"><i class="ti ti-checklist"></i></a>';
+    html += '  <button class="action-btn" title="Edit" data-allowed-roles="admin,superadmin,teacher"><i class="ti ti-edit"></i></button>';
+    html += '  <button class="action-btn" style="color:#ef4444;" title="Delete" onclick="deleteHomework(' + hw.id + ')" data-allowed-roles="admin,superadmin,teacher"><i class="ti ti-trash"></i></button>';
     html += '</td>';
     html += '</tr>';
   });
