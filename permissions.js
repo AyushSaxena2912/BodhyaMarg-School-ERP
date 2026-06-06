@@ -7,7 +7,7 @@ const BodhyaAuth = {
   // In production: replace with real backend API call
   DEMO_USERS: [
     { email: 'admin@school.com',    password: 'admin123',    role: 'admin',       name: 'Vikram Sharma',  id: 'USR001' },
-    { email: 'teacher@school.com',  password: 'teacher123',  role: 'teacher',     name: 'Mohan Lal',      id: 'USR002' },
+    { email: 'teacher@school.com',  password: 'teacher123',  role: 'teacher',     name: 'Mohan Sharma',   id: 'USR002' },
     { email: 'student@school.com',  password: 'student123',  role: 'student',     name: 'Aarav Sharma',   id: 'USR003' },
     { email: 'parent@school.com',   password: 'parent123',   role: 'parent',      name: 'Rajesh Sharma',  id: 'USR004' },
     { email: 'staff@school.com',    password: 'staff123',    role: 'staff',       name: 'Priya Kumari',   id: 'USR005' },

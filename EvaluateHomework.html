@@ -573,10 +573,14 @@ function downloadMock() {
 
 // Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
+  if (window.BodhyaAuth) {
+    BodhyaAuth.guardPage(['admin', 'superadmin', 'teacher']);
+  }
   initData();
   render();
 });
 </script>
+<script src="permissions.js"></script>
 <script src="sidebar.js"></script>
 </body>
 </html>
