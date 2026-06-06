@@ -227,8 +227,14 @@
       <!-- Agenda Sidebar (Right) -->
       <div class="cal-agenda">
         <div class="agenda-header">
-          Upcoming Events
-          <span class="agenda-count" id="agendaCount">0</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            Upcoming Events
+            <span class="agenda-count" id="agendaCount">0</span>
+          </div>
+          <div style="display:flex; gap:4px;">
+            <button class="nav-btn" onclick="scrollAgenda('up')" style="width:24px; height:24px; border-radius:4px;" title="Scroll Up"><i class="ti ti-chevron-up" style="font-size:12px;"></i></button>
+            <button class="nav-btn" onclick="scrollAgenda('down')" style="width:24px; height:24px; border-radius:4px;" title="Scroll Down"><i class="ti ti-chevron-down" style="font-size:12px;"></i></button>
+          </div>
         </div>
         <div class="agenda-list" id="agendaList">
           <!-- Agenda items injected via JS -->
@@ -633,6 +639,15 @@ function deleteEvent() {
     saveEventsToStorage();
     closeEventModal();
     renderCalendar();
+  }
+}
+
+function scrollAgenda(direction) {
+  const list = document.getElementById('agendaList');
+  if (direction === 'up') {
+    list.scrollBy({ top: -150, behavior: 'smooth' });
+  } else {
+    list.scrollBy({ top: 150, behavior: 'smooth' });
   }
 }
 
