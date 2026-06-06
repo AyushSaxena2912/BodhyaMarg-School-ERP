@@ -168,6 +168,36 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
       </div>
     </div>
 
+    <!-- SuperAdmin Search and Filter for Evaluated Homework -->
+    <div class="filter-card" id="adminEvalFilters" style="display: none; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; display: flex; align-items: flex-end; gap: 16px; margin-bottom: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); flex-wrap: wrap;">
+      <div class="filter-group" style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px;">
+        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Teacher</label>
+        <select id="evalFilterTeacher" onchange="onEvalFilterChange()" style="font-family: inherit; font-size: 13.5px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; background: var(--white); outline: none; transition: border-color 0.2s; width: 100%; cursor: pointer;">
+          <option value="">All Teachers</option>
+        </select>
+      </div>
+      <div class="filter-group" style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px;">
+        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Class & Section</label>
+        <select id="evalFilterClass" onchange="onEvalFilterChange()" style="font-family: inherit; font-size: 13.5px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; background: var(--white); outline: none; transition: border-color 0.2s; width: 100%; cursor: pointer;">
+          <option value="">All Classes</option>
+        </select>
+      </div>
+      <div class="filter-group" style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px;">
+        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Subject</label>
+        <select id="evalFilterSubject" onchange="onEvalFilterChange()" style="font-family: inherit; font-size: 13.5px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; background: var(--white); outline: none; transition: border-color 0.2s; width: 100%; cursor: pointer;">
+          <option value="">All Subjects</option>
+        </select>
+      </div>
+      <div class="filter-group" style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px;">
+        <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Date</label>
+        <input type="date" id="evalFilterDate" onchange="onEvalFilterChange()" style="font-family: inherit; font-size: 13.5px; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; background: var(--white); outline: none; transition: border-color 0.2s; width: 100%; cursor: pointer;" />
+      </div>
+      <div class="filter-group" style="display: flex; flex-direction: column; gap: 6px; flex: 1.5; min-width: 220px;">
+        <label style="font-size: 11px; font-weight: 600; color: var(--green); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Select Homework to Evaluate</label>
+        <select id="evalSelectHw" onchange="onSelectHwChange()" style="font-family: inherit; font-size: 13.5px; color: var(--green); border: 1.5px solid var(--green); border-radius: var(--radius); padding: 8px 12px; background: var(--white); outline: none; width: 100%; font-weight: 600; cursor: pointer;"></select>
+      </div>
+    </div>
+
     <!-- Homework Header Info -->
     <div class="hw-header-card">
       <div class="hw-details">
@@ -572,6 +602,103 @@ function downloadMock() {
   closePreview();
 }
 
+function formatDateString(dateStr) {
+  if (!dateStr) return '';
+  var parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  var year = parts[0];
+  var monthNum = parseInt(parts[1]) - 1;
+  var day = parseInt(parts[2]);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return day + ' ' + months[monthNum] + ' ' + year;
+}
+
+function populateEvalFilters() {
+  const teacherSelect = document.getElementById('evalFilterTeacher');
+  const classSelect = document.getElementById('evalFilterClass');
+  const subjectSelect = document.getElementById('evalFilterSubject');
+  
+  const teachers = [...new Set(Object.values(hwDatabase).map(h => h.teacher))].sort();
+  const classes = [...new Set(Object.values(hwDatabase).map(h => h.classSec))].sort();
+  const subjects = [...new Set(Object.values(hwDatabase).map(h => h.subject))].sort();
+  
+  if (teacherSelect) {
+    teacherSelect.innerHTML = '<option value="">All Teachers</option>' + teachers.map(t => `<option value="${t}">${t}</option>`).join('');
+  }
+  if (classSelect) {
+    classSelect.innerHTML = '<option value="">All Classes</option>' + classes.map(c => `<option value="${c}">${c}</option>`).join('');
+  }
+  if (subjectSelect) {
+    subjectSelect.innerHTML = '<option value="">All Subjects</option>' + subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+  }
+  
+  // Sync filters with the currently loaded homework
+  const currentHw = hwDatabase[currentHwId];
+  if (currentHw) {
+    if (teacherSelect) teacherSelect.value = currentHw.teacher;
+    if (classSelect) classSelect.value = currentHw.classSec;
+    if (subjectSelect) subjectSelect.value = currentHw.subject;
+  }
+  
+  updateEvalHwList();
+}
+
+function updateEvalHwList() {
+  const teacherVal = document.getElementById('evalFilterTeacher').value;
+  const classVal = document.getElementById('evalFilterClass').value;
+  const subjectVal = document.getElementById('evalFilterSubject').value;
+  const dateVal = document.getElementById('evalFilterDate').value;
+  const selectHw = document.getElementById('evalSelectHw');
+  
+  let filteredHw = Object.entries(hwDatabase).map(([id, info]) => ({ id: parseInt(id), ...info }));
+  
+  if (teacherVal) {
+    filteredHw = filteredHw.filter(h => h.teacher === teacherVal);
+  }
+  if (classVal) {
+    filteredHw = filteredHw.filter(h => h.classSec === classVal);
+  }
+  if (subjectVal) {
+    filteredHw = filteredHw.filter(h => h.subject === subjectVal);
+  }
+  if (dateVal) {
+    const formattedDate = formatDateString(dateVal);
+    filteredHw = filteredHw.filter(h => h.assigned === formattedDate || h.deadline === formattedDate);
+  }
+  
+  if (selectHw) {
+    if (filteredHw.length === 0) {
+      selectHw.innerHTML = '<option value="">No matching homeworks</option>';
+    } else {
+      selectHw.innerHTML = filteredHw.map(h => `<option value="${h.id}" ${h.id === currentHwId ? 'selected' : ''}>${h.topic} (${h.classSec})</option>`).join('');
+    }
+  }
+}
+
+function onEvalFilterChange() {
+  updateEvalHwList();
+  const selectHw = document.getElementById('evalSelectHw');
+  if (selectHw && selectHw.value) {
+    onSelectHwChange();
+  }
+}
+
+function onSelectHwChange() {
+  const selectHw = document.getElementById('evalSelectHw');
+  if (selectHw && selectHw.value) {
+    const newId = parseInt(selectHw.value);
+    if (newId !== currentHwId) {
+      currentHwId = newId;
+      const url = new URL(window.location);
+      url.searchParams.set('id', currentHwId);
+      window.history.replaceState({}, '', url);
+      
+      initData();
+      render();
+    }
+  }
+}
+
 // Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
   if (window.BodhyaAuth) {
@@ -579,6 +706,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   initData();
   render();
+  
+  // Set up Admin filters if user is SuperAdmin/Admin
+  let isAdmin = false;
+  if (window.BodhyaAuth && BodhyaAuth.isLoggedIn()) {
+    const role = BodhyaAuth.getRole();
+    if (role === 'admin' || role === 'superadmin') {
+      isAdmin = true;
+    }
+  }
+  if (isAdmin) {
+    const filtersCard = document.getElementById('adminEvalFilters');
+    if (filtersCard) {
+      filtersCard.style.display = 'flex';
+      populateEvalFilters();
+    }
+  }
 });
 </script>
 <script src="sidebar.js"></script>
