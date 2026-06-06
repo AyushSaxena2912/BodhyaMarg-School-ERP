@@ -168,28 +168,30 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
         </div>
       </div>
       <div class="page-actions">
-        <a href="HomeworkList.html" class="btn"><i class="ti ti-arrow-left"></i> Back to Homeworks</a>
+        <a href="HomeworkList.html" class="btn" style="text-decoration: none;"><i class="ti ti-arrow-left"></i> Back to Homeworks</a>
       </div>
     </div>
 
     <!-- Homework Header Info -->
     <div class="hw-header-card">
       <div class="hw-details">
-        <h2 id="hwTopic">Algebra Equations Ex 1.2</h2>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <h2 id="hwTopic" style="margin: 0;">Algebra Equations Ex 1.2</h2>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="ti ti-settings" style="color: var(--green);"></i>
+            <span style="font-weight:600; font-size:12.5px; color: var(--text-muted);">Enable Grading (Marks):</span>
+            <label class="toggle-switch toggle-switch-sm" style="margin: 0;">
+              <input type="checkbox" id="toggleGrading" checked onchange="toggleGrading(this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
         <div class="hw-meta">
           <div class="hw-meta-item"><i class="ti ti-books"></i><span id="hwSubject">Mathematics</span></div>
           <div class="hw-meta-item"><i class="ti ti-users"></i><span id="hwClass">Class X - Section A</span></div>
           <div class="hw-meta-item"><i class="ti ti-calendar"></i>Assigned: <span id="hwAssigned">24 May 2026</span></div>
           <div class="hw-meta-item"><i class="ti ti-calendar-due"></i>Due Date: <span id="hwDeadline" style="color:var(--red); font-weight: 500;">27 May 2026</span></div>
           <div class="hw-meta-item"><i class="ti ti-user"></i>Teacher: <span id="hwTeacher">Ramesh Patel</span></div>
-          <div class="hw-meta-item" style="margin-left: auto; border-left: 1px solid var(--border); padding-left: 16px; display: flex; align-items: center; gap: 8px;">
-            <i class="ti ti-settings" style="color: var(--green);"></i>
-            <span style="font-weight:600; font-size:12.5px;">Enable Grading (Marks):</span>
-            <label class="toggle-switch toggle-switch-sm">
-              <input type="checkbox" id="toggleGrading" checked onchange="toggleGrading(this.checked)">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
         </div>
         <div class="hw-description" id="hwDesc">
           Please solve all the linear equations in exercise 1.2 on pages 45-47. Write out all step-by-step calculations neatly on your worksheets, scan them to a single PDF document, and upload it here before the due date.
