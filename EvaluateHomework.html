@@ -401,7 +401,7 @@ function getActionHtml(s, status) {
 }
 
 function render(filterName = '') {
-  const tbody = document.getElementById('submissionsTbody');
+  const tbody = document.getElementById('submissionBody');
   let html = '';
   const hw = hwDatabase[currentHwId] || {};
   const maxMarks = hw.maxMarks || 50;
