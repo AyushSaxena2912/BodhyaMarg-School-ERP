@@ -83,14 +83,12 @@ tbody td { padding: 14px 20px; font-size: 13.5px; color: var(--text); vertical-a
 .badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
 .badge-pending { background: #f1f5f9; color: var(--text-muted); }
 .badge-pending::before { background: var(--text-hint); }
-.badge-submitted { background: #fef3c7; color: #d97706; }
-.badge-submitted::before { background: #d97706; }
-.badge-evaluated { background: var(--green-light); color: var(--green); }
-.badge-evaluated::before { background: var(--green); }
-.badge-rejected { background: #fee2e2; color: var(--red); }
-.badge-rejected::before { background: var(--red); }
-.badge-missing { background: #e2e8f0; color: #475569; }
-.badge-missing::before { background: #475569; }
+.badge-submitted { background: #eff6ff; color: #3b82f6; }
+.badge-submitted::before { background: #3b82f6; }
+.badge-graded { background: var(--green-light); color: var(--green); }
+.badge-graded::before { background: var(--green); }
+.badge-resubmit { background: #fee2e2; color: var(--red); }
+.badge-resubmit::before { background: var(--red); }
 
 /* File Link */
 .file-attachment { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius); border: 1px solid var(--border); background: #fafbfc; font-size: 12.5px; color: var(--green); font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap; transition: all 0.15s; }
@@ -299,12 +297,12 @@ initHwDatabase();
 // Mock student submissions dataset corresponding to Homework IDs
 var submissionsData = {
   1: [
-    { id: 101, name: 'Aarav Sharma', roll: 'Roll: 01', status: 'Submitted', file: 'aarav_hw.pdf', size: '1.2 MB', date: '26 May 2026, 03:30 PM', marks: '45', remarks: 'Good step by step explanations.' },
-    { id: 102, name: 'Diya Patel', roll: 'Roll: 02', status: 'Evaluated', file: 'diya_hw.pdf', size: '950 KB', date: '26 May 2026, 04:15 PM', marks: '48', remarks: 'Neat work! Very accurate calculations.' },
-    { id: 103, name: 'Vihaan Singh', roll: 'Roll: 03', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' },
-    { id: 104, name: 'Ananya Gupta', roll: 'Roll: 04', status: 'Rejected', file: 'ananya_hw.pdf', size: '2.1 MB', date: '25 May 2026, 06:10 PM', marks: '0', remarks: 'Wrong file uploaded. Please resubmit the algebra assignment.' },
-    { id: 105, name: 'Rohan Verma', roll: 'Roll: 05', status: 'Missing', file: '', size: '', date: '', marks: '0', remarks: 'Not Received' },
-    { id: 106, name: 'Meera Rajput', roll: 'Roll: 06', status: 'Submitted', file: 'meera_hw.jpg', size: '1.8 MB', date: '27 May 2026, 08:20 AM', marks: '50', remarks: 'Excellent! Outstanding results.' }
+    { id: 101, name: 'Aarav Sharma', roll: 'Roll: 01', status: '', file: 'aarav_hw.pdf', size: '1.2 MB', date: '26 May 2026, 03:30 PM', marks: '45', remarks: 'Good step by step explanations.' },
+    { id: 102, name: 'Diya Patel', roll: 'Roll: 02', status: '', file: 'diya_hw.pdf', size: '950 KB', date: '26 May 2026, 04:15 PM', marks: '', remarks: '' },
+    { id: 103, name: 'Vihaan Singh', roll: 'Roll: 03', status: '', file: '', size: '', date: '', marks: '', remarks: '' },
+    { id: 104, name: 'Ananya Gupta', roll: 'Roll: 04', status: 'Resubmit', file: 'ananya_hw.pdf', size: '2.1 MB', date: '25 May 2026, 06:10 PM', marks: '', remarks: 'Blurry upload. Please resubmit.' },
+    { id: 105, name: 'Rohan Verma', roll: 'Roll: 05', status: '', file: '', size: '', date: '', marks: '', remarks: '' },
+    { id: 106, name: 'Meera Rajput', roll: 'Roll: 06', status: '', file: 'meera_hw.jpg', size: '1.8 MB', date: '27 May 2026, 08:20 AM', marks: '50', remarks: 'Excellent! Outstanding results.' }
   ],
   2: [
     { id: 201, name: 'Tanvi Joshi', roll: 'Roll: 12', status: 'Submitted', file: 'tanvi_photosynthesis.jpg', size: '1.4 MB', date: '21 May 2026, 11:20 AM', marks: '49', remarks: 'Exquisite drawings and labeling.' },
@@ -377,12 +375,34 @@ function updateStats() {
 
 function getInitials(name) {
   return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+}function getDerivedStatus(s) {
+  if (s.marks !== undefined && s.marks !== null && s.marks.toString().trim() !== '') return 'Graded';
+  if (s.status === 'Resubmit') return 'Resubmit';
+  if (s.file && s.file.trim() !== '') return 'Submitted';
+  return 'Pending';
+}
+
+function getStatusBadge(status) {
+  if (status === 'Graded') return '<span class="badge badge-graded">Graded</span>';
+  if (status === 'Resubmit') return '<span class="badge badge-resubmit">Resubmit Requested</span>';
+  if (status === 'Submitted') return '<span class="badge badge-submitted">Needs Grading</span>';
+  return '<span class="badge badge-pending">Pending</span>';
+}
+
+function getActionHtml(s, status) {
+  if (status === 'Graded') {
+    return `<button class="btn btn-outline" style="padding:4px 10px; font-size:11.5px; color:var(--text-muted); border-color:var(--border);" onclick="clearGrade(${s.id})"><i class="ti ti-trash"></i> Clear</button>`;
+  } else if (status === 'Submitted') {
+    return `<button class="btn btn-outline" style="padding:4px 10px; font-size:11.5px; color:var(--red); border-color:#fca5a5; background:#fff5f5;" onclick="requestResubmit(${s.id})"><i class="ti ti-rotate"></i> Ask Resubmit</button>`;
+  } else if (status === 'Resubmit') {
+    return `<button class="btn btn-outline" style="padding:4px 10px; font-size:11.5px;" onclick="undoResubmit(${s.id})"><i class="ti ti-arrow-back-up"></i> Undo</button>`;
+  }
+  return `<span style="color:var(--text-hint);">-</span>`;
 }
 
 function render(filterName = '') {
-  const tbody = document.getElementById('submissionBody');
+  const tbody = document.getElementById('submissionsTbody');
   let html = '';
-
   const hw = hwDatabase[currentHwId] || {};
   const maxMarks = hw.maxMarks || 50;
 
@@ -398,65 +418,27 @@ function render(filterName = '') {
 
   filtered.forEach(s => {
     const initials = getInitials(s.name);
-    
-    // Status column
-    let statusBadge = '';
-    if (s.status === 'Pending') statusBadge = `<span class="badge badge-pending">Pending</span>`;
-    else if (s.status === 'Submitted') statusBadge = `<span class="badge badge-submitted">Needs Review</span>`;
-    else if (s.status === 'Evaluated') statusBadge = `<span class="badge badge-evaluated">Evaluated</span>`;
-    else if (s.status === 'Rejected') statusBadge = `<span class="badge badge-rejected">Rejected</span>`;
-    else if (s.status === 'Missing') statusBadge = `<span class="badge badge-missing">Missing</span>`;
-
-    const statusCell = statusBadge;
+    const derivedStatus = getDerivedStatus(s);
+    const statusCell = getStatusBadge(derivedStatus);
+    const actionCell = getActionHtml(s, derivedStatus);
       
     // File attachment column
-    const hasFile = ['Submitted', 'Evaluated', 'Rejected'].includes(s.status) && s.file;
+    const hasFile = s.file && s.file.trim() !== '';
     const fileCell = hasFile 
       ? `<a href="#" class="file-attachment" onclick="openPreview('${s.file}', '${s.size}')"><i class="ti ti-paperclip"></i> ${s.file}</a>`
       : `<span style="color:var(--text-hint); font-style:italic;">No upload</span>`;
 
-    // Date submitted column
-    const dateCell = hasFile 
+    const dateCell = hasFile && s.date
       ? `<div>${s.date.split(',')[0]}</div>`
       : `<span style="color:var(--text-hint);">-</span>`;
 
-    // Marks, Remarks, and Action columns
-    let marksCell = '';
-    let remarksCell = '';
-    let actionCell = '';
-
-    if (s.status === 'Pending' || s.status === 'Missing') {
-      marksCell = `<div class="grade-input-group">
-           <input type="text" class="grade-box" disabled style="background:#f1f5f9; cursor:not-allowed;" value="${s.status === 'Missing' ? '0' : '-'}" />
-           <span class="max-marks">/ ${maxMarks}</span>
-         </div>`;
-      remarksCell = `<input type="text" class="remarks-box" disabled style="background:#f1f5f9; cursor:not-allowed;" value="${s.status === 'Missing' ? 'Not Received' : 'Not submitted'}" />`;
-      
-      actionCell = s.status === 'Pending' 
-        ? `<div style="display:flex; gap:6px;">
-             <button class="btn btn-primary" style="padding:4px 10px; font-size:11.5px;" onclick="updateStatus(${s.id}, 'Submitted')">📥 Offline</button>
-             <button class="btn btn-outline" style="padding:4px 10px; font-size:11.5px; color:#475569; border-color:#cbd5e1;" onclick="updateStatus(${s.id}, 'Missing')">⚠️ Missing</button>
-           </div>`
-        : `<button class="btn btn-outline" style="padding:4px 10px; font-size:11.5px;" onclick="updateStatus(${s.id}, 'Pending')"><i class="ti ti-rotate"></i> Reset</button>`;
-    } else if (s.status === 'Submitted') {
-      marksCell = `<div class="grade-input-group">
-           <input type="number" class="grade-box" data-id="${s.id}" value="${s.marks}" placeholder="--" min="0" max="${maxMarks}" onchange="updateIndividualGrade(${s.id}, 'marks', this.value)" />
-           <span class="max-marks">/ ${maxMarks}</span>
-         </div>`;
-      remarksCell = `<input type="text" class="remarks-box" data-id="${s.id}" value="${s.remarks}" placeholder="Enter feedback..." onchange="updateIndividualGrade(${s.id}, 'remarks', this.value)" />`;
-      actionCell = `<div style="display:flex; gap:6px;">
-          <button class="btn btn-primary" style="background:var(--green); border-color:var(--green); padding:4px 10px; font-size:11.5px;" onclick="updateStatus(${s.id}, 'Evaluated')">✅ Accept</button>
-          <button class="btn btn-outline" style="color:var(--red); border-color:#fca5a5; background:#fff5f5; padding:4px 10px; font-size:11.5px;" onclick="updateStatus(${s.id}, 'Rejected')">❌ Reject</button>
-        </div>`;
-    } else if (s.status === 'Evaluated' || s.status === 'Rejected') {
-      const isRej = s.status === 'Rejected';
-      marksCell = `<div class="grade-input-group">
-           <input type="text" class="grade-box" disabled style="background:${isRej ? '#fff5f5' : '#f0fdf4'}; color:${isRej ? 'var(--red)' : 'var(--green)'};" value="${isRej ? '0' : s.marks}" />
-           <span class="max-marks">/ ${maxMarks}</span>
-         </div>`;
-      remarksCell = `<input type="text" class="remarks-box" disabled style="background:${isRej ? '#fff5f5' : '#f0fdf4'};" value="${s.remarks || (isRej ? 'Resubmit required' : '')}" />`;
-      actionCell = `<button class="btn btn-outline" style="padding:4px 10px; font-size:11.5px;" onclick="updateStatus(${s.id}, 'Submitted')"><i class="ti ti-edit"></i> Edit</button>`;
-    }
+    // Marks, Remarks columns (always editable for spreadsheet style)
+    const marksCell = `
+      <div class="grade-input-group">
+        <input type="number" class="grade-box" data-id="${s.id}" value="${s.marks || ''}" placeholder="--" min="0" max="${maxMarks}" onchange="updateIndividualGrade(${s.id}, 'marks', this.value)" />
+        <span class="max-marks">/ ${maxMarks}</span>
+      </div>`;
+    const remarksCell = `<input type="text" class="remarks-box" data-id="${s.id}" value="${s.remarks || ''}" placeholder="Enter remarks..." onchange="updateIndividualGrade(${s.id}, 'remarks', this.value)" />`;
 
     html += `
       <tr>
@@ -469,12 +451,12 @@ function render(filterName = '') {
             </div>
           </div>
         </td>
-        <td>${statusCell}</td>
+        <td id="status-cell-${s.id}">${statusCell}</td>
         <td>${fileCell}</td>
         <td>${dateCell}</td>
         <td class="marks-col">${marksCell}</td>
         <td>${remarksCell}</td>
-        <td>${actionCell}</td>
+        <td id="action-cell-${s.id}">${actionCell}</td>
       </tr>
     `;
   });
@@ -501,45 +483,64 @@ function handleSearch() {
 }
 
 function updateIndividualGrade(studentId, field, value) {
+  let updatedS = null;
   currentSubmissions = currentSubmissions.map(s => {
     if (s.id === studentId) {
-      return { ...s, [field]: value };
-    }
-    return s;
-  });
-}
-
-function updateStatus(studentId, newStatus) {
-  currentSubmissions = currentSubmissions.map(s => {
-    if (s.id === studentId) {
-      let updates = { status: newStatus };
-      
-      if (newStatus === 'Rejected' || newStatus === 'Missing') {
-        updates.marks = '0';
+      s[field] = value;
+      // Auto-clear resubmit status if marks are provided
+      if (field === 'marks' && value.toString().trim() !== '' && s.status === 'Resubmit') {
+        s.status = '';
       }
-      if (newStatus === 'Pending') {
-        updates.marks = '';
-        updates.remarks = '';
-        updates.file = '';
-        updates.date = '';
-      }
-      if (newStatus === 'Submitted' && !s.file) {
-        updates.file = 'offline_submission.pdf';
-        updates.size = '--';
-        const now = new Date();
-        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        updates.date = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}, ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
-      }
-
-      return { ...s, ...updates };
+      updatedS = s;
     }
     return s;
   });
   
-  localStorage.setItem('bodhyamarg_submissions_hw_' + currentHwId, JSON.stringify(currentSubmissions));
-  updateStats();
-  render(document.getElementById('searchBox').value);
-  showToast('Submission status updated.');
+  if (updatedS) {
+    const newStatus = getDerivedStatus(updatedS);
+    const statusCell = document.getElementById(`status-cell-${studentId}`);
+    const actionCell = document.getElementById(`action-cell-${studentId}`);
+    if (statusCell) statusCell.innerHTML = getStatusBadge(newStatus);
+    if (actionCell) actionCell.innerHTML = getActionHtml(updatedS, newStatus);
+  }
+}
+
+function clearGrade(studentId) {
+  currentSubmissions = currentSubmissions.map(s => {
+    if (s.id === studentId) {
+      s.marks = '';
+      s.remarks = '';
+      const marksInput = document.querySelector(`.grade-box[data-id="${studentId}"]`);
+      const remarksInput = document.querySelector(`.remarks-box[data-id="${studentId}"]`);
+      if(marksInput) marksInput.value = '';
+      if(remarksInput) remarksInput.value = '';
+    }
+    return s;
+  });
+  updateIndividualGrade(studentId, 'marks', '');
+}
+
+function requestResubmit(studentId) {
+  currentSubmissions = currentSubmissions.map(s => {
+    if (s.id === studentId) {
+      s.status = 'Resubmit';
+      s.marks = '';
+      const marksInput = document.querySelector(`.grade-box[data-id="${studentId}"]`);
+      if(marksInput) marksInput.value = '';
+    }
+    return s;
+  });
+  updateIndividualGrade(studentId, 'marks', '');
+}
+
+function undoResubmit(studentId) {
+  currentSubmissions = currentSubmissions.map(s => {
+    if (s.id === studentId) {
+      s.status = '';
+    }
+    return s;
+  });
+  updateIndividualGrade(studentId, 'marks', '');
 }
 
 function saveAllGrades() {
