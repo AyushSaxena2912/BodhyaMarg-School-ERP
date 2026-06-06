@@ -405,7 +405,7 @@ function render(filterName = '') {
 
     // Date submitted column
     const dateCell = isSubmitted 
-      ? `<div>${s.date.split(',')[0]}<div style="font-size:11px;color:var(--text-hint);margin-top:2px;">${s.date.split(',')[1] || ''}</div></div>`
+      ? `<div>${s.date.split(',')[0]}</div>`
       : `<span style="color:var(--text-hint);">-</span>`;
 
     // Marks obtained inputs
