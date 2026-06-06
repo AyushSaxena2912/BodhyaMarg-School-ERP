@@ -370,8 +370,13 @@ var defaultHwDatabase = {
 var hwDatabase = {};
 function initHwDatabase() {
   const cachedDb = localStorage.getItem('bodhyamarg_hw_database');
-  if (cachedDb) {
-    hwDatabase = JSON.parse(cachedDb);
+  if (cachedDb && cachedDb !== '{}' && cachedDb !== 'null' && cachedDb !== 'undefined') {
+    try {
+      hwDatabase = JSON.parse(cachedDb);
+    } catch (e) {
+      hwDatabase = defaultHwDatabase;
+      localStorage.setItem('bodhyamarg_hw_database', JSON.stringify(hwDatabase));
+    }
   } else {
     hwDatabase = defaultHwDatabase;
     localStorage.setItem('bodhyamarg_hw_database', JSON.stringify(hwDatabase));
@@ -407,7 +412,9 @@ var submissionsData = {
 function getHomeworkId() {
   const params = new URLSearchParams(window.location.search);
   const id = parseInt(params.get('id'));
-  return hwDatabase[id] ? id : 1;
+  if (hwDatabase && hwDatabase[id]) return id;
+  const firstKey = Object.keys(hwDatabase || {})[0];
+  return firstKey ? parseInt(firstKey) : 1;
 }
 
 var currentHwId = getHomeworkId();
@@ -436,14 +443,14 @@ function initData() {
   document.getElementById('toggleGrading').checked = gradingEnabled;
   
   // Render details
-  const hw = hwDatabase[currentHwId];
-  document.getElementById('hwTopic').textContent = hw.topic;
-  document.getElementById('hwSubject').textContent = hw.subject;
-  document.getElementById('hwClass').textContent = hw.classSec;
-  document.getElementById('hwAssigned').textContent = hw.assigned;
-  document.getElementById('hwDeadline').textContent = hw.deadline;
-  document.getElementById('hwTeacher').textContent = hw.teacher;
-  document.getElementById('hwDesc').textContent = hw.desc;
+  const hw = hwDatabase[currentHwId] || defaultHwDatabase[currentHwId] || { topic: 'Homework Detail', subject: 'Subject', classSec: 'Class', assigned: '', deadline: '', teacher: '', desc: '' };
+  document.getElementById('hwTopic').textContent = hw.topic || 'Homework Topic';
+  document.getElementById('hwSubject').textContent = hw.subject || 'Subject';
+  document.getElementById('hwClass').textContent = hw.classSec || 'Class & Section';
+  document.getElementById('hwAssigned').textContent = hw.assigned || '';
+  document.getElementById('hwDeadline').textContent = hw.deadline || '';
+  document.getElementById('hwTeacher').textContent = hw.teacher || '';
+  document.getElementById('hwDesc').textContent = hw.desc || '';
 
   updateStats();
 }
