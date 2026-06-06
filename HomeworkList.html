@@ -412,7 +412,7 @@ function renderHomeworks() {
     html += '</td>';
     html += '<td style="text-align:right;">';
     html += '  <a href="EvaluateHomework.html?id=' + hw.id + '" class="action-btn primary" title="Evaluate Progress" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;" data-allowed-roles="admin,superadmin,teacher"><i class="ti ti-checklist"></i></a>';
-    html += '  <button class="action-btn" title="Edit" data-allowed-roles="admin,superadmin,teacher"><i class="ti ti-edit"></i></button>';
+    html += '  <button class="action-btn" title="Edit" onclick="editHomework(' + hw.id + ')" data-allowed-roles="admin,superadmin,teacher"><i class="ti ti-edit"></i></button>';
     html += '  <button class="action-btn" style="color:#ef4444;" title="Delete" onclick="deleteHomework(' + hw.id + ')" data-allowed-roles="admin,superadmin,teacher"><i class="ti ti-trash"></i></button>';
     html += '</td>';
     html += '</tr>';
@@ -420,7 +420,12 @@ function renderHomeworks() {
   document.getElementById('hwBody').innerHTML = html;
 }
 
+var editingHwId = null;
+
 function openCreateModal() { 
+  editingHwId = null;
+  document.querySelector('#createModal .modal-title').innerHTML = '<i class="ti ti-book-upload"></i> Assign New Homework';
+  document.querySelector('#createModal .btn-primary').innerHTML = '<i class="ti ti-check"></i> Assign Homework';
   document.getElementById('newHwClass').value = '';
   document.getElementById('newHwSubject').value = '';
   document.getElementById('newHwTitle').value = '';
@@ -431,6 +436,52 @@ function openCreateModal() {
   document.getElementById('maxMarksContainer').style.display = 'flex';
   document.getElementById('newHwMaxMarks').value = '50';
   document.getElementById('createModal').classList.add('open'); 
+}
+
+function parseDateBack(dateStr) {
+  if (!dateStr) return '';
+  var months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+  var parts = dateStr.split(' ');
+  if (parts.length !== 3) return '';
+  var day = parts[0].padStart(2, '0');
+  var mon = months[parts[1]] || '01';
+  var year = parts[2];
+  return year + '-' + mon + '-' + day;
+}
+
+function editHomework(id) {
+  var hw = hwData.find(function(h) { return h.id === id; });
+  if (!hw) return;
+  editingHwId = id;
+  document.querySelector('#createModal .modal-title').innerHTML = '<i class="ti ti-edit"></i> Edit Homework';
+  document.querySelector('#createModal .btn-primary').innerHTML = '<i class="ti ti-check"></i> Save Changes';
+  
+  // Populate class dropdown first
+  var classSelect = document.getElementById('newHwClass');
+  classSelect.value = hw.class;
+  
+  // Populate subject based on selected class
+  updateModalSubjects();
+  var subjectSelect = document.getElementById('newHwSubject');
+  subjectSelect.value = hw.subject;
+  
+  document.getElementById('newHwTitle').value = hw.title;
+  document.getElementById('newHwAssignDate').value = parseDateBack(hw.assignDate);
+  document.getElementById('newHwDeadline').value = parseDateBack(hw.deadline);
+  
+  // Load description from hw database
+  var hwDatabase = JSON.parse(localStorage.getItem('bodhyamarg_hw_database')) || {};
+  var hwDetail = hwDatabase[id];
+  document.getElementById('newHwDesc').value = (hwDetail && hwDetail.desc) ? hwDetail.desc : '';
+  
+  // Load grading settings
+  var gradingEnabled = localStorage.getItem('bodhyamarg_grading_enabled_hw_' + id);
+  var isGrading = gradingEnabled !== 'false';
+  document.getElementById('newHwGrading').checked = isGrading;
+  document.getElementById('maxMarksContainer').style.display = isGrading ? 'flex' : 'none';
+  document.getElementById('newHwMaxMarks').value = (hwDetail && hwDetail.maxMarks) ? hwDetail.maxMarks : '50';
+  
+  document.getElementById('createModal').classList.add('open');
 }
 
 function toggleMaxMarksInput(checked) {
@@ -471,65 +522,105 @@ function saveHomework() {
     return;
   }
 
-  // Calculate next ID
-  var nextId = 1;
-  if (hwData.length > 0) {
-    nextId = Math.max.apply(Math, hwData.map(function(h) { return h.id; })) + 1;
+  if (editingHwId !== null) {
+    // ---- EDIT MODE ----
+    var hwIndex = hwData.findIndex(function(h) { return h.id === editingHwId; });
+    if (hwIndex === -1) { alert('Homework not found.'); return; }
+    
+    hwData[hwIndex].title = titleVal;
+    hwData[hwIndex].subject = subjectVal;
+    hwData[hwIndex].class = classVal;
+    hwData[hwIndex].assignDate = formatDateString(assignDateVal);
+    hwData[hwIndex].deadline = formatDateString(deadlineVal);
+    
+    // Check if deadline is in the future
+    var deadlineDate = new Date(deadlineVal);
+    var today = new Date(); today.setHours(0,0,0,0);
+    hwData[hwIndex].status = deadlineDate >= today ? 'Active' : 'Expired';
+    
+    localStorage.setItem('bodhyamarg_homework_list', JSON.stringify(hwData));
+    localStorage.setItem('bodhyamarg_homework_list_v2', JSON.stringify(hwData));
+    
+    // Update evaluation database
+    var defaultHwDatabase = {
+      1: { topic: 'Algebra Equations Ex 1.2', subject: 'Mathematics', classSec: 'Class X - Section A', teacher: 'Ramesh Patel', assigned: '24 May 2026', deadline: '27 May 2026', desc: 'Please solve all the linear equations in exercise 1.2 on pages 45-47.', maxMarks: 50 },
+      2: { topic: 'Photosynthesis Diagram', subject: 'Science', classSec: 'Class X - Section B', teacher: 'Meera Sharma', assigned: '20 May 2026', deadline: '22 May 2026', desc: 'Draw a detailed, labeled diagram of plant photosynthesis.', maxMarks: 50 },
+      3: { topic: 'Essay on Environment', subject: 'English', classSec: 'Class IX - Section A', teacher: 'Suresh Yadav', assigned: '26 May 2026', deadline: '30 May 2026', desc: 'Write an essay of 500 words on the impact of global warming.', maxMarks: 50 },
+      4: { topic: 'History Chapter 4 Q&A', subject: 'History', classSec: 'Class VIII - Section C', teacher: 'Priya Gupta', assigned: '25 May 2026', deadline: '28 May 2026', desc: 'Answer all the textual questions at the end of Chapter 4.', maxMarks: 50 }
+    };
+    var hwDatabase = JSON.parse(localStorage.getItem('bodhyamarg_hw_database')) || defaultHwDatabase;
+    if (hwDatabase[editingHwId]) {
+      hwDatabase[editingHwId].topic = titleVal;
+      hwDatabase[editingHwId].subject = subjectVal;
+      hwDatabase[editingHwId].classSec = classVal;
+      hwDatabase[editingHwId].assigned = formatDateString(assignDateVal);
+      hwDatabase[editingHwId].deadline = formatDateString(deadlineVal);
+      hwDatabase[editingHwId].desc = descVal || 'No instructions provided.';
+      hwDatabase[editingHwId].maxMarks = maxMarksVal;
+    }
+    localStorage.setItem('bodhyamarg_hw_database', JSON.stringify(hwDatabase));
+    localStorage.setItem('bodhyamarg_grading_enabled_hw_' + editingHwId, gradingVal ? 'true' : 'false');
+    
+    alert('Homework updated successfully!');
+    editingHwId = null;
+  } else {
+    // ---- CREATE MODE ----
+    var nextId = 1;
+    if (hwData.length > 0) {
+      nextId = Math.max.apply(Math, hwData.map(function(h) { return h.id; })) + 1;
+    }
+
+    var newHwObj = {
+      id: nextId,
+      title: titleVal,
+      subject: subjectVal,
+      class: classVal,
+      teacher: currentUser.name,
+      assignDate: formatDateString(assignDateVal),
+      deadline: formatDateString(deadlineVal),
+      completed: 4,
+      total: 6,
+      status: 'Active',
+      hasAttachment: false
+    };
+
+    hwData.push(newHwObj);
+    localStorage.setItem('bodhyamarg_homework_list', JSON.stringify(hwData));
+
+    var defaultHwDatabase = {
+      1: { topic: 'Algebra Equations Ex 1.2', subject: 'Mathematics', classSec: 'Class X - Section A', teacher: 'Ramesh Patel', assigned: '24 May 2026', deadline: '27 May 2026', desc: 'Please solve all the linear equations in exercise 1.2 on pages 45-47. Write out all step-by-step calculations neatly on your worksheets, scan them to a single PDF document, and upload it.', maxMarks: 50 },
+      2: { topic: 'Photosynthesis Diagram', subject: 'Science', classSec: 'Class X - Section B', teacher: 'Meera Sharma', assigned: '20 May 2026', deadline: '22 May 2026', desc: 'Draw a detailed, labeled diagram of plant photosynthesis. Explain the light and dark reaction cycles in detail. Scan and submit your sheets.', maxMarks: 50 },
+      3: { topic: 'Essay on Environment', subject: 'English', classSec: 'Class IX - Section A', teacher: 'Suresh Yadav', assigned: '26 May 2026', deadline: '30 May 2026', desc: 'Write an essay of 500 words on the impact of global warming on polar caps. Structure it with introduction, current facts, and solution steps.', maxMarks: 50 },
+      4: { topic: 'History Chapter 4 Q&A', subject: 'History', classSec: 'Class VIII - Section C', teacher: 'Priya Gupta', assigned: '25 May 2026', deadline: '28 May 2026', desc: 'Answer all the textual questions at the end of Chapter 4: Industrialization in Europe. Word count should be around 100-150 words per answer.', maxMarks: 50 }
+    };
+    var hwDatabase = JSON.parse(localStorage.getItem('bodhyamarg_hw_database')) || defaultHwDatabase;
+    hwDatabase[nextId] = {
+      topic: titleVal,
+      subject: subjectVal,
+      classSec: classVal,
+      teacher: currentUser.name,
+      assigned: formatDateString(assignDateVal),
+      deadline: formatDateString(deadlineVal),
+      desc: descVal || 'No instructions provided.',
+      maxMarks: maxMarksVal
+    };
+    localStorage.setItem('bodhyamarg_hw_database', JSON.stringify(hwDatabase));
+
+    localStorage.setItem('bodhyamarg_grading_enabled_hw_' + nextId, gradingVal ? 'true' : 'false');
+
+    var mockSubmissions = [
+      { id: 101, name: 'Aarav Sharma', roll: 'Roll: 01', status: 'Submitted', file: 'aarav_homework.pdf', size: '1.2 MB', date: '26 May 2026, 03:30 PM', marks: '', remarks: '' },
+      { id: 102, name: 'Diya Patel', roll: 'Roll: 02', status: 'Submitted', file: 'diya_patel_ex.pdf', size: '950 KB', date: '26 May 2026, 04:15 PM', marks: '', remarks: '' },
+      { id: 103, name: 'Vihaan Singh', roll: 'Roll: 03', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' },
+      { id: 104, name: 'Ananya Gupta', roll: 'Roll: 04', status: 'Submitted', file: 'ananya_gupta.pdf', size: '2.1 MB', date: '25 May 2026, 06:10 PM', marks: '', remarks: '' },
+      { id: 105, name: 'Rohan Verma', roll: 'Roll: 05', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' },
+      { id: 106, name: 'Meera Rajput', roll: 'Roll: 06', status: 'Submitted', file: 'meera_r.jpg', size: '1.8 MB', date: '27 May 2026, 08:20 AM', marks: '', remarks: '' }
+    ];
+    localStorage.setItem('bodhyamarg_submissions_hw_' + nextId, JSON.stringify(mockSubmissions));
+
+    alert('Homework assigned successfully!');
   }
-
-  // 1. Save homework item to list
-  var newHwObj = {
-    id: nextId,
-    title: titleVal,
-    subject: subjectVal,
-    class: classVal,
-    teacher: currentUser.name,
-    assignDate: formatDateString(assignDateVal),
-    deadline: formatDateString(deadlineVal),
-    completed: 4,
-    total: 6,
-    status: 'Active',
-    hasAttachment: false
-  };
-
-  hwData.push(newHwObj);
-  localStorage.setItem('bodhyamarg_homework_list', JSON.stringify(hwData));
-
-  // 2. Save homework details to evaluation database
-  var defaultHwDatabase = {
-    1: { topic: 'Algebra Equations Ex 1.2', subject: 'Mathematics', classSec: 'Class X - Section A', teacher: 'Ramesh Patel', assigned: '24 May 2026', deadline: '27 May 2026', desc: 'Please solve all the linear equations in exercise 1.2 on pages 45-47. Write out all step-by-step calculations neatly on your worksheets, scan them to a single PDF document, and upload it.', maxMarks: 50 },
-    2: { topic: 'Photosynthesis Diagram', subject: 'Science', classSec: 'Class X - Section B', teacher: 'Meera Sharma', assigned: '20 May 2026', deadline: '22 May 2026', desc: 'Draw a detailed, labeled diagram of plant photosynthesis. Explain the light and dark reaction cycles in detail. Scan and submit your sheets.', maxMarks: 50 },
-    3: { topic: 'Essay on Environment', subject: 'English', classSec: 'Class IX - Section A', teacher: 'Suresh Yadav', assigned: '26 May 2026', deadline: '30 May 2026', desc: 'Write an essay of 500 words on the impact of global warming on polar caps. Structure it with introduction, current facts, and solution steps.', maxMarks: 50 },
-    4: { topic: 'History Chapter 4 Q&A', subject: 'History', classSec: 'Class VIII - Section C', teacher: 'Priya Gupta', assigned: '25 May 2026', deadline: '28 May 2026', desc: 'Answer all the textual questions at the end of Chapter 4: Industrialization in Europe. Word count should be around 100-150 words per answer.', maxMarks: 50 }
-  };
-  var hwDatabase = JSON.parse(localStorage.getItem('bodhyamarg_hw_database')) || defaultHwDatabase;
-  hwDatabase[nextId] = {
-    topic: titleVal,
-    subject: subjectVal,
-    classSec: classVal,
-    teacher: currentUser.name,
-    assigned: formatDateString(assignDateVal),
-    deadline: formatDateString(deadlineVal),
-    desc: descVal || 'No instructions provided.',
-    maxMarks: maxMarksVal
-  };
-  localStorage.setItem('bodhyamarg_hw_database', JSON.stringify(hwDatabase));
-
-  // 3. Save homework grading enabled state
-  localStorage.setItem('bodhyamarg_grading_enabled_hw_' + nextId, gradingVal ? 'true' : 'false');
-
-  // 4. Save mock submissions for evaluating this homework
-  var mockSubmissions = [
-    { id: 101, name: 'Aarav Sharma', roll: 'Roll: 01', status: 'Submitted', file: 'aarav_homework.pdf', size: '1.2 MB', date: '26 May 2026, 03:30 PM', marks: '', remarks: '' },
-    { id: 102, name: 'Diya Patel', roll: 'Roll: 02', status: 'Submitted', file: 'diya_patel_ex.pdf', size: '950 KB', date: '26 May 2026, 04:15 PM', marks: '', remarks: '' },
-    { id: 103, name: 'Vihaan Singh', roll: 'Roll: 03', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' },
-    { id: 104, name: 'Ananya Gupta', roll: 'Roll: 04', status: 'Submitted', file: 'ananya_gupta.pdf', size: '2.1 MB', date: '25 May 2026, 06:10 PM', marks: '', remarks: '' },
-    { id: 105, name: 'Rohan Verma', roll: 'Roll: 05', status: 'Pending', file: '', size: '', date: '', marks: '', remarks: '' },
-    { id: 106, name: 'Meera Rajput', roll: 'Roll: 06', status: 'Submitted', file: 'meera_r.jpg', size: '1.8 MB', date: '27 May 2026, 08:20 AM', marks: '', remarks: '' }
-  ];
-  localStorage.setItem('bodhyamarg_submissions_hw_' + nextId, JSON.stringify(mockSubmissions));
-
-  alert('Homework assigned successfully!');
+  
   closeModal('createModal');
   renderHomeworks();
 }
