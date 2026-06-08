@@ -281,6 +281,13 @@ body[data-current-role="admin"] [data-allowed-roles="superadmin"] { display: non
         <a href="Error500.html" class="nav-item">500 Server Error</a>
         <a href="Error503.html" class="nav-item">503 Maintenance</a>
       </div>
+      </div>
     </div>
+  </div>
+
+  <div class="nav-group" style="margin-top: 20px;">
+    <a href="Login.html" class="nav-item" onclick="localStorage.removeItem('bodhyamarg_role');" style="color: var(--red); font-weight: 500;">
+      <i class="ti ti-logout"></i> Logout
+    </a>
   </div>
 </aside>
