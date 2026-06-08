@@ -286,7 +286,7 @@ body[data-current-role="admin"] [data-allowed-roles="superadmin"] { display: non
   </div>
 
   <div class="nav-group" style="margin-top: 20px;">
-    <a href="#" class="nav-item" onclick="BodhyaAuth.logout(); return false;" style="color: var(--red); font-weight: 500;">
+    <a href="Login.html" class="nav-item" onclick="localStorage.removeItem('bodhya_logged_in'); localStorage.removeItem('bodhya_user_role'); localStorage.removeItem('bodhya_user_id'); localStorage.removeItem('bodhya_user_name'); window.location.href='Login.html'; return false;" style="color: var(--red); font-weight: 500;">
       <i class="ti ti-logout"></i> Logout
     </a>
   </div>
